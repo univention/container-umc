@@ -3,5 +3,10 @@
 version: '3.8'
 
 services:
+  server:
+    image: umc-server
+    build:
+      context: ./images/server
+    env_file: .env.server
 
 ...

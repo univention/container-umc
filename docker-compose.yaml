@@ -3,6 +3,9 @@
 version: '3.8'
 
 services:
+  server:
+    volumes:
+    - umc-socket:/var/run/univention-management-console
 
 secrets:
   ca_cert:
