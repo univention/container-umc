@@ -4,6 +4,14 @@ version: '3.8'
 
 services:
 
+secrets:
+  ca_cert:
+    file: ssl/certs/CAcert.pem
+  cert_pem:
+    file: ssl/certs/cert.pem
+  private_key:
+    file: ssl/secret/private.key
+
 volumes:
   umc-socket:
 
