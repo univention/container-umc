@@ -6,6 +6,10 @@ services:
   server:
     volumes:
     - umc-socket:/var/run/univention-management-console
+    secrets:
+    - ca_cert
+    - cert_pem
+    - private_key
 
 secrets:
   ca_cert:
