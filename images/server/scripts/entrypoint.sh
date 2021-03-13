@@ -12,6 +12,9 @@ set -euxo pipefail
 # License: Public Domain (no inventive step)
 #
 
+PID_PATH=/var/run/umc-server.pid
+SOCKET_PATH=/var/run/univention-management-console/server.socket
+
 PRIVATE_KEY_FILE=/run/secrets/private_key
 CA_CERT_FILE=/run/secrets/ca_cert
 CERT_PEM_FILE=/run/secrets/cert_pem
@@ -44,6 +47,16 @@ mkdir --parents "${CA_DIR}"
 cp -a "${PRIVATE_KEY_FILE}" "${DST_KEY_PATH}"
 cp -a "${CA_CERT_FILE}" "${DST_CERT_PATH}"
 cp -a "${CERT_PEM_FILE}" "${DST_CA_PATH}"
+
+if [[ -f "${PID_PATH}" ]]; then
+  echo "Removing stale pid ${PID_PATH}"
+  rm "${PID_PATH}"
+fi
+
+if [[ -S "${SOCKET_PATH}" ]]; then
+  echo "Removing stale socket file ${SOCKET_PATH}"
+  rm "${SOCKET_PATH}"
+fi
 
 /usr/sbin/univention-management-console-server "$@"
 
