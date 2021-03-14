@@ -1,6 +1,7 @@
 #!/bin/bash
 # -*- coding: utf-8 -*-
 set -euxo pipefail
+umask 077
 
 # Univention Management Console Docker Entrypoint Script
 # Copyright (C) 2021 Univention GmbH
