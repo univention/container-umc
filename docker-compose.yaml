@@ -4,6 +4,8 @@ version: '3.8'
 
 services:
   server:
+    ports:
+    - 6670:6670
     volumes:
     - umc-socket:/var/run/univention-management-console
     secrets:
