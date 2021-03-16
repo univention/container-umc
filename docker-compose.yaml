@@ -13,6 +13,12 @@ services:
     - cert_pem
     - private_key
 
+  web:
+    ports:
+    - 8090:8090
+    volumes:
+    - umc-socket:/var/run/univention-management-console
+
 secrets:
   ca_cert:
     file: ssl/certs/CAcert.pem

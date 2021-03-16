@@ -9,4 +9,10 @@ services:
       context: ./images/server
     env_file: .env.server
 
+  web:
+    image: umc-web
+    build:
+      context: ./images/web
+    env_file: .env.web
+
 ...
