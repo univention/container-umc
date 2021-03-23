@@ -277,6 +277,6 @@ COPY \
 
 ENTRYPOINT ["/entrypoint.sh"]
 
-CMD ["-n", "-d", "2", "-L", "/dev/stdout"]
+CMD ["--no-daemon", "--debug=2", "--log-file=/dev/stdout"]
 
 # [EOF]
