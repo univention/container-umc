@@ -68,7 +68,7 @@ if [[ -S "${SOCKET_PATH}" ]]; then
   rm "${SOCKET_PATH}"
 fi
 
-/usr/sbin/univention-management-console-server "$@"
+exec /usr/sbin/univention-management-console-server "$@"
 
 exit 0
 
