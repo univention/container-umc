@@ -1,5 +1,4 @@
 #!/bin/sh
-# -*- coding: utf-8 -*-
 
 # Used to replace binary calls from dpkg-postinst scripts
 

@@ -1,5 +1,4 @@
 #!/bin/sh
-# -*- coding: utf-8 -*-
 
 # Replaces /usr/share/univention-lib/join.sh to install dpkg-packages
 # without side-effects in Docker.
