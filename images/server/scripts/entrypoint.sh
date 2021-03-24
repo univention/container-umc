@@ -70,6 +70,4 @@ fi
 
 exec /usr/sbin/univention-management-console-server "$@"
 
-exit 0
-
 # [EOF]
