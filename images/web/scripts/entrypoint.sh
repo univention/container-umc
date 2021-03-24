@@ -11,6 +11,4 @@ fi
 
 exec /usr/sbin/univention-management-console-web-server "$@"
 
-exit 0
-
 # [EOF]
