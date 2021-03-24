@@ -4,7 +4,7 @@
 ARG DOCKER_REGISTRY=""
 
 ############################################################
-# Set Docker environment
+# Start first stage
 
 FROM ${DOCKER_REGISTRY}debian:buster-slim AS build
 
@@ -59,7 +59,7 @@ RUN \
     python3-notifier
 
 ############################################################
-# Second stage
+# Start second stage
 
 FROM ${DOCKER_REGISTRY}debian:buster-slim AS final
 
@@ -83,7 +83,7 @@ RUN \
     python3-defusedxml \
     # for $PY_LIBS/univention/admin/syntax.py
     python3-dateutil \
-    # for /usr/lib/python3/dist-packages/univention/management/console/protocol/session.py
+    # for $PY_LIBS/univention/management/console/protocol/session.py
     python3-ldap \
     # for $PY_LIBS/univention/lib/umc_module.py
     python3-magic \
@@ -106,73 +106,54 @@ COPY --from=build \
   /usr/sbin/univention-management-console-web-server \
   /usr/sbin/univention-management-console-web-server
 
-# from univention-admin-diary-client and python3-univention-admin-diary
-# for /usr/lib/python3/dist-packages/univention/admin/handlers/__init__.py
-COPY --from=build \
-  ${SRC_PY_LIBS}/univention/admindiary/__init__.py \
-  ${SRC_PY_LIBS}/univention/admindiary/client.py \
-  ${SRC_PY_LIBS}/univention/admindiary/events.py \
-  ${DST_PY_LIBS}/univention/admindiary/
-
 # from python3-notifier (univention package)
 # for /usr/sbin/univention-management-console-web-server
+# used files: __init__.py dispatch.py log.py nf_generic.py popen.py signals.py
+#             threads.py version.py
+# unused files: nf_gtk.py nf_qt.py nf_twisted.py
 COPY --from=build \
-  ${SRC_PY_LIBS}/notifier/__init__.py \
-  ${SRC_PY_LIBS}/notifier/dispatch.py \
-  ${SRC_PY_LIBS}/notifier/log.py \
-  ${SRC_PY_LIBS}/notifier/nf_generic.py \
-  ${SRC_PY_LIBS}/notifier/popen.py \
-  ${SRC_PY_LIBS}/notifier/signals.py \
-  ${SRC_PY_LIBS}/notifier/threads.py \
-  ${SRC_PY_LIBS}/notifier/version.py \
+  ${SRC_PY_LIBS}/notifier/*.py \
   ${DST_PY_LIBS}/notifier/
+RUN rm ${DST_PY_LIBS}/notifier/{nf_gtk.py,nf_qt.py,nf_twisted.py}
+
+# from univention-admin-diary-client and python3-univention-admin-diary
+# for $PY_LIBS/univention/admin/handlers/__init__.py
+# used files: __init__.py client.py events.py
+COPY --from=build \
+  ${SRC_PY_LIBS}/univention/admindiary/ \
+  ${DST_PY_LIBS}/univention/admindiary/
 
 # from python3-pam
-# for /usr/lib/python3/dist-packages/univention/management/console/pam.py
+# for $PY_LIBS/univention/management/console/pam.py
 COPY --from=build \
   ${SRC_PY_LIBS}/PAM.cpython-37m-x86_64-linux-gnu.so \
   ${DST_PY_LIBS}/PAM.cpython-37m-x86_64-linux-gnu.so
 
 # from python3-univention-management-console
 # for /usr/sbin/univention-management-console-web-server
+# used files: __init__.py client.py definitions.py message.py modserver.py
+#             server.py session.py version.py
 COPY --from=build \
-  ${SRC_PY_LIBS}/univention/management/console/protocol/__init__.py \
-  ${SRC_PY_LIBS}/univention/management/console/protocol/client.py \
-  ${SRC_PY_LIBS}/univention/management/console/protocol/definitions.py \
-  ${SRC_PY_LIBS}/univention/management/console/protocol/message.py \
-  ${SRC_PY_LIBS}/univention/management/console/protocol/modserver.py \
-  ${SRC_PY_LIBS}/univention/management/console/protocol/server.py \
-  ${SRC_PY_LIBS}/univention/management/console/protocol/session.py \
-  ${SRC_PY_LIBS}/univention/management/console/protocol/version.py \
+  ${SRC_PY_LIBS}/univention/management/console/protocol/*.py \
   ${DST_PY_LIBS}/univention/management/console/protocol/
 
 # from python3-univention-management-console
-# for /usr/lib/python3/dist-packages/univention/management/console/protocol/message.py
+# for $PY_LIBS/univention/management/console/protocol/message.py
+# used files: acl.py auth.py base.py category.py config.py error.py ldap.py
+#             locales.py log.py module.py pam.py resources.py tools.py
 COPY --from=build \
-  ${SRC_PY_LIBS}/univention/management/console/acl.py \
-  ${SRC_PY_LIBS}/univention/management/console/auth.py \
-  ${SRC_PY_LIBS}/univention/management/console/base.py \
-  ${SRC_PY_LIBS}/univention/management/console/category.py \
-  ${SRC_PY_LIBS}/univention/management/console/config.py \
-  ${SRC_PY_LIBS}/univention/management/console/error.py \
-  ${SRC_PY_LIBS}/univention/management/console/ldap.py \
-  ${SRC_PY_LIBS}/univention/management/console/locales.py \
-  ${SRC_PY_LIBS}/univention/management/console/log.py \
-  ${SRC_PY_LIBS}/univention/management/console/module.py \
-  ${SRC_PY_LIBS}/univention/management/console/pam.py \
-  ${SRC_PY_LIBS}/univention/management/console/resources.py \
-  ${SRC_PY_LIBS}/univention/management/console/tools.py \
+  ${SRC_PY_LIBS}/univention/management/console/*.py \
   ${DST_PY_LIBS}/univention/management/console/
 
 # from python3-univention-management-console
-# for /usr/lib/python3/dist-packages/univention/management/console/protocol/session.py
+# for $PY_LIBS/univention/management/console/protocol/session.py
 COPY --from=build \
   ${SRC_PY_LIBS}/univention/management/console/modules/decorators.py \
   ${SRC_PY_LIBS}/univention/management/console/modules/sanitizers.py \
   ${DST_PY_LIBS}/univention/management/console/modules/
 
 # from python3-univention-lib
-# for /usr/lib/python3/dist-packages/univention/management/console/protocol/definitions.py
+# for $PY_LIBS/univention/management/console/protocol/definitions.py
 COPY --from=build \
   ${SRC_PY_LIBS}/univention/lib/i18n.py \
   ${SRC_PY_LIBS}/univention/lib/ucs.py \
@@ -180,65 +161,64 @@ COPY --from=build \
   ${DST_PY_LIBS}/univention/lib/
 
 # from python3-univention-directory-manager
-# for /usr/lib/python3/dist-packages/univention/management/console/protocol/session.py
+# for $PY_LIBS/univention/management/console/protocol/session.py
+# used files: __init__.py _ucr.py allocators.py config.py filter.py hook.py
+#             layout.py localization.py locking.py mapping.py modules.py
+#             nagios.py objects.py syntax.py types.py uexceptions.py uldap.py
+# unused fies: cron.py license_data.py policy.py samba.py
 COPY --from=build \
-  ${SRC_PY_LIBS}/univention/admin/__init__.py \
-  ${SRC_PY_LIBS}/univention/admin/_ucr.py \
-  ${SRC_PY_LIBS}/univention/admin/allocators.py \
-  ${SRC_PY_LIBS}/univention/admin/config.py \
-  ${SRC_PY_LIBS}/univention/admin/filter.py \
-  ${SRC_PY_LIBS}/univention/admin/hook.py \
-  ${SRC_PY_LIBS}/univention/admin/layout.py \
-  ${SRC_PY_LIBS}/univention/admin/localization.py \
-  ${SRC_PY_LIBS}/univention/admin/locking.py \
-  ${SRC_PY_LIBS}/univention/admin/mapping.py \
-  ${SRC_PY_LIBS}/univention/admin/modules.py \
-  ${SRC_PY_LIBS}/univention/admin/nagios.py \
-  ${SRC_PY_LIBS}/univention/admin/objects.py \
-  ${SRC_PY_LIBS}/univention/admin/uexceptions.py \
-  ${SRC_PY_LIBS}/univention/admin/uldap.py \
-  ${SRC_PY_LIBS}/univention/admin/syntax.py \
-  ${SRC_PY_LIBS}/univention/admin/types.py \
+  ${SRC_PY_LIBS}/univention/admin/*.py \
   ${DST_PY_LIBS}/univention/admin/
+RUN rm ${DST_PY_LIBS}/univention/admin/{cron.py,license_data.py,policy.py,samba.py}
 
 # from python3-univention-directory-manager
-# for /usr/lib/python3/dist-packages/univention/admin/handlers/groups/group.py
+# for $PY_LIBS/univention/admin/handlers/groups/group.py
+# used files: __init__.py
+# unused files: -
 COPY --from=build \
-  ${SRC_PY_LIBS}/univention/admin/handlers/__init__.py \
+  ${SRC_PY_LIBS}/univention/admin/handlers/*.py \
   ${DST_PY_LIBS}/univention/admin/handlers/
 
 # from python3-univention-directory-manager
-# for /usr/lib/python3/dist-packages/univention/management/console/acl.py
+# for $PY_LIBS/univention/management/console/acl.py
+# used files: __base.py domaincontroller_backup.py domaincontroller_master.py
+#             domaincontroller_slave.py memberserver.py
+# unused files: __init__.py computer.py ipmanagedclient.py linux.py macos.py
+#               trustaccount.py ubuntu.py windows.py windows_domaincontroller.py
 COPY --from=build \
-  ${SRC_PY_LIBS}/univention/admin/handlers/computers/__base.py \
-  ${SRC_PY_LIBS}/univention/admin/handlers/computers/domaincontroller_backup.py \
-  ${SRC_PY_LIBS}/univention/admin/handlers/computers/domaincontroller_master.py \
-  ${SRC_PY_LIBS}/univention/admin/handlers/computers/domaincontroller_slave.py \
-  ${SRC_PY_LIBS}/univention/admin/handlers/computers/memberserver.py \
+  ${SRC_PY_LIBS}/univention/admin/handlers/computers/*.py \
   ${DST_PY_LIBS}/univention/admin/handlers/computers/
+RUN rm ${DST_PY_LIBS}/univention/admin/handlers/computers/{__init__.py,computer.py,ipmanagedclient.py,linux.py,macos.py,trustaccount.py,ubuntu.py,windows.py,windows_domaincontroller.py}
 
 # from python3-univention-directory-manager
-# for /usr/lib/python3/dist-packages/univention/admin/handlers/computers/__base.py
+# for $PY_LIBS/univention/admin/handlers/computers/__base.py
+# used files: __init__.py forward_zone.py reverse_zone.py
+# unused files: alias.py dns.py host_record.py ns_record.py ptr_record.py
+#               srv_record.py txt_record.py
 COPY --from=build \
-  ${SRC_PY_LIBS}/univention/admin/handlers/dns/__init__.py \
-  ${SRC_PY_LIBS}/univention/admin/handlers/dns/forward_zone.py \
-  ${SRC_PY_LIBS}/univention/admin/handlers/dns/reverse_zone.py \
+  ${SRC_PY_LIBS}/univention/admin/handlers/dns/*.py \
   ${DST_PY_LIBS}/univention/admin/handlers/dns/
+RUN rm ${DST_PY_LIBS}/univention/admin/handlers/dns/{alias.py,dns.py,host_record.py,ns_record.py,ptr_record.py,srv_record.py,txt_record.py}
 
 # from python3-univention-directory-manager
-# for /usr/lib/python3/dist-packages/univention/admin/handlers/computers/__base.py
+# for $PY_LIBS/univention/admin/handlers/computers/__base.py
+# used files: group.py
+# unused files: __init__.py
 COPY --from=build \
-  ${SRC_PY_LIBS}/univention/admin/handlers/networks/network.py \
+  ${SRC_PY_LIBS}/univention/admin/handlers/groups/*.py \
+  ${DST_PY_LIBS}/univention/admin/handlers/groups/
+RUN rm ${DST_PY_LIBS}/univention/admin/handlers/groups/__init__.py
+
+# from python3-univention-directory-manager
+# for $PY_LIBS/univention/admin/handlers/computers/__base.py
+# used files: network.py
+# unused files: -
+COPY --from=build \
+  ${SRC_PY_LIBS}/univention/admin/handlers/networks/*.py \
   ${DST_PY_LIBS}/univention/admin/handlers/networks/
 
-# from python3-univention-directory-manager
-# for /usr/lib/python3/dist-packages/univention/admin/handlers/computers/__base.py
-COPY --from=build \
-  ${SRC_PY_LIBS}/univention/admin/handlers/groups/group.py \
-  ${DST_PY_LIBS}/univention/admin/handlers/groups/
-
 # from python3-univention
-# for /usr/lib/python3/dist-packages/univention/admin/uldap.py
+# for $PY_LIBS/univention/admin/uldap.py
 COPY --from=build \
   ${SRC_PY_LIBS}/univention/uldap.py \
   ${DST_PY_LIBS}/univention/uldap.py
@@ -248,14 +228,14 @@ COPY --from=build \
 # Copy Docker-specific files
 
 # from python3-univention-directory-manager
-# for /usr/lib/python3/dist-packages/univention/admin/uldap.py
+# for $PY_LIBS/univention/admin/uldap.py
 COPY \
   libs/admin/license.py \
   libs/admin/password.py \
   ${DST_PY_LIBS}/univention/admin/
 
 # from python3-univention-config-registry
-# for /usr/lib/python3/dist-packages/univention/management/console/log.py
+# for $PY_LIBS/univention/management/console/log.py
 COPY \
   libs/config_registry.py \
   ${DST_PY_LIBS}/univention/config_registry.py
