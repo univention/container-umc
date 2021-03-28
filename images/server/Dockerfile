@@ -10,9 +10,6 @@ FROM ${DOCKER_REGISTRY}debian:buster-slim AS build
 
 ARG APT_KEY_URL=https://updates.software-univention.de/univention-archive-key-ucs-5x.gpg
 
-# Ignore questions from debconf
-ARG DEBIAN_FRONTEND=noninteractive
-
 ARG PY_LIBS="/usr/lib/python3/dist-packages"
 
 SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
@@ -25,11 +22,12 @@ WORKDIR /apt
 
 RUN \
   apt-get update && \
-  apt-get --assume-yes --verbose-versions --no-install-recommends install \
-    ca-certificates=20200601~deb10u2 \
-    curl=7.64.0-4+deb10u1 \
-    gpg=2.2.12-1+deb10u1 \
-    gpg-agent=2.2.12-1+deb10u1 && \
+  DEBIAN_FRONTEND=noninteractive \
+    apt-get --assume-yes --verbose-versions --no-install-recommends install \
+      ca-certificates=20200601~deb10u2 \
+      curl=7.64.0-4+deb10u1 \
+      gpg=2.2.12-1+deb10u1 \
+      gpg-agent=2.2.12-1+deb10u1 && \
   curl -fsSL "${APT_KEY_URL}" | apt-key add - && \
   rm -rf /var/lib/apt/lists/*
 
@@ -85,9 +83,10 @@ RUN \
 RUN \
   echo 'nameserver 192.168.0.97' > /etc/resolv.conf && \
   apt-get update && \
-  apt-get --assume-yes --no-install-recommends install \
-    # the python3-univention-debug postinst uses py3compile
-    python3-minimal
+  DEBIAN_FRONTEND=noninteractive \
+    apt-get --assume-yes --no-install-recommends install \
+      # the python3-univention-debug postinst uses py3compile
+      python3-minimal
 
 RUN \
   apt-get download \
@@ -134,30 +133,31 @@ WORKDIR /
 
 RUN \
   apt-get update && \
-  apt-get --assume-yes --no-install-recommends install \
-    # for $PY_LIBS/univention/admin/password.py
-    libhdb9-heimdal \
-    # for $PY_LIBS/univention/admin/password.py
-    libkrb5-26-heimdal \
-    # for $PY_LIBS/univention/admin/password.py
-    python3-bcrypt \
-    # for /usr/sbin/univention-management-console-server
-    python3-daemon \
-    # for $PY_LIBS/univention/admin/syntax.py
-    python3-dateutil \
-    # for $PY_LIBS/univention/management/console/protocol/session.py
-    python3-ldap \
-    # for $PY_LIBS/univention/lib/umc_module.py
-    python3-magic \
-    # for $PY_LIBS/univention/management/console/protocol/server.py
-    python3-openssl \
-    # for $PY_LIBS/univention/admin/syntax.py
-    python3-pil \
-    # for $PY_LIBS/univention/management/console/locales.py
-    python3-polib \
-    #python3-six \
-    # for $PY_LIBS/univention/management/console/protocol/server.py
-    python3-tornado && \
+  DEBIAN_FRONTEND=noninteractive \
+    apt-get --assume-yes --no-install-recommends install \
+      # for $PY_LIBS/univention/admin/password.py
+      libhdb9-heimdal \
+      # for $PY_LIBS/univention/admin/password.py
+      libkrb5-26-heimdal \
+      # for $PY_LIBS/univention/admin/password.py
+      python3-bcrypt \
+      # for /usr/sbin/univention-management-console-server
+      python3-daemon \
+      # for $PY_LIBS/univention/admin/syntax.py
+      python3-dateutil \
+      # for $PY_LIBS/univention/management/console/protocol/session.py
+      python3-ldap \
+      # for $PY_LIBS/univention/lib/umc_module.py
+      python3-magic \
+      # for $PY_LIBS/univention/management/console/protocol/server.py
+      python3-openssl \
+      # for $PY_LIBS/univention/admin/syntax.py
+      python3-pil \
+      # for $PY_LIBS/univention/management/console/locales.py
+      python3-polib \
+      #python3-six \
+      # for $PY_LIBS/univention/management/console/protocol/server.py
+      python3-tornado && \
   rm -rf /var/lib/apt/lists/*
 
 
