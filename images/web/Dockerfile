@@ -10,9 +10,6 @@ FROM ${DOCKER_REGISTRY}debian:buster-slim AS build
 
 ARG APT_KEY_URL=https://updates.software-univention.de/univention-archive-key-ucs-5x.gpg
 
-# Ignore questions from debconf
-ARG DEBIAN_FRONTEND=noninteractive
-
 SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 
 WORKDIR /
@@ -23,11 +20,12 @@ WORKDIR /
 
 RUN \
   apt-get update && \
-  apt-get --assume-yes --verbose-versions --no-install-recommends install \
-    ca-certificates=20200601~deb10u2 \
-    curl=7.64.0-4+deb10u1 \
-    gpg=2.2.12-1+deb10u1 \
-    gpg-agent=2.2.12-1+deb10u1 && \
+  DEBIAN_FRONTEND=noninteractive \
+    apt-get --assume-yes --verbose-versions --no-install-recommends install \
+      ca-certificates=20200601~deb10u2 \
+      curl=7.64.0-4+deb10u1 \
+      gpg=2.2.12-1+deb10u1 \
+      gpg-agent=2.2.12-1+deb10u1 && \
   curl -fsSL "${APT_KEY_URL}" | apt-key add - && \
   rm -rf /var/lib/apt/lists/*
 
@@ -47,16 +45,18 @@ COPY \
 RUN \
   echo 'nameserver 192.168.0.97' > /etc/resolv.conf && \
   apt-get update && \
-  apt-get --assume-yes --no-install-recommends install \
-    univention-management-console-web-server && \
+  DEBIAN_FRONTEND=noninteractive \
+    apt-get --assume-yes --no-install-recommends install \
+      univention-management-console-web-server && \
   rm -rf /var/lib/apt/lists/*
 
 RUN \
   apt-get update
 
 RUN \
-  apt-get --assume-yes --no-install-recommends install \
-    python3-notifier
+  DEBIAN_FRONTEND=noninteractive \
+    apt-get --assume-yes --no-install-recommends install \
+      python3-notifier
 
 ############################################################
 # Start second stage
@@ -72,33 +72,34 @@ WORKDIR /
 
 RUN \
   apt-get update && \
-  apt-get --assume-yes --no-install-recommends install \
-    # for /usr/sbin/univention-management-console-web-server
-    python3 \
-    # for /usr/sbin/univention-management-console-web-server
-    python3-cherrypy3 \
-    # for /usr/sbin/univention-management-console-web-server
-    python3-daemon \
-    # for /usr/sbin/univention-management-console-web-server
-    python3-defusedxml \
-    # for $PY_LIBS/univention/admin/syntax.py
-    python3-dateutil \
-    # for $PY_LIBS/univention/management/console/protocol/session.py
-    python3-ldap \
-    # for $PY_LIBS/univention/lib/umc_module.py
-    python3-magic \
-    # for $PY_LIBS/univention/management/console/protocol/client.py
-    python3-openssl \
-    # for $PY_LIBS/univention/admin/syntax.py
-    python3-pil \
-    # for $PY_LIBS/univention/management/console/locales.py
-    python3-polib \
-    # for /usr/sbin/univention-management-console-web-server
-    python3-pysaml2 \
-    # for /usr/sbin/univention-management-console-web-server
-    python3-six \
-    # for $PY_LIBS/univention/management/console/protocol/server.py
-    python3-tornado && \
+  DEBIAN_FRONTEND=noninteractive \
+    apt-get --assume-yes --no-install-recommends install \
+      # for /usr/sbin/univention-management-console-web-server
+      python3 \
+      # for /usr/sbin/univention-management-console-web-server
+      python3-cherrypy3 \
+      # for /usr/sbin/univention-management-console-web-server
+      python3-daemon \
+      # for /usr/sbin/univention-management-console-web-server
+      python3-defusedxml \
+      # for $PY_LIBS/univention/admin/syntax.py
+      python3-dateutil \
+      # for $PY_LIBS/univention/management/console/protocol/session.py
+      python3-ldap \
+      # for $PY_LIBS/univention/lib/umc_module.py
+      python3-magic \
+      # for $PY_LIBS/univention/management/console/protocol/client.py
+      python3-openssl \
+      # for $PY_LIBS/univention/admin/syntax.py
+      python3-pil \
+      # for $PY_LIBS/univention/management/console/locales.py
+      python3-polib \
+      # for /usr/sbin/univention-management-console-web-server
+      python3-pysaml2 \
+      # for /usr/sbin/univention-management-console-web-server
+      python3-six \
+      # for $PY_LIBS/univention/management/console/protocol/server.py
+      python3-tornado && \
   rm -rf /var/lib/apt/lists/*
 
 # from univention-management-console-web-server
