@@ -191,45 +191,9 @@ COPY --from=build \
 RUN rm ${DST_PY_LIBS}/univention/admin/{cron.py,license_data.py,policy.py,samba.py}
 
 # from python3-univention-directory-manager
-# used files: __init__.py
-# unused files: -
 COPY --from=build \
-  ${SRC_PY_LIBS}/univention/admin/handlers/*.py \
+  ${SRC_PY_LIBS}/univention/admin/handlers/ \
   ${DST_PY_LIBS}/univention/admin/handlers/
-
-# from python3-univention-directory-manager
-# used files: __base.py domaincontroller_backup.py domaincontroller_master.py
-#             domaincontroller_slave.py memberserver.py
-# unused files: __init__.py computer.py ipmanagedclient.py linux.py macos.py
-#               trustaccount.py ubuntu.py windows.py windows_domaincontroller.py
-COPY --from=build \
-  ${SRC_PY_LIBS}/univention/admin/handlers/computers/*.py \
-  ${DST_PY_LIBS}/univention/admin/handlers/computers/
-RUN rm ${DST_PY_LIBS}/univention/admin/handlers/computers/{__init__.py,computer.py,ipmanagedclient.py,linux.py,macos.py,trustaccount.py,ubuntu.py,windows.py,windows_domaincontroller.py}
-
-# from python3-univention-directory-manager
-# used files: __init__.py forward_zone.py reverse_zone.py
-# unused files: alias.py dns.py host_record.py ns_record.py ptr_record.py
-#               srv_record.py txt_record.py
-COPY --from=build \
-  ${SRC_PY_LIBS}/univention/admin/handlers/dns/*.py \
-  ${DST_PY_LIBS}/univention/admin/handlers/dns/
-RUN rm ${DST_PY_LIBS}/univention/admin/handlers/dns/{alias.py,dns.py,host_record.py,ns_record.py,ptr_record.py,srv_record.py,txt_record.py}
-
-# from python3-univention-directory-manager
-# used files: group.py
-# unused files: __init__.py
-COPY --from=build \
-  ${SRC_PY_LIBS}/univention/admin/handlers/groups/*.py \
-  ${DST_PY_LIBS}/univention/admin/handlers/groups/
-RUN rm ${DST_PY_LIBS}/univention/admin/handlers/groups/__init__.py
-
-# from python3-univention-directory-manager
-# used files: network.py
-# unused files: -
-COPY --from=build \
-  ${SRC_PY_LIBS}/univention/admin/handlers/networks/network.py \
-  ${DST_PY_LIBS}/univention/admin/handlers/networks/
 
 # from python3-univention-admin-diary and univention-admin-diary-client
 # used files: __init__.py client.py events.py
