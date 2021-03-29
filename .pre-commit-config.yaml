@@ -47,6 +47,9 @@ repos:
   rev: v1.0.6
   hooks:
   - id: shell-lint
+    args:
+    - --external-sources
+    - --source-path=SCRIPTDIR
 
 # "Dockerfile linter"
 # - repo: https://gitlab.com/univention/pre-commit-hooks/dockerfilelint-precommit-hooks

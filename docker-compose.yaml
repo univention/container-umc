@@ -3,6 +3,13 @@
 version: '3.8'
 
 services:
+  gateway:
+    container_name: gateway
+    env_file: .env.gateway
+    ports:
+    - 80:80
+    - 443:443
+
   server:
     container_name: server
     env_file: .env.server

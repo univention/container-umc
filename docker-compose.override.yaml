@@ -3,6 +3,12 @@
 version: '3.8'
 
 services:
+  gateway:
+    build:
+      context: ./images/gateway
+      args:
+        DOCKER_REGISTRY: artifacts.knut.univention.de/dockerhub_proxy_cache/library/
+
   server:
     build:
       context: ./images/server
