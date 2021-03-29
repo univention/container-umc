@@ -41,9 +41,7 @@ COPY \
 ############################################################
 # Install univention-management-console-web-server and required dependencies
 
-# TODO: remove nameserver after public release
 RUN \
-  echo 'nameserver 192.168.0.97' > /etc/resolv.conf && \
   apt-get update && \
   DEBIAN_FRONTEND=noninteractive \
     apt-get --assume-yes --no-install-recommends install \
