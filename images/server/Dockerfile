@@ -77,17 +77,12 @@ COPY \
 RUN \
   # For apt-get download sandbox
   chown _apt /apt && \
-  mkdir /var/log/univention/
-
-# TODO: remove nameserver after public release
-RUN \
-  echo 'nameserver 192.168.0.97' > /etc/resolv.conf && \
+  mkdir /var/log/univention/ && \
   apt-get update && \
   DEBIAN_FRONTEND=noninteractive \
     apt-get --assume-yes --no-install-recommends install \
       # the python3-univention-debug postinst uses py3compile
       python3-minimal=3.7.* && \
-
   apt-get download \
     # UV package
     python3-notifier \
@@ -105,7 +100,6 @@ RUN \
     univention-admin-diary-client \
     univention-management-console-server \
     univention-management-console-module-udm && \
-
   rm -rf /var/lib/apt/lists/* && \
   dpkg --install --force-depends /apt/* && \
   rm ${PY_LIBS}/univention/admin/license.py && \
