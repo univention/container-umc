@@ -86,9 +86,8 @@ RUN \
   DEBIAN_FRONTEND=noninteractive \
     apt-get --assume-yes --no-install-recommends install \
       # the python3-univention-debug postinst uses py3compile
-      python3-minimal
+      python3-minimal=3.7.* && \
 
-RUN \
   apt-get download \
     # UV package
     python3-notifier \
@@ -105,9 +104,8 @@ RUN \
     # $PY_LIBS/univention/admindiary/events.py
     univention-admin-diary-client \
     univention-management-console-server \
-    univention-management-console-module-udm
+    univention-management-console-module-udm && \
 
-RUN \
   rm -rf /var/lib/apt/lists/* && \
   dpkg --install --force-depends /apt/* && \
   rm ${PY_LIBS}/univention/admin/license.py && \
@@ -136,28 +134,28 @@ RUN \
   DEBIAN_FRONTEND=noninteractive \
     apt-get --assume-yes --no-install-recommends install \
       # for $PY_LIBS/univention/admin/password.py
-      libhdb9-heimdal \
+      libhdb9-heimdal=7.5.* \
       # for $PY_LIBS/univention/admin/password.py
-      libkrb5-26-heimdal \
+      libkrb5-26-heimdal=7.5.* \
       # for $PY_LIBS/univention/admin/password.py
-      python3-bcrypt \
+      python3-bcrypt=3.1.* \
       # for /usr/sbin/univention-management-console-server
-      python3-daemon \
+      python3-daemon=2.2.* \
       # for $PY_LIBS/univention/admin/syntax.py
-      python3-dateutil \
+      python3-dateutil=2.7.* \
       # for $PY_LIBS/univention/management/console/protocol/session.py
-      python3-ldap \
+      python3-ldap=3.1.* \
       # for $PY_LIBS/univention/lib/umc_module.py
-      python3-magic \
+      python3-magic=2:* \
       # for $PY_LIBS/univention/management/console/protocol/server.py
-      python3-openssl \
+      python3-openssl=19.* \
       # for $PY_LIBS/univention/admin/syntax.py
-      python3-pil \
+      python3-pil=5.4.* \
       # for $PY_LIBS/univention/management/console/locales.py
-      python3-polib \
+      python3-polib=1.1.* \
       #python3-six \
       # for $PY_LIBS/univention/management/console/protocol/server.py
-      python3-tornado && \
+      python3-tornado=5.1.* && \
   rm -rf /var/lib/apt/lists/*
 
 

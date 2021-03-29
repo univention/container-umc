@@ -126,7 +126,9 @@ class ConfigRegistry:
             'enabled',
             'on',
         )
-        logging.debug('ucr is_true %s %s %s -> %s', key, default, value, result)
+        logging.debug(
+            'ucr is_true %s %s %s -> %s', key, default, value, result
+        )
         return result
 
     def is_false(self, key: str, default: bool = False) -> bool:

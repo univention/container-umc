@@ -1,0 +1,11 @@
+---
+
+version: '3.8'
+
+services:
+  server:
+    image: artifacts.knut.univention.de/upx/container-umc/umc-server:${CI_PIPELINE_TAG}test
+  web:
+    image: artifacts.knut.univention.de/upx/container-umc/umc-web:${CI_PIPELINE_TAG}test
+
+...

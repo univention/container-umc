@@ -4,6 +4,8 @@ version: '3.8'
 
 services:
   server:
+    container_name: server
+    env_file: .env.server
     ports:
     - 6670:6670
     volumes:
@@ -14,6 +16,8 @@ services:
     - private_key
 
   web:
+    container_name: web
+    env_file: .env.web
     ports:
     - 8090:8090
     volumes:

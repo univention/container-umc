@@ -47,16 +47,9 @@ RUN \
   apt-get update && \
   DEBIAN_FRONTEND=noninteractive \
     apt-get --assume-yes --no-install-recommends install \
-      univention-management-console-web-server && \
+      univention-management-console-web-server=12.0.* \
+      python3-notifier=0.9.* && \
   rm -rf /var/lib/apt/lists/*
-
-RUN \
-  apt-get update
-
-RUN \
-  DEBIAN_FRONTEND=noninteractive \
-    apt-get --assume-yes --no-install-recommends install \
-      python3-notifier
 
 ############################################################
 # Start second stage
@@ -75,31 +68,31 @@ RUN \
   DEBIAN_FRONTEND=noninteractive \
     apt-get --assume-yes --no-install-recommends install \
       # for /usr/sbin/univention-management-console-web-server
-      python3 \
+      python3=3.7.* \
       # for /usr/sbin/univention-management-console-web-server
-      python3-cherrypy3 \
+      python3-cherrypy3=8.9.* \
       # for /usr/sbin/univention-management-console-web-server
-      python3-daemon \
+      python3-daemon=2.2.* \
       # for /usr/sbin/univention-management-console-web-server
-      python3-defusedxml \
+      python3-defusedxml=0.5.* \
       # for $PY_LIBS/univention/admin/syntax.py
-      python3-dateutil \
+      python3-dateutil=2.7.* \
       # for $PY_LIBS/univention/management/console/protocol/session.py
-      python3-ldap \
+      python3-ldap=3.1.* \
       # for $PY_LIBS/univention/lib/umc_module.py
-      python3-magic \
+      python3-magic=2:* \
       # for $PY_LIBS/univention/management/console/protocol/client.py
-      python3-openssl \
+      python3-openssl=19.* \
       # for $PY_LIBS/univention/admin/syntax.py
-      python3-pil \
+      python3-pil=5.4.* \
       # for $PY_LIBS/univention/management/console/locales.py
-      python3-polib \
+      python3-polib=1.1.* \
       # for /usr/sbin/univention-management-console-web-server
-      python3-pysaml2 \
+      python3-pysaml2=4.5.* \
       # for /usr/sbin/univention-management-console-web-server
-      python3-six \
+      python3-six=1.12.* \
       # for $PY_LIBS/univention/management/console/protocol/server.py
-      python3-tornado && \
+      python3-tornado=5.1.* && \
   rm -rf /var/lib/apt/lists/*
 
 # from univention-management-console-web-server

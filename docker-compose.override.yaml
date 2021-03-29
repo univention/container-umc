@@ -4,15 +4,15 @@ version: '3.8'
 
 services:
   server:
-    image: umc-server
     build:
       context: ./images/server
-    env_file: .env.server
+      args:
+        DOCKER_REGISTRY: artifacts.knut.univention.de/dockerhub_proxy_cache/library/
 
   web:
-    image: umc-web
     build:
       context: ./images/web
-    env_file: .env.web
+      args:
+        DOCKER_REGISTRY: artifacts.knut.univention.de/dockerhub_proxy_cache/library/
 
 ...
