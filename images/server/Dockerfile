@@ -24,10 +24,10 @@ RUN \
   apt-get update && \
   DEBIAN_FRONTEND=noninteractive \
     apt-get --assume-yes --verbose-versions --no-install-recommends install \
-      ca-certificates=20200601~deb10u2 \
-      curl=7.64.0-4+deb10u1 \
-      gpg=2.2.12-1+deb10u1 \
-      gpg-agent=2.2.12-1+deb10u1 && \
+      ca-certificates=20* \
+      curl=7.64.* \
+      gpg=2.2.* \
+      gpg-agent=2.2.* && \
   curl -fsSL "${APT_KEY_URL}" | apt-key add - && \
   rm -rf /var/lib/apt/lists/*
 
