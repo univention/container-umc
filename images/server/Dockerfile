@@ -184,11 +184,13 @@ COPY --from=build \
 # used files: __init__.py _ucr.py allocators.py config.py filter.py hook.py
 #             layout.py localization.py locking.py mapping.py modules.py
 #             nagios.py objects.py syntax.py types.py uexceptions.py uldap.py
-# unused fies: cron.py license_data.py policy.py samba.py
+# unused files: cron.py license_data.py policy.py
+# only imported but unused files: samba.py
 COPY --from=build \
   ${SRC_PY_LIBS}/univention/admin/*.py \
   ${DST_PY_LIBS}/univention/admin/
-RUN rm ${DST_PY_LIBS}/univention/admin/{cron.py,license_data.py,policy.py,samba.py}
+RUN rm ${DST_PY_LIBS}/univention/admin/{cron.py,license_data.py,policy.py} && \
+    echo '' > ${DST_PY_LIBS}/univention/admin/samba.py
 
 # from python3-univention-directory-manager
 COPY --from=build \
