@@ -49,10 +49,10 @@ repos:
   - id: shell-lint
 
 # "Dockerfile linter"
-- repo: https://gitlab.com/univention/pre-commit-hooks/dockerfilelint-precommit-hooks
-  rev: v0.1.0
-  hooks:
-  - id: dockerfilelint
+# - repo: https://gitlab.com/univention/pre-commit-hooks/dockerfilelint-precommit-hooks
+#   rev: v0.1.0
+#   hooks:
+#   - id: dockerfilelint
 
 # "docker-compose.yaml linter"
 - repo: https://gitlab.com/univention/pre-commit/docker-compose-check
