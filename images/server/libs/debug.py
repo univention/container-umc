@@ -38,58 +38,106 @@ with the Python logging module.
 
 import logging
 
+############################################################
+# components
+
+# Sourced by univention.management.console.log
+
+ACL = 'acl'
+
+# imported from univention/admin/handlers/__init__.py
+ADMIN = 'admin'
+
+AUTH = 'auth'
+
+LDAP = 'ldap'
+
+LOCALE = 'locale'
+
+MAIN = 'main'
+
+NETWORK = 'network'
+
+SSL = 'ssl'
+
+MODULE = 'module'
+
+PARSER = 'parser'
+
+PROTOCOL = 'protocol'
+
+RESOURCES = 'resources'
+
+############################################################
+# log-levels
+
+# Sourced by univention.management.console.log
+ERROR = 0
+
+# Referenced from univention.admin.handlers via ImportError
+WARN = 1
+
+# Referenced from univention.management.console.log via ILogger.process
+PROCESS = 2
+
+# Referenced from univention.management.console.log via ILogger.info
+INFO = 3
+
+# Unused
+ALL = 4
+
+PY_LOG_LEVELS = {
+    ERROR: logging.ERROR,
+    WARN: logging.WARN,
+    PROCESS: logging.INFO,
+    INFO: logging.INFO,
+    ALL: logging.INFO,
+}
+
+logging.getLogger().setLevel(0)
+
 
 # Called from univention.management.console.log via log_init
-def init(_a, _b, _c):
-    """This has been used to initialise the log module"""
+def init(_logfile, _flag_flush, _flag_function):
+    """This has been used to initialise the log module
+
+    Args:
+        _logfile: log-file-path (unused)
+        _flag_flush: flash-flag (unused)
+        _flag_function: function-flag (unused)
+
+    """
+    logging.getLogger('MAIN').log(100, 'DEBUG_INIT')
 
 
 # Called from univention.management.console.log via log_set_level
-def set_level(_, level):
-    """Change the current log-level"""
-    logging.getLogger().setLevel(level)
+def set_level(category: str, level: int):
+    """Change the current log-level
+
+    Args:
+        category: Name of the category, e.g. MAIN, LDAP, USERS, ...
+        level: Level of logging, e.g. ERROR, WARN, PROCESS, INFO, ALL
+
+    """
+    # convert univention to python log-level
+    pylevel = PY_LOG_LEVELS[level]
+    logging.getLogger(category).setLevel(pylevel)
 
 
 # Called from univention.management.console.log via ILogger.__log
-debug = logging.debug
+def debug(category: str, level: int, message: str, _utf8: bool = True) -> None:
+    """Log message 'message' of severity 'level' to facility 'category'.
 
-############################################################
-# used levels
+    Args:
+        category: Name of the category, e.g. MAIN, LDAP, USERS, ...
+        level: Level of logging, e.g. ERROR, WARN, PROCESS, INFO, ALL
+        message: The message to log.
+        _utf8: Assume the message is UTF-8 encoded. (unused)
 
-# Sourced by univention.management.console.log
-ERROR = logging.ERROR
+    """
+    # convert univention to python log-level
+    pylevel = PY_LOG_LEVELS[level]
+    logging.getLogger(category).log(pylevel, message)
 
-# Referenced from univention.management.console.log via ILogger.process
-PROCESS = logging.INFO
-
-# Referenced from univention.admin.handlers via ImportError
-WARN = logging.WARN
-
-# Referenced from univention.management.console.log via ILogger.info
-INFO = logging.INFO
-
-############################################################
-# unused components
-
-# Sourced by univention.management.console.log
-MAIN = None
-LDAP = None
-NETWORK = None
-SSL = None
-ADMIN = None
-MODULE = None
-AUTH = None
-PARSER = None
-LOCALE = None
-ACL = None
-RESOURCES = None
-PROTOCOL = None
-
-############################################################
-# unused variables
-
-# stub values for the unused init function
-FLUSH = None
-NO_FUNCTION = None
 
 # [EOF]
