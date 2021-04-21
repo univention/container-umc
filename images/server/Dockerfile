@@ -286,6 +286,11 @@ COPY \
   libs/debug.py \
   ${DST_PY_LIBS}/univention/debug.py
 
+# from python3-univention-debug, univention package
+COPY \
+  libs/management/console/log.py \
+  ${DST_PY_LIBS}/univention/management/console/log.py
+
 COPY \
   scripts/entrypoint.sh \
   /entrypoint.sh
