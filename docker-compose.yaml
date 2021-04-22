@@ -10,6 +10,7 @@ services:
     - 6670:6670
     volumes:
     - umc-socket:/var/run/univention-management-console
+    - ./acls:/var/cache/univention-management-console/acls/
     secrets:
     - ca_cert
     - cert_pem
@@ -33,5 +34,4 @@ secrets:
 
 volumes:
   umc-socket:
-
 ...
