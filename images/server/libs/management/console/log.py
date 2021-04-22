@@ -119,7 +119,7 @@ class ILogger:
         """
         fmt = (
             f'{{asctime}}.{{msecs:03.0f}} {category:11s} ( {{level:7s}} ) : '
-            '{{message}}'
+            '{message}'
         )
         formatter = logging.Formatter(
             fmt=fmt,
