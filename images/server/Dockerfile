@@ -24,13 +24,13 @@ RUN \
   apt-get update && \
   DEBIAN_FRONTEND=noninteractive \
     apt-get --assume-yes --verbose-versions --no-install-recommends install \
-      # for tar (extract from deb-file)
+      # for /usr/bin/ar (used to extract from deb-file)
       binutils=2.31.* \
       ca-certificates=20* \
       curl=7.64.* \
       gpg=2.2.* \
       gpg-agent=2.2.* \
-      # for --xz parameter of tar
+      # for /usr/bin/xz called by tar (used to extract from deb-file)
       xz-utils=5.2.* && \
   curl -fsSL "${APT_KEY_URL}" | apt-key add - && \
   rm -rf /var/lib/apt/lists/*
