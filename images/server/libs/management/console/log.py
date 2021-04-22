@@ -141,6 +141,15 @@ class ILogger:
         """
         self.logger.error(message, extra={'level': 'ERROR'})
 
+    def warn(self, message: str) -> None:
+        """Log a warning line
+
+        Args:
+            message: The message to log.
+
+        """
+        self.logger.warning(message, extra={'level': 'WARN'})
+
     def process(self, message: str) -> None:
         """Log a process line
 
