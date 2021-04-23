@@ -79,6 +79,11 @@ BASE ${LDAP_BASE}
 EOF
 chmod 0755 /etc/ldap/ldap.conf
 
+touch /etc/machine.secret /etc/ldap.secret
+chmod 0700 /etc/machine.secret /etc/ldap.secret
+echo -n "${LDAP_ADMIN_PASSWORD}" > /etc/ldap.secret
+echo -n "${LDAP_MACHINE_PASSWORD}" > /etc/machine.secret
+
 exec /usr/sbin/univention-management-console-server "$@"
 
 # [EOF]
