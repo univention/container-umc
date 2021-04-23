@@ -11,6 +11,7 @@ services:
     volumes:
     - umc-socket:/var/run/univention-management-console
     - ./acls:/var/cache/univention-management-console/acls/
+    - ${PWD}/ucr.server:/etc/univention/base.conf
     secrets:
     - ca_cert
     - cert_pem

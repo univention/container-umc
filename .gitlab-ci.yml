@@ -51,6 +51,7 @@ pre-commit-job:
   script:
   # Compose lint would fail without the referenced env files
   - cp .env.server.example .env.server
+  - cp ucr.server.example ucr.server
   - cp .env.web.example .env.web
   - pre-commit run --all-files
 

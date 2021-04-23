@@ -93,6 +93,7 @@ RUN \
     # use UCS-repo because it is not yet in Debian/stable (just bullseye)
     python3-pam \
     python3-univention \
+    python3-univention-config-registry \
     python3-univention-directory-manager \
     python3-univention-heimdal \
     python3-univention-lib \
@@ -153,9 +154,12 @@ RUN \
       python3-pil=5.4.* \
       # for $PY_LIBS/univention/management/console/locales.py
       python3-polib=1.1.* \
-      #python3-six \
       # for $PY_LIBS/univention/management/console/protocol/server.py
-      python3-tornado=5.1.* && \
+      python3-tornado=5.1.* \
+      # for $PY_LIBS/univention/config_registry/
+      python3-lazy-object-proxy=1.3.* \
+      python3-six=1.12.* \
+      && \
   rm -rf /var/lib/apt/lists/*
 
 
@@ -202,6 +206,20 @@ RUN rm ${DST_PY_LIBS}/univention/admin/{cron.py,license_data.py,policy.py} && \
 COPY --from=build \
   ${SRC_PY_LIBS}/univention/admin/handlers/ \
   ${DST_PY_LIBS}/univention/admin/handlers/
+
+# from python3-univention-condig-registry
+COPY --from=build \
+  ${SRC_PY_LIBS}/univention/config_registry/ \
+  ${DST_PY_LIBS}/univention/config_registry/
+RUN sed -i 's/from univention.debhelper import parseRfc822.*//g' \
+  ${DST_PY_LIBS}/univention/config_registry/handler.py \
+  ${DST_PY_LIBS}/univention/config_registry/__init__.py
+COPY --from=build \
+  ${SRC_PY_LIBS}/univention/config_registry_info.py \
+  ${DST_PY_LIBS}/univention/config_registry_info.py
+COPY --from=build \
+  ${SRC_PY_LIBS}/univention/info_tools.py \
+  ${DST_PY_LIBS}/univention/info_tools.py
 
 # from python3-univention-admin-diary and univention-admin-diary-client
 # used files: __init__.py client.py events.py
@@ -290,24 +308,17 @@ COPY \
   libs/admin/password.py \
   ${DST_PY_LIBS}/univention/admin/
 
-COPY \
-  libs/config_registry.py \
-  ${DST_PY_LIBS}/univention/config_registry.py
-
 # from python3-univention-debug, univention package
 COPY \
   libs/debug.py \
   ${DST_PY_LIBS}/univention/debug.py
 
-# from python3-univention-debug, univention package
+# from python3-univention-management-console, univention package
 COPY \
   libs/management/console/log.py \
   ${DST_PY_LIBS}/univention/management/console/log.py
 
-COPY \
-  scripts/entrypoint.sh \
-  /entrypoint.sh
-
+COPY scripts/entrypoint.sh /entrypoint.sh
 
 ############################################################
 # Define runtime
