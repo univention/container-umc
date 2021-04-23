@@ -68,6 +68,17 @@ if [[ -S "${SOCKET_PATH}" ]]; then
   rm "${SOCKET_PATH}"
 fi
 
+cat <<EOF > /etc/ldap/ldap.conf
+# This file should be world readable but not world writable.
+
+TLS_CACERT /etc/univention/ssl/ucsCA/CAcert.pem
+
+URI ${LDAP_URI}
+
+BASE ${LDAP_BASE}
+EOF
+chmod 0755 /etc/ldap/ldap.conf
+
 exec /usr/sbin/univention-management-console-server "$@"
 
 # [EOF]
