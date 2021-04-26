@@ -84,6 +84,8 @@ chmod 0700 /etc/machine.secret /etc/ldap.secret
 echo -n "${LDAP_ADMIN_PASSWORD}" > /etc/ldap.secret
 echo -n "${LDAP_MACHINE_PASSWORD}" > /etc/machine.secret
 
-exec /usr/sbin/univention-management-console-server "$@"
+univention-config-registry commit /etc/pam.d/univention-management-console
+sed -i 's/password.*requisite.*pam_cracklib.so/password required  pam_cracklib.so/; /pam_unix/d; /pam_krb5/d' /etc/pam.d/univention-management-console
 
+exec /usr/sbin/univention-management-console-server "$@"
 # [EOF]

@@ -6,7 +6,7 @@ ldap/server/port: 7389
 ldap/server/ip: 1.2.3.4
 ldap/hostdn: cn=primary,cn=dc,cn=computers,dc=example,dc=org
 ad/member=false
-auth/methods: krb5 ldap unix
+auth/methods: ldap
 directory/manager/templates/alphanum/whitelist: 
 directory/manager/user/activate_ldap_attribute_mailForwardCopyToSelf: yes
 directory/manager/user_group/uniqueness: true

@@ -19,6 +19,7 @@ services:
     - umc-socket:/var/run/univention-management-console
     - ./acls:/var/cache/univention-management-console/acls/
     - ${PWD}/ucr.server:/etc/univention/base.conf
+    - ./images/server/config/saml/ucs-sso.example.org.xml.example:/usr/share/univention-management-console/saml/idp/ucs-sso.example.org.xml
     secrets:
     - ca_cert
     - cert_pem

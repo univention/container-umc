@@ -16,6 +16,7 @@ UCR variables can simply be obtained from the DC Primary via:
 
 ```bash
 univention-config-registry dump >> ucr.server
+sed -i 's#^auth/methods:.*#auth/methods: ldap#g' ucr.server
 ```
 
 ## Container for the UMC-Web-Server

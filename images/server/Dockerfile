@@ -57,9 +57,6 @@ COPY \
 
 COPY \
   scripts/fake-bin.sh \
-  /usr/local/bin/univention-config-registry
-COPY \
-  scripts/fake-bin.sh \
   /usr/local/bin/ucr
 COPY \
   scripts/fake-bin.sh \
@@ -82,8 +79,13 @@ RUN \
   apt-get update && \
   DEBIAN_FRONTEND=noninteractive \
     apt-get --assume-yes --no-install-recommends install \
+      # for /usr/sbin/univention-config-registry
+      python3-lazy-object-proxy=1.3.* \
       # the python3-univention-debug postinst uses py3compile
-      python3-minimal=3.7.* && \
+      python3-minimal=3.7.* \
+      # for /usr/sbin/univention-config-registry
+      python3-six=1.12.* \
+      && \
   apt-get download \
     # UV package
     python3-notifier \
@@ -97,11 +99,15 @@ RUN \
     python3-univention-heimdal=10.* \
     python3-univention-lib=9.* \
     python3-univention-management-console=12.* \
+    python3-univention-debhelper=2.* \
     # for $PY_LIBS/univention/admindiary/client.py and
     # $PY_LIBS/univention/admindiary/events.py
     univention-admin-diary-client=2.* \
+    # for /usr/sbin/univention-config-registry
+    univention-config=15.* \
     univention-management-console-module-udm=10.* \
-    univention-management-console-server=12.* && \
+    univention-management-console-server=12.* \
+    && \
   rm -rf /var/lib/apt/lists/* && \
   echo 'path-include /usr/share/doc/univention-management-console-server/changelog.Debian.gz' > /etc/dpkg/dpkg.cfg.d/univention && \
   dpkg --install --force-depends /apt/* && \
@@ -114,6 +120,8 @@ RUN \
 
 FROM ${DOCKER_REGISTRY}debian:buster-slim AS final
 
+ARG APT_KEY_URL=https://updates.software-univention.de/univention-archive-key-ucs-5x.gpg
+
 ARG SRC_PY_LIBS="/usr/lib/python3/dist-packages"
 ARG DST_PY_LIBS="/usr/lib/python3/dist-packages"
 
@@ -123,8 +131,22 @@ WORKDIR /
 
 
 ############################################################
-# Install Python requirements
+# Install patched packages from UCS repository
 
+RUN \
+  apt-get update && \
+  DEBIAN_FRONTEND=noninteractive \
+    apt-get --assume-yes --verbose-versions --no-install-recommends install \
+      ca-certificates=20* \
+      curl=7.64.* \
+      gpg=2.2.* \
+      gpg-agent=2.2.* \
+      && \
+  curl -fsSL "${APT_KEY_URL}" | apt-key add - && \
+  rm -rf /var/lib/apt/lists/*
+COPY \
+  sources.list \
+  /etc/apt/sources.list.d/15_ucs-online-version.list
 RUN \
   apt-get update && \
   DEBIAN_FRONTEND=noninteractive \
@@ -133,6 +155,19 @@ RUN \
       libhdb9-heimdal=7.5.* \
       # for $PY_LIBS/univention/admin/password.py
       libkrb5-26-heimdal=7.5.* \
+      libpam0g=1.3.* \
+      libpam-ldap=186-* \
+      pam-saml=1.9.* \
+    && \
+  rm -rf /var/lib/apt/lists/* /etc/apt/sources.list.d/15_ucs-online-version.list
+
+############################################################
+# Install Python requirements
+
+RUN \
+  apt-get update && \
+  DEBIAN_FRONTEND=noninteractive \
+    apt-get --assume-yes --no-install-recommends install \
       # for $PY_LIBS/univention/admin/password.py
       python3-bcrypt=3.1.* \
       # for /usr/sbin/univention-management-console-server
@@ -209,9 +244,6 @@ COPY --from=build \
 COPY --from=build \
   ${SRC_PY_LIBS}/univention/config_registry/ \
   ${DST_PY_LIBS}/univention/config_registry/
-RUN sed -i 's/from univention.debhelper import parseRfc822.*//g' \
-  ${DST_PY_LIBS}/univention/config_registry/handler.py \
-  ${DST_PY_LIBS}/univention/config_registry/__init__.py
 COPY --from=build \
   ${SRC_PY_LIBS}/univention/config_registry_info.py \
   ${DST_PY_LIBS}/univention/config_registry_info.py
@@ -294,6 +326,24 @@ RUN mkdir /usr/share/doc/univention-management-console-server/
 COPY --from=build \
   /usr/share/doc/univention-management-console-server/changelog.Debian.gz \
   /usr/share/doc/univention-management-console-server/changelog.Debian.gz
+
+COPY --from=build \
+  /etc/univention/templates/info/univention-management-console-server.info \
+  /etc/univention/templates/info/
+
+COPY --from=build \
+  /etc/univention/templates/files/etc/pam.d/univention-management-console.d/ \
+  /etc/univention/templates/files/etc/pam.d/univention-management-console.d/
+
+COPY --from=build \
+  /usr/lib/python3/dist-packages/univention/debhelper.py \
+  /usr/lib/python3/dist-packages/univention/debhelper.py
+
+COPY --from=build \
+  /usr/sbin/univention-config-registry \
+  /usr/sbin/univention-config-registry
+RUN mkdir --parents /var/cache/univention-config/ && \
+  touch /var/cache/univention-config/cache
 
 
 ############################################################
