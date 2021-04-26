@@ -91,20 +91,20 @@ RUN \
     # UV package
     python3-notifier \
     # use UCS-repo because it is not yet in Debian/stable (just bullseye)
-    python3-pam \
-    python3-univention \
-    python3-univention-config-registry \
-    python3-univention-directory-manager \
-    python3-univention-heimdal \
-    python3-univention-lib \
-    python3-univention-management-console \
+    python3-pam=0.4.2-* \
+    python3-univention=13.* \
     # for $PY_LIBS/univention/admindiary/__init__.py
-    python3-univention-admin-diary \
+    python3-univention-admin-diary=2.* \
+    python3-univention-config-registry=15.* \
+    python3-univention-directory-manager=15.* \
+    python3-univention-heimdal=10.* \
+    python3-univention-lib=9.* \
+    python3-univention-management-console=12.* \
     # for $PY_LIBS/univention/admindiary/client.py and
     # $PY_LIBS/univention/admindiary/events.py
-    univention-admin-diary-client \
-    univention-management-console-server \
-    univention-management-console-module-udm && \
+    univention-admin-diary-client=2.* \
+    univention-management-console-module-udm=10.* \
+    univention-management-console-server=12.* && \
   rm -rf /var/lib/apt/lists/* && \
   dpkg --install --force-depends /apt/* && \
   ar p /apt/univention-management-console-server_12.*_all.deb data.tar.xz | \
