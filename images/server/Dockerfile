@@ -165,6 +165,9 @@ RUN \
 COPY --from=build \
   /usr/sbin/univention-management-console-server \
   /usr/sbin/
+COPY --from=build \
+  /usr/sbin/univention-management-console-module \
+  /usr/sbin/
 
 # from python3-univention-heimdal
 COPY --from=build \
@@ -261,12 +264,11 @@ COPY --from=build \
 # from python3-univention-management-console
 # for /usr/sbin/univention-management-console-server
 # used files: client.py definitions.py message.py server.py session.py
-#             version.py
-# unused files: __init__.py modserver.py
+#             version.py modserver.py __init__.py
+# unused files: -
 COPY --from=build \
   ${SRC_PY_LIBS}/univention/management/console/protocol/*.py \
   ${DST_PY_LIBS}/univention/management/console/protocol/
-RUN rm ${DST_PY_LIBS}/univention/management/console/protocol/{__init__.py,modserver.py}
 
 # from python3-univention
 # for $PY_LIBS/univention/admin/uldap.py
