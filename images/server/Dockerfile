@@ -167,6 +167,8 @@ RUN \
   apt-get update && \
   DEBIAN_FRONTEND=noninteractive \
     apt-get --assume-yes --no-install-recommends install \
+      libc-bin=2.28-* \
+      locales=2.28-* \
       # for $PY_LIBS/univention/admin/password.py
       libhdb9-heimdal=7.5.* \
       # for $PY_LIBS/univention/admin/password.py
@@ -434,6 +436,11 @@ COPY scripts/entrypoint.sh /entrypoint.sh
 
 ############################################################
 # Define runtime
+
+# build all locales
+RUN echo -en 'en_US.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8\n' >> /etc/locale.gen && \
+	localedef -i de_DE -c -f UTF-8 -A /usr/share/locale/locale.alias de_DE.UTF-8 && \
+	localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
 
 ENTRYPOINT ["/entrypoint.sh"]
 
