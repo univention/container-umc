@@ -67,6 +67,12 @@ COPY \
 COPY \
   scripts/fake-bin.sh \
   /usr/local/bin/a2dissite
+COPY \
+  scripts/fake-bin.sh \
+  /usr/sbin/univention-management-console-acls
+COPY \
+  scripts/fake-bin.sh \
+  /usr/local/bin/call_joinscript
 
 
 ############################################################
@@ -76,6 +82,7 @@ RUN \
   # For apt-get download sandbox
   chown _apt /apt && \
   mkdir /var/log/univention/ && \
+  mkdir -p /usr/share/locale/de/LC_MESSAGES/ && \
   apt-get update && \
   DEBIAN_FRONTEND=noninteractive \
     apt-get --assume-yes --no-install-recommends install \
@@ -88,16 +95,24 @@ RUN \
       && \
   apt-get download \
     # UV package
-    python3-notifier \
+    libunivention-config0=15.* \
+    libunivention-debug1=12.* \
+    libunivention-license0=11.* \
+    libunivention-policy0=11.* \
+    python3-notifier=0.9.* \
     # use UCS-repo because it is not yet in Debian/stable (just bullseye)
+    python3-m2crypto=0.31.* \
     python3-pam=0.4.2-* \
+    python3-trml2pdf=1.2-* \
     python3-univention=13.* \
     # for $PY_LIBS/univention/admindiary/__init__.py
     python3-univention-admin-diary=2.* \
     python3-univention-config-registry=15.* \
     python3-univention-directory-manager=15.* \
+    python3-univention-directory-reports=12.* \
     python3-univention-heimdal=10.* \
     python3-univention-lib=9.* \
+    python3-univention-license=11.* \
     python3-univention-management-console=12.* \
     python3-univention-debhelper=2.* \
     # for $PY_LIBS/univention/admindiary/client.py and
@@ -105,14 +120,15 @@ RUN \
     univention-admin-diary-client=2.* \
     # for /usr/sbin/univention-config-registry
     univention-config=15.* \
+    univention-directory-reports=12.* \
     univention-management-console-module-udm=10.* \
     univention-management-console-server=12.* \
     && \
   rm -rf /var/lib/apt/lists/* && \
-  echo 'path-include /usr/share/doc/univention-management-console-server/changelog.Debian.gz' > /etc/dpkg/dpkg.cfg.d/univention && \
+  echo 'path-exclude /usr/sbin/univention-management-console-acls' >> /etc/dpkg/dpkg.cfg.d/univention && \
+  echo 'path-include /usr/share/doc/univention-management-console-server/changelog.Debian.gz' >> /etc/dpkg/dpkg.cfg.d/univention && \
+  echo 'path-include /usr/share/locale/de/LC_MESSAGES/univention-directory-reports.mo' >> /etc/dpkg/dpkg.cfg.d/univention && \
   dpkg --install --force-depends /apt/* && \
-  rm ${PY_LIBS}/univention/admin/license.py && \
-  rm ${PY_LIBS}/univention/admin/password.py && \
   rm -rf /apt/
 
 ############################################################
@@ -189,6 +205,14 @@ RUN \
       # for $PY_LIBS/univention/config_registry/
       python3-lazy-object-proxy=1.3.* \
       python3-six=1.12.* \
+      # for $PY_LIBS/univention/password.py
+      python3-cracklib=2.* \
+      # for $PY_LIBS/univention/admin/handlers/settings/
+      python3-apt=1.8.* \
+      # for python3-trml2pdf
+      python3-reportlab=3.5.* \
+      # for $PY_LIBS/univention/admin/password.py
+      python3-passlib=1.7.* \
       && \
   rm -rf /var/lib/apt/lists/*
 
@@ -209,6 +233,26 @@ COPY --from=build \
   ${SRC_PY_LIBS}/heimdal.cpython-37m-x86_64-linux-gnu.so \
   ${DST_PY_LIBS}/heimdal.cpython-37m-x86_64-linux-gnu.so
 
+# from libunivention-license0
+COPY --from=build \
+  /usr/lib/x86_64-linux-gnu/libuniventionlicense.so.0.0.1 \
+  /usr/lib/x86_64-linux-gnu/libuniventionlicense.so.0
+
+# from libunivention-policy0
+COPY --from=build \
+  /usr/lib/x86_64-linux-gnu/libuniventionpolicy.so.0.0.1 \
+  /usr/lib/x86_64-linux-gnu/libuniventionpolicy.so.0
+
+# from libunivention-config0
+COPY --from=build \
+  /usr/lib/x86_64-linux-gnu/libuniventionconfig.so.0.0.1 \
+  /usr/lib/x86_64-linux-gnu/libuniventionconfig.so.0
+
+# from libunivention-debug1
+COPY --from=build \
+  /usr/lib/x86_64-linux-gnu/libuniventiondebug.so.1.0.0 \
+  /usr/lib/x86_64-linux-gnu/libuniventiondebug.so.1
+
 # from python3-notifier (univention package)
 # used files: __init__.py dispatch.py log.py nf_generic.py popen.py signals.py
 #             threads.py version.py
@@ -223,17 +267,29 @@ COPY --from=build \
   ${SRC_PY_LIBS}/PAM.cpython-37m-x86_64-linux-gnu.so \
   ${DST_PY_LIBS}/PAM.cpython-37m-x86_64-linux-gnu.so
 
+# from python3-m2crypto
+COPY --from=build \
+  ${SRC_PY_LIBS}/M2Crypto/ \
+  ${DST_PY_LIBS}/M2Crypto/
+
+# from python3-trml2pdf
+COPY --from=build \
+  ${SRC_PY_LIBS}/trml2pdf/ \
+  ${DST_PY_LIBS}/trml2pdf/
+
 # from python3-univention-directory-manager
 # used files: __init__.py _ucr.py allocators.py config.py filter.py hook.py
 #             layout.py localization.py locking.py mapping.py modules.py
 #             nagios.py objects.py syntax.py types.py uexceptions.py uldap.py
-# unused files: cron.py license_data.py policy.py
-# only imported but unused files: samba.py
+#             policy.py cron.py samba.py license_data.py
+# unused files: -
 COPY --from=build \
   ${SRC_PY_LIBS}/univention/admin/*.py \
   ${DST_PY_LIBS}/univention/admin/
-RUN rm ${DST_PY_LIBS}/univention/admin/{cron.py,license_data.py,policy.py} && \
-    echo '' > ${DST_PY_LIBS}/univention/admin/samba.py
+
+COPY --from=build \
+  ${SRC_PY_LIBS}/univention/license.cpython-37m-x86_64-linux-gnu.so \
+  ${DST_PY_LIBS}/univention/license.cpython-37m-x86_64-linux-gnu.so
 
 # from python3-univention-directory-manager
 COPY --from=build \
@@ -259,32 +315,30 @@ COPY --from=build \
   ${DST_PY_LIBS}/univention/admindiary/
 
 # from python3-univention-lib
-# used files: i18n.py ucs.py umc_module.py
+# used files: i18n.py ucs.py umc_module.py s4.py misc.py
 # unused files: __init__.py account.py admember.py atjobs.py fstab.py
 #               ldap_extension.py license_tools.py listenerSharePath.py
-#               locking.py misc.py package_manager.py password.py s4.py
+#               locking.py package_manager.py password.py
 #               ucrLogrotate.py umc.py
 COPY --from=build \
   ${SRC_PY_LIBS}/univention/lib/*.py \
   ${DST_PY_LIBS}/univention/lib/
-RUN rm ${DST_PY_LIBS}/univention/lib/{__init__.py,account.py,admember.py,atjobs.py,fstab.py,ldap_extension.py,license_tools.py,listenerSharePath.py,locking.py,misc.py,package_manager.py,password.py,s4.py,ucrLogrotate.py,umc.py}
+RUN rm ${DST_PY_LIBS}/univention/lib/{__init__.py,account.py,admember.py,atjobs.py,fstab.py,ldap_extension.py,license_tools.py,listenerSharePath.py,locking.py,package_manager.py,password.py,ucrLogrotate.py,umc.py}
 
 # from python3-univention-management-console
 # used files: acl.py auth.py base.py category.py config.py error.py ldap.py
-#             locales.py log.py module.py pam.py resources.py tools.py
-# unused files: __init__.py
+#             locales.py log.py module.py pam.py resources.py tools.py __init__.py
+# unused files: -
 COPY --from=build \
   ${SRC_PY_LIBS}/univention/management/console/*.py \
   ${DST_PY_LIBS}/univention/management/console/
-RUN rm ${DST_PY_LIBS}/univention/management/console/__init__.py
 
 # from python3-univention-management-console
-# used files: __init__.py decorators.py sanitizers.py
-# unused files: mixins.py
+# used files: __init__.py decorators.py sanitizers.py mixins.py
+# unused files: -
 COPY --from=build \
   ${SRC_PY_LIBS}/univention/management/console/modules/*.py \
   ${DST_PY_LIBS}/univention/management/console/modules/
-RUN rm ${DST_PY_LIBS}/univention/management/console/modules/mixins.py
 
 # from python3-univention-management-console
 # used files: __init__.py syntax.py tools.py udm_ldap.py
@@ -305,8 +359,9 @@ COPY --from=build \
 # from python3-univention
 # for $PY_LIBS/univention/admin/uldap.py
 COPY --from=build \
+  ${SRC_PY_LIBS}/univention/password.py \
   ${SRC_PY_LIBS}/univention/uldap.py \
-  ${DST_PY_LIBS}/univention/uldap.py
+  ${DST_PY_LIBS}/univention/
 
 # from univention-management-console-server
 # for $PY_LIBS/univention/management/console/category.py
@@ -345,15 +400,25 @@ COPY --from=build \
 RUN mkdir --parents /var/cache/univention-config/ && \
   touch /var/cache/univention-config/cache
 
+# available reports
+COPY --from=build \
+  ${SRC_PY_LIBS}/univention/directory/ \
+  ${DST_PY_LIBS}/univention/directory/
+COPY --from=build \
+  /etc/univention/directory/reports/ \
+  /etc/univention/directory/reports/
+COPY --from=build \
+  /etc/univention/templates/files/etc/univention/directory/reports/ \
+  /etc/univention/templates/files/etc/univention/directory/reports/
+COPY --from=build \
+  /etc/univention/templates/info/univention-directory-reports.info \
+  /etc/univention/templates/info/univention-directory-reports.info
+COPY --from=build \
+  /usr/share/locale/de/LC_MESSAGES/univention-directory-reports.mo \
+  /usr/share/locale/de/LC_MESSAGES/univention-directory-reports.mo
 
 ############################################################
 # Copy Docker-specific files
-
-# from python3-univention-directory-manager
-COPY \
-  libs/admin/license.py \
-  libs/admin/password.py \
-  ${DST_PY_LIBS}/univention/admin/
 
 # from python3-univention-debug, univention package
 COPY \
