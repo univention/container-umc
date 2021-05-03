@@ -24,14 +24,11 @@ RUN \
   apt-get update && \
   DEBIAN_FRONTEND=noninteractive \
     apt-get --assume-yes --verbose-versions --no-install-recommends install \
-      # for /usr/bin/ar (used to extract from deb-file)
-      binutils=2.31.* \
       ca-certificates=20* \
       curl=7.64.* \
       gpg=2.2.* \
       gpg-agent=2.2.* \
-      # for /usr/bin/xz called by tar (used to extract from deb-file)
-      xz-utils=5.2.* && \
+      && \
   curl -fsSL "${APT_KEY_URL}" | apt-key add - && \
   rm -rf /var/lib/apt/lists/*
 
@@ -106,10 +103,8 @@ RUN \
     univention-management-console-module-udm=10.* \
     univention-management-console-server=12.* && \
   rm -rf /var/lib/apt/lists/* && \
+  echo 'path-include /usr/share/doc/univention-management-console-server/changelog.Debian.gz' > /etc/dpkg/dpkg.cfg.d/univention && \
   dpkg --install --force-depends /apt/* && \
-  ar p /apt/univention-management-console-server_12.*_all.deb data.tar.xz | \
-    tar --extract --xz --one-top-level=/ \
-    ./usr/share/doc/univention-management-console-server/changelog.Debian.gz && \
   rm ${PY_LIBS}/univention/admin/license.py && \
   rm ${PY_LIBS}/univention/admin/password.py && \
   rm -rf /apt/
