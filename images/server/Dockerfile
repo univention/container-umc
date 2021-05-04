@@ -123,6 +123,7 @@ RUN \
     univention-directory-reports=12.* \
     univention-management-console-module-udm=10.* \
     univention-management-console-server=12.* \
+    univention-pam=13.* \
     && \
   rm -rf /var/lib/apt/lists/* && \
   echo 'path-exclude /usr/sbin/univention-management-console-acls' >> /etc/dpkg/dpkg.cfg.d/univention && \
@@ -387,6 +388,13 @@ COPY --from=build \
 COPY --from=build \
   /etc/univention/templates/info/univention-management-console-server.info \
   /etc/univention/templates/info/
+
+COPY --from=build \
+  /etc/univention/templates/info/univention-pam.info \
+  /etc/univention/templates/info/univention-pam.info
+COPY --from=build \
+  /etc/univention/templates/files/etc/pam_ldap.conf \
+  /etc/univention/templates/files/etc/pam_ldap.conf
 
 COPY --from=build \
   /etc/univention/templates/files/etc/pam.d/univention-management-console.d/ \
