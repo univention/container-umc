@@ -84,6 +84,8 @@ chmod 0700 /etc/machine.secret /etc/ldap.secret
 echo -n "${LDAP_ADMIN_PASSWORD}" > /etc/ldap.secret
 echo -n "${LDAP_MACHINE_PASSWORD}" > /etc/machine.secret
 
+echo -n "${LDAP_MACHINE_PASSWORD}" > /etc/pam_ldap.secret
+chmod 0700 /etc/pam_ldap.secret
 univention-config-registry commit \
   /etc/pam_ldap.conf \
   /etc/pam.d/univention-management-console
