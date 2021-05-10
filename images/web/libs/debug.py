@@ -42,7 +42,11 @@ ERROR = logging.ERROR
 WARN = logging.WARN
 
 # Referenced from univention.management.console.log via ILogger.info
-INFO = logging.INFO
+INFO = logging.INFO - 5
+
+PROCESS = logging.INFO
+
+ALL = logging.DEBUG
 
 ############################################################
 # unused components
