@@ -17,6 +17,7 @@ services:
     - 6670:6670
     volumes:
     - umc-socket:/var/run/univention-management-console
+    - umc-temp-upload:/var/tmp/univention-management-console-frontend
     - ./acls:/var/cache/univention-management-console/acls/
     - ${PWD}/ucr.server:/etc/univention/base.conf
     - ./images/server/config/saml/ucs-sso.example.org.xml.example:/usr/share/univention-management-console/saml/idp/ucs-sso.example.org.xml
@@ -32,6 +33,7 @@ services:
     - 8090:8090
     volumes:
     - umc-socket:/var/run/univention-management-console
+    - umc-temp-upload:/var/tmp/univention-management-console-frontend
 
 secrets:
   ca_cert:
@@ -43,4 +45,5 @@ secrets:
 
 volumes:
   umc-socket:
+  umc-temp-upload:
 ...
