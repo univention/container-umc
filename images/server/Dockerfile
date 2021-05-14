@@ -216,6 +216,8 @@ RUN \
       python3-reportlab=3.5.* \
       # for $PY_LIBS/univention/admin/password.py
       python3-passlib=1.7.* \
+      # for $PY_LIBS/univention/admin/__init__.py
+      python3-unidecode=1.0.* \
       && \
   rm -rf /var/lib/apt/lists/*
 
