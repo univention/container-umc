@@ -100,6 +100,10 @@ COPY --from=build \
   /usr/sbin/univention-management-console-web-server \
   /usr/sbin/univention-management-console-web-server
 
+COPY --from=build \
+  /usr/share/univention-management-console/saml/sp.py \
+  /usr/share/univention-management-console/saml/sp.py
+
 # from python3-notifier (univention package)
 # for /usr/sbin/univention-management-console-web-server
 # used files: __init__.py dispatch.py log.py nf_generic.py popen.py signals.py
