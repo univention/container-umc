@@ -55,6 +55,8 @@ RUN \
       univention-management-console-frontend=12.* \
       # for /etc/apache2/sites-available/univention.conf
       univention-management-console-web-server=12.* \
+      # for /etc/univention/templates/files/var/www/univention/meta.json
+      univention-management-console-server=12.* \
       # for /etc/apache2/sites-available/univention-saml.conf
       univention-saml=7.* \
       # for /etc/apache2/sites-available/univention-portal.conf
@@ -63,6 +65,10 @@ RUN \
       univention-server-overview=3.* \
       univention-web-js=4.* \
       univention-web-style=4.* \
+      # for /usr/sbin/univention-config-registry
+      python3-univention-config-registry=15.* \
+      univention-config=15.* \
+      python3-univention-debhelper=2.* \
       && \
   rm -rf /var/lib/apt/lists/*
 
@@ -71,6 +77,9 @@ RUN \
 # Start second stage
 
 FROM ${DOCKER_REGISTRY}httpd:2.4 AS final
+
+ARG SRC_PY_LIBS="/usr/lib/python3/dist-packages"
+ARG DST_PY_LIBS="/usr/lib/python3/dist-packages"
 
 SHELL ["/bin/sh", "-eux", "-c"]
 
@@ -82,6 +91,9 @@ RUN \
     apt-get --assume-yes --no-install-recommends install \
       libpython3.7=3.7.* \
       libapache2-mod-wsgi-py3=4.6.* \
+      # for univention-config-registry
+      python3-lazy-object-proxy=1.3.* \
+      python3-six=1.12.* \
       && \
   rm -rf /var/lib/apt/lists/*
 
@@ -122,8 +134,49 @@ COPY --from=build \
   /usr/share/doc/univention-web-js
 
 COPY --from=build \
+  ${SRC_PY_LIBS}/univention/debhelper.py \
+  ${DST_PY_LIBS}/univention/debhelper.py
+
+COPY --from=build \
+  ${SRC_PY_LIBS}/univention/config_registry/ \
+  ${DST_PY_LIBS}/univention/config_registry/
+
+COPY --from=build \
+  ${SRC_PY_LIBS}/univention/config_registry_info.py \
+  ${DST_PY_LIBS}/univention/config_registry_info.py
+
+COPY --from=build \
+  ${SRC_PY_LIBS}/univention/info_tools.py \
+  ${DST_PY_LIBS}/univention/info_tools.py
+
+COPY --from=build \
+  /usr/sbin/univention-config-registry \
+  /usr/sbin/univention-config-registry
+
+RUN mkdir --parents /var/cache/univention-config/ && \
+  touch /var/cache/univention-config/cache
+
+RUN mkdir /var/log/univention/
+
+COPY --from=build \
   /etc/univention/registry.info/ \
   /etc/univention/registry.info
+
+COPY --from=build \
+  /etc/univention/templates/info/univention-management-console-server.info \
+  /etc/univention/templates/info/
+
+COPY --from=build \
+  /etc/univention/templates/info/univention-web-js.info \
+  /etc/univention/templates/info/
+
+COPY --from=build \
+  /etc/univention/templates/files/var/www/univention/languages.json \
+  /etc/univention/templates/files/var/www/univention/languages.json
+
+COPY --from=build \
+  /etc/univention/templates/files/var/www/univention/meta.json \
+  /etc/univention/templates/files/var/www/univention/meta.json
 
 COPY --from=build \
   /var/www \

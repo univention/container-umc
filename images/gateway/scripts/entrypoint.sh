@@ -28,6 +28,10 @@ sed \
   "s/http:\/\/127.0.0.1:8090/$UMC_PROTOCOL:\/\/$UMC_HOST:$UMC_PORT/g" \
   /etc/apache2/sites-available/univention.conf
 
+univention-config-registry commit \
+  /var/www/univention/languages.json \
+  /var/www/univention/meta.json
+
 # Apache gets grumpy about PID files pre-existing
 rm -f /usr/local/apache2/logs/httpd.pid
 
