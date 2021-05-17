@@ -22,3 +22,9 @@ umc/http/content-security-policy/script-src: 'self' 'unsafe-inline' 'unsafe-eval
 umc/http/content-security-policy/style-src: 'self' 'unsafe-inline'
 umc/login/content-security-policy/frame-ancestors: 'self'
 portal/paths: /univention/portal/, /univention/umc/
+locale: de_DE.UTF-8:UTF-8 en_US.UTF-8:UTF-8
+ucs/server/languages/de_AT: Deutsch (Österreich)
+ucs/server/languages/de_CH: Deutsch (Schweiz)
+ucs/server/languages/de_DE: Deutsch
+ucs/server/languages/en_GB: English (United Kingdom)
+ucs/server/languages/en_US: English

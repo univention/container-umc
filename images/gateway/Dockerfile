@@ -57,9 +57,9 @@ RUN \
       univention-management-console-web-server=12.* \
       # for /etc/univention/templates/files/var/www/univention/meta.json
       univention-management-console-server=12.* \
-      # for /etc/apache2/sites-available/univention-saml.conf
+      # for /usr/share/univention-management-console-frontend/js/dijit/themes/umc/icons/scalable/.*
       univention-saml=7.* \
-      # for /etc/apache2/sites-available/univention-portal.conf
+      # for /usr/share/univention-management-console-frontend/js/dijit/themes/umc/icons/scalable/.*
       univention-portal=4.* \
       # for /etc/apache2/sites-available/univention-server-overview.conf
       univention-server-overview=3.* \
@@ -69,6 +69,8 @@ RUN \
       python3-univention-config-registry=15.* \
       univention-config=15.* \
       python3-univention-debhelper=2.* \
+      # for UCR template files
+      python3-univention-lib=9.* \
       && \
   rm -rf /var/lib/apt/lists/*
 
@@ -138,6 +140,12 @@ COPY --from=build \
   ${DST_PY_LIBS}/univention/debhelper.py
 
 COPY --from=build \
+  ${SRC_PY_LIBS}/univention/lib/misc.py \
+  ${DST_PY_LIBS}/univention/lib/misc.py
+
+RUN touch ${DST_PY_LIBS}/univention/lib/__init__.py
+
+COPY --from=build \
   ${SRC_PY_LIBS}/univention/config_registry/ \
   ${DST_PY_LIBS}/univention/config_registry/
 
@@ -159,15 +167,27 @@ RUN mkdir --parents /var/cache/univention-config/ && \
 RUN mkdir /var/log/univention/
 
 COPY --from=build \
-  /etc/univention/registry.info/ \
-  /etc/univention/registry.info
-
-COPY --from=build \
   /etc/univention/templates/info/univention-management-console-server.info \
   /etc/univention/templates/info/
 
 COPY --from=build \
   /etc/univention/templates/info/univention-web-js.info \
+  /etc/univention/templates/info/
+
+COPY --from=build \
+  /etc/univention/templates/info/univention-apache.info \
+  /etc/univention/templates/info/
+
+COPY --from=build \
+  /etc/univention/templates/info/univention-directory-manager-rest.info \
+  /etc/univention/templates/info/
+
+COPY --from=build \
+  /etc/univention/templates/info/univention-management-console-web-server.info \
+  /etc/univention/templates/info/
+
+COPY --from=build \
+  /etc/univention/templates/info/univention-server-overview.info \
   /etc/univention/templates/info/
 
 COPY --from=build \
@@ -179,8 +199,72 @@ COPY --from=build \
   /etc/univention/templates/files/var/www/univention/meta.json
 
 COPY --from=build \
+  /etc/univention/templates/files/etc/apache2/mods-available/ssl.conf \
+  /etc/univention/templates/files/etc/apache2/mods-available/ssl.conf
+
+COPY --from=build \
+  /etc/univention/templates/files/etc/apache2/mods-available/proxy.conf \
+  /etc/univention/templates/files/etc/apache2/mods-available/proxy.conf
+
+COPY --from=build \
+  /etc/univention/templates/files/etc/apache2/conf-available/univention-web.conf \
+  /etc/univention/templates/files/etc/apache2/conf-available/univention-web.conf
+
+COPY --from=build \
+  /etc/univention/templates/files/etc/apache2/conf-available/ucs.conf \
+  /etc/univention/templates/files/etc/apache2/conf-available/ucs.conf
+
+RUN mkdir --parents /etc/apache2/sites-enabled/
+
+COPY --from=build \
+  /etc/univention/templates/files/etc/apache2/sites-available/univention.conf \
+  /etc/univention/templates/files/etc/apache2/sites-available/univention.conf
+RUN ln -sf /etc/apache2/sites-available/univention.conf /etc/apache2/sites-enabled/univention.conf
+
+COPY --from=build \
+  /etc/univention/templates/files/etc/apache2/sites-available/univention-udm.conf \
+  /etc/univention/templates/files/etc/apache2/sites-available/univention-udm.conf
+RUN ln -sf /etc/apache2/sites-available/univention-udm.conf /etc/apache2/sites-enabled/univention-udm.conf
+
+COPY --from=build \
+  /etc/univention/templates/files/etc/apache2/sites-available/univention-server-overview.conf \
+  /etc/univention/templates/files/etc/apache2/sites-available/univention-server-overview.conf
+RUN ln -sf /etc/apache2/sites-available/univention-server-overview.conf /etc/apache2/sites-enabled/univention-server-overview.conf
+
+COPY --from=build \
+  /etc/univention/templates/files/etc/apache2/sites-available/ssl.d/99end \
+  /etc/univention/templates/files/etc/apache2/sites-available/ssl.d/99end
+
+COPY --from=build \
+  /etc/univention/templates/files/etc/apache2/sites-available/ssl.d/10hsts \
+  /etc/univention/templates/files/etc/apache2/sites-available/ssl.d/10hsts
+
+COPY --from=build \
+  /etc/univention/templates/files/etc/apache2/sites-available/ssl.d/00start \
+  /etc/univention/templates/files/etc/apache2/sites-available/ssl.d/00start
+RUN ln -sf /etc/apache2/sites-available/default-ssl.conf /etc/apache2/sites-enabled/default-ssl.conf
+
+COPY --from=build \
+  /etc/univention/templates/files/etc/apache2/sites-available/000-default.d/99end \
+  /etc/univention/templates/files/etc/apache2/sites-available/000-default.d/99end
+
+COPY --from=build \
+  /etc/univention/templates/files/etc/apache2/sites-available/000-default.d/00start \
+  /etc/univention/templates/files/etc/apache2/sites-available/000-default.d/00start
+RUN ln -sf /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-enabled/000-default.conf
+
+COPY --from=build \
+  /etc/univention/templates/files/etc/apache2/ucs-sites.conf.d/ucs-sites.conf \
+  /etc/univention/templates/files/etc/apache2/ucs-sites.conf.d/ucs-sites.conf
+
+COPY --from=build \
+  /etc/univention/templates/files/etc/apache2/ports.conf \
+  /etc/univention/templates/files/etc/apache2/ports.conf
+
+COPY --from=build \
   /var/www \
   /var/www
+RUN rm -rf /var/www/saml
 
 COPY --from=build \
   /etc/apache2/apache2.conf \
@@ -199,10 +283,6 @@ COPY --from=build \
   /etc/apache2/
 
 COPY --from=build \
-  /etc/apache2/ucs-sites.conf.d \
-  /etc/apache2/ucs-sites.conf.d
-
-COPY --from=build \
   /etc/apache2/conf-available/ \
   /etc/apache2/conf-available
 
@@ -218,14 +298,6 @@ COPY --from=build \
   /etc/apache2/mods-enabled/ \
   /etc/apache2/mods-enabled
 
-COPY --from=build \
-  /etc/apache2/sites-available/ \
-  /etc/apache2/sites-available
-
-COPY --from=build \
-  /etc/apache2/sites-enabled/ \
-  /etc/apache2/sites-enabled
-
 
 ############################################################
 # Copy Docker-specific files
@@ -237,12 +309,9 @@ RUN \
 # Disable configs
 RUN \
   rm \
-    /etc/apache2/conf-enabled/other-vhosts-access-log.conf
-
-# Disable sites
-RUN \
-  rm \
-    /etc/apache2/sites-available/univention-vhosts.conf
+    /etc/apache2/conf-enabled/other-vhosts-access-log.conf \
+    /etc/apache2/conf-available/simplesamlphp.conf \
+    /etc/apache2/conf-available/php7.3-cgi.conf
 
 # Enable modules
 RUN \
@@ -256,16 +325,19 @@ RUN \
   /etc/apache2/mods-enabled/proxy_http.load
 
 # Disable modules
-# @todo: if necessary install missing module /usr/lib/apache2/modules/mod_authnz_pam.so
-RUN \
-  rm \
-    /etc/apache2/mods-enabled/authnz_pam.load
+RUN for mod in \
+  authnz_pam \
+  mod_actions \
+  mod_cgi \
+  mod_suexec \
+  ; do \
+    rm "/etc/apache2/mods-enabled/${mod}.load" || true; \
+  done
 
 # Make modules available
 # @todo: Not all modules are necessary!
 RUN for mod in \
   mod_access_compat \
-  mod_actions \
   mod_alias \
   mod_auth_basic \
   mod_authn_core \
@@ -275,7 +347,6 @@ RUN for mod in \
   mod_authz_host \
   mod_authz_user \
   mod_autoindex \
-  mod_cgi \
   mod_deflate \
   mod_dir \
   mod_env \
@@ -297,7 +368,6 @@ RUN for mod in \
   mod_socache_shmcb \
   mod_ssl \
   mod_status \
-  mod_suexec \
   mod_unique_id \
   mod_mime \
   mod_mpm_event \
@@ -326,7 +396,7 @@ RUN \
 # Custom Log format (example): CustomLog "/dev/stdout" "%h %l %u %t \"%r\" %>s %b"
 RUN \
   sed -i '/CustomLog \/var\/log\/apache2\/access.log/c CustomLog \"\/dev\/stdout\" "\%h \%l \%u \%t \\"\%r\\" \%>s \%b"' \
-  /etc/apache2/ucs-sites.conf.d/ucs-sites.conf
+  /etc/univention/templates/files/etc/apache2/ucs-sites.conf.d/ucs-sites.conf
 
 # Change LogFormat temporarily
 # Replace \%O to \%b in LogFormat

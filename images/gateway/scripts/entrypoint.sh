@@ -22,10 +22,23 @@ umask 077
 # Short identifier: AGPL-3.0-only
 # Website: https://spdx.org/licenses/AGPL-3.0-only.html
 
+univention-config-registry commit \
+  /etc/apache2/conf-available/ucs.conf \
+  /etc/apache2/conf-available/univention-web.conf \
+  /etc/apache2/mods-available/proxy.conf \
+  /etc/apache2/mods-available/ssl.conf \
+  /etc/apache2/ports.conf \
+  /etc/apache2/sites-available/000-default.conf \
+  /etc/apache2/sites-available/default-ssl.conf \
+  /etc/apache2/sites-available/univention.conf \
+  /etc/apache2/sites-available/univention-server-overview.conf \
+  /etc/apache2/sites-available/univention-udm.conf \
+  /etc/apache2/ucs-sites.conf.d/ucs-sites.conf
+
 # Replace destination of existing univention config
 sed \
   --in-place \
-  "s/http:\/\/127.0.0.1:8090/$UMC_PROTOCOL:\/\/$UMC_HOST:$UMC_PORT/g" \
+  "s#http://127.0.0.1:8090#$UMC_PROTOCOL://$UMC_HOST:$UMC_PORT#g" \
   /etc/apache2/sites-available/univention.conf
 
 sed \
