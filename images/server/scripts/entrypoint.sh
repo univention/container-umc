@@ -92,6 +92,9 @@ univention-config-registry commit \
 sed -i 's/password.*requisite.*pam_cracklib.so/password required  pam_cracklib.so/; /pam_unix/d; /pam_krb5/d' /etc/pam.d/univention-management-console
 
 univention-config-registry commit \
+  /var/www/univention/meta.json
+
+univention-config-registry commit \
   /etc/univention/directory/reports/config.ini \
   /etc/univention/directory/reports/default/de_DE/header.rml \
   /etc/univention/directory/reports/default/de_DE/footer.rml \

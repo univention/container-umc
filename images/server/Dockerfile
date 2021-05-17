@@ -403,6 +403,10 @@ COPY --from=build \
   /etc/univention/templates/files/etc/pam.d/univention-management-console.d/
 
 COPY --from=build \
+  /etc/univention/templates/files/var/www/univention/meta.json \
+  /etc/univention/templates/files/var/www/univention/meta.json
+
+COPY --from=build \
   /usr/lib/python3/dist-packages/univention/debhelper.py \
   /usr/lib/python3/dist-packages/univention/debhelper.py
 
@@ -411,6 +415,8 @@ COPY --from=build \
   /usr/sbin/univention-config-registry
 RUN mkdir --parents /var/cache/univention-config/ && \
   touch /var/cache/univention-config/cache
+
+RUN mkdir /var/log/univention/
 
 # available reports
 COPY --from=build \
