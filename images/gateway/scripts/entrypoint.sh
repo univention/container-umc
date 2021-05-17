@@ -28,6 +28,11 @@ sed \
   "s/http:\/\/127.0.0.1:8090/$UMC_PROTOCOL:\/\/$UMC_HOST:$UMC_PORT/g" \
   /etc/apache2/sites-available/univention.conf
 
+sed \
+  --in-place \
+  "s#http://127.0.0.1:9979#$UDM_PROTOCOL://$UDM_HOST:$UDM_PORT#g" \
+  /etc/apache2/sites-available/univention-udm.conf
+
 univention-config-registry commit \
   /var/www/univention/languages.json \
   /var/www/univention/meta.json
