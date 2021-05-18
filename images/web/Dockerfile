@@ -89,6 +89,8 @@ RUN \
       python3-pysaml2=4.5.* \
       # for /usr/sbin/univention-management-console-web-server
       python3-six=1.12.* \
+      # for $PY_LIBS/univention/admin/__init__.py
+      python3-unidecode=1.0.* \
       # for $PY_LIBS/univention/management/console/protocol/server.py
       python3-tornado=5.1.* && \
   rm -rf /var/lib/apt/lists/*
