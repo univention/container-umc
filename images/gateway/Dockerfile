@@ -90,7 +90,7 @@ WORKDIR /
 RUN \
   apt-get update && \
   DEBIAN_FRONTEND=noninteractive \
-    apt-get --assume-yes --no-install-recommends install \
+    apt-get --assume-yes --verbose-versions --no-install-recommends install \
       libpython3.7=3.7.* \
       libapache2-mod-wsgi-py3=4.6.* \
       # for univention-config-registry

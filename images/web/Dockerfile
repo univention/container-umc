@@ -44,7 +44,7 @@ COPY \
 RUN \
   apt-get update && \
   DEBIAN_FRONTEND=noninteractive \
-    apt-get --assume-yes --no-install-recommends install \
+    apt-get --assume-yes --verbose-versions --no-install-recommends install \
       univention-management-console-web-server=12.0.* \
       python3-notifier=0.9.* && \
   rm -rf /var/lib/apt/lists/*
@@ -64,7 +64,7 @@ WORKDIR /
 RUN \
   apt-get update && \
   DEBIAN_FRONTEND=noninteractive \
-    apt-get --assume-yes --no-install-recommends install \
+    apt-get --assume-yes --verbose-versions --no-install-recommends install \
       # for /usr/sbin/univention-management-console-web-server
       python3=3.7.* \
       # for /usr/sbin/univention-management-console-web-server

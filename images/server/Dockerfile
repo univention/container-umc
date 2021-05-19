@@ -85,7 +85,7 @@ RUN \
   mkdir -p /usr/share/locale/de/LC_MESSAGES/ && \
   apt-get update && \
   DEBIAN_FRONTEND=noninteractive \
-    apt-get --assume-yes --no-install-recommends install \
+    apt-get --assume-yes --verbose-versions --no-install-recommends install \
       # for /usr/sbin/univention-config-registry
       python3-lazy-object-proxy=1.3.* \
       # the python3-univention-debug postinst uses py3compile
@@ -167,7 +167,7 @@ COPY \
 RUN \
   apt-get update && \
   DEBIAN_FRONTEND=noninteractive \
-    apt-get --assume-yes --no-install-recommends install \
+    apt-get --assume-yes --verbose-versions --no-install-recommends install \
       libc-bin=2.28-* \
       locales=2.28-* \
       # for $PY_LIBS/univention/admin/password.py
@@ -186,7 +186,7 @@ RUN \
 RUN \
   apt-get update && \
   DEBIAN_FRONTEND=noninteractive \
-    apt-get --assume-yes --no-install-recommends install \
+    apt-get --assume-yes --verbose-versions --no-install-recommends install \
       # for $PY_LIBS/univention/admin/password.py
       python3-bcrypt=3.1.* \
       # for /usr/sbin/univention-management-console-server
