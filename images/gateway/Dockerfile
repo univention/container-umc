@@ -263,120 +263,49 @@ RUN \
 
 # Make modules available
 # @todo: Not all modules are necessary!
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_access_compat.so \
-  /usr/lib/apache2/modules/mod_access_compat.so
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_actions.so \
-  /usr/lib/apache2/modules/mod_actions.so
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_alias.so \
-  /usr/lib/apache2/modules/mod_alias.so
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_auth_basic.so \
-  /usr/lib/apache2/modules/mod_auth_basic.so
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_authn_core.so \
-  /usr/lib/apache2/modules/mod_authn_core.so
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_authn_file.so \
-  /usr/lib/apache2/modules/mod_authn_file.so
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_authz_core.so \
-  /usr/lib/apache2/modules/mod_authz_core.so
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_authz_groupfile.so \
-  /usr/lib/apache2/modules/mod_authz_groupfile.so
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_authz_host.so \
-  /usr/lib/apache2/modules/mod_authz_host.so
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_authz_user.so \
-  /usr/lib/apache2/modules/mod_authz_user.so
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_autoindex.so \
-  /usr/lib/apache2/modules/mod_autoindex.so
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_cgi.so \
-  /usr/lib/apache2/modules/mod_cgi.so
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_deflate.so \
-  /usr/lib/apache2/modules/mod_deflate.so
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_dir.so \
-  /usr/lib/apache2/modules/mod_dir.so
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_env.so \
-  /usr/lib/apache2/modules/mod_env.so
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_expires.so \
-  /usr/lib/apache2/modules/mod_expires.so
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_filter.so \
-  /usr/lib/apache2/modules/mod_filter.so
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_headers.so \
-  /usr/lib/apache2/modules/mod_headers.so
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_lbmethod_bybusyness.so \
-  /usr/lib/apache2/modules/mod_lbmethod_bybusyness.so
-RUN \
-  ln -sf /usr/local/apache2/modules/mime.load \
-  /usr/lib/apache2/modules/mime.load
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_mpm_prefork.so \
-  /usr/lib/apache2/modules/mod_mpm_prefork.so
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_negotiation.so \
-  /usr/lib/apache2/modules/mod_negotiation.so
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_proxy_balancer.so \
-  /usr/lib/apache2/modules/mod_proxy_balancer.so
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_proxy_connect.so \
-  /usr/lib/apache2/modules/mod_proxy_connect.so
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_proxy_http.so \
-  /usr/lib/apache2/modules/mod_proxy_http.so
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_proxy.so \
-  /usr/lib/apache2/modules/mod_proxy.so
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_reqtimeout.so \
-  /usr/lib/apache2/modules/mod_reqtimeout.so
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_rewrite.so \
-  /usr/lib/apache2/modules/mod_rewrite.so
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_setenvif.so \
-  /usr/lib/apache2/modules/mod_setenvif.so
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_slotmem_shm.so \
-  /usr/lib/apache2/modules/mod_slotmem_shm.so
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_socache_shmcb.so \
-  /usr/lib/apache2/modules/mod_socache_shmcb.so
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_ssl.so \
-  /usr/lib/apache2/modules/mod_ssl.so
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_status.so \
-  /usr/lib/apache2/modules/mod_status.so
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_suexec.so \
-  /usr/lib/apache2/modules/mod_suexec.so
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_unique_id.so \
-  /usr/lib/apache2/modules/mod_unique_id.so
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_mime.so \
-  /usr/lib/apache2/modules/mod_mime.so
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_mpm_event.so \
-  /usr/lib/apache2/modules/mod_mpm_event.so
-RUN \
-  ln -sf /usr/local/apache2/modules/mod_log_config.so \
-  /usr/lib/apache2/modules/mod_log_config.so
+RUN for mod in \
+  mod_access_compat \
+  mod_actions \
+  mod_alias \
+  mod_auth_basic \
+  mod_authn_core \
+  mod_authn_file \
+  mod_authz_core \
+  mod_authz_groupfile \
+  mod_authz_host \
+  mod_authz_user \
+  mod_autoindex \
+  mod_cgi \
+  mod_deflate \
+  mod_dir \
+  mod_env \
+  mod_expires \
+  mod_filter \
+  mod_headers \
+  mod_lbmethod_bybusyness \
+  mime.load \
+  mod_mpm_prefork \
+  mod_negotiation \
+  mod_proxy_balancer \
+  mod_proxy_connect \
+  mod_proxy_http \
+  mod_proxy \
+  mod_reqtimeout \
+  mod_rewrite \
+  mod_setenvif \
+  mod_slotmem_shm \
+  mod_socache_shmcb \
+  mod_ssl \
+  mod_status \
+  mod_suexec \
+  mod_unique_id \
+  mod_mime \
+  mod_mpm_event \
+  mod_log_config \
+  ; do \
+    ln -sf "/usr/local/apache2/modules/${mod}.so" \
+    "/usr/lib/apache2/modules/${mod}.so"; \
+  done
 
 # Change/Remove some properties in the default univention apache config
 RUN \
