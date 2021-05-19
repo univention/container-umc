@@ -128,7 +128,7 @@ RUN \
   rm -rf /var/lib/apt/lists/* && \
   echo 'path-exclude /usr/sbin/univention-management-console-acls' >> /etc/dpkg/dpkg.cfg.d/univention && \
   echo 'path-include /usr/share/doc/univention-management-console-server/changelog.Debian.gz' >> /etc/dpkg/dpkg.cfg.d/univention && \
-  echo 'path-include /usr/share/locale/de/LC_MESSAGES/univention-directory-reports.mo' >> /etc/dpkg/dpkg.cfg.d/univention && \
+  echo 'path-include /usr/share/locale/de/LC_MESSAGES/univention-*.mo' >> /etc/dpkg/dpkg.cfg.d/univention && \
   dpkg --install --force-depends /apt/* && \
   rm -rf /apt/
 
@@ -432,8 +432,8 @@ COPY --from=build \
   /etc/univention/templates/info/univention-directory-reports.info \
   /etc/univention/templates/info/univention-directory-reports.info
 COPY --from=build \
-  /usr/share/locale/de/LC_MESSAGES/univention-directory-reports.mo \
-  /usr/share/locale/de/LC_MESSAGES/univention-directory-reports.mo
+  /usr/share/locale/de/LC_MESSAGES/univention-*.mo \
+  /usr/share/locale/de/LC_MESSAGES/
 
 ############################################################
 # Copy Docker-specific files
