@@ -34,6 +34,10 @@ univention-config-registry commit \
   /etc/apache2/sites-available/univention-server-overview.conf \
   /etc/apache2/sites-available/univention-udm.conf \
   /etc/apache2/ucs-sites.conf.d/ucs-sites.conf
+#  /etc/apache2/sites-available/univention-vhosts.conf \
+#  /etc/apache2/sites-available/univention-portal.conf \
+#  /etc/apache2/sites-available/univention-saml.conf \
+#  /etc/apache2/ucs-sites.conf.d/univention-portal.conf \
 
 # Replace destination of existing univention config
 sed \

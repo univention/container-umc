@@ -57,8 +57,10 @@ RUN \
       univention-management-console-web-server=12.* \
       # for /etc/univention/templates/files/var/www/univention/meta.json
       univention-management-console-server=12.* \
+#      # for /etc/apache2/sites-available/univention-saml.conf
       # for /usr/share/univention-management-console-frontend/js/dijit/themes/umc/icons/scalable/.*
       univention-saml=7.* \
+#      # for /etc/apache2/sites-available/univention-portal.conf
       # for /usr/share/univention-management-console-frontend/js/dijit/themes/umc/icons/scalable/.*
       univention-portal=4.* \
       # for /etc/apache2/sites-available/univention-server-overview.conf
@@ -145,6 +147,12 @@ COPY --from=build \
 
 RUN touch ${DST_PY_LIBS}/univention/lib/__init__.py
 
+#COPY --from=build \
+#  ${SRC_PY_LIBS}/univention/saml/lib.py \
+#  ${DST_PY_LIBS}/univention/saml/lib.py
+#
+#RUN touch ${DST_PY_LIBS}/univention/saml/__init__.py
+
 COPY --from=build \
   ${SRC_PY_LIBS}/univention/config_registry/ \
   ${DST_PY_LIBS}/univention/config_registry/
@@ -166,6 +174,8 @@ RUN mkdir --parents /var/cache/univention-config/ && \
 
 RUN mkdir /var/log/univention/
 
+#RUN mkdir --parents /usr/share/simplesamlphp/www/
+
 COPY --from=build \
   /etc/univention/templates/info/univention-management-console-server.info \
   /etc/univention/templates/info/
@@ -185,6 +195,14 @@ COPY --from=build \
 COPY --from=build \
   /etc/univention/templates/info/univention-management-console-web-server.info \
   /etc/univention/templates/info/
+
+#COPY --from=build \
+#  /etc/univention/templates/info/univention-portal.info \
+#  /etc/univention/templates/info/
+
+#COPY --from=build \
+#  /etc/univention/templates/info/univention-saml.info \
+#  /etc/univention/templates/info/
 
 COPY --from=build \
   /etc/univention/templates/info/univention-server-overview.info \
@@ -221,6 +239,11 @@ COPY --from=build \
   /etc/univention/templates/files/etc/apache2/sites-available/univention.conf
 RUN ln -sf /etc/apache2/sites-available/univention.conf /etc/apache2/sites-enabled/univention.conf
 
+#COPY --from=build \
+#  /etc/univention/templates/files/etc/apache2/sites-available/univention-vhosts.conf \
+#  /etc/univention/templates/files/etc/apache2/sites-available/univention-vhosts.conf
+#RUN ln -sf /etc/apache2/sites-available/univention-vhosts.conf /etc/apache2/sites-enabled/univention-vhosts.conf
+
 COPY --from=build \
   /etc/univention/templates/files/etc/apache2/sites-available/univention-udm.conf \
   /etc/univention/templates/files/etc/apache2/sites-available/univention-udm.conf
@@ -230,6 +253,11 @@ COPY --from=build \
   /etc/univention/templates/files/etc/apache2/sites-available/univention-server-overview.conf \
   /etc/univention/templates/files/etc/apache2/sites-available/univention-server-overview.conf
 RUN ln -sf /etc/apache2/sites-available/univention-server-overview.conf /etc/apache2/sites-enabled/univention-server-overview.conf
+
+#COPY --from=build \
+#  /etc/univention/templates/files/etc/apache2/sites-available/univention-portal.conf \
+#  /etc/univention/templates/files/etc/apache2/sites-available/univention-portal.conf
+#RUN ln -sf /etc/apache2/sites-available/univention-portal.conf /etc/apache2/sites-enabled/univention-portal.conf
 
 COPY --from=build \
   /etc/univention/templates/files/etc/apache2/sites-available/ssl.d/99end \
@@ -253,9 +281,18 @@ COPY --from=build \
   /etc/univention/templates/files/etc/apache2/sites-available/000-default.d/00start
 RUN ln -sf /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-enabled/000-default.conf
 
+#COPY --from=build \
+#  /etc/univention/templates/files/etc/apache2/sites-available/univention-saml.conf \
+#  /etc/univention/templates/files/etc/apache2/sites-available/univention-saml.conf
+#RUN ln -sf /etc/apache2/sites-available/univention-saml.conf /etc/apache2/sites-enabled/univention-saml.conf
+
 COPY --from=build \
   /etc/univention/templates/files/etc/apache2/ucs-sites.conf.d/ucs-sites.conf \
   /etc/univention/templates/files/etc/apache2/ucs-sites.conf.d/ucs-sites.conf
+
+#COPY --from=build \
+#  /etc/univention/templates/files/etc/apache2/ucs-sites.conf.d/univention-portal.conf \
+#  /etc/univention/templates/files/etc/apache2/ucs-sites.conf.d/univention-portal.conf
 
 COPY --from=build \
   /etc/univention/templates/files/etc/apache2/ports.conf \
