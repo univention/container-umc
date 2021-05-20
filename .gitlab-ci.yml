@@ -1,5 +1,11 @@
 ---
 
+# Only docker/compose:debian-1.28.0 seems to be working with dind
+# out of the box the alpine as of 1.28.0 does not because of a mismatch issue
+# between "musl libc" vs glibc:
+# https://github.com/docker/compose/issues/3465
+# https://stackoverflow.com/a/42322893
+
 stages:
 - lint-stage
 - build-stage
@@ -51,22 +57,12 @@ pre-commit-job:
   - echo "Explicitly skip the default action docker login"
   script:
   # Compose lint would fail without the referenced env files
-  - cp .env.gateway.example .env.gateway
-  - cp ucr.gateway.example ucr.gateway
-  - cp .env.server.example .env.server
-  - cp ucr.server.example ucr.server
-  - cp .env.web.example .env.web
-  - cp ucr.web.example ucr.web
+  - for i in .env.*.example; do cp "${i}" "${i/.example}"; done
   - pre-commit run --all-files
 
-build-job:
+build-gateway-job:
   tags:
   - docker
-  # Only the debian flavor seems to be working with dind out of the box
-  # the alpine as of 1.28.0 does not because of a mismatch issue
-  # between "musl libc" vs glibc:
-  # https://github.com/docker/compose/issues/3465
-  # https://stackoverflow.com/a/42322893
   image: ${UNIV_DOCKERHUB_CACHE}docker/compose:debian-1.28.0
   stage: build-stage
   services:
@@ -76,11 +72,41 @@ build-job:
   script:
   # https://github.com/adrienverge/yamllint/issues/20
   - export LANG=C.UTF-8
-  - cp .env.gateway.example .env.gateway
-  - cp .env.server.example .env.server
-  - cp .env.web.example .env.web
-  - docker-compose ${DOCKER_COMPOSE_BUILD_FILES} build
-  - docker-compose ${DOCKER_COMPOSE_BUILD_FILES} push
+  - for i in .env.*.example; do cp "${i}" "${i/.example}"; done
+  - docker-compose ${DOCKER_COMPOSE_BUILD_FILES} build gateway
+  - docker-compose ${DOCKER_COMPOSE_BUILD_FILES} push gateway
+
+build-server-job:
+  tags:
+  - docker
+  image: ${UNIV_DOCKERHUB_CACHE}docker/compose:debian-1.28.0
+  stage: build-stage
+  services:
+  - name: ${UNIV_DOCKERHUB_CACHE}library/docker:18.09.7-dind
+    alias: docker
+    command: [--insecure-registry=artifacts.knut.univention.de]
+  script:
+  # https://github.com/adrienverge/yamllint/issues/20
+  - export LANG=C.UTF-8
+  - for i in .env.*.example; do cp "${i}" "${i/.example}"; done
+  - docker-compose ${DOCKER_COMPOSE_BUILD_FILES} build server
+  - docker-compose ${DOCKER_COMPOSE_BUILD_FILES} push server
+
+build-web-job:
+  tags:
+  - docker
+  image: ${UNIV_DOCKERHUB_CACHE}docker/compose:debian-1.28.0
+  stage: build-stage
+  services:
+  - name: ${UNIV_DOCKERHUB_CACHE}library/docker:18.09.7-dind
+    alias: docker
+    command: [--insecure-registry=artifacts.knut.univention.de]
+  script:
+  # https://github.com/adrienverge/yamllint/issues/20
+  - export LANG=C.UTF-8
+  - for i in .env.*.example; do cp "${i}" "${i/.example}"; done
+  - docker-compose ${DOCKER_COMPOSE_BUILD_FILES} build web
+  - docker-compose ${DOCKER_COMPOSE_BUILD_FILES} push web
 
 test-job:
   tags:
@@ -92,9 +118,8 @@ test-job:
     alias: docker
     command: [--insecure-registry=artifacts.knut.univention.de]
   script:
-  - cp .env.gateway.example .env.gateway
-  - cp .env.server.example .env.server
-  - cp .env.web.example .env.web
+  - for i in .env.*.example; do cp "${i}" "${i/.example}"; done
+  - for i in ucr.*.example; do cp "${i}" "${i/.example}"; done
   # Masked temporary file created via the GitLab UI
   - cp "${PRIVATE_KEY_FILE}" ssl/secret/private.key
   - cp "${CERT_FILE}" ssl/certs/cert.pem
@@ -117,9 +142,7 @@ publish-job:
     alias: docker
     command: [--insecure-registry=artifacts.knut.univention.de]
   script:
-  - cp .env.gateway.example .env.gateway
-  - cp .env.server.example .env.server
-  - cp .env.web.example .env.web
+  - for i in .env.*.example; do cp "${i}" "${i/.example}"; done
   - docker-compose ${DOCKER_COMPOSE_PRODUCTION_FILES} pull
   - docker tag
     ${UPX_IMAGE_REGISTRY}container-umc/umc-server:${CI_PIPELINE_TAG}test
