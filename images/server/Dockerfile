@@ -86,6 +86,7 @@ RUN \
   apt-get update && \
   DEBIAN_FRONTEND=noninteractive \
     apt-get --assume-yes --verbose-versions --no-install-recommends install \
+      patch=2.* \
       # for /usr/sbin/univention-config-registry
       python3-lazy-object-proxy=1.3.* \
       # the python3-univention-debug postinst uses py3compile
@@ -131,6 +132,9 @@ RUN \
   echo 'path-include /usr/share/locale/de/LC_MESSAGES/univention-*.mo' >> /etc/dpkg/dpkg.cfg.d/univention && \
   dpkg --install --force-depends /apt/* && \
   rm -rf /apt/
+
+COPY capture_module_logging.patch /
+RUN  patch -p 0 -d / -i /capture_module_logging.patch && rm /capture_module_logging.patch
 
 ############################################################
 # Start second stage
