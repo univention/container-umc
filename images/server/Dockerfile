@@ -177,6 +177,9 @@ RUN \
       libpam0g=1.3.* \
       libpam-ldap=186-* \
       pam-saml=1.9.* \
+      # for $PY_LIBS/univention/management/console/protocol/session.py
+      # the debian-buster version would cause a segfault.
+      python3-ldap=3.1.* \
     && \
   rm -rf /var/lib/apt/lists/* /etc/apt/sources.list.d/15_ucs-online-version.list
 
@@ -193,8 +196,6 @@ RUN \
       python3-daemon=2.2.* \
       # for $PY_LIBS/univention/admin/syntax.py
       python3-dateutil=2.7.* \
-      # for $PY_LIBS/univention/management/console/protocol/session.py
-      python3-ldap=3.1.* \
       # for $PY_LIBS/univention/lib/umc_module.py
       python3-magic=2:* \
       # for $PY_LIBS/univention/management/console/protocol/server.py
