@@ -86,12 +86,16 @@ INFO = 3
 # Unused
 ALL = 4
 
+# Sometimes used for passwords
+SPECIAL = 99
+
 PY_LOG_LEVELS = {
     ERROR: logging.ERROR,
     WARN: logging.WARN,
     PROCESS: logging.INFO,
     INFO: logging.INFO,
     ALL: logging.INFO,
+    SPECIAL: logging.DEBUG,
 }
 
 logging.getLogger().setLevel(0)
@@ -120,7 +124,7 @@ def set_level(category: str, level: int):
 
     """
     # convert univention to python log-level
-    pylevel = PY_LOG_LEVELS[level]
+    pylevel = PY_LOG_LEVELS.get(level, logging.ERROR)
     logging.getLogger(category).setLevel(pylevel)
 
 
