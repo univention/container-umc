@@ -37,6 +37,7 @@ services:
     - umc-socket:/var/run/univention-management-console
     - umc-temp-upload:/var/tmp/univention-management-console-frontend
     - ./images/server/config/saml/ucs-sso.example.org.xml.example:/usr/share/univention-management-console/saml/idp/ucs-sso.example.org.xml:ro
+    - ${PWD}/ucr.web:/etc/univention/base.conf
 
 secrets:
   ca_cert:

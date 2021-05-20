@@ -418,6 +418,9 @@ COPY --from=build \
 COPY --from=build \
   /usr/sbin/univention-config-registry \
   /usr/sbin/univention-config-registry
+
+RUN ln --symbolic --force /usr/sbin/univention-config-registry /usr/sbin/ucr
+
 RUN mkdir --parents /var/cache/univention-config/ && \
   touch /var/cache/univention-config/cache
 

@@ -46,7 +46,8 @@ RUN \
   DEBIAN_FRONTEND=noninteractive \
     apt-get --assume-yes --verbose-versions --no-install-recommends install \
       univention-management-console-web-server=12.0.* \
-      python3-notifier=0.9.* && \
+      python3-notifier=0.9.* \
+      && \
   rm -rf /var/lib/apt/lists/*
 
 ############################################################
@@ -92,8 +93,33 @@ RUN \
       # for $PY_LIBS/univention/admin/__init__.py
       python3-unidecode=1.0.* \
       # for $PY_LIBS/univention/management/console/protocol/server.py
-      python3-tornado=5.1.* && \
+      python3-tornado=5.1.* \
+      # for univention-config-registry
+      python3-lazy-object-proxy=1.3.* \
+      && \
   rm -rf /var/lib/apt/lists/*
+
+# for univention-config-registry
+COPY --from=build \
+  ${SRC_PY_LIBS}/univention/config_registry/ \
+  ${DST_PY_LIBS}/univention/config_registry/
+
+COPY --from=build \
+  ${SRC_PY_LIBS}/univention/config_registry_info.py \
+  ${DST_PY_LIBS}/univention/config_registry_info.py
+
+COPY --from=build \
+  ${SRC_PY_LIBS}/univention/info_tools.py \
+  ${DST_PY_LIBS}/univention/info_tools.py
+
+COPY --from=build \
+  /usr/sbin/univention-config-registry \
+  /usr/sbin/univention-config-registry
+
+RUN ln --symbolic --force /usr/sbin/univention-config-registry /usr/sbin/ucr
+
+RUN mkdir --parents /var/cache/univention-config/ && \
+  touch /var/cache/univention-config/cache
 
 # from univention-management-console-web-server
 COPY --from=build \
@@ -237,12 +263,6 @@ COPY \
   libs/admin/license.py \
   libs/admin/password.py \
   ${DST_PY_LIBS}/univention/admin/
-
-# from python3-univention-config-registry
-# for $PY_LIBS/univention/management/console/log.py
-COPY \
-  libs/config_registry.py \
-  ${DST_PY_LIBS}/univention/config_registry.py
 
 # from python3-univention-debug
 # for /usr/sbin/univention-management-console-web-server
