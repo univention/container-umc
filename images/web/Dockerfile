@@ -123,7 +123,8 @@ COPY --from=build \
 
 RUN ln --symbolic --force /usr/sbin/univention-config-registry /usr/sbin/ucr
 
-RUN mkdir --parents /var/cache/univention-config/ && \
+RUN mkdir /etc/univention && \
+  mkdir --parents /var/cache/univention-config/ && \
   touch /var/cache/univention-config/cache
 
 # from univention-management-console-web-server
