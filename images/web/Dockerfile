@@ -46,6 +46,7 @@ RUN \
   DEBIAN_FRONTEND=noninteractive \
     apt-get --assume-yes --verbose-versions --no-install-recommends install \
       univention-management-console-web-server=12.0.* \
+      python3-univention-debhelper=2.* \
       python3-notifier=0.9.* \
       && \
   rm -rf /var/lib/apt/lists/*
@@ -100,6 +101,10 @@ RUN \
   rm -rf /var/lib/apt/lists/*
 
 # for univention-config-registry
+COPY --from=build \
+  ${SRC_PY_LIBS}/univention/debhelper.py \
+  ${DST_PY_LIBS}/univention/debhelper.py
+
 COPY --from=build \
   ${SRC_PY_LIBS}/univention/config_registry/ \
   ${DST_PY_LIBS}/univention/config_registry/
