@@ -1,0 +1,15 @@
+https://git.knut.univention.de/univention/customers/dataport/upx/iam-issues/-/issues/141
+
+diff --git /usr/lib/python3/dist-packages/univention/admin/license.py /usr/lib/python3/dist-packages/univention/admin/license.py
+index 03caf24632..71383b1d97 100644
+--- /usr/lib/python3/dist-packages/univention/admin/license.py
++++ /usr/lib/python3/dist-packages/univention/admin/license.py
+@@ -187,7 +187,7 @@ class License(object):
+ 		self.__selected = False
+ 
+ 	def _load_license_via_c_module(self, module):
+-		return univention.license.select(module)
++		return 0
+ 
+ 	def _load_license_via_python(self, module, lo):
+ 		# Try to set the version even if the license load was not successful

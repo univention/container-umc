@@ -133,8 +133,13 @@ RUN \
   dpkg --install --force-depends /apt/* && \
   rm -rf /apt/
 
-COPY capture_module_logging.patch /
-RUN  patch -p 0 -d / -i /capture_module_logging.patch && rm /capture_module_logging.patch
+COPY capture_module_logging.patch disable_license_check.patch /
+RUN  \
+  patch -p 0 -d / -i /capture_module_logging.patch && \
+    rm /capture_module_logging.patch && \
+  patch -p 0 -d / -i /disable_license_check.patch && \
+    rm /disable_license_check.patch
+
 
 ############################################################
 # Start second stage
