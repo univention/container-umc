@@ -453,6 +453,10 @@ RUN mkdir /usr/share/univention-management-console-module-udm/
 COPY --from=build \
   /usr/share/locale/de/LC_MESSAGES/univention-*.mo \
   /usr/share/locale/de/LC_MESSAGES/
+COPY --from=build \
+  /usr/share/univention-management-console/i18n/de/umc-core.mo \
+  /usr/share/univention-management-console/i18n/de/udm.mo \
+  /usr/share/univention-management-console/i18n/de/
 
 ############################################################
 # Copy Docker-specific files
