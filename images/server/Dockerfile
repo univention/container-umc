@@ -100,6 +100,8 @@ RUN \
     libunivention-debug1=12.* \
     libunivention-license0=11.* \
     libunivention-policy0=11.* \
+    # for /usr/share/locale/de/LC_MESSAGES/univention-admin*.mo
+    python-univention-directory-manager=15.* \
     python3-notifier=0.9.* \
     # use UCS-repo because it is not yet in Debian/stable (just bullseye)
     python3-m2crypto=0.31.* \
