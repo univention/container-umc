@@ -445,6 +445,12 @@ COPY --from=build \
   /etc/univention/templates/info/univention-directory-reports.info \
   /etc/univention/templates/info/univention-directory-reports.info
 COPY --from=build \
+  /usr/share/univention-directory-reports/ \
+  /usr/share/univention-directory-reports/
+RUN mkdir /usr/share/univention-management-console-module-udm/
+
+# locales
+COPY --from=build \
   /usr/share/locale/de/LC_MESSAGES/univention-*.mo \
   /usr/share/locale/de/LC_MESSAGES/
 
