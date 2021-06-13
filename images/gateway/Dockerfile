@@ -72,14 +72,20 @@ RUN \
       # for UCR template files
       python3-univention-lib=9.* \
       && \
-  rm -rf /var/lib/apt/lists/*
-
+  rm -rf /var/lib/apt/lists/* && \
+  awk \
+    '/^Package: python3-univention-directory-manager-rest$/{ while(!/^Version: /){getline} print $2 }' \
+    /var/lib/dpkg/status > /version
 
 ############################################################
 # Start second stage
 
 FROM ${DOCKER_REGISTRY}httpd:2.4 AS final
 
+ARG LABEL_CREATED=undefined
+ARG LABEL_REVISION=undefined
+ARG LABEL_SOURCE=undefined
+ARG LABEL_VERSION=undefined
 ARG SRC_PY_LIBS="/usr/lib/python3/dist-packages"
 ARG DST_PY_LIBS="/usr/lib/python3/dist-packages"
 
@@ -160,6 +166,10 @@ COPY --from=build \
 COPY --from=build \
   /usr/sbin/univention-config-registry \
   /usr/sbin/univention-config-registry
+
+COPY --from=build \
+  /version \
+  /version
 
 RUN ln --symbolic --force /usr/sbin/univention-config-registry /usr/sbin/ucr
 
@@ -389,5 +399,15 @@ CMD ["-D", \
      "FOREGROUND", \
      "-d", "/etc/apache2/", \
      "-f", "/etc/apache2/apache2.conf"]
+
+LABEL org.opencontainers.image.created="${LABEL_CREATED}"
+LABEL org.opencontainers.image.description="Apache Gateway for Univention Management Console"
+LABEL org.opencontainers.image.licenses="AGPL-3.0-or-later"
+LABEL org.opencontainers.image.revision=$LABEL_REVISION
+LABEL org.opencontainers.image.source="${LABEL_SOURCE}"
+LABEL org.opencontainers.image.title="udm-rest"
+LABEL org.opencontainers.image.url="https://docs.software-univention.de/developer-reference-4.4.html#chap:umc"
+LABEL org.opencontainers.image.vendor="Univention GmbH"
+LABEL org.opencontainers.image.version="${LABEL_VERSION}"
 
 # [EOF]

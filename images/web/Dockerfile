@@ -49,13 +49,20 @@ RUN \
       python3-univention-debhelper=2.* \
       python3-notifier=0.9.* \
       && \
-  rm -rf /var/lib/apt/lists/*
+  rm -rf /var/lib/apt/lists/* && \
+  awk \
+    '/^Package: univention-management-console-web-server$/{ while(!/^Version: /){getline} print $2 }' \
+    /var/lib/dpkg/status > /version
 
 ############################################################
 # Start second stage
 
 FROM ${DOCKER_REGISTRY}debian:buster-slim AS final
 
+ARG LABEL_CREATED=undefined
+ARG LABEL_REVISION=undefined
+ARG LABEL_SOURCE=undefined
+ARG LABEL_VERSION=undefined
 ARG SRC_PY_LIBS="/usr/lib/python3/dist-packages"
 ARG DST_PY_LIBS="/usr/lib/python3/dist-packages"
 
@@ -261,6 +268,10 @@ COPY --from=build \
   ${SRC_PY_LIBS}/univention/uldap.py \
   ${DST_PY_LIBS}/univention/uldap.py
 
+COPY --from=build \
+  /version \
+  /version
+
 
 ############################################################
 # Copy Docker-specific files
@@ -290,5 +301,15 @@ COPY \
 ENTRYPOINT ["/entrypoint.sh"]
 
 CMD ["--no-daemon", "--debug=2", "--log-file=/dev/stdout"]
+
+LABEL org.opencontainers.image.created="${LABEL_CREATED}"
+LABEL org.opencontainers.image.description="Web service for Univention Management Console"
+LABEL org.opencontainers.image.licenses="AGPL-3.0-or-later"
+LABEL org.opencontainers.image.revision=$LABEL_REVISION
+LABEL org.opencontainers.image.source="${LABEL_SOURCE}"
+LABEL org.opencontainers.image.title="udm-rest"
+LABEL org.opencontainers.image.url="https://docs.software-univention.de/developer-reference-4.4.html#chap:umc"
+LABEL org.opencontainers.image.vendor="Univention GmbH"
+LABEL org.opencontainers.image.version="${LABEL_VERSION}"
 
 # [EOF]

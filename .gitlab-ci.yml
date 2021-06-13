@@ -72,11 +72,9 @@ build-gateway-job:
     alias: docker
     command: [--insecure-registry=artifacts.knut.univention.de]
   script:
-  # https://github.com/adrienverge/yamllint/issues/20
-  - export LANG=C.UTF-8
-  - for i in .env.*.example; do cp "${i}" "${i/.example}"; done
-  - docker-compose ${DOCKER_COMPOSE_BUILD_FILES} build gateway
-  - docker-compose ${DOCKER_COMPOSE_BUILD_FILES} push gateway
+  - apt-get update
+  - apt-get --assume-yes --verbose-versions --no-install-recommends install python3-sh
+  - python3 ci-build-script.py gateway
 
 build-server-job:
   tags:
@@ -88,11 +86,9 @@ build-server-job:
     alias: docker
     command: [--insecure-registry=artifacts.knut.univention.de]
   script:
-  # https://github.com/adrienverge/yamllint/issues/20
-  - export LANG=C.UTF-8
-  - for i in .env.*.example; do cp "${i}" "${i/.example}"; done
-  - docker-compose ${DOCKER_COMPOSE_BUILD_FILES} build server
-  - docker-compose ${DOCKER_COMPOSE_BUILD_FILES} push server
+  - apt-get update
+  - apt-get --assume-yes --verbose-versions --no-install-recommends install python3-sh
+  - python3 ci-build-script.py server
 
 build-web-job:
   tags:
@@ -104,11 +100,9 @@ build-web-job:
     alias: docker
     command: [--insecure-registry=artifacts.knut.univention.de]
   script:
-  # https://github.com/adrienverge/yamllint/issues/20
-  - export LANG=C.UTF-8
-  - for i in .env.*.example; do cp "${i}" "${i/.example}"; done
-  - docker-compose ${DOCKER_COMPOSE_BUILD_FILES} build web
-  - docker-compose ${DOCKER_COMPOSE_BUILD_FILES} push web
+  - apt-get update
+  - apt-get --assume-yes --verbose-versions --no-install-recommends install python3-sh
+  - python3 ci-build-script.py web
 
 test-job:
   tags:

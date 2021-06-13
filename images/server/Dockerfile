@@ -133,7 +133,10 @@ RUN \
   echo 'path-include /usr/share/doc/univention-management-console-server/changelog.Debian.gz' >> /etc/dpkg/dpkg.cfg.d/univention && \
   echo 'path-include /usr/share/locale/de/LC_MESSAGES/univention-*.mo' >> /etc/dpkg/dpkg.cfg.d/univention && \
   dpkg --install --force-depends /apt/* && \
-  rm -rf /apt/
+  rm -rf /apt/ && \
+  awk \
+    '/^Package: univention-management-console-server$/{ while(!/^Version: /){getline} print $2 }' \
+    /var/lib/dpkg/status > /version
 
 COPY capture_module_logging.patch disable_license_check.patch /
 RUN  \
@@ -149,7 +152,10 @@ RUN  \
 FROM ${DOCKER_REGISTRY}debian:buster-slim AS final
 
 ARG APT_KEY_URL=https://updates.software-univention.de/univention-archive-key-ucs-5x.gpg
-
+ARG LABEL_CREATED=undefined
+ARG LABEL_REVISION=undefined
+ARG LABEL_SOURCE=undefined
+ARG LABEL_VERSION=undefined
 ARG SRC_PY_LIBS="/usr/lib/python3/dist-packages"
 ARG DST_PY_LIBS="/usr/lib/python3/dist-packages"
 
@@ -460,6 +466,10 @@ COPY --from=build \
   /usr/share/univention-management-console/i18n/de/udm.mo \
   /usr/share/univention-management-console/i18n/de/
 
+COPY --from=build \
+  /version \
+  /version
+
 ############################################################
 # Copy Docker-specific files
 
@@ -486,5 +496,15 @@ RUN echo -en 'en_US.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8\n' >> /etc/locale.gen && \
 ENTRYPOINT ["/entrypoint.sh"]
 
 CMD ["--no-daemon", "--debug=2", "--log-file=/dev/stdout"]
+
+LABEL org.opencontainers.image.created="${LABEL_CREATED}"
+LABEL org.opencontainers.image.description="Server service for Univention Management Console"
+LABEL org.opencontainers.image.licenses="AGPL-3.0-or-later"
+LABEL org.opencontainers.image.revision=$LABEL_REVISION
+LABEL org.opencontainers.image.source="${LABEL_SOURCE}"
+LABEL org.opencontainers.image.title="udm-rest"
+LABEL org.opencontainers.image.url="https://docs.software-univention.de/developer-reference-4.4.html#chap:umc"
+LABEL org.opencontainers.image.vendor="Univention GmbH"
+LABEL org.opencontainers.image.version="${LABEL_VERSION}"
 
 # [EOF]
