@@ -171,12 +171,13 @@ COPY --from=build \
   /version \
   /version
 
-RUN ln --symbolic --force /usr/sbin/univention-config-registry /usr/sbin/ucr
+RUN \
+  ln --symbolic --force /usr/sbin/univention-config-registry /usr/sbin/ucr && \
 
-RUN mkdir --parents /var/cache/univention-config/ && \
-  touch /var/cache/univention-config/cache
+  mkdir --parents /var/cache/univention-config/ && \
+  touch /var/cache/univention-config/cache && \
 
-RUN mkdir /var/log/univention/
+  mkdir /var/log/univention/
 
 COPY --from=build \
   /etc/univention/templates/info/univention-management-console-server.info \
@@ -297,93 +298,86 @@ RUN \
 # Enable modules
 RUN \
   echo "LoadModule unixd_module /usr/local/apache2/modules/mod_unixd.so" \
-  > /etc/apache2/mods-enabled/unixd.load
-RUN \
-  echo "LoadModule log_config_module /usr/local/apache2/modules/mod_log_config.so" \
-  > /etc/apache2/mods-enabled/log_config.load
-RUN \
-  ln -sf /etc/apache2/mods-available/proxy_http.load \
-  /etc/apache2/mods-enabled/proxy_http.load
+    > /etc/apache2/mods-enabled/unixd.load && \
 
-# Disable modules
-RUN for mod in \
-  authnz_pam \
-  mod_actions \
-  mod_cgi \
-  mod_suexec \
+  echo "LoadModule log_config_module /usr/local/apache2/modules/mod_log_config.so" \
+    > /etc/apache2/mods-enabled/log_config.load && \
+
+  ln -sf /etc/apache2/mods-available/proxy_http.load \
+    /etc/apache2/mods-enabled/proxy_http.load && \
+
+  # Disable modules
+  for mod in \
+    authnz_pam \
+    mod_actions \
+    mod_cgi \
+    mod_suexec \
   ; do \
     rm "/etc/apache2/mods-enabled/${mod}.load" || true; \
-  done
+  done && \
 
-# Make modules available
-# @todo: Not all modules are necessary!
-RUN for mod in \
-  mod_access_compat \
-  mod_alias \
-  mod_auth_basic \
-  mod_authn_core \
-  mod_authn_file \
-  mod_authz_core \
-  mod_authz_groupfile \
-  mod_authz_host \
-  mod_authz_user \
-  mod_autoindex \
-  mod_deflate \
-  mod_dir \
-  mod_env \
-  mod_expires \
-  mod_filter \
-  mod_headers \
-  mod_lbmethod_bybusyness \
-  mime.load \
-  mod_mpm_prefork \
-  mod_negotiation \
-  mod_proxy_balancer \
-  mod_proxy_connect \
-  mod_proxy_http \
-  mod_proxy \
-  mod_reqtimeout \
-  mod_rewrite \
-  mod_setenvif \
-  mod_slotmem_shm \
-  mod_socache_shmcb \
-  mod_ssl \
-  mod_status \
-  mod_unique_id \
-  mod_mime \
-  mod_mpm_event \
-  mod_log_config \
+  # Make modules available
+  # @todo: Not all modules are necessary!
+  for mod in \
+    mod_access_compat \
+    mod_alias \
+    mod_auth_basic \
+    mod_authn_core \
+    mod_authn_file \
+    mod_authz_core \
+    mod_authz_groupfile \
+    mod_authz_host \
+    mod_authz_user \
+    mod_autoindex \
+    mod_deflate \
+    mod_dir \
+    mod_env \
+    mod_expires \
+    mod_filter \
+    mod_headers \
+    mod_lbmethod_bybusyness \
+    mime.load \
+    mod_mpm_prefork \
+    mod_negotiation \
+    mod_proxy_balancer \
+    mod_proxy_connect \
+    mod_proxy_http \
+    mod_proxy \
+    mod_reqtimeout \
+    mod_rewrite \
+    mod_setenvif \
+    mod_slotmem_shm \
+    mod_socache_shmcb \
+    mod_ssl \
+    mod_status \
+    mod_unique_id \
+    mod_mime \
+    mod_mpm_event \
+    mod_log_config \
   ; do \
     ln -sf "/usr/local/apache2/modules/${mod}.so" \
     "/usr/lib/apache2/modules/${mod}.so"; \
-  done
+  done && \
 
-# Change/Remove some properties in the default univention apache config
-RUN \
+  # Change/Remove some properties in the default univention apache config
   sed -i "/User \${APACHE_RUN_USER}/c User www-data" \
-  /etc/apache2/apache2.conf
-RUN \
+    /etc/apache2/apache2.conf && \
   sed -i "/Group \${APACHE_RUN_GROUP}/c Group www-data" \
-  /etc/apache2/apache2.conf
-RUN \
+    /etc/apache2/apache2.conf && \
   sed -i "/\${APACHE_RUN_DIR}/d" \
-  /etc/apache2/apache2.conf
-RUN \
+    /etc/apache2/apache2.conf && \
   sed -i "/ErrorLog \${APACHE_LOG_DIR}/c ErrorLog /dev/stderr" \
-  /etc/apache2/apache2.conf
-RUN \
+    /etc/apache2/apache2.conf && \
   sed -i "/PidFile \${APACHE_PID_FILE}/c PidFile /usr/local/apache2/logs/httpd.pid" \
-  /etc/apache2/apache2.conf
-# Custom Log format (example): CustomLog "/dev/stdout" "%h %l %u %t \"%r\" %>s %b"
-RUN \
+    /etc/apache2/apache2.conf && \
+  # Custom Log format (example): CustomLog "/dev/stdout" "%h %l %u %t \"%r\" %>s %b"
   sed -i '/CustomLog \/var\/log\/apache2\/access.log/c CustomLog \"\/dev\/stdout\" "\%h \%l \%u \%t \\"\%r\\" \%>s \%b"' \
-  /etc/univention/templates/files/etc/apache2/ucs-sites.conf.d/ucs-sites.conf
+    /etc/univention/templates/files/etc/apache2/ucs-sites.conf.d/ucs-sites.conf && \
 
-# Change LogFormat temporarily
-# Replace \%O to \%b in LogFormat
-RUN \
+  # Change LogFormat temporarily
+  # Replace \%O to \%b in LogFormat
   sed -i '/LogFormat/s/\%O/\%b/g' \
-  /etc/apache2/apache2.conf
+    /etc/apache2/apache2.conf
 
 COPY \
   scripts/entrypoint.sh \
