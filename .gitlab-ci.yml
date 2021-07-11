@@ -146,13 +146,13 @@ publish-job:
   - for i in .env.*.example; do cp "${i}" "${i/.example}"; done
   - docker-compose ${DOCKER_COMPOSE_PRODUCTION_FILES} pull
   - docker tag
-      ${UPX_IMAGE_REGISTRY}container-umc/umc-server:${CI_PIPELINE_ID}-test
+      ${UPX_IMAGE_REGISTRY}container-umc/umc-server:build-${CI_PIPELINE_ID}
       ${UPX_IMAGE_REGISTRY}container-umc/umc-server:latest
   - docker tag
-      ${UPX_IMAGE_REGISTRY}container-umc/umc-web:${CI_PIPELINE_ID}-test
+      ${UPX_IMAGE_REGISTRY}container-umc/umc-web:build-${CI_PIPELINE_ID}
       ${UPX_IMAGE_REGISTRY}container-umc/umc-web:latest
   - docker tag
-      ${UPX_IMAGE_REGISTRY}container-umc/umc-gateway:${CI_PIPELINE_ID}-test
+      ${UPX_IMAGE_REGISTRY}container-umc/umc-gateway:build-${CI_PIPELINE_ID}
       ${UPX_IMAGE_REGISTRY}container-umc/umc-gateway:latest
   - docker push ${UPX_IMAGE_REGISTRY}container-umc/umc-server:latest
   - docker push ${UPX_IMAGE_REGISTRY}container-umc/umc-web:latest

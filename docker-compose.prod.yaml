@@ -4,12 +4,13 @@ version: '3.8'
 
 services:
   gateway:
-    image: artifacts.knut.univention.de/upx/container-umc/umc-gateway:${CI_PIPELINE_ID}-test
+    image: artifacts.knut.univention.de/upx/container-umc/umc-gateway:build-${CI_PIPELINE_ID}
 
   server:
-    image: artifacts.knut.univention.de/upx/container-umc/umc-server:${CI_PIPELINE_ID}-test
+    image: artifacts.knut.univention.de/upx/container-umc/umc-server:build-${CI_PIPELINE_ID}
 
   web:
-    image: artifacts.knut.univention.de/upx/container-umc/umc-web:${CI_PIPELINE_ID}-test
+    image: artifacts.knut.univention.de/upx/container-umc/umc-web:build-${CI_PIPELINE_ID}
+
 
 ...

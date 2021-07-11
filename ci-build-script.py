@@ -14,123 +14,104 @@ import time
 # third party
 import sh  # pylint: disable=import-error
 
-sh2 = sh(_out='/dev/stdout', _err='/dev/stderr')  # pylint: disable=not-callable
+# internal imports
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+LIBS_DIR = os.path.join(BASE_DIR, 'lib')
+sys.path.insert(1, LIBS_DIR)
 
-DEFAULT_UPX_IMAGE_REGISTRY = 'artifacts.knut.univention.de/upx/'
-
-DEFAULT_CI_PIPELINE_ID = '4711'
-
-DEFAULT_DOCKER_COMPOSE_BUILD_FILES = (
-    '--file docker-compose.yaml'
-    ' --file docker-compose.override.yaml'
-    ' --file docker-compose.prod.yaml'
+import ci_docker  # noqa: E402,E501; pylint: disable=import-error,wrong-import-position
+from ci_log import (  # noqa: E402,E501; pylint: disable=import-error,wrong-import-position
+    log,
 )
+import ci_vars  # noqa: E402; pylint: disable=import-error,wrong-import-position
+import ci_version  # noqa: E402,E501; pylint: disable=import-error,wrong-import-position
 
+# pylint: disable=not-callable
+sh_noout = sh(_cwd=BASE_DIR)
 
-class AppVersionNotFound(Exception):
-    """Raised if /version file could not be read"""
-
-
-def add_version_label(image_name):
-    """Adds a version label to an image"""
-    print('Retrieving /version from {}'.format(image_name))
-    result = sh2.docker.run(
-        '--rm',
-        '--entrypoint=/bin/cat',
-        image_name,
-        '/version',
-        _out=None,
-    ).stdout
-    app_version = result.rstrip().decode('ascii')
-    if not app_version:
-        raise AppVersionNotFound
-    print('Adding version label {}'.format(app_version))
-    sh2.docker.build(
-        '--label',
-        'org.opencontainers.app.version={}'.format(app_version),
-        '--tag',
-        image_name,
-        '-',
-        _in='FROM {}'.format(image_name),
-    )
-    print('Done with labeling')
+# pylint: disable=not-callable
+sh_out = sh(_out='/dev/stdout', _err='/dev/stderr', _cwd=BASE_DIR)
 
 
 def main(service):
     """The main script builds, labels and pushes"""
 
-    build_env = {
+    docker_env = ci_vars.get_env_vars(ci_vars.MINIMAL_DOCKER_VARS)
+
+    pull_push_env = ci_vars.get_env_vars(ci_vars.ADDITIONAL_PULL_PUSH_VARS)
+    pull_push_env.update(docker_env)
+
+    compose_env = {
         'COMPOSE_DOCKER_CLI_BUILD': '0',
-        'PWD': os.getcwd(),
+        'CI_PROJECT_URL': 'unset',
+        'CI_PIPELINE_ID': ci_vars.DEFAULT_CI_PIPELINE_ID,
+        'LANG': 'C.UTF-8',
     }
 
-    build_env['LANG'] = os.environ.get('LANG', 'C.UTF-8')
-
-    time_stamp = ''
     if 'CI_JOB_STARTED_AT' not in os.environ:
-        time_stamp = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-    build_env['CI_JOB_STARTED_AT'] = os.environ.get(
-        'CI_JOB_STARTED_AT', time_stamp
-    )
+        compose_env['CI_JOB_STARTED_AT'] = time.strftime(
+            "%Y-%m-%dT%H:%M:%SZ", time.gmtime()
+        )
 
-    sha_hash = ''
     if 'CI_COMMIT_SHA' not in os.environ:
         # pylint: disable=too-many-function-args
-        sha_hash = sh.git('rev-parse', 'HEAD').stdout.rstrip().decode('ascii')
-    build_env['CI_COMMIT_SHA'] = os.environ.get('CI_COMMIT_SHA', sha_hash)
+        compose_env['CI_COMMIT_SHA'] = (
+            sh_noout.git('rev-parse', 'HEAD').stdout.rstrip().decode('ascii')
+        )
 
-    build_env['CI_PROJECT_URL'] = os.environ.get('CI_PROJECT_URL', 'unset')
-
-    build_env['CI_PIPELINE_ID'] = os.environ.get(
-        'CI_PIPELINE_ID', DEFAULT_CI_PIPELINE_ID
-    )
-    ci_pipeline_id = build_env['CI_PIPELINE_ID']
+    compose_env.update(ci_vars.get_env_vars(ci_vars.ADDITIONAL_COMPOSE_VARS))
+    compose_env.update(docker_env)
 
     docker_compose_build_files = os.environ.get(
-        'DOCKER_COMPOSE_BUILD_FILES', DEFAULT_DOCKER_COMPOSE_BUILD_FILES
+        'DOCKER_COMPOSE_BUILD_FILES',
+        ci_vars.DEFAULT_DOCKER_COMPOSE_BUILD_FILES,
     )
 
+    ci_pipeline_id = compose_env['CI_PIPELINE_ID']
+
     upx_image_registry = os.environ.get(
-        'UPX_IMAGE_REGISTRY', DEFAULT_UPX_IMAGE_REGISTRY
+        'UPX_IMAGE_REGISTRY',
+        ci_vars.DEFAULT_UPX_IMAGE_REGISTRY,
     )
+
+    # If not set the "docker-credential-secretservice" crashes
+    # with "double free or corruption" for local builds
+    if 'DBUS_SESSION_BUS_ADDRESS' in os.environ:
+        compose_env['DBUS_SESSION_BUS_ADDRESS'] = os.environ[
+            'DBUS_SESSION_BUS_ADDRESS']
 
     for old_name in glob.iglob('.env.*.example'):
         new_name = old_name.replace('.example', '')
         shutil.copy2(old_name, new_name)
 
-    # If not set the "docker-credential-secretservice" crashes
-    # with "double free or corruption" for local builds
-    if 'DBUS_SESSION_BUS_ADDRESS' in os.environ:
-        build_env['DBUS_SESSION_BUS_ADDRESS'] = os.environ[
-            'DBUS_SESSION_BUS_ADDRESS']
-
-    # debugging gitlab:
-    build_env.update(os.environ)
-
-    sh2.docker_compose(
+    sh_out.docker_compose(
         docker_compose_build_files.split(),
         'build',
         service if service else '--parallel',
-        _env=build_env,
+        _env=compose_env,
     )
 
     services = ('gateway', 'server', 'web')
     if service:
         services = (service, )
     for cur_service in services:
-        image_name = '{}container-umc/umc-{}:{}-test'.format(
-            upx_image_registry, cur_service, ci_pipeline_id
+        image_path = '{}container-umc/umc-{}'.format(
+            upx_image_registry, cur_service
         )
         try:
-            add_version_label(image_name)
-        except AppVersionNotFound:
+            ci_docker.add_and_push_build_version_label_and_tag(
+                image_path, ci_pipeline_id, docker_env, pull_push_env
+            )
+        except ci_version.AppVersionNotFound:
+            log.error('app version not found')
             return 2
 
-    sh2.docker_compose(
+    # push tag "build-<ci-pipeline-id>"
+    sh_out.docker_compose(
         docker_compose_build_files.split(),
         'push',
         service if service else None,
-        _env=build_env,
+        _env=compose_env,
     )
 
     return 0
