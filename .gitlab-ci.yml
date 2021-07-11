@@ -46,7 +46,7 @@ pre-commit-job:
   stage: lint-stage
   image:
     name: ${UPX_IMAGE_REGISTRY}container-pre-commit/pre-commit:latest
-    entrypoint: ["/bin/bash", "-c"]
+    entrypoint: [/bin/bash, -c]
   variables:
     PIP_CACHE_DIR: ${CI_PROJECT_DIR}/.cache/pip
     PRE_COMMIT_HOME: ${CI_PROJECT_DIR}/.cache/pre-commit
@@ -141,14 +141,14 @@ publish-job:
   - for i in .env.*.example; do cp "${i}" "${i/.example}"; done
   - docker-compose ${DOCKER_COMPOSE_PRODUCTION_FILES} pull
   - docker tag
-    ${UPX_IMAGE_REGISTRY}container-umc/umc-server:${CI_PIPELINE_TAG}test
-    ${UPX_IMAGE_REGISTRY}container-umc/umc-server:latest
+      ${UPX_IMAGE_REGISTRY}container-umc/umc-server:${CI_PIPELINE_TAG}test
+      ${UPX_IMAGE_REGISTRY}container-umc/umc-server:latest
   - docker tag
-    ${UPX_IMAGE_REGISTRY}container-umc/umc-web:${CI_PIPELINE_TAG}test
-    ${UPX_IMAGE_REGISTRY}container-umc/umc-web:latest
+      ${UPX_IMAGE_REGISTRY}container-umc/umc-web:${CI_PIPELINE_TAG}test
+      ${UPX_IMAGE_REGISTRY}container-umc/umc-web:latest
   - docker tag
-    ${UPX_IMAGE_REGISTRY}container-umc/umc-gateway:${CI_PIPELINE_TAG}test
-    ${UPX_IMAGE_REGISTRY}container-umc/umc-gateway:latest
+      ${UPX_IMAGE_REGISTRY}container-umc/umc-gateway:${CI_PIPELINE_TAG}test
+      ${UPX_IMAGE_REGISTRY}container-umc/umc-gateway:latest
   - docker push ${UPX_IMAGE_REGISTRY}container-umc/umc-server:latest
   - docker push ${UPX_IMAGE_REGISTRY}container-umc/umc-web:latest
   - docker push ${UPX_IMAGE_REGISTRY}container-umc/umc-gateway:latest
