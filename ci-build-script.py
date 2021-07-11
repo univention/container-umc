@@ -18,9 +18,7 @@ sh2 = sh(_out='/dev/stdout', _err='/dev/stderr')  # pylint: disable=not-callable
 
 DEFAULT_UPX_IMAGE_REGISTRY = 'artifacts.knut.univention.de/upx/'
 
-DEFAULT_CI_PIPELINE_TAG = '4711-'
-
-DEFAULT_CI_BUILD_ID = '4711'
+DEFAULT_CI_PIPELINE_ID = '4711'
 
 DEFAULT_DOCKER_COMPOSE_BUILD_FILES = (
     '--file docker-compose.yaml'
@@ -83,9 +81,10 @@ def main(service):
 
     build_env['CI_PROJECT_URL'] = os.environ.get('CI_PROJECT_URL', 'unset')
 
-    build_env['CI_BUILD_ID'] = os.environ.get(
-        'CI_BUILD_ID', DEFAULT_CI_BUILD_ID
+    build_env['CI_PIPELINE_ID'] = os.environ.get(
+        'CI_PIPELINE_ID', DEFAULT_CI_PIPELINE_ID
     )
+    ci_pipeline_id = build_env['CI_PIPELINE_ID']
 
     docker_compose_build_files = os.environ.get(
         'DOCKER_COMPOSE_BUILD_FILES', DEFAULT_DOCKER_COMPOSE_BUILD_FILES
@@ -94,11 +93,6 @@ def main(service):
     upx_image_registry = os.environ.get(
         'UPX_IMAGE_REGISTRY', DEFAULT_UPX_IMAGE_REGISTRY
     )
-    ci_pipeline_tag = os.environ.get(
-        'CI_PIPELINE_TAG', DEFAULT_CI_PIPELINE_TAG
-    )
-
-    build_env['CI_PIPELINE_TAG'] = ci_pipeline_tag
 
     for old_name in glob.iglob('.env.*.example'):
         new_name = old_name.replace('.example', '')
@@ -124,8 +118,8 @@ def main(service):
     if service:
         services = (service, )
     for cur_service in services:
-        image_name = '{}container-umc/umc-{}:{}test'.format(
-            upx_image_registry, cur_service, ci_pipeline_tag
+        image_name = '{}container-umc/umc-{}:{}-test'.format(
+            upx_image_registry, cur_service, ci_pipeline_id
         )
         try:
             add_version_label(image_name)
