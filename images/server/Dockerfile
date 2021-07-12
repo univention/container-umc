@@ -432,12 +432,11 @@ COPY --from=build \
   /usr/sbin/univention-config-registry \
   /usr/sbin/univention-config-registry
 
-RUN ln --symbolic --force /usr/sbin/univention-config-registry /usr/sbin/ucr
-
-RUN mkdir --parents /var/cache/univention-config/ && \
-  touch /var/cache/univention-config/cache
-
-RUN mkdir /var/log/univention/
+RUN \
+  ln --symbolic --force /usr/sbin/univention-config-registry /usr/sbin/ucr && \
+  mkdir --parents /var/cache/univention-config/ && \
+  touch /var/cache/univention-config/cache && \
+  mkdir /var/log/univention/
 
 # available reports
 COPY --from=build \
