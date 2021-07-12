@@ -1,4 +1,5 @@
 /.env.gateway
 /.env.server
 /.env.web
+/lib/__pycache__/
 /ssl/
