@@ -138,12 +138,18 @@ RUN \
     '/^Package: univention-management-console-server$/{ while(!/^Version: /){getline} print $2 }' \
     /var/lib/dpkg/status > /version
 
-COPY capture_module_logging.patch disable_license_check.patch /
+COPY capture_module_logging.patch \
+     disable_license_check.patch \
+     use_try_first.patch \
+     /
+
 RUN  \
   patch -p 0 -d / -i /capture_module_logging.patch && \
     rm /capture_module_logging.patch && \
   patch -p 0 -d / -i /disable_license_check.patch && \
-    rm /disable_license_check.patch
+    rm /disable_license_check.patch && \
+  patch -p 0 -d / -i /use_try_first.patch && \
+    rm /use_try_first.patch
 
 
 ############################################################
@@ -489,8 +495,8 @@ COPY scripts/entrypoint.sh /entrypoint.sh
 
 # build all locales
 RUN echo -en 'en_US.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8\n' >> /etc/locale.gen && \
-	localedef -i de_DE -c -f UTF-8 -A /usr/share/locale/locale.alias de_DE.UTF-8 && \
-	localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
+    localedef -i de_DE -c -f UTF-8 -A /usr/share/locale/locale.alias de_DE.UTF-8 && \
+    localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
 
 ENTRYPOINT ["/entrypoint.sh"]
 
