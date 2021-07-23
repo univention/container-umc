@@ -1,6 +1,6 @@
 ---
 
-# Only docker/compose:debian-1.28.0 seems to be working with dind
+# Only docker/compose:debian-X.XX.X seems to be working with dind
 # out of the box the alpine as of 1.28.0 does not because of a mismatch issue
 # between "musl libc" vs glibc:
 # https://github.com/docker/compose/issues/3465
@@ -16,13 +16,7 @@ variables:
   UNIV_ARTIFACTS: artifacts.knut.univention.de
   UNIV_DOCKERHUB_CACHE: ${UNIV_ARTIFACTS}/dockerhub_proxy_cache/
   UPX_IMAGE_REGISTRY: ${UNIV_ARTIFACTS}/upx/
-  # We need to turn off TLS or reconfigure GitLab, see:
-  # https://about.gitlab.com/releases/
-  # 2019/07/31/docker-in-docker-with-docker-19-dot-03/
   DOCKER_TLS_CERTDIR: ''
-  # DOCKER_TLS_CERTDIR: "/certs"
-  # DOCKER_TLS_VERIFY: 1
-  # DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
   DOCKER_HOST: tcp://docker:2375
 
   DOCKER_COMPOSE_PRODUCTION_FILES:
@@ -70,54 +64,60 @@ pre-commit-job:
 build-gateway-job:
   tags:
   - docker
-  image: ${UNIV_DOCKERHUB_CACHE}docker/compose:debian-1.28.0
+  image:
+    ${UPX_IMAGE_REGISTRY}docker/compose:1.30-debian-buster-python-3.7.3
   stage: build-stage
   services:
-  - name: ${UNIV_DOCKERHUB_CACHE}library/docker:18.09.7-dind
-    alias: docker
-    command: [--insecure-registry=artifacts.knut.univention.de]
+    - name: ${UNIV_DOCKERHUB_CACHE}library/docker:20.10.7-dind
+      alias: docker
+      command:
+        - "--insecure-registry=artifacts.knut.univention.de"
+        - "--tls=false"
   script:
-  - apt-get update
-  - apt-get --assume-yes --verbose-versions --no-install-recommends install python3-sh
   - python3 ci-build-script.py gateway
 
 build-server-job:
   tags:
   - docker
-  image: ${UNIV_DOCKERHUB_CACHE}docker/compose:debian-1.28.0
+  image:
+    ${UPX_IMAGE_REGISTRY}docker/compose:1.30-debian-buster-python-3.7.3
   stage: build-stage
   services:
-  - name: ${UNIV_DOCKERHUB_CACHE}library/docker:18.09.7-dind
-    alias: docker
-    command: [--insecure-registry=artifacts.knut.univention.de]
+    - name: ${UNIV_DOCKERHUB_CACHE}library/docker:20.10.7-dind
+      alias: docker
+      command:
+        - "--insecure-registry=artifacts.knut.univention.de"
+        - "--tls=false"
   script:
-  - apt-get update
-  - apt-get --assume-yes --verbose-versions --no-install-recommends install python3-sh
   - python3 ci-build-script.py server
 
 build-web-job:
   tags:
   - docker
-  image: ${UNIV_DOCKERHUB_CACHE}docker/compose:debian-1.28.0
+  image:
+    ${UPX_IMAGE_REGISTRY}docker/compose:1.30-debian-buster-python-3.7.3
   stage: build-stage
   services:
-  - name: ${UNIV_DOCKERHUB_CACHE}library/docker:18.09.7-dind
-    alias: docker
-    command: [--insecure-registry=artifacts.knut.univention.de]
+    - name: ${UNIV_DOCKERHUB_CACHE}library/docker:20.10.7-dind
+      alias: docker
+      command:
+        - "--insecure-registry=artifacts.knut.univention.de"
+        - "--tls=false"
   script:
-  - apt-get update
-  - apt-get --assume-yes --verbose-versions --no-install-recommends install python3-sh
   - python3 ci-build-script.py web
 
 test-job:
   tags:
   - docker
-  image: ${UNIV_DOCKERHUB_CACHE}docker/compose:debian-1.28.0
+  image:
+    ${UPX_IMAGE_REGISTRY}docker/compose:1.30-debian-buster-python-3.7.3
   stage: test-stage
   services:
-  - name: ${UNIV_DOCKERHUB_CACHE}library/docker:18.09.7-dind
-    alias: docker
-    command: [--insecure-registry=artifacts.knut.univention.de]
+    - name: ${UNIV_DOCKERHUB_CACHE}library/docker:20.10.7-dind
+      alias: docker
+      command:
+        - "--insecure-registry=artifacts.knut.univention.de"
+        - "--tls=false"
   script:
   - for i in .env.*.example; do cp "${i}" "${i/.example}"; done
   - for i in ucr.*.example; do cp "${i}" "${i/.example}"; done
@@ -132,16 +132,19 @@ test-job:
   - docker-compose ${DOCKER_COMPOSE_PRODUCTION_FILES} rm
 
 publish-job:
-  image: ${UNIV_DOCKERHUB_CACHE}docker/compose:debian-1.28.0
+  image:
+    ${UPX_IMAGE_REGISTRY}docker/compose:1.30-debian-buster-python-3.7.3
   stage: publish-stage
   tags:
   - docker
   only:
   - main
   services:
-  - name: ${UNIV_DOCKERHUB_CACHE}library/docker:18.09.7-dind
-    alias: docker
-    command: [--insecure-registry=artifacts.knut.univention.de]
+    - name: ${UNIV_DOCKERHUB_CACHE}library/docker:20.10.7-dind
+      alias: docker
+      command:
+        - "--insecure-registry=artifacts.knut.univention.de"
+        - "--tls=false"
   script:
   - for i in .env.*.example; do cp "${i}" "${i/.example}"; done
   - docker-compose ${DOCKER_COMPOSE_PRODUCTION_FILES} pull
