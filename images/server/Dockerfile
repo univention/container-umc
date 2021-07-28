@@ -207,7 +207,7 @@ RUN \
   rm -rf /var/lib/apt/lists/* /etc/apt/sources.list.d/15_ucs-online-version.list
 
 ############################################################
-# Install Python requirements
+# Install Python and entrypoint.sh requirements
 
 RUN \
   apt-get update && \
@@ -242,6 +242,8 @@ RUN \
       python3-passlib=1.7.* \
       # for $PY_LIBS/univention/admin/__init__.py
       python3-unidecode=1.0.* \
+      # for the entrypoint.sh script
+      wget=1.* \
       && \
   rm -rf /var/lib/apt/lists/*
 
@@ -496,7 +498,9 @@ COPY scripts/entrypoint.sh /entrypoint.sh
 # build all locales
 RUN echo -en 'en_US.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8\n' >> /etc/locale.gen && \
     localedef -i de_DE -c -f UTF-8 -A /usr/share/locale/locale.alias de_DE.UTF-8 && \
-    localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
+    localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8 && \
+# Create directory for SAML IDP xml
+    mkdir -p /usr/share/univention-management-console/saml/idp
 
 ENTRYPOINT ["/entrypoint.sh"]
 

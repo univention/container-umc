@@ -36,6 +36,9 @@ DST_KEY_PATH="${CERT_DIR}/private.key"
 DST_CERT_PATH="${CERT_DIR}/cert.pem"
 DST_CA_PATH="${CA_DIR}/CAcert.pem"
 
+SAML_METADATA_PATH="$(printf '%s%s' /usr/share/univention-management-console \
+                                    /saml/idp/ucs-sso.example.org.xml)"
+
 if [[ ! -f "${PRIVATE_KEY_FILE}" ]]; then
   echo "SSL private key is missing at ${PRIVATE_KEY_FILE}"
   exit 1
@@ -66,6 +69,36 @@ fi
 if [[ -S "${SOCKET_PATH}" ]]; then
   echo "Removing stale socket file ${SOCKET_PATH}"
   rm "${SOCKET_PATH}"
+fi
+
+if [[ -n "${SAML_METADATA_URL:-}" ]]; then
+  result=1
+  counter=3
+
+  echo "Trying to fetch SAML metadata from ${SAML_METADATA_URL}"
+
+  # 'Connection refused' is not retried by `wget --tries=X` hence the loop
+  while [[ ${result} -gt 0 && ${counter} -gt 0 ]]; do
+    {
+        wget \
+          --quiet \
+          --timeout=3 \
+          --tries=2 \
+          --output-document="${SAML_METADATA_PATH}" \
+          "${SAML_METADATA_URL}" \
+        && result=0
+    } || true
+
+    counter=$((counter-1))
+    sleep 3
+  done
+
+  if [[ ${result} -gt 0 ]]; then
+    echo "Error: Failed to fetch saml_metadata from ${SAML_METADATA_URL}" >&2
+    exit 255
+  fi
+
+  echo "Successfully set SAML metadata in ${SAML_METADATA_PATH}"
 fi
 
 cat <<EOF > /etc/ldap/ldap.conf

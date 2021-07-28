@@ -104,6 +104,8 @@ RUN \
       python3-tornado=5.1.* \
       # for univention-config-registry
       python3-lazy-object-proxy=1.3.* \
+      # for the entrypoint.sh script
+      wget=1.* \
       && \
   rm -rf /var/lib/apt/lists/*
 
@@ -298,6 +300,8 @@ COPY \
 ############################################################
 # Define runtime
 
+# Create directory for SAML IDP xml
+RUN mkdir -p /usr/share/univention-management-console/saml/idp
 ENTRYPOINT ["/entrypoint.sh"]
 
 CMD ["--no-daemon", "--debug=2", "--log-file=/dev/stdout"]
