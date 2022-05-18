@@ -9,8 +9,5 @@ services:
   server:
     image: artifacts.knut.univention.de/upx/upx-umc-server:build-${CI_PIPELINE_ID}
 
-  web:
-    image: artifacts.knut.univention.de/upx/upx-umc-web:build-${CI_PIPELINE_ID}
-
 
 ...

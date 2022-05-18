@@ -26,7 +26,7 @@ def main(service):
 
     envs = ci_vars.get_docker_envs(BASE_DIR, pull_push=True)
 
-    services = ('gateway', 'server', 'web')
+    services = ('gateway', 'server')
     if service:
         services = (service, )
     for cur_service in services:

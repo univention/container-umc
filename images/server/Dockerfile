@@ -138,6 +138,18 @@ RUN \
     '/^Package: univention-management-console-server$/{ while(!/^Version: /){getline} print $2 }' \
     /var/lib/dpkg/status > /version
 
+WORKDIR /apt
+RUN \
+  # For apt-get download sandbox
+  chown _apt /apt && \
+  apt-get update && \
+  apt-get download \
+    univention-management-console-web-server=12.* \
+    univention-management-console-frontend=12.* \
+    && \
+  for i in /apt/*.deb; do dpkg --extract "$i" /; done && \
+  rm -rf /apt/
+
 COPY capture_module_logging.patch \
      disable_license_check.patch \
      use_try_first.patch \
@@ -219,6 +231,8 @@ RUN \
       python3-daemon=2.2.* \
       # for $PY_LIBS/univention/admin/syntax.py
       python3-dateutil=2.7.* \
+      # for /usr/sbin/univention-management-console-web-server
+      python3-defusedxml=0.5.* \
       # for $PY_LIBS/univention/lib/umc_module.py
       python3-magic=2:* \
       # for $PY_LIBS/univention/management/console/protocol/server.py
@@ -234,12 +248,22 @@ RUN \
       python3-six=1.12.* \
       # for $PY_LIBS/univention/password.py
       python3-cracklib=2.* \
+      # for ...
+      python3-cryptography=2.* \
       # for $PY_LIBS/univention/admin/handlers/settings/
       python3-apt=1.8.* \
       # for python3-trml2pdf
       python3-reportlab=3.5.* \
       # for $PY_LIBS/univention/admin/password.py
       python3-passlib=1.7.* \
+      # for ...
+      python3-pycurl=7.* \
+      # for /usr/sbin/univention-management-console-web-server
+      python3-pysaml2=4.5.* \
+      # for ...
+      python3-setproctitle=1.* \
+      # for ...
+      python3-tornado=5.* \
       # for $PY_LIBS/univention/admin/__init__.py
       python3-unidecode=1.0.* \
       # for the entrypoint.sh script
@@ -474,6 +498,14 @@ COPY --from=build \
   /usr/share/univention-management-console/i18n/de/
 
 COPY --from=build \
+  /usr/share/univention-management-console/saml/sp.py \
+  /usr/share/univention-management-console/saml/sp.py
+
+COPY --from=build \
+  /usr/share/univention-management-console-frontend/error.html \
+  /usr/share/univention-management-console-frontend/error.html
+
+COPY --from=build \
   /version \
   /version
 
@@ -490,6 +522,8 @@ COPY \
   libs/management/console/log.py \
   ${DST_PY_LIBS}/univention/management/console/log.py
 
+RUN mkdir /var/cache/univention-management-console/
+
 COPY scripts/entrypoint.sh /entrypoint.sh
 
 ############################################################
@@ -504,7 +538,7 @@ RUN echo -en 'en_US.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8\n' >> /etc/locale.gen && \
 
 ENTRYPOINT ["/entrypoint.sh"]
 
-CMD ["--no-daemon", "--debug=2", "--log-file=/dev/stdout"]
+CMD ["--debug=2", "--log-file=/dev/stdout", "--processes=1"]
 
 LABEL org.opencontainers.image.created="${LABEL_CREATED}"
 LABEL org.opencontainers.image.description="Server service for Univention Management Console"

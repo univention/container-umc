@@ -22,7 +22,7 @@ umask 077
 # Short identifier: AGPL-3.0-only
 # Website: https://spdx.org/licenses/AGPL-3.0-only.html
 
-PID_PATH=/var/run/umc-server.pid
+PID_PATH=/var/run/umc-server.pid  # TODO: remove?!
 SOCKET_PATH=/var/run/univention-management-console/server.socket
 
 PRIVATE_KEY_FILE=/run/secrets/private_key

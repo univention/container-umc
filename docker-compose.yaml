@@ -16,26 +16,12 @@ services:
     container_name: server
     env_file: .env.server
     ports:
-    - 6670:6670
+    - 8090:8090
     volumes:
     - umc-socket:/var/run/univention-management-console
     - umc-temp-upload:/var/tmp/univention-management-console-frontend
     - ./acls:/var/cache/univention-management-console/acls/
     - ${PWD}/ucr.server:/etc/univention/base.conf
-    secrets:
-    - ca_cert
-    - cert_pem
-    - private_key
-
-  web:
-    container_name: web
-    env_file: .env.web
-    ports:
-    - 8090:8090
-    volumes:
-    - umc-socket:/var/run/univention-management-console
-    - umc-temp-upload:/var/tmp/univention-management-console-frontend
-    - ${PWD}/ucr.web:/etc/univention/base.conf
     secrets:
     - ca_cert
     - cert_pem

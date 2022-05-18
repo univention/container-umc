@@ -22,15 +22,3 @@ services:
         LABEL_REVISION: "${CI_COMMIT_SHA}"
         LABEL_SOURCE: "${CI_PROJECT_URL}"
         LABEL_VERSION: "${CI_PIPELINE_ID}"
-
-  web:
-    build:
-      context: ./images/web
-      args:
-        DOCKER_REGISTRY: artifacts.knut.univention.de/dockerhub_proxy_cache/library/
-        LABEL_CREATED: "${CI_JOB_STARTED_AT}"
-        LABEL_REVISION: "${CI_COMMIT_SHA}"
-        LABEL_SOURCE: "${CI_PROJECT_URL}"
-        LABEL_VERSION: "${CI_PIPELINE_ID}"
-
-...
