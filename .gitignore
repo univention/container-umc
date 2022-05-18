@@ -1,5 +1,5 @@
-/.env.gateway
-/.env.server
-/.env.web
+/.env.univention-management-console-gateway
+/.env.univention-management-console-server
+/ansible/inventory/*.yaml
 /lib/__pycache__/
 /ssl/

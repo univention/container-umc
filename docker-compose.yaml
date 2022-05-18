@@ -2,44 +2,26 @@
 
 version: '3.8'
 
+name: "dev-local"
+
 services:
-  gateway:
-    container_name: gateway
-    env_file: .env.gateway
+  umc-gateway:
+    env_file: .env.univention-management-console-gateway
+    platform: linux/amd64
     ports:
-    - 80:80
-    - 443:443
-    volumes:
-    - ${PWD}/ucr.gateway:/etc/univention/base.conf
+      - 8110:80
 
-  server:
-    container_name: server
-    env_file: .env.server
+  umc-server:
+    env_file: .env.univention-management-console-server
+    platform: linux/amd64
     ports:
-    - 6670:6670
+      - 8111:8090
     volumes:
-    - umc-socket:/var/run/univention-management-console
-    - umc-temp-upload:/var/tmp/univention-management-console-frontend
-    - ./acls:/var/cache/univention-management-console/acls/
-    - ${PWD}/ucr.server:/etc/univention/base.conf
+      - umc-acls:/var/cache/univention-management-console/acls/
     secrets:
-    - ca_cert
-    - cert_pem
-    - private_key
-
-  web:
-    container_name: web
-    env_file: .env.web
-    ports:
-    - 8090:8090
-    volumes:
-    - umc-socket:/var/run/univention-management-console
-    - umc-temp-upload:/var/tmp/univention-management-console-frontend
-    - ${PWD}/ucr.web:/etc/univention/base.conf
-    secrets:
-    - ca_cert
-    - cert_pem
-    - private_key
+      - ca_cert
+      - cert_pem
+      - private_key
 
 secrets:
   ca_cert:
@@ -50,6 +32,5 @@ secrets:
     file: ssl/secret/private.key
 
 volumes:
-  umc-socket:
-  umc-temp-upload:
+  umc-acls:
 ...

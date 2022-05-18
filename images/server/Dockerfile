@@ -1,21 +1,19 @@
 ############################################################
 # Global variables
 
-ARG DOCKER_REGISTRY=""
+ARG DEBIAN_BASE_IMAGE_TAG=buster-slim
+ARG DOCKERHUB_CACHE
 
 ############################################################
 # Start first stage
 
-FROM ${DOCKER_REGISTRY}debian:buster-slim AS build
+FROM ${DOCKERHUB_CACHE}debian:${DEBIAN_BASE_IMAGE_TAG} AS build
 
 ARG APT_KEY_URL=https://updates.software-univention.de/univention-archive-key-ucs-5x.gpg
-
-ARG PY_LIBS="/usr/lib/python3/dist-packages"
 
 SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 
 WORKDIR /apt
-
 
 ############################################################
 # Install Univention APT-Key
@@ -30,8 +28,7 @@ RUN \
       gpg-agent=2.2.* \
       && \
   curl -fsSL "${APT_KEY_URL}" | apt-key add - && \
-  rm -rf /var/lib/apt/lists/*
-
+  rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
 ############################################################
 # Install scripts and configs for dpkg
@@ -40,40 +37,14 @@ COPY \
   sources.list \
   /etc/apt/sources.list.d/15_ucs-online-version.list
 
-# Sourced by univention-management-console-server.postinst
-COPY \
-  scripts/umc.sh \
-  /usr/share/univention-lib/umc.sh
-
-# Sourced by univention-management-console-server.postinst
-COPY \
-  scripts/all.sh \
-  /usr/share/univention-lib/all.sh
-
-# Sourced by univention-management-console-module-udm.postinst
-COPY \
-  scripts/join.sh \
-  /usr/share/univention-lib/join.sh
-
-COPY \
-  scripts/fake-bin.sh \
-  /usr/local/bin/ucr
-COPY \
-  scripts/fake-bin.sh \
-  /usr/local/bin/create_logfile
-COPY \
-  scripts/fake-bin.sh \
-  /usr/local/bin/systemctl
-COPY \
-  scripts/fake-bin.sh \
-  /usr/local/bin/a2dissite
-COPY \
-  scripts/fake-bin.sh \
-  /usr/sbin/univention-management-console-acls
-COPY \
-  scripts/fake-bin.sh \
-  /usr/local/bin/call_joinscript
-
+COPY scripts/fake.sh /usr/local/bin/systemctl
+COPY scripts/fake.sh /usr/local/bin/a2dissite
+COPY scripts/fake.sh /usr/local/bin/call_joinscript
+COPY scripts/fake.sh /usr/local/bin/create_logfile
+COPY scripts/fake.sh /usr/local/bin/stop_udm_cli_server
+COPY scripts/fake.sh /usr/local/bin/umc_frontend_new_hash
+COPY scripts/fake.sh /usr/sbin/univention-management-console-acls
+COPY scripts/fake-uv-lib.sh /usr/local/bin/fake-uv-lib.sh
 
 ############################################################
 # Install univention-management-console-server and required dependencies
@@ -83,9 +54,23 @@ RUN \
   chown _apt /apt && \
   mkdir /var/log/univention/ && \
   mkdir -p /usr/share/locale/de/LC_MESSAGES/ && \
-  apt-get update && \
+  apt-get --quiet update && \
+  # install Univention bash helper functions dependency
   DEBIAN_FRONTEND=noninteractive \
     apt-get --assume-yes --verbose-versions --no-install-recommends install \
+      shell-univention-lib=9.* \
+      && \
+  # we do not need the many bash helper-functions here
+  cp /usr/local/bin/fake-uv-lib.sh /usr/share/univention-lib/all.sh && \
+  cp /usr/local/bin/fake-uv-lib.sh /usr/share/univention-lib/base.sh && \
+  cp /usr/local/bin/fake-uv-lib.sh /usr/share/univention-lib/join.sh && \
+  cp /usr/local/bin/fake-uv-lib.sh /usr/share/univention-lib/umc.sh && \
+  # install Python dependencies
+  DEBIAN_FRONTEND=noninteractive \
+    apt-get --assume-yes --verbose-versions --no-install-recommends install \
+            --option Dpkg::Options::="--force-confold" \
+      python3=3.7.* \
+      python3-distutils=3.7.* \
       patch=2.* \
       # for /usr/sbin/univention-config-registry
       python3-lazy-object-proxy=1.3.* \
@@ -128,40 +113,49 @@ RUN \
     univention-management-console-server=12.* \
     univention-pam=13.* \
     && \
-  rm -rf /var/lib/apt/lists/* && \
+  rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* && \
   echo 'path-exclude /usr/sbin/univention-management-console-acls' >> /etc/dpkg/dpkg.cfg.d/univention && \
   echo 'path-include /usr/share/doc/univention-management-console-server/changelog.Debian.gz' >> /etc/dpkg/dpkg.cfg.d/univention && \
   echo 'path-include /usr/share/locale/de/LC_MESSAGES/univention-*.mo' >> /etc/dpkg/dpkg.cfg.d/univention && \
-  dpkg --install --force-depends /apt/* && \
+  DEBIAN_FRONTEND=noninteractive \
+    dpkg --install --force-depends /apt/* && \
   rm -rf /apt/ && \
   awk \
     '/^Package: univention-management-console-server$/{ while(!/^Version: /){getline} print $2 }' \
     /var/lib/dpkg/status > /version
 
-COPY capture_module_logging.patch \
-     disable_license_check.patch \
+WORKDIR /apt
+RUN \
+  # For apt-get download sandbox
+  chown _apt /apt && \
+  apt-get --quiet update && \
+  apt-get download \
+    univention-management-console-web-server=12.* \
+    univention-management-console-frontend=12.* \
+    && \
+  for i in /apt/*.deb; do dpkg --extract "$i" /; done && \
+  rm -rf /apt/
+
+COPY disable_license_check.patch \
      use_try_first.patch \
+     unsafe_saml_for_debug.patch \
      /
 
 RUN  \
-  patch -p 0 -d / -i /capture_module_logging.patch && \
-    rm /capture_module_logging.patch && \
   patch -p 0 -d / -i /disable_license_check.patch && \
     rm /disable_license_check.patch && \
   patch -p 0 -d / -i /use_try_first.patch && \
-    rm /use_try_first.patch
-
+    rm /use_try_first.patch && \
+  patch -p 0 -d / -i /unsafe_saml_for_debug.patch && \
+    rm /unsafe_saml_for_debug.patch
 
 ############################################################
 # Start second stage
 
-FROM ${DOCKER_REGISTRY}debian:buster-slim AS final
+FROM ${DOCKERHUB_CACHE}debian:${DEBIAN_BASE_IMAGE_TAG} AS final
 
 ARG APT_KEY_URL=https://updates.software-univention.de/univention-archive-key-ucs-5x.gpg
-ARG LABEL_CREATED=undefined
-ARG LABEL_REVISION=undefined
-ARG LABEL_SOURCE=undefined
-ARG LABEL_VERSION=undefined
+
 ARG SRC_PY_LIBS="/usr/lib/python3/dist-packages"
 ARG DST_PY_LIBS="/usr/lib/python3/dist-packages"
 
@@ -169,12 +163,11 @@ SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 
 WORKDIR /
 
-
 ############################################################
 # Install patched packages from UCS repository
 
 RUN \
-  apt-get update && \
+  apt-get --quiet update && \
   DEBIAN_FRONTEND=noninteractive \
     apt-get --assume-yes --verbose-versions --no-install-recommends install \
       ca-certificates=20* \
@@ -183,12 +176,14 @@ RUN \
       gpg-agent=2.2.* \
       && \
   curl -fsSL "${APT_KEY_URL}" | apt-key add - && \
-  rm -rf /var/lib/apt/lists/*
+  rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
+
 COPY \
   sources.list \
   /etc/apt/sources.list.d/15_ucs-online-version.list
+
 RUN \
-  apt-get update && \
+  apt-get --quiet update && \
   DEBIAN_FRONTEND=noninteractive \
     apt-get --assume-yes --verbose-versions --no-install-recommends install \
       libc-bin=2.28-* \
@@ -204,13 +199,13 @@ RUN \
       # the debian-buster version would cause a segfault.
       python3-ldap=3.1.* \
     && \
-  rm -rf /var/lib/apt/lists/* /etc/apt/sources.list.d/15_ucs-online-version.list
+  rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* /etc/apt/sources.list.d/15_ucs-online-version.list
 
 ############################################################
 # Install Python and entrypoint.sh requirements
 
 RUN \
-  apt-get update && \
+  apt-get --quiet update && \
   DEBIAN_FRONTEND=noninteractive \
     apt-get --assume-yes --verbose-versions --no-install-recommends install \
       # for $PY_LIBS/univention/admin/password.py
@@ -219,6 +214,8 @@ RUN \
       python3-daemon=2.2.* \
       # for $PY_LIBS/univention/admin/syntax.py
       python3-dateutil=2.7.* \
+      # for /usr/sbin/univention-management-console-web-server
+      python3-defusedxml=0.5.* \
       # for $PY_LIBS/univention/lib/umc_module.py
       python3-magic=2:* \
       # for $PY_LIBS/univention/management/console/protocol/server.py
@@ -234,18 +231,32 @@ RUN \
       python3-six=1.12.* \
       # for $PY_LIBS/univention/password.py
       python3-cracklib=2.* \
+      # for ...
+      python3-cryptography=2.* \
       # for $PY_LIBS/univention/admin/handlers/settings/
       python3-apt=1.8.* \
       # for python3-trml2pdf
       python3-reportlab=3.5.* \
       # for $PY_LIBS/univention/admin/password.py
       python3-passlib=1.7.* \
+      # for ...
+      python3-pycurl=7.* \
+      # for /usr/sbin/univention-management-console-web-server
+      python3-pysaml2=4.5.* \
+      # for $PY_LIBS/univention/management/console/server.py
+      python3-sdnotify=0.* \
+      # for ...
+      python3-setproctitle=1.* \
+      # for ...
+      python3-tornado=5.* \
+      # for $PY_LIBS/univention/management/console/protocol/modserver.py
+      python3-tzlocal=1.* \
       # for $PY_LIBS/univention/admin/__init__.py
       python3-unidecode=1.0.* \
       # for the entrypoint.sh script
       wget=1.* \
       && \
-  rm -rf /var/lib/apt/lists/*
+  rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
 
 ############################################################
@@ -474,6 +485,18 @@ COPY --from=build \
   /usr/share/univention-management-console/i18n/de/
 
 COPY --from=build \
+  /usr/share/univention-management-console/saml/sp.py \
+  /usr/share/univention-management-console/saml/sp.py
+
+COPY --from=build \
+  /usr/share/univention-management-console-frontend/error.html \
+  /usr/share/univention-management-console-frontend/error.html
+
+COPY --from=build \
+  /etc/univention/*.conf \
+  /etc/univention/
+
+COPY --from=build \
   /version \
   /version
 
@@ -481,15 +504,14 @@ COPY --from=build \
 # Copy Docker-specific files
 
 # from python3-univention-debug, univention package
+# FIXME: this is ucs/base/univention-debug-python/python/univention/debug2.py
 COPY \
   libs/debug.py \
   ${DST_PY_LIBS}/univention/debug.py
 
-# from python3-univention-management-console, univention package
-COPY \
-  libs/management/console/log.py \
-  ${DST_PY_LIBS}/univention/management/console/log.py
+RUN mkdir /var/cache/univention-management-console/
 
+COPY scripts/env_to_ucr.py /env_to_ucr.py
 COPY scripts/entrypoint.sh /entrypoint.sh
 
 ############################################################
@@ -499,21 +521,11 @@ COPY scripts/entrypoint.sh /entrypoint.sh
 RUN echo -en 'en_US.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8\n' >> /etc/locale.gen && \
     localedef -i de_DE -c -f UTF-8 -A /usr/share/locale/locale.alias de_DE.UTF-8 && \
     localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8 && \
-# Create directory for SAML IDP xml
+    # Create directory for SAML IDP xml
     mkdir -p /usr/share/univention-management-console/saml/idp
 
 ENTRYPOINT ["/entrypoint.sh"]
 
-CMD ["--no-daemon", "--debug=2", "--log-file=/dev/stdout"]
-
-LABEL org.opencontainers.image.created="${LABEL_CREATED}"
-LABEL org.opencontainers.image.description="Server service for Univention Management Console"
-LABEL org.opencontainers.image.licenses="AGPL-3.0-or-later"
-LABEL org.opencontainers.image.revision=$LABEL_REVISION
-LABEL org.opencontainers.image.source="${LABEL_SOURCE}"
-LABEL org.opencontainers.image.title="udm-rest"
-LABEL org.opencontainers.image.url="https://docs.software-univention.de/developer-reference-4.4.html#chap:umc"
-LABEL org.opencontainers.image.vendor="Univention GmbH"
-LABEL org.opencontainers.image.version="${LABEL_VERSION}"
+CMD ["--debug=2", "--log-file=/dev/stdout", "--processes=1"]
 
 # [EOF]

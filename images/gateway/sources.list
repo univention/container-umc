@@ -1,7 +1,12 @@
 
-# TODO: remove "-test" after UCS 5.0 release
+# FIXME: Once 5.0.4 has been released,
+#        grab all packages from ucs504 and errata504 on updates.software-univention.de
+#        and remove the scoped builds from omar.knut.univention.de.
 
-deb https://updates-test.software-univention.de/ ucs500 main
-deb https://updates-test.software-univention.de/ errata500 main
+deb https://updates.software-univention.de/ ucs503 main
+deb https://updates.software-univention.de/ errata503 main
+
+deb [trusted=yes] http://omar.knut.univention.de/build2/ ucs_5.0-0-fbest-umc/all/
+deb [trusted=yes] http://omar.knut.univention.de/build2/ ucs_5.0-0-fbest-umc/$(ARCH)/
 
 # [EOF]

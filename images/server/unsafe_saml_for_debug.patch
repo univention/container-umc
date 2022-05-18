@@ -1,0 +1,21 @@
+diff --git /usr/share/univention-management-console/saml/sp.py /usr/share/univention-management-console/saml/sp.py
+index 8164554..c9dd8e8 100644
+--- /usr/share/univention-management-console/saml/sp.py
++++ /usr/share/univention-management-console/saml/sp.py
+@@ -1,5 +1,6 @@
+ # http://pysaml2.readthedocs.org/en/latest/howto/config.html
+ import glob
++import os
+ import os.path
+ from tempfile import NamedTemporaryFile
+ 
+@@ -55,7 +56,8 @@ else:
+     addresses = [fqdn]
+     addresses.extend([y['address'] for x, y in i.all_interfaces if y and y.get('address')])
+ 
+-bases = ['%s://%s/univention/saml' % (scheme, addr) for addr in addresses for scheme in ('https', 'http')]
++schemes = ('https', 'http') if os.getenv('SAML_PREFER_HTTP', 'no') != 'INSECURE' else ('http', 'https')
++bases = ['%s://%s/univention/saml' % (scheme, addr) for addr in addresses for scheme in schemes]
+ CONFIG = {
+     "entityid": "https://%s/univention/saml/metadata" % (fqdn,),
+     "name_form": NAME_FORMAT_URI,

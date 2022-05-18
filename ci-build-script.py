@@ -45,7 +45,7 @@ def main(service):
         _env=envs['compose'],
     )
 
-    services = ('gateway', 'server', 'web')
+    services = ('gateway', 'server')
     if service:
         services = (service, )
     for cur_service in services:

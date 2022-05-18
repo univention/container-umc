@@ -1,21 +1,19 @@
 ############################################################
 # Global variables
 
-ARG DOCKER_REGISTRY=""
+ARG DEBIAN_BASE_IMAGE_TAG=buster-slim
+ARG DOCKER_PROXY
 
 ############################################################
-# Set Docker environment
+# First build stage
 
-FROM ${DOCKER_REGISTRY}debian:buster-slim AS build
+FROM ${DOCKER_PROXY}debian:${DEBIAN_BASE_IMAGE_TAG} AS build
 
 ARG APT_KEY_URL=https://updates.software-univention.de/univention-archive-key-ucs-5x.gpg
-
-ARG PY_LIBS="/usr/lib/python3/dist-packages"
 
 SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 
 WORKDIR /apt
-
 
 ############################################################
 # Install Univention APT-Key
@@ -30,8 +28,7 @@ RUN \
       gpg-agent=2.2.* \
       && \
   curl -fsSL "${APT_KEY_URL}" | apt-key add - && \
-  rm -rf /var/lib/apt/lists/*
-
+  rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
 ############################################################
 # Install scripts and configs for dpkg
@@ -40,14 +37,37 @@ COPY \
   sources.list \
   /etc/apt/sources.list.d/15_ucs-online-version.list
 
+COPY scripts/fake.sh /usr/local/bin/systemctl
+COPY scripts/fake.sh /usr/local/bin/call_joinscript
+COPY scripts/fake.sh /usr/local/bin/create_logfile
+COPY scripts/fake.sh /usr/local/bin/stop_udm_cli_server
+COPY scripts/fake.sh /usr/local/bin/umc_frontend_new_hash
+COPY scripts/fake-uv-lib.sh /usr/local/bin/fake-uv-lib.sh
 
 ############################################################
 # Install univention-management-console-frontend / univention-web
 
 RUN \
-  apt-get update && \
+  apt-get --quiet update && \
+  # install Univention bash helper functions dependency
   DEBIAN_FRONTEND=noninteractive \
     apt-get --assume-yes --verbose-versions --no-install-recommends install \
+      shell-univention-lib=9.* \
+      && \
+  # we do not need the many bash helper-functions here
+  cp /usr/local/bin/fake-uv-lib.sh /usr/share/univention-lib/all.sh && \
+  cp /usr/local/bin/fake-uv-lib.sh /usr/share/univention-lib/join.sh && \
+  cp /usr/local/bin/fake-uv-lib.sh /usr/share/univention-lib/umc.sh && \
+  # install unlisted dependencies
+  DEBIAN_FRONTEND=noninteractive \
+    apt-get --assume-yes --verbose-versions --no-install-recommends install \
+      python3=3.7.* \
+      python3-distutils=3.7.* \
+      && \
+  # install UMC
+  DEBIAN_FRONTEND=noninteractive \
+    apt-get --assume-yes --verbose-versions --no-install-recommends install \
+            --option Dpkg::Options::="--force-confold" \
       univention-apache=12.* \
       # also for /etc/apache2/sites-available/univention-udm.conf
       univention-directory-manager-rest=10.* \
@@ -72,10 +92,11 @@ RUN \
       # for UCR template files
       python3-univention-lib=9.* \
       && \
-  rm -rf /var/lib/apt/lists/* && \
+  rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* && \
   awk \
     '/^Package: python3-univention-directory-manager-rest$/{ while(!/^Version: /){getline} print $2 }' \
     /var/lib/dpkg/status > /version
+
 
 ############################################################
 # Start second stage
@@ -89,12 +110,12 @@ ARG LABEL_VERSION=undefined
 ARG SRC_PY_LIBS="/usr/lib/python3/dist-packages"
 ARG DST_PY_LIBS="/usr/lib/python3/dist-packages"
 
-SHELL ["/bin/sh", "-eux", "-c"]
+SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 
 WORKDIR /
 
 RUN \
-  apt-get update && \
+  apt-get --quiet update && \
   DEBIAN_FRONTEND=noninteractive \
     apt-get --assume-yes --verbose-versions --no-install-recommends install \
       libpython3.9=3.* \
@@ -103,7 +124,7 @@ RUN \
       python3-lazy-object-proxy=1.* \
       python3-six=1.* \
       && \
-  rm -rf /var/lib/apt/lists/*
+  rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
 
 ############################################################
@@ -173,10 +194,10 @@ COPY --from=build \
 
 RUN \
   ln --symbolic --force /usr/sbin/univention-config-registry /usr/sbin/ucr && \
-
+  \
   mkdir --parents /var/cache/univention-config/ && \
   touch /var/cache/univention-config/cache && \
-
+  \
   mkdir /var/log/univention/
 
 COPY --from=build \
@@ -244,6 +265,10 @@ COPY --from=build \
   /etc/univention/templates/files/etc/apache2/ports.conf
 
 COPY --from=build \
+  /etc/univention/*.conf \
+  /etc/univention/
+
+COPY --from=build \
   /var/www \
   /var/www
 RUN rm -rf /var/www/saml
@@ -299,13 +324,13 @@ RUN \
 RUN \
   echo "LoadModule unixd_module /usr/local/apache2/modules/mod_unixd.so" \
     > /etc/apache2/mods-enabled/unixd.load && \
-
+  \
   echo "LoadModule log_config_module /usr/local/apache2/modules/mod_log_config.so" \
     > /etc/apache2/mods-enabled/log_config.load && \
-
+  \
   ln -sf /etc/apache2/mods-available/proxy_http.load \
     /etc/apache2/mods-enabled/proxy_http.load && \
-
+  \
   # Disable modules
   for mod in \
     authnz_pam \
@@ -315,7 +340,7 @@ RUN \
   ; do \
     rm "/etc/apache2/mods-enabled/${mod}.load" || true; \
   done && \
-
+  \
   # Make modules available
   # @todo: Not all modules are necessary!
   for mod in \
@@ -358,7 +383,7 @@ RUN \
     ln -sf "/usr/local/apache2/modules/${mod}.so" \
     "/usr/lib/apache2/modules/${mod}.so"; \
   done && \
-
+  \
   # Change/Remove some properties in the default univention apache config
   sed -i "/User \${APACHE_RUN_USER}/c User www-data" \
     /etc/apache2/apache2.conf && \
@@ -370,10 +395,14 @@ RUN \
     /etc/apache2/apache2.conf && \
   sed -i "/PidFile \${APACHE_PID_FILE}/c PidFile /usr/local/apache2/logs/httpd.pid" \
     /etc/apache2/apache2.conf && \
+  # Specify the Mutex implementation.
+  # This choice allows running the amd64 container also on arm64 hosts.
+  sed -i 's/^#\?Mutex.*$/Mutex posixsem/' \
+    /etc/apache2/apache2.conf && \
   # Custom Log format (example): CustomLog "/dev/stdout" "%h %l %u %t \"%r\" %>s %b"
   sed -i '/CustomLog \/var\/log\/apache2\/access.log/c CustomLog \"\/dev\/stdout\" "\%h \%l \%u \%t \\"\%r\\" \%>s \%b"' \
     /etc/univention/templates/files/etc/apache2/ucs-sites.conf.d/ucs-sites.conf && \
-
+  \
   # Change LogFormat temporarily
   # Replace \%O to \%b in LogFormat
   sed -i '/LogFormat/s/\%O/\%b/g' \
@@ -383,6 +412,9 @@ COPY \
   scripts/entrypoint.sh \
   /entrypoint.sh
 
+COPY \
+  scripts/env_to_ucr.py \
+  /env_to_ucr.py
 
 ############################################################
 # Define runtime
@@ -393,15 +425,5 @@ CMD ["-D", \
      "FOREGROUND", \
      "-d", "/etc/apache2/", \
      "-f", "/etc/apache2/apache2.conf"]
-
-LABEL org.opencontainers.image.created="${LABEL_CREATED}"
-LABEL org.opencontainers.image.description="Apache Gateway for Univention Management Console"
-LABEL org.opencontainers.image.licenses="AGPL-3.0-or-later"
-LABEL org.opencontainers.image.revision=$LABEL_REVISION
-LABEL org.opencontainers.image.source="${LABEL_SOURCE}"
-LABEL org.opencontainers.image.title="udm-rest"
-LABEL org.opencontainers.image.url="https://docs.software-univention.de/developer-reference-4.4.html#chap:umc"
-LABEL org.opencontainers.image.vendor="Univention GmbH"
-LABEL org.opencontainers.image.version="${LABEL_VERSION}"
 
 # [EOF]

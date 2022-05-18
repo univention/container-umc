@@ -22,22 +22,16 @@ umask 077
 # Short identifier: AGPL-3.0-only
 # Website: https://spdx.org/licenses/AGPL-3.0-only.html
 
-PID_PATH=/var/run/umc-server.pid
-SOCKET_PATH=/var/run/univention-management-console/server.socket
 
+############################################################
+# Initialize UCR from environment variables
+python3 /env_to_ucr.py
+
+############################################################
+# Link certificates in place
 PRIVATE_KEY_FILE=/run/secrets/private_key
 CA_CERT_FILE=/run/secrets/ca_cert
 CERT_PEM_FILE=/run/secrets/cert_pem
-
-CERT_DIR="/etc/univention/ssl/${HOSTNAME}.${DOMAINNAME}"
-CA_DIR="/etc/univention/ssl/ucsCA"
-
-DST_KEY_PATH="${CERT_DIR}/private.key"
-DST_CERT_PATH="${CERT_DIR}/cert.pem"
-DST_CA_PATH="${CA_DIR}/CAcert.pem"
-
-SAML_METADATA_PATH="$(printf '%s%s' /usr/share/univention-management-console \
-                                    /saml/idp/ucs-sso.example.org.xml)"
 
 if [[ ! -f "${PRIVATE_KEY_FILE}" ]]; then
   echo "SSL private key is missing at ${PRIVATE_KEY_FILE}"
@@ -54,29 +48,33 @@ if [[ ! -f "${CERT_PEM_FILE}" ]]; then
   exit 1
 fi
 
+CERT_DIR="/etc/univention/ssl/${hostname}.${domainname}"
+CA_DIR="/etc/univention/ssl/ucsCA"
+
 mkdir --parents "${CERT_DIR}"
 mkdir --parents "${CA_DIR}"
 
-cp -a "${PRIVATE_KEY_FILE}" "${DST_KEY_PATH}"
-cp -a "${CA_CERT_FILE}" "${DST_CERT_PATH}"
-cp -a "${CERT_PEM_FILE}" "${DST_CA_PATH}"
+ln --symbolic --force "${PRIVATE_KEY_FILE}" "${CERT_DIR}/private.key"
+ln --symbolic --force "${CERT_PEM_FILE}" "${CERT_DIR}/cert.pem"
+ln --symbolic --force "${CA_CERT_FILE}" "${CA_DIR}/CAcert.pem"
 
-if [[ -f "${PID_PATH}" ]]; then
-  echo "Removing stale pid ${PID_PATH}"
-  rm "${PID_PATH}"
-fi
 
-if [[ -S "${SOCKET_PATH}" ]]; then
-  echo "Removing stale socket file ${SOCKET_PATH}"
-  rm "${SOCKET_PATH}"
-fi
+############################################################
+# Load SAML metadata
+SAML_METADATA_BASE=/usr/share/univention-management-console/saml/idp
 
 if [[ -n "${SAML_METADATA_URL:-}" ]]; then
+  if [[ -z "${SAML_METADATA_URL_INTERNAL:-}" ]]; then
+    echo "SAML_METADATA_URL_INTERNAL is not set! Assuming it to equal SAML_METADATA_URL."
+    SAML_METADATA_URL_INTERNAL=${SAML_METADATA_URL}
+  fi
+
+  SAML_HOST=`echo ${SAML_METADATA_URL} | awk -F/ '{print $3}'`
+  SAML_METADATA_PATH="${SAML_METADATA_BASE}/${SAML_HOST}.xml"
+
+  echo "Trying to fetch SAML metadata from ${SAML_METADATA_URL_INTERNAL}"
   result=1
   counter=3
-
-  echo "Trying to fetch SAML metadata from ${SAML_METADATA_URL}"
-
   # 'Connection refused' is not retried by `wget --tries=X` hence the loop
   while [[ ${result} -gt 0 && ${counter} -gt 0 ]]; do
     {
@@ -84,8 +82,9 @@ if [[ -n "${SAML_METADATA_URL:-}" ]]; then
           --quiet \
           --timeout=3 \
           --tries=2 \
+          --header="Host: ${SAML_HOST}" \
           --output-document="${SAML_METADATA_PATH}" \
-          "${SAML_METADATA_URL}" \
+          "${SAML_METADATA_URL_INTERNAL}" \
         && result=0
     } || true
 
@@ -94,13 +93,24 @@ if [[ -n "${SAML_METADATA_URL:-}" ]]; then
   done
 
   if [[ ${result} -gt 0 ]]; then
-    echo "Error: Failed to fetch saml_metadata from ${SAML_METADATA_URL}" >&2
+    echo "Error: Failed to fetch saml_metadata from ${SAML_METADATA_URL_INTERNAL}" >&2
     exit 255
   fi
 
   echo "Successfully set SAML metadata in ${SAML_METADATA_PATH}"
+
+  ucr set umc/saml/idp-server=${SAML_METADATA_URL}
 fi
 
+if [[ -n "${SAML_SP_SERVER:-}" ]]; then
+  ucr set umc/saml/sp-server=${SAML_SP_SERVER}
+  mkdir --parents "/etc/univention/ssl/${SAML_SP_SERVER}"
+  ln --symbolic --force "${CERT_PEM_FILE}" "/etc/univention/ssl/${SAML_SP_SERVER}/cert.pem"
+  ln --symbolic --force "${PRIVATE_KEY_FILE}" "/etc/univention/ssl/${SAML_SP_SERVER}/private.key"
+fi
+
+############################################################
+# Store LDAP configuration
 cat <<EOF > /etc/ldap/ldap.conf
 # This file should be world readable but not world writable.
 
@@ -111,15 +121,15 @@ URI ${LDAP_URI}
 
 BASE ${LDAP_BASE}
 EOF
-chmod 0755 /etc/ldap/ldap.conf
+chmod 0644 /etc/ldap/ldap.conf
 
 touch /etc/machine.secret /etc/ldap.secret
-chmod 0700 /etc/machine.secret /etc/ldap.secret
+chmod 0600 /etc/machine.secret /etc/ldap.secret
 echo -n "${LDAP_ADMIN_PASSWORD}" > /etc/ldap.secret
 echo -n "${LDAP_MACHINE_PASSWORD}" > /etc/machine.secret
 
 echo -n "${LDAP_MACHINE_PASSWORD}" > /etc/pam_ldap.secret
-chmod 0700 /etc/pam_ldap.secret
+chmod 0600 /etc/pam_ldap.secret
 univention-config-registry commit \
   /etc/pam_ldap.conf \
   /etc/pam.d/univention-management-console
