@@ -97,11 +97,11 @@ RUN \
   apt-get update && \
   DEBIAN_FRONTEND=noninteractive \
     apt-get --assume-yes --verbose-versions --no-install-recommends install \
-      libpython3.7=3.7.* \
-      libapache2-mod-wsgi-py3=4.6.* \
+      libpython3.9=3.* \
+      libapache2-mod-wsgi-py3=4.* \
       # for univention-config-registry
-      python3-lazy-object-proxy=1.3.* \
-      python3-six=1.12.* \
+      python3-lazy-object-proxy=1.* \
+      python3-six=1.* \
       && \
   rm -rf /var/lib/apt/lists/*
 
