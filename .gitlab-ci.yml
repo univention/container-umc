@@ -1,132 +1,50 @@
 ---
+variables:
+  SOUVAP_API_V4_URL: https://gitlab.souvap-univention.de/api/v4
+  SOUVAP_DOCKER_ACCESS_USER: gitlab-ci-knut
+  SOUVAP_HELM_ACCESS_USER: gitlab-ci-knut
+  # SOUVAP_HELM_PROJECT_ID: TODO
+  SOUVAP_REGISTRY_HOST: registry.souvap-univention.de
+  # SOUVAP_REGISTRY_PATH: souvap/tooling/images/container-umc
+  # SOUVAP_REGISTRY_REPO: ${SOUVAP_REGISTRY_HOST}/${SOUVAP_REGISTRY_PATH}
 
-# Only docker/compose:debian-X.XX.X seems to be working with dind
-# out of the box the alpine as of 1.28.0 does not because of a mismatch issue
-# between "musl libc" vs glibc:
-# https://github.com/docker/compose/issues/3465
-# https://stackoverflow.com/a/42322893
+include:
+  - project: univention/customers/dataport/upx/common-ci
+    file:
+      # - defaults/souvap-workflow.yaml
+      - templates/kaniko.yaml
+      - templates/souvap.yaml
+      - jobs/lint-commit-messages.yaml
+      - jobs/lint-pre-commit.yaml
+      # - jobs/package-and-publish-helm-charts.yaml
 
 stages:
-- lint-stage
-- build-stage
-- test-stage
-- publish-stage
+  - lint
+  - prepare
+  - build
+  - test
+  - package
+  - publish
 
-variables:
-  UNIV_ARTIFACTS: artifacts.knut.univention.de
-  UNIV_DOCKERHUB_CACHE: ${UNIV_ARTIFACTS}/dockerhub_proxy_cache/
-  UPX_IMAGE_REGISTRY: ${UNIV_ARTIFACTS}/upx/
-  DOCKER_TLS_CERTDIR: ''
-  DOCKER_HOST: tcp://docker:2375
-
-  DOCKER_COMPOSE_PRODUCTION_FILES:
-    --file docker-compose.yaml
-    --file docker-compose.prod.yaml
-
-  DOCKER_COMPOSE_BUILD_FILES:
-    ${DOCKER_COMPOSE_PRODUCTION_FILES}
-    --file docker-compose.override.yaml
-
-default:
+lint-pre-commit:
   before_script:
-  - mkdir "$HOME/.docker/"
-  - echo "$DOCKER_AUTH_CONFIG" > "$HOME/.docker/config.json"
+    # Compose lint would fail without the referenced env files
+    - cp .env.univention-management-console-gateway.example .env.univention-management-console-gateway
+    - cp .env.univention-management-console-server.example .env.univention-management-console-server
+    - helm repo add bitnami https://charts.bitnami.com/bitnami
 
-pre-commit-job:
-  tags:
-  - docker
-  stage: lint-stage
-  image:
-    name: ${UPX_IMAGE_REGISTRY}upx-pre-commit:latest
-    entrypoint: [/bin/bash, -c]
+build-umc-gateway:
+  stage: build
+  extends: .kaniko
+  needs: []
   variables:
-    PIP_CACHE_DIR: ${CI_PROJECT_DIR}/.cache/pip
-    PRE_COMMIT_HOME: ${CI_PROJECT_DIR}/.cache/pre-commit
-  cache:
-    paths:
-    - .cache/pip
-    - .cache/pre-commit
-    - venv/
-  before_script:
-  - echo "Explicitly skip the default action docker login"
-  script:
-  # The image currently supplies version 21.1.2
-  - /venv/bin/python -m pip install --upgrade pip==21.1.3
-  # pip/ruamel.yaml.clib depends on
-  #   gcc to compile test_ruamel_yaml.c
-  #   Scrt1.o and crti.o from musl-dev
-  #   Python.h from python3-dev
-  - apk add --no-cache gcc musl-dev python3-dev
-  # Compose lint would fail without the referenced env files
-  - for i in .env.*.example; do cp "${i}" "${i/.example}"; done
-  - pre-commit run --all-files
+    KANIKO_BUILD_CONTEXT: "docker/gateway"
+    CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/umc-gateway"
 
-build-gateway-job:
-  tags:
-  - docker
-  image: ${UPX_IMAGE_REGISTRY}docker/compose:1.30-debian-buster-python-3.7.3
-  stage: build-stage
-  services:
-  - name: ${UNIV_DOCKERHUB_CACHE}library/docker:20.10.7-dind
-    alias: docker
-    command:
-    - --insecure-registry=artifacts.knut.univention.de
-    - --tls=false
-  script:
-  - python3 ci-build-script.py gateway
-
-build-server-job:
-  tags:
-  - docker
-  image: ${UPX_IMAGE_REGISTRY}docker/compose:1.30-debian-buster-python-3.7.3
-  stage: build-stage
-  services:
-  - name: ${UNIV_DOCKERHUB_CACHE}library/docker:20.10.7-dind
-    alias: docker
-    command:
-    - --insecure-registry=artifacts.knut.univention.de
-    - --tls=false
-  script:
-  - python3 ci-build-script.py server
-
-test-job:
-  tags:
-  - docker
-  image: ${UPX_IMAGE_REGISTRY}docker/compose:1.30-debian-buster-python-3.7.3
-  stage: test-stage
-  services:
-  - name: ${UNIV_DOCKERHUB_CACHE}library/docker:20.10.7-dind
-    alias: docker
-    command:
-    - --insecure-registry=artifacts.knut.univention.de
-    - --tls=false
-  script:
-  - for i in .env.*.example; do cp "${i}" "${i/.example}"; done
-  - for i in ucr.*.example; do cp "${i}" "${i/.example}"; done
-  # Masked temporary file created via the GitLab UI
-  - cp "${PRIVATE_KEY_FILE}" ssl/secret/private.key
-  - cp "${CERT_FILE}" ssl/certs/cert.pem
-  - cp "${CA_CERT_FILE}" ssl/certs/CAcert.pem
-  - docker-compose ${DOCKER_COMPOSE_PRODUCTION_FILES} pull
-  - docker-compose ${DOCKER_COMPOSE_PRODUCTION_FILES} up --detach --no-build
-  - echo "Integration test here"
-  - docker-compose ${DOCKER_COMPOSE_PRODUCTION_FILES} down
-  - docker-compose ${DOCKER_COMPOSE_PRODUCTION_FILES} rm
-
-publish-job:
-  image: ${UPX_IMAGE_REGISTRY}docker/compose:1.30-debian-buster-python-3.7.3
-  stage: publish-stage
-  tags:
-  - docker
-  only:
-  - main
-  services:
-  - name: ${UNIV_DOCKERHUB_CACHE}library/docker:20.10.7-dind
-    alias: docker
-    command:
-    - --insecure-registry=artifacts.knut.univention.de
-    - --tls=false
-  script:
-  - python3 ci-publish-script.py
-
-...
+build-umc-server:
+  stage: build
+  extends: .kaniko
+  needs: []
+  variables:
+    KANIKO_BUILD_CONTEXT: "docker/server"
+    CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/umc-server"

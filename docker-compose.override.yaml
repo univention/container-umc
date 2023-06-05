@@ -5,14 +5,14 @@ version: '3.8'
 services:
   umc-gateway:
     build:
-      context: ./images/gateway
+      context: ./docker/gateway
       platforms:
         # FIXME: remove once arm64 packages are available at updates.software-univention.de
         - "linux/amd64"
       target: final
   umc-server:
     build:
-      context: ./images/server
+      context: ./docker/server
       platforms:
         # FIXME: remove once arm64 packages are available at updates.software-univention.de
         - "linux/amd64"
