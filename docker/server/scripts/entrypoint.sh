@@ -69,7 +69,7 @@ if [[ -n "${SAML_METADATA_URL:-}" ]]; then
     SAML_METADATA_URL_INTERNAL=${SAML_METADATA_URL}
   fi
 
-  SAML_HOST=`echo ${SAML_METADATA_URL} | awk -F/ '{print $3}'`
+  SAML_HOST=$(echo "${SAML_METADATA_URL}" | awk -F/ '{print $3}')
   SAML_METADATA_PATH="${SAML_METADATA_BASE}/${SAML_HOST}.xml"
 
   echo "Trying to fetch SAML metadata from ${SAML_METADATA_URL_INTERNAL}"
@@ -99,11 +99,11 @@ if [[ -n "${SAML_METADATA_URL:-}" ]]; then
 
   echo "Successfully set SAML metadata in ${SAML_METADATA_PATH}"
 
-  ucr set umc/saml/idp-server=${SAML_METADATA_URL}
+  ucr set umc/saml/idp-server="${SAML_METADATA_URL}"
 fi
 
 if [[ -n "${SAML_SP_SERVER:-}" ]]; then
-  ucr set umc/saml/sp-server=${SAML_SP_SERVER}
+  ucr set umc/saml/sp-server="${SAML_SP_SERVER}"
   mkdir --parents "/etc/univention/ssl/${SAML_SP_SERVER}"
   ln --symbolic --force "${CERT_PEM_FILE}" "/etc/univention/ssl/${SAML_SP_SERVER}/cert.pem"
   ln --symbolic --force "${PRIVATE_KEY_FILE}" "/etc/univention/ssl/${SAML_SP_SERVER}/private.key"

@@ -23,6 +23,21 @@ services:
       - cert_pem
       - private_key
 
+  # Environment of the pre-commit linter.
+  pre-commit:
+    profiles:
+      - test
+    image: gitregistry.knut.univention.de/univention/customers/dataport/upx/container-pre-commit/upx-pre-commit:latest
+    volumes:
+      - type: bind
+        source: .
+        target: /code
+      - type: volume
+        # pre-commit installs dependencies, having them cached speeds things up
+        # a lot.
+        source: pre-commit-cache
+        target: /cache
+
 secrets:
   ca_cert:
     file: ssl/certs/CAcert.pem
@@ -32,5 +47,8 @@ secrets:
     file: ssl/secret/private.key
 
 volumes:
+  pre-commit-cache:
   umc-acls:
+
+
 ...
