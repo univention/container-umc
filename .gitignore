@@ -1,5 +1,6 @@
-/.env.univention-management-console-gateway
-/.env.univention-management-console-server
+/.env.umc-gateway
+/.env.umc-server
 /ansible/inventory/*.yaml
 /lib/__pycache__/
+/secret/
 /ssl/

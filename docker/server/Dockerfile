@@ -101,7 +101,7 @@ RUN \
     python3-univention-heimdal=10.* \
     python3-univention-lib=9.* \
     python3-univention-license=11.* \
-    python3-univention-management-console=12.* \
+    python3-univention-management-console=12.0.27-1 \
     python3-univention-debhelper=2.* \
     # for $PY_LIBS/univention/admindiary/client.py and
     # $PY_LIBS/univention/admindiary/events.py
@@ -110,7 +110,7 @@ RUN \
     univention-config=15.* \
     univention-directory-reports=12.* \
     univention-management-console-module-udm=10.* \
-    univention-management-console-server=12.* \
+    univention-management-console-server=12.0.27-1 \
     univention-pam=13.* \
     && \
   rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* && \
@@ -137,6 +137,7 @@ RUN \
   rm -rf /apt/
 
 COPY disable_license_check.patch \
+     disable_suffixed_cookies.patch \
      use_try_first.patch \
      unsafe_saml_for_debug.patch \
      /
@@ -144,6 +145,8 @@ COPY disable_license_check.patch \
 RUN  \
   patch -p 0 -d / -i /disable_license_check.patch && \
     rm /disable_license_check.patch && \
+  patch -p 0 -d / -i /disable_suffixed_cookies.patch && \
+    rm /disable_suffixed_cookies.patch && \
   patch -p 0 -d / -i /use_try_first.patch && \
     rm /use_try_first.patch && \
   patch -p 0 -d / -i /unsafe_saml_for_debug.patch && \
@@ -242,6 +245,7 @@ RUN \
       # for ...
       python3-pycurl=7.* \
       # for /usr/sbin/univention-management-console-web-server
+      python3-cherrypy3=8.* \
       python3-pysaml2=4.5.* \
       # for $PY_LIBS/univention/management/console/server.py
       python3-sdnotify=0.* \
@@ -294,6 +298,14 @@ COPY --from=build \
 COPY --from=build \
   /usr/lib/x86_64-linux-gnu/libuniventiondebug.so.1.0.0 \
   /usr/lib/x86_64-linux-gnu/libuniventiondebug.so.1
+
+# from python3-univention-debug
+# for ${PY_LIBS}/univention/management/console/log.py
+COPY --from=build \
+  ${SRC_PY_LIBS}/univention/_debug.cpython-37m-x86_64-linux-gnu.so \
+  ${SRC_PY_LIBS}/univention/debug.py \
+  ${SRC_PY_LIBS}/univention/debug2.py \
+  ${DST_PY_LIBS}/univention/
 
 # from python3-notifier (univention package)
 # used files: __init__.py dispatch.py log.py nf_generic.py popen.py signals.py
@@ -398,6 +410,11 @@ COPY --from=build \
   ${SRC_PY_LIBS}/univention/management/console/protocol/*.py \
   ${DST_PY_LIBS}/univention/management/console/protocol/
 
+# from python3-univention-management-console
+COPY --from=build \
+  ${SRC_PY_LIBS}/univention_management_console-*.egg-info \
+  ${DST_PY_LIBS}/univention_management_console-*.egg-info
+
 # from python3-univention
 # for $PY_LIBS/univention/admin/uldap.py
 COPY --from=build \
@@ -417,7 +434,7 @@ COPY --from=build \
   /usr/share/univention-management-console/modules/udm.xml \
   /usr/share/univention-management-console/modules/udm.xml
 
-RUN mkdir /usr/share/doc/univention-management-console-server/
+RUN mkdir /usr/share/doc/univention-management-console-web-server/
 
 # Read by umc-get info
 COPY --from=build \
@@ -436,8 +453,30 @@ COPY --from=build \
   /etc/univention/templates/files/etc/pam_ldap.conf
 
 COPY --from=build \
+  /etc/univention/templates/info/univention-management-console-*.info \
+  /etc/univention/templates/info/
+COPY --from=build \
   /etc/univention/templates/files/etc/pam.d/univention-management-console.d/ \
   /etc/univention/templates/files/etc/pam.d/univention-management-console.d/
+
+# stub file for SAML IdP setup (handled by entrypoint.sh)
+# TODO: This calls UDM and creates saml/serviceprovider entries. Do we need them?
+RUN \
+  mkdir /etc/univention/templates/modules && \
+  touch /etc/univention/templates/modules/setup_saml_sp.py
+
+# stub files referenced by pam*
+RUN \
+  mkdir \
+    /etc/univention/templates/files/etc/pam.d/common-auth.d \
+    /etc/univention/templates/files/etc/pam.d/common-session.d \
+    && \
+  touch \
+    /etc/univention/templates/files/etc/pam.d/common-session.d/10univention-pam_common \
+    /etc/univention/templates/files/etc/pam.d/common-auth.d/10univention-pam_header \
+    /etc/univention/templates/files/etc/pam.d/common-auth.d/30univention-pam_local \
+    /etc/univention/templates/files/etc/pam.d/common-auth.d/50univention-pam_general \
+    /etc/univention/templates/files/etc/pam.d/common-auth.d/70univention-pam_env
 
 COPY --from=build \
   /etc/univention/templates/files/var/www/univention/meta.json \
@@ -503,15 +542,8 @@ COPY --from=build \
 ############################################################
 # Copy Docker-specific files
 
-# from python3-univention-debug, univention package
-# FIXME: this is ucs/base/univention-debug-python/python/univention/debug2.py
-COPY \
-  libs/debug.py \
-  ${DST_PY_LIBS}/univention/debug.py
-
 RUN mkdir /var/cache/univention-management-console/
 
-COPY scripts/env_to_ucr.py /env_to_ucr.py
 COPY scripts/entrypoint.sh /entrypoint.sh
 
 ############################################################
@@ -526,6 +558,6 @@ RUN echo -en 'en_US.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8\n' >> /etc/locale.gen && \
 
 ENTRYPOINT ["/entrypoint.sh"]
 
-CMD ["--debug=2", "--log-file=/dev/stdout", "--processes=1"]
+CMD ["--no-daemonize-module-processes", "--log-file", "stdout"]
 
 # [EOF]

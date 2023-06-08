@@ -412,10 +412,6 @@ COPY \
   scripts/entrypoint.sh \
   /entrypoint.sh
 
-COPY \
-  scripts/env_to_ucr.py \
-  /env_to_ucr.py
-
 ############################################################
 # Define runtime
 

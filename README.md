@@ -47,26 +47,17 @@ Edit the following variables in `.env.univention-management-console-server` to y
 ```
 DOMAINNAME=
 HOSTNAME=
-LDAP_URI=ldap://<UCS_IP>:7389
-LDAP_BASE=<ucr get ldap/base>
+LDAP_HOST=<UCS_IP>
+LDAP_PORT=7389
+LDAP_BASE_DN=<ucr get ldap/base>
 LDAP_MACHINE_PASSWORD=<content of /etc/machine.secret>
 LDAP_ADMIN_PASSWORD=<content of /etc/ldap.secret>
+...
 SAML_METADATA_URL=http://localhost:8097/realms/ucs/protocol/saml/descriptor
 SAML_METADATA_URL_INTERNAL=http://keycloak:8080/realms/ucs/protocol/saml/descriptor
 SAML_SP_SERVER=localhost:8000
 SAML_OVER_HTTP=no
-...
-ldap__base=
-ldap__master=
-ldap__master__port=7389
-ldap__server__name=
-ldap__server__port=7389
-ldap__server__ip=
-ldap__hostdn=
-...
 ```
-
-Values of the UCR variables (lower-case keys) can be obtained from UCS using `ucr dump`.
 
 The `SAML_METADATA_URL` should include the public FQDN of the SAML IdP.
 For development purposes there is `SAML_METADATA_URL_INTERNAL`
@@ -82,7 +73,7 @@ and accompanying certificate woes.
 Edit the following variables in `.env.univention-management-console-gateway` to your liking:
 ```
 UDM_URL=
-UMC_SERVER_URL
-domainname=
-hostname=
+UMC_SERVER_URL=
+DOMAINNAME=
+HOSTNAME=
 ```

@@ -1,23 +1,21 @@
 ---
 
-version: '3.8'
-
 name: "dev-local"
 
 services:
   umc-gateway:
-    env_file: .env.univention-management-console-gateway
     platform: linux/amd64
     ports:
-      - 8110:80
+      - 8091:80
+    env_file: .env.umc-gateway
 
   umc-server:
-    env_file: .env.univention-management-console-server
     platform: linux/amd64
     ports:
-      - 8111:8090
+      - 8090:8090
     volumes:
       - umc-acls:/var/cache/univention-management-console/acls/
+    env_file: .env.umc-server
     secrets:
       - ca_cert
       - cert_pem
@@ -44,7 +42,11 @@ secrets:
   cert_pem:
     file: ssl/certs/cert.pem
   private_key:
-    file: ssl/secret/private.key
+    file: ssl/certs/private.key
+  ldap_secret:
+    file: secret/ldap.secret
+  machine_secret:
+    file: secret/machine.secret
 
 volumes:
   pre-commit-cache:

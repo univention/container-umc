@@ -29,7 +29,35 @@ set -euxo pipefail
 # <https://www.gnu.org/licenses/>.
 
 # Fill UCR from environment variables
-python3 ./env_to_ucr.py
+ucr set \
+    domainname="${DOMAINNAME}" \
+    hostname="${HOSTNAME}" \
+    apache2/autostart=yes \
+    apache2/documentroot="/var/www/" \
+    apache2/force_https/exclude/http_host/localhost="localhost" \
+    apache2/force_https/exclude/request_uri/mod-status="/server-status" \
+    apache2/force_https/exclude/request_uri/univention-portal="/univention/get" \
+    apache2/loglevel="warn" \
+    apache2/maxclients=150 \
+    apache2/startsite="univention/" \
+    ucs/server/robots/disallow="/" \
+    ucs/server/sso/fqdn="ucs-sso.univention.intranet" \
+    umc/http/content-security-policy/connect-src="'self'" \
+    umc/http/content-security-policy/default-src="'unsafe-eval'" \
+    umc/http/content-security-policy/font-src="'self'" \
+    umc/http/content-security-policy/form-action="'self'" \
+    umc/http/content-security-policy/frame-ancestors="'self'" \
+    umc/http/content-security-policy/frame-src="*" \
+    umc/http/content-security-policy/img-src="*" \
+    umc/http/content-security-policy/media-src="*" \
+    umc/http/content-security-policy/object-src="'self'" \
+    umc/http/content-security-policy/script-src="'self' 'unsafe-inline'" \
+    umc/http/content-security-policy/style-src="'self' 'unsafe-inline'" \
+    umc/login/content-security-policy/frame-ancestors="'self'" \
+    portal/paths="/univention/portal/, /univention/umc/" \
+    locale="de_DE.UTF-8:UTF-8 en_US.UTF-8:UTF-8" \
+    ucs/server/languages/de_DE="Deutsch" \
+    ucs/server/languages/en_US="English"
 
 # Generate config files from UCR templates
 univention-config-registry commit \
