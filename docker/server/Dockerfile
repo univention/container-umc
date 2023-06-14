@@ -101,7 +101,7 @@ RUN \
     python3-univention-heimdal=10.* \
     python3-univention-lib=9.* \
     python3-univention-license=11.* \
-    python3-univention-management-console=12.0.27-1 \
+    python3-univention-management-console=12.* \
     python3-univention-debhelper=2.* \
     # for $PY_LIBS/univention/admindiary/client.py and
     # $PY_LIBS/univention/admindiary/events.py
@@ -110,7 +110,7 @@ RUN \
     univention-config=15.* \
     univention-directory-reports=12.* \
     univention-management-console-module-udm=10.* \
-    univention-management-console-server=12.0.27-1 \
+    univention-management-console-server=12.* \
     univention-pam=13.* \
     && \
   rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* && \

@@ -29,8 +29,8 @@ stages:
 lint-pre-commit:
   before_script:
     # Compose lint would fail without the referenced env files
-    - cp .env.univention-management-console-gateway.example .env.univention-management-console-gateway
-    - cp .env.univention-management-console-server.example .env.univention-management-console-server
+    - cp .env.umc-gateway.example .env.umc-gateway
+    - cp .env.umc-server.example .env.umc-server
     - helm repo add bitnami https://charts.bitnami.com/bitnami
 
 build-umc-gateway:

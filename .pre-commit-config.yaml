@@ -54,15 +54,11 @@ repos:
       # "ruff"
       - id: "ruff"
         alias: "ruff-main"
-        # exclude file which was copied untouched from upstream ucs
-        exclude: docker/server/libs/debug.py
         # "ruff"
       - id: "ruff"
         alias: "ruff-fix"
         stages: ["manual"]
         args: ["--fix"]
-        # exclude file which was copied untouched from upstream ucs
-        exclude: docker/server/libs/debug.py
 
   # This is a wrapper for shellcheck as long as
   # shellcheck doesn't have it's own .pre-commit-hooks.yaml

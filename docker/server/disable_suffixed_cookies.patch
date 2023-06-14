@@ -5,7 +5,7 @@ because the portal-frontend does not handle them correctly.
 +++ /usr/lib/python3/dist-packages/univention/management/console/resource.py
 @@ -185,13 +185,7 @@
              return morsel.value
- 
+
      def suffixed_cookie_name(self, name):
 -        host, _, port = self.request.headers.get('Host', '').partition(':')
 -        if port:
@@ -15,6 +15,6 @@ because the portal-frontend does not handle them correctly.
 -                port = ''
 -        return '%s%s' % (name, port)
 +        return name
- 
+
      def bind_session_to_ip(self):
          ip = self.get_ip_address()
