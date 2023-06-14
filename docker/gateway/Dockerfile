@@ -311,17 +311,13 @@ COPY --from=build \
 
 RUN \
   mkdir -p \
-  /usr/lib/apache2/modules/
-
-# Disable configs
-RUN \
+  /usr/lib/apache2/modules/ && \
+  # Disable configs
   rm \
     /etc/apache2/conf-enabled/other-vhosts-access-log.conf \
     /etc/apache2/conf-available/simplesamlphp.conf \
-    /etc/apache2/conf-available/php7.3-cgi.conf
-
-# Enable modules
-RUN \
+    /etc/apache2/conf-available/php7.3-cgi.conf && \
+  # Enable modules
   echo "LoadModule unixd_module /usr/local/apache2/modules/mod_unixd.so" \
     > /etc/apache2/mods-enabled/unixd.load && \
   \

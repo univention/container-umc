@@ -135,10 +135,10 @@ ucr set \
     portal/auth-mode="saml" \
     umc/http/interface="0.0.0.0" \
     umc/http/port=8090 \
-    umc/module/debug/level=${DEBUG_LEVEL} \
+    umc/module/debug/level="${DEBUG_LEVEL}" \
     umc/self-service/allow-authenticated-use=true \
     umc/self-service/profiledata/enabled=true \
-    umc/server/debug/level=${DEBUG_LEVEL} \
+    umc/server/debug/level="${DEBUG_LEVEL}" \
     umc/server/processes=1 \
     umc/web/favorites/default="welcome,udm:users/user,udm:groups/group,udm:computers/computer,appcenter:appcenter,updater" \
     umc/web/sso/enabled=true \
