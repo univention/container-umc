@@ -201,6 +201,9 @@ RUN \
       # for $PY_LIBS/univention/management/console/protocol/session.py
       # the debian-buster version would cause a segfault.
       python3-ldap=3.1.* \
+      # for $PY_LIBS/univention/management/console/message.py
+      # calling $PY_LIBS/univention/uldap.py
+      cy2-saml=1.9.* \
     && \
   rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* /etc/apt/sources.list.d/15_ucs-online-version.list
 
