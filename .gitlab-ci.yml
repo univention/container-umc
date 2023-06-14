@@ -11,7 +11,7 @@ variables:
 include:
   - project: univention/customers/dataport/upx/common-ci
     file:
-      # - defaults/souvap-workflow.yaml
+      - defaults/souvap-workflow.yaml
       - templates/kaniko.yaml
       - templates/souvap.yaml
       - jobs/lint-commit-messages.yaml
