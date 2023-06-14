@@ -159,12 +159,12 @@ ucr set \
     directory/reports/cleanup/age="43200" \
     directory/reports/cleanup/cron="0 0 * * *" \
     directory/reports/logo="/usr/share/univention-directory-reports/univention_logo.png" \
-    directory/reports/templates/csv/computer1="computers/computer "CSV Report" /etc/univention/directory/reports/default computers.csv" \
-    directory/reports/templates/csv/group1="groups/group "CSV Report" /etc/univention/directory/reports/default groups.csv" \
-    directory/reports/templates/csv/user1="users/user "CSV Report" /etc/univention/directory/reports/default users.csv" \
-    directory/reports/templates/pdf/computer1="computers/computer "PDF Document" /etc/univention/directory/reports/default computers.rml" \
-    directory/reports/templates/pdf/group1="groups/group "PDF Document" /etc/univention/directory/reports/default groups.rml" \
-    directory/reports/templates/pdf/user1="users/user "PDF Document" /etc/univention/directory/reports/default users.rml" \
+    directory/reports/templates/csv/computer1="computers/computer \"CSV Report\" /etc/univention/directory/reports/default computers.csv" \
+    directory/reports/templates/csv/group1="groups/group \"CSV Report\" /etc/univention/directory/reports/default groups.csv" \
+    directory/reports/templates/csv/user1="users/user \"CSV Report\" /etc/univention/directory/reports/default users.csv" \
+    directory/reports/templates/pdf/computer1="computers/computer \"PDF Document\" /etc/univention/directory/reports/default computers.rml" \
+    directory/reports/templates/pdf/group1="groups/group \"PDF Document\" /etc/univention/directory/reports/default groups.rml" \
+    directory/reports/templates/pdf/user1="users/user \"PDF Document\" /etc/univention/directory/reports/default users.rml" \
     groups/default/domainadmins="Domain Admins" \
     groups/default/printoperators="Printer-Admins" \
     license/base="dc=example,dc=org" \
@@ -177,8 +177,8 @@ ucr set \
     saml/idp/enableSAML20-IdP="true" \
     saml/idp/entityID="https://ucs-sso.example.org/simplesamlphp/saml2/idp/metadata.php" \
     saml/idp/https="true" \
-    saml/idp/ldap/get_attributes=""'uid', 'mailPrimaryAddress', 'memberOf', 'enabledServiceProviderIdentifier'"" \
-    saml/idp/ldap/search_attributes=""'uid', 'mailPrimaryAddress'"" \
+    saml/idp/ldap/get_attributes="'uid', 'mailPrimaryAddress', 'memberOf', 'enabledServiceProviderIdentifier'" \
+    saml/idp/ldap/search_attributes="'uid', 'mailPrimaryAddress'" \
     saml/idp/lookandfeel/theme="univentiontheme:univention" \
     saml/idp/negotiate="true" \
     saml/idp/session-duration="43200" \
@@ -227,8 +227,8 @@ ucr set \
     umc/http/content-security-policy/img-src="*" \
     umc/http/content-security-policy/media-src="*" \
     umc/http/content-security-policy/object-src="'self'" \
-    umc/http/content-security-policy/script-src=""'self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com/ https://s.ytimg.com/"" \
-    umc/http/content-security-policy/style-src=""'self' 'unsafe-inline'"" \
+    umc/http/content-security-policy/script-src="'self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com/ https://s.ytimg.com/" \
+    umc/http/content-security-policy/style-src="'self' 'unsafe-inline'" \
     umc/http/response-timeout="310" \
     umc/http/session/timeout="28800" \
     umc/login/content-security-policy/frame-ancestors="'self'" \
