@@ -101,7 +101,7 @@ RUN \
 ############################################################
 # Start second stage
 
-FROM ${DOCKER_REGISTRY}httpd:2.4 AS final
+FROM ${DOCKER_REGISTRY}httpd:2.4-bookworm AS final
 
 ARG LABEL_CREATED=undefined
 ARG LABEL_REVISION=undefined
@@ -118,7 +118,7 @@ RUN \
   apt-get --quiet update && \
   DEBIAN_FRONTEND=noninteractive \
     apt-get --assume-yes --verbose-versions --no-install-recommends install \
-      libpython3.9=3.* \
+      libpython3.11=3.* \
       libapache2-mod-wsgi-py3=4.* \
       # for univention-config-registry
       python3-lazy-object-proxy=1.* \
