@@ -1,3 +1,6 @@
+Allow configuring which scheme (https or http) to consider when generating the
+SAML Consumer Service Assertions (i.e. the URL where to return after the IdP (Keycloak) login).
+
 diff --git /usr/share/univention-management-console/saml/sp.py /usr/share/univention-management-console/saml/sp.py
 index 8164554..c9dd8e8 100644
 --- /usr/share/univention-management-console/saml/sp.py
@@ -14,7 +17,7 @@ index 8164554..c9dd8e8 100644
      addresses.extend([y['address'] for x, y in i.all_interfaces if y and y.get('address')])
 
 -bases = ['%s://%s/univention/saml' % (scheme, addr) for addr in addresses for scheme in ('https', 'http')]
-+schemes = ('https', 'http') if os.getenv('SAML_PREFER_HTTP', 'no') != 'INSECURE' else ('http', 'https')
++schemes = tuple(scheme.strip() for scheme in os.getenv('SAML_SCHEMES', 'https, http').split(','))
 +bases = ['%s://%s/univention/saml' % (scheme, addr) for addr in addresses for scheme in schemes]
  CONFIG = {
      "entityid": "https://%s/univention/saml/metadata" % (fqdn,),

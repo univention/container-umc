@@ -1,0 +1,48 @@
+---
+
+# Dummy values for running the Helm linter on the umc-server.
+# Run it like this: helm lint -f values.yaml -f linter_values.yaml .
+
+## Application-specific
+umcServer:
+  domainname: "example.develop.souvap-univention.de"
+  hostname: "umc"
+  ldapHost: "my-ldap"
+  ldapHostIp: "192.0.2.1"
+  ldapPort: 7389
+  ldapBaseDn: "dc=exampel,dc=org"
+  ldapHostDn: "cn=ucs-1234,cn=dc,cn=computers,dc=example,dc=org"
+  enforceSessionCookie: "true"
+  localIpRanges: "192.0.2.0/0,::/0"
+  debugLevel: "5"
+  samlMetadataUrl: "https://id.example.org/realms/ucs/protocol/saml/descriptor"
+  samlMetadataUrlInternal: "http://keycloak/realms/ucs/protocol/saml/descriptor"
+  samlSpServer: "umc.example.develop.souvap-univention.de"
+  samlSchemes: "https, http"
+
+
+## Kubernetes ingress
+ingress:
+  enabled: false
+  host: "umc.example.develop.souvap-univention.de"
+
+
+## Istio based
+istio:
+  enabled: true
+  host: "umc.example.develop.souvap-univention.de"
+
+## Docker image
+image:
+  tag: "branch-feature-example"
+
+
+## Container deployment probes
+probes:
+  liveness:
+    enabled: false
+
+  readiness:
+    enabled: false
+
+...

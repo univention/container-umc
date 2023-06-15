@@ -43,7 +43,7 @@ The SSL keys and certificates can be fetched from a UCS machine:
 
 ## Container for the UMC-Server
 
-Edit the following variables in `.env.univention-management-console-server` to your liking:
+Edit the following variables in `.env.umc-server` to your liking:
 ```
 DOMAINNAME=
 HOSTNAME=
@@ -56,7 +56,7 @@ LDAP_ADMIN_PASSWORD=<content of /etc/ldap.secret>
 SAML_METADATA_URL=http://localhost:8097/realms/ucs/protocol/saml/descriptor
 SAML_METADATA_URL_INTERNAL=http://keycloak:8080/realms/ucs/protocol/saml/descriptor
 SAML_SP_SERVER=localhost:8000
-SAML_OVER_HTTP=no
+SAML_SCHEMES=http
 ```
 
 The `SAML_METADATA_URL` should include the public FQDN of the SAML IdP.
@@ -64,13 +64,14 @@ For development purposes there is `SAML_METADATA_URL_INTERNAL`
 which should be set if the UMC container cannot reach `SAML_METADATA_URL`
 and needs to use a cluster-internal hostname.
 
-For development purposes only(!)
-consider setting `SAML_PREFER_HTTP=INSECURE` in order to avoid https redirects
-and accompanying certificate woes.
+`SAML_SCHEMES` configures the preference for generating SAML Consumer Service Assertions.
+The default in UCS is `"https, http"`,
+which you might consider setting to `"http"` for development purposes (only!),
+and `"https"` for production.
 
 ## Container for the Apache Gateway
 
-Edit the following variables in `.env.univention-management-console-gateway` to your liking:
+Edit the following variables in `.env.umc-gateway` to your liking:
 ```
 UDM_URL=
 UMC_SERVER_URL=

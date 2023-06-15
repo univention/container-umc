@@ -1,6 +1,7 @@
 /.env.umc-gateway
 /.env.umc-server
 /ansible/inventory/*.yaml
+/helm/*/charts/
 /lib/__pycache__/
 /secret/
 /ssl/

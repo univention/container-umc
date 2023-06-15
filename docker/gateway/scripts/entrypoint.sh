@@ -79,19 +79,16 @@ if [[ -z "${UMC_SERVER_URL:-}" ]]; then
   exit 126
 fi
 
-if [[ -z "${UDM_URL:-}" ]]; then
-  echo "Please set the environmental variable UDM_URL"
-  exit 126
-fi
-
 sed \
   --in-place \
   "s#http://127.0.0.1:8090#$UMC_SERVER_URL#g" \
   /etc/apache2/sites-available/univention.conf
 
+# Forwarding /univetion/udm should not be done with Apache,
+# but in the Ingress/Istio config.
 sed \
   --in-place \
-  "s#http://127.0.0.1:9979#$UDM_URL#g" \
+  "s#http://127.0.0.1:9979#http://udm-rest-api#g" \
   /etc/apache2/sites-available/univention-udm.conf
 
 univention-config-registry commit \

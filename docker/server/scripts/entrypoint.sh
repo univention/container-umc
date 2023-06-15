@@ -119,8 +119,18 @@ BASE ${LDAP_BASE_DN}
 EOF
 chmod 0644 /etc/ldap/ldap.conf
 
-ln --symbolic --force /run/secrets/ldap_secret /etc/ldap.secret
-ln --symbolic --force /run/secrets/machine_secret /etc/machine.secret
+LDAP_SECRET_FILE=${LDAP_SECRET_FILE:-/run/secrets/ldap_secret}
+MACHINE_SECRET_FILE=${MACHINE_SECRET_FILE:-/run/secrets/machine_secret}
+ln --symbolic --force "${LDAP_SECRET_FILE}" /etc/ldap.secret
+ln --symbolic --force "${MACHINE_SECRET_FILE}" /etc/machine.secret
+
+# By default, disable binding the session to the client IP,
+# as the client IP cannot be determined in K8s depending, on the ingress/istio/... config.
+LOCAL_IP_RANGES=${LOCAL_IP_RANGES:-0.0.0.0/0, ::/0}
+# In order to mitigate the security implications,
+# limit the cookies to the duration of the Browser session.
+ENFORCE_SESSION_COOKIE=${ENFORCE_SESSION_COOKIE:-true}
+
 
 # TODO: Do we have to set ldap/server/ip as well?
 ucr set \
@@ -133,7 +143,9 @@ ucr set \
     domainname="${DOMAINNAME}" \
     hostname="${HOSTNAME}" \
     portal/auth-mode="saml" \
+    umc/http/allowed-session-overtake/ranges="${LOCAL_IP_RANGES}" \
     umc/http/interface="0.0.0.0" \
+    umc/http/enforce-session-cookie="${ENFORCE_SESSION_COOKIE}" \
     umc/http/port=8090 \
     umc/module/debug/level="${DEBUG_LEVEL}" \
     umc/self-service/allow-authenticated-use=true \
@@ -258,12 +270,11 @@ ucr set \
     uuid/system="00000000-0000-0000-0000-000000000000" \
     version/erratalevel="0" \
     version/patchlevel="4" \
-    version/version="5.0" \
-
+    version/version="5.0"
 
 ############################################################
 # Configure PAM
-ln --symbolic --force /run/secrets/machine_secret /etc/pam_ldap.secret
+ln --symbolic --force "${MACHINE_SECRET_FILE}" /etc/pam_ldap.secret
 univention-config-registry commit \
   /etc/pam_ldap.conf \
   /etc/pam.d/univention-management-console
@@ -280,6 +291,10 @@ univention-config-registry commit \
   /etc/univention/directory/reports/default/de_DE/footer.rml \
   /etc/univention/directory/reports/default/en_US/header.rml \
   /etc/univention/directory/reports/default/en_US/footer.rml
+
+############################################################
+# Create storage location for ACLs, in case no volume is mounted
+mkdir -p /var/cache/univention-management-console/acls
 
 ############################################################
 # Run!

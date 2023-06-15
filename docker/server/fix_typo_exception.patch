@@ -21,6 +21,6 @@ ERROR      (        1) : Uncaught exception GET /univention/get/session-info (10
              CORE.warn('Switching session IP from=%r to=%r' % (current_ip, ip))
 -            self.current_user.ip = current_ip = ip
 +            self.current_user.user.ip = current_ip = ip
- 
+
          # bind session to IP (allow requests from localhost)
          if ip != current_ip and not any(ipaddress.ip_address(ip) in network for network in allowed_networks):

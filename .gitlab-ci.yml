@@ -1,22 +1,18 @@
 ---
 variables:
-  SOUVAP_API_V4_URL: https://gitlab.souvap-univention.de/api/v4
-  SOUVAP_DOCKER_ACCESS_USER: gitlab-ci-knut
-  SOUVAP_HELM_ACCESS_USER: gitlab-ci-knut
-  # SOUVAP_HELM_PROJECT_ID: TODO
-  SOUVAP_REGISTRY_HOST: registry.souvap-univention.de
-  # SOUVAP_REGISTRY_PATH: souvap/tooling/images/container-umc
-  # SOUVAP_REGISTRY_REPO: ${SOUVAP_REGISTRY_HOST}/${SOUVAP_REGISTRY_PATH}
+  SOUVAP_HELM_PROJECT_ID: 123
+  SOUVAP_REGISTRY_PATH: souvap/tooling/images/univention-management-console
 
 include:
   - project: univention/customers/dataport/upx/common-ci
     file:
       - defaults/souvap-workflow.yaml
+      - defaults/stages.yaml
       - templates/kaniko.yaml
       - templates/souvap.yaml
       - jobs/lint-commit-messages.yaml
       - jobs/lint-pre-commit.yaml
-      # - jobs/package-and-publish-helm-charts.yaml
+      - jobs/package-and-publish-helm-charts.yaml
 
 stages:
   - lint
@@ -48,3 +44,29 @@ build-umc-server:
   variables:
     KANIKO_BUILD_CONTEXT: "docker/server"
     CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/umc-server"
+
+# TODO: Remove once we drop this job from common-ci
+publish-helm-charts:
+  rules:
+    - when: never
+
+push-image-souvap-gateway:
+  # TODO, drop once common-ci sets the stage by default
+  stage: publish
+  needs:
+    - job: build-umc-gateway
+  extends: .push-image-souvap
+  variables:
+    SOUVAP_IMAGE_NAME: "umc-gateway"
+
+push-image-souvap-server:
+  # TODO, drop once common-ci sets the stage by default
+  stage: publish
+  needs:
+    - job: build-umc-server
+  extends: .push-image-souvap
+  variables:
+    SOUVAP_IMAGE_NAME: "umc-server"
+
+publish-helm-charts-souvap:
+  extends: .publish-helm-charts-souvap

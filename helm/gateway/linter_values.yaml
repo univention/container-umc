@@ -1,0 +1,37 @@
+---
+
+# Dummy values for running the Helm linter on the umc-gateway.
+# Run it like this: helm lint -f values.yaml -f linter_values.yaml .
+
+## Application-specific
+umcGateway:
+  domainname: "example.develop.souvap-univention.de"
+  hostname: "umc-gateway"
+  umcServerUrl: "http://umc-server:8090"
+
+
+## Kubernetes ingress
+ingress:
+  enabled: false
+  host: "umc-gateway.example.develop.souvap-univention.de"
+
+
+## Istio based
+istio:
+  enabled: true
+  host: "umc-gateway.example.develop.souvap-univention.de"
+
+## Docker image
+image:
+  tag: "branch-feature-example"
+
+
+## Container deployment probes
+probes:
+  liveness:
+    enabled: false
+
+  readiness:
+    enabled: false
+
+...

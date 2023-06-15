@@ -1,0 +1,52 @@
+{{ template "chart.header" . }}
+{{ template "chart.deprecationWarning" . }}
+
+{{ template "chart.description" . }}
+
+- **Version**: {{ template "chart.version" . }}
+- **Type**: {{ template "chart.type" . }}
+- **AppVersion**: {{ template "chart.appVersion" . }}
+- {{ template "chart.homepageLine" . }}
+
+## TL;DR
+
+```console
+helm repo add univention-management-console https://gitlab.souvap-univention.de/api/v4/projects/123/packages/helm/stable
+helm upgrade --install umc-gateway univention-management-console/umc-gateway
+```
+
+
+## Introduction
+
+This chart does install the gateway of the Univention Management Console.
+
+The gateway serves the static components of the UMC web interface,
+such as images, scripts, and stylesheets.
+
+
+{{ template "chart.maintainersSection" . }}
+
+{{ template "chart.sourcesSection" . }}
+
+
+## Installing
+
+To install the chart with the release name `umc-gateway`:
+
+```console
+helm repo add univention-management-console https://gitlab.souvap-univention.de/api/v4/projects/123/packages/helm/stable
+helm upgrade --install umc-gateway univention-management-console/umc-gateway
+```
+
+
+## Uninstalling
+
+To uninstall the chart with the release name `umc-gateway`:
+
+```console
+helm uninstall umc-gateway
+```
+
+{{ template "chart.requirementsSection" . }}
+
+{{ template "chart.valuesSectionHtml" . }}

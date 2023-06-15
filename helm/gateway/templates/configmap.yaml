@@ -1,0 +1,12 @@
+---
+{{ include "common.configMap" (dict "top" . "overrides" "umc-gateway.configMap") }}
+
+{{- define "umc-gateway.configMap" }}
+{{- with .top }}
+data:
+  DOMAINNAME: "{{ .Values.umcGateway.domainname }}"
+  HOSTNAME: "{{ .Values.umcGateway.hostname }}"
+  UMC_SERVER_URL: "{{ .Values.umcGateway.umcServerUrl }}"
+{{- end }}
+{{- end }}
+...

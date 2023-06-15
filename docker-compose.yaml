@@ -20,6 +20,8 @@ services:
       - ca_cert
       - cert_pem
       - private_key
+      - ldap_secret
+      - machine_secret
 
   # Environment of the pre-commit linter.
   pre-commit:
