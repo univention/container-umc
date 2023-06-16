@@ -1,0 +1,26 @@
+ERROR      (        1) : Uncaught exception GET /univention/get/session-info (10.233.95.96)
+    HTTPServerRequest(protocol='http', host='umc-server:8090', method='GET', uri='/univention/get/session-info', version='HTTP/1.1', remote_ip='10.233.95.96')
+    Traceback (most recent call last):
+      File "/usr/lib/python3/dist-packages/tornado/web.py", line 1571, in _execute
+        result = yield result
+      File "/usr/lib/python3/dist-packages/tornado/gen.py", line 1133, in run
+        value = future.result()
+      File "/usr/lib/python3/dist-packages/tornado/gen.py", line 1147, in run
+        yielded = self.gen.send(value)
+      File "/usr/lib/python3/dist-packages/univention/management/console/resource.py", line 101, in prepare
+        self.bind_session_to_ip()
+      File "/usr/lib/python3/dist-packages/univention/management/console/resource.py", line 200, in bind_session_to_ip
+        self.current_user.ip = current_ip = ip
+    AttributeError: 'Session' object has no attribute 'ip'
+
+--- /usr/lib/python3/dist-packages/univention/management/console/resource.py
++++ /usr/lib/python3/dist-packages/univention/management/console/resource.py
+@@ -203,7 +203,7 @@ class Resource(RequestHandler):
+         # make sure a lost connection to the UMC-Server does not bind the session to ::1
+         if ip != current_ip and any(ipaddress.ip_address(current_ip) in network for network in allowed_networks):
+             CORE.warn('Switching session IP from=%r to=%r' % (current_ip, ip))
+-            self.current_user.ip = current_ip = ip
++            self.current_user.user.ip = current_ip = ip
+ 
+         # bind session to IP (allow requests from localhost)
+         if ip != current_ip and not any(ipaddress.ip_address(ip) in network for network in allowed_networks):
