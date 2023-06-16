@@ -25,9 +25,9 @@ umask 077
 
 ############################################################
 # Link certificates in place
-PRIVATE_KEY_FILE=/run/secrets/private_key
-CA_CERT_FILE=/run/secrets/ca_cert
-CERT_PEM_FILE=/run/secrets/cert_pem
+PRIVATE_KEY_FILE=${PRIVATE_KEY_FILE:-/run/secrets/private_key}
+CA_CERT_FILE=${CA_CERT_FILE:-/run/secrets/ca_cert}
+CERT_PEM_FILE=${CERT_PEM_FILE:-/run/secrets/cert_pem}
 
 if [[ ! -f "${PRIVATE_KEY_FILE}" ]]; then
   echo "SSL private key is missing at ${PRIVATE_KEY_FILE}"
