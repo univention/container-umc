@@ -615,7 +615,7 @@ false
 {
   "domainname": null,
   "hostname": null,
-  "umcServerUrl": null
+  "ssoFqdn": null
 }
 </pre>
 </td>
@@ -640,13 +640,13 @@ null
 			<td>Host name of the instance. Example: `souvap`</td>
 		</tr>
 		<tr>
-			<td>umcGateway.umcServerUrl</td>
+			<td>umcGateway.ssoFqdn</td>
 			<td>string</td>
 			<td><pre lang="json">
 null
 </pre>
 </td>
-			<td>How to reach the UMC server. Example: `http://umc-server:8090`</td>
+			<td>The FQDN of the identity provider. Example: `https://id.souvap.example.org`</td>
 		</tr>
 	</tbody>
 </table>

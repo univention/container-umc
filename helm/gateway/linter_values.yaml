@@ -7,7 +7,7 @@
 umcGateway:
   domainname: "example.develop.souvap-univention.de"
   hostname: "umc-gateway"
-  umcServerUrl: "http://umc-server:8090"
+  ssoFqdn: "https://id.example.org"
 
 
 ## Kubernetes ingress

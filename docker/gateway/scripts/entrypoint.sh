@@ -41,19 +41,20 @@ ucr set \
     apache2/maxclients=150 \
     apache2/startsite="univention/" \
     ucs/server/robots/disallow="/" \
-    ucs/server/sso/fqdn="ucs-sso.univention.intranet" \
+    ucs/server/sso/fqdn="${SSO_FQDN}" \
     umc/http/content-security-policy/connect-src="'self'" \
     umc/http/content-security-policy/default-src="'unsafe-eval'" \
     umc/http/content-security-policy/font-src="'self'" \
     umc/http/content-security-policy/form-action="'self'" \
     umc/http/content-security-policy/frame-ancestors="'self'" \
-    umc/http/content-security-policy/frame-src="*" \
+    umc/http/content-security-policy/frame-src="'self' https://${SSO_FQDN}" \
     umc/http/content-security-policy/img-src="*" \
     umc/http/content-security-policy/media-src="*" \
     umc/http/content-security-policy/object-src="'self'" \
-    umc/http/content-security-policy/script-src="'self' 'unsafe-inline'" \
+    umc/http/content-security-policy/script-src="'self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com/ https://s.ytimg.com" \
     umc/http/content-security-policy/style-src="'self' 'unsafe-inline'" \
     umc/login/content-security-policy/frame-ancestors="'self'" \
+    umc/self-service/content-security-policy/frame-ancestors="'self'" \
     portal/paths="/univention/portal/, /univention/umc/" \
     locale="de_DE.UTF-8:UTF-8 en_US.UTF-8:UTF-8" \
     ucs/server/languages/de_DE="Deutsch" \
@@ -70,26 +71,7 @@ univention-config-registry commit \
   /etc/apache2/sites-available/default-ssl.conf \
   /etc/apache2/sites-available/univention.conf \
   /etc/apache2/sites-available/univention-server-overview.conf \
-  /etc/apache2/sites-available/univention-udm.conf \
   /etc/apache2/ucs-sites.conf.d/ucs-sites.conf
-
-# Replace destination of existing univention config
-if [[ -z "${UMC_SERVER_URL:-}" ]]; then
-  echo "Please set the environmental variable UMC_SERVER_URL"
-  exit 126
-fi
-
-sed \
-  --in-place \
-  "s#http://127.0.0.1:8090#$UMC_SERVER_URL#g" \
-  /etc/apache2/sites-available/univention.conf
-
-# Forwarding /univetion/udm should not be done with Apache,
-# but in the Ingress/Istio config.
-sed \
-  --in-place \
-  "s#http://127.0.0.1:9979#http://udm-rest-api#g" \
-  /etc/apache2/sites-available/univention-udm.conf
 
 univention-config-registry commit \
   /var/www/univention/languages.json \

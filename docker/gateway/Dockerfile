@@ -402,7 +402,19 @@ RUN \
   # Change LogFormat temporarily
   # Replace \%O to \%b in LogFormat
   sed -i '/LogFormat/s/\%O/\%b/g' \
-    /etc/apache2/apache2.conf
+    /etc/apache2/apache2.conf && \
+  \
+  # Do not forward requests to the UMC server through here,
+  # instead the ingress/istio needs to be configured properly.
+  sed \
+    --in-place \
+    --expression='\#ProxyPass.*auth|saml|get|set|command|upload|logout#d' \
+    /etc/univention/templates/files/etc/apache2/sites-available/univention.conf && \
+  # Do not forward requests to the UDM through here,
+  # instead the ingress/istio needs to be configured properly.
+  rm \
+    /etc/univention/templates/files/etc/apache2/sites-available/univention-udm.conf \
+    /etc/apache2/sites-enabled/univention-udm.conf
 
 COPY \
   scripts/entrypoint.sh \

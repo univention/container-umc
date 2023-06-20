@@ -24,9 +24,9 @@ umcGateway:
   # -- Host name of the instance.
   # Example: `souvap`
   hostname: null
-  # -- How to reach the UMC server.
-  # Example: `http://umc-server:8090`
-  umcServerUrl: null
+  # -- The FQDN of the identity provider.
+  # Example: `https://id.souvap.example.org`
+  ssoFqdn: null
 
 
 ## Kubernetes ingress
