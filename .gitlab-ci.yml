@@ -51,8 +51,6 @@ publish-helm-charts:
     - when: never
 
 push-image-souvap-gateway:
-  # TODO, drop once common-ci sets the stage by default
-  stage: publish
   needs:
     - job: build-umc-gateway
   extends: .push-image-souvap
@@ -60,8 +58,6 @@ push-image-souvap-gateway:
     SOUVAP_IMAGE_NAME: "umc-gateway"
 
 push-image-souvap-server:
-  # TODO, drop once common-ci sets the stage by default
-  stage: publish
   needs:
     - job: build-umc-server
   extends: .push-image-souvap
