@@ -408,7 +408,7 @@ RUN \
   # instead the ingress/istio needs to be configured properly.
   sed \
     --in-place \
-    --expression='\#ProxyPass.*auth|saml|get|set|command|upload|logout#d' \
+    --expression='s#print.*ProxyPass.*auth|saml|get|set|command|upload|logout.*#pass#' \
     /etc/univention/templates/files/etc/apache2/sites-available/univention.conf && \
   # Do not forward requests to the UDM through here,
   # instead the ingress/istio needs to be configured properly.
