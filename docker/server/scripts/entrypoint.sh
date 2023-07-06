@@ -25,35 +25,18 @@ umask 077
 
 ############################################################
 # Link certificates in place
-PRIVATE_KEY_FILE=${PRIVATE_KEY_FILE:-/run/secrets/private_key}
 CA_CERT_FILE=${CA_CERT_FILE:-/run/secrets/ca_cert}
-CERT_PEM_FILE=${CERT_PEM_FILE:-/run/secrets/cert_pem}
 
-if [[ ! -f "${PRIVATE_KEY_FILE}" ]]; then
-  echo "SSL private key is missing at ${PRIVATE_KEY_FILE}"
-  exit 1
+if [[ -f "${CA_CERT_FILE}" ]]; then
+  echo "Using provided CA certificate at ${CA_CERT_FILE}"
+  CA_DIR="/etc/univention/ssl/ucsCA"
+
+  mkdir --parents "${CA_DIR}"
+  ln --symbolic --force "${CA_CERT_FILE}" "${CA_DIR}/CAcert.pem"
+else
+  unset CA_DIR
+  echo "No CA certificate provided!"
 fi
-
-if [[ ! -f "${CA_CERT_FILE}" ]]; then
-  echo "SSL CA Certificate is missing at ${CA_CERT_FILE}"
-  exit 1
-fi
-
-if [[ ! -f "${CERT_PEM_FILE}" ]]; then
-  echo "SSL Site Certificate is missing at ${CERT_PEM_FILE}"
-  exit 1
-fi
-
-CERT_DIR="/etc/univention/ssl/${HOSTNAME}.${DOMAINNAME}"
-CA_DIR="/etc/univention/ssl/ucsCA"
-
-mkdir --parents "${CERT_DIR}"
-mkdir --parents "${CA_DIR}"
-
-ln --symbolic --force "${PRIVATE_KEY_FILE}" "${CERT_DIR}/private.key"
-ln --symbolic --force "${CERT_PEM_FILE}" "${CERT_DIR}/cert.pem"
-ln --symbolic --force "${CA_CERT_FILE}" "${CA_DIR}/CAcert.pem"
-
 
 ############################################################
 # Load SAML metadata
@@ -99,6 +82,17 @@ if [[ -n "${SAML_METADATA_URL:-}" ]]; then
 fi
 
 if [[ -n "${SAML_SP_SERVER:-}" ]]; then
+  CERT_PEM_FILE=${CERT_PEM_FILE:-/run/secrets/cert_pem}
+  PRIVATE_KEY_FILE=${PRIVATE_KEY_FILE:-/run/secrets/private_key}
+  if [[ ! -f "${CERT_PEM_FILE}" ]]; then
+    echo "\$CERT_PEM_FILE is not pointing to a file at ${CERT_PEM_FILE}"
+    exit 255
+  fi
+  if [[ ! -f "${PRIVATE_KEY_FILE}" ]]; then
+    echo "\$PRIVATE_KEY_FILE is not pointing to a file at ${PRIVATE_KEY_FILE}"
+    exit 255
+  fi
+
   ucr set umc/saml/sp-server="${SAML_SP_SERVER}"
   mkdir --parents "/etc/univention/ssl/${SAML_SP_SERVER}"
   ln --symbolic --force "${CERT_PEM_FILE}" "/etc/univention/ssl/${SAML_SP_SERVER}/cert.pem"
@@ -110,7 +104,7 @@ fi
 cat <<EOF > /etc/ldap/ldap.conf
 # This file should be world readable but not world writable.
 
-TLS_CACERT /etc/univention/ssl/ucsCA/CAcert.pem
+${CA_DIR:+TLS_CACERT /etc/univention/ssl/ucsCA/CAcert.pem}
 TLS_REQCERT ${TLS_REQCERT:-demand}
 
 URI ldap://${LDAP_HOST}:${LDAP_PORT}
@@ -119,10 +113,28 @@ BASE ${LDAP_BASE_DN}
 EOF
 chmod 0644 /etc/ldap/ldap.conf
 
+# TODO: Does this container really need to know this secret?
 LDAP_SECRET_FILE=${LDAP_SECRET_FILE:-/run/secrets/ldap_secret}
+if [[ -f "${LDAP_SECRET_FILE}" ]]; then
+  echo "Using LDAP admin secret"
+  ln --symbolic --force "${LDAP_SECRET_FILE}" /etc/ldap.secret
+else
+  echo "No LDAP admin secret provided!"
+fi
+
+# Password which belongs to the LDAP_HOST_DN machine account
 MACHINE_SECRET_FILE=${MACHINE_SECRET_FILE:-/run/secrets/machine_secret}
-ln --symbolic --force "${LDAP_SECRET_FILE}" /etc/ldap.secret
-ln --symbolic --force "${MACHINE_SECRET_FILE}" /etc/machine.secret
+if [[ -f "${MACHINE_SECRET_FILE}" ]]; then
+  echo "Using LDAP machine secret from file"
+  ln --symbolic --force "${MACHINE_SECRET_FILE}" /etc/machine.secret
+elif [[ -n "${MACHINE_SECRET}" ]]; then
+  echo "Using LDAP machine secret from env"
+  echo -n "${MACHINE_SECRET}" > /etc/machine.secret
+else
+  echo "No LDAP machine secret found at ${MACHINE_SECRET_FILE} and \$MACHINE_SECRET not set!"
+  echo "Check the \$MACHINE_SECRET_FILE variable and the file that it points to."
+  exit 1
+fi
 
 # By default, disable binding the session to the client IP,
 # as the client IP cannot be determined in K8s depending, on the ingress/istio/... config.

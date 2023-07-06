@@ -20,6 +20,28 @@ The SSL keys and certificates can be fetched from a UCS machine:
    where the `extra_hosts` entries are used to map the LDAP server's IP address to its hostname.
    This is necessary as the LDAP library checks the TLS certificate against the hostname.
 
+## LDAP Configuration
+
+The following variables need to be set according to your LDAP server:
+```
+LDAP_HOST=primary.example.com
+LDAP_PORT=7389
+LDAP_BASE_DN=dc=example,dc=org
+LDAP_HOST_DN=cn=ucs-1234,cn=dc,cn=computers,dc=example,dc=org
+```
+
+### TLS
+
+In order to use TLS you need to set these:
+```
+TLS_REQCERT=demand
+CA_CERT_FILE=/run/secrets/ca_cert
+```
+The `CA_CERT_FILE` must point to the CA certificate which signed the LDAP server certificate,
+in PEM format.
+
+TLS can be disabled by setting `TLS_REQCERT=never`, which is not recommended.
+
 
 ## SAML Configuration
 
@@ -29,6 +51,8 @@ SAML_METADATA_URL=http://localhost:8097/realms/ucs/protocol/saml/descriptor
 SAML_METADATA_URL_INTERNAL=http://keycloak:8080/realms/ucs/protocol/saml/descriptor
 SAML_SP_SERVER=localhost:8000
 SAML_SCHEMES=http
+CERT_PEM_FILE=/run/secrets/cert_pem
+PRIVATE_KEY_FILE=/run/secrets/private_key
 ```
 
 The `SAML_METADATA_URL` should include the public FQDN of the SAML IdP.
@@ -41,6 +65,10 @@ and needs to use a cluster-internal hostname.
 The default in UCS is `"https, http"`,
 which you might consider setting to `"http"` for development purposes (only!),
 and `"https"` for production.
+
+In any case, using SAML requires a certificate and its private key under
+`CERT_PEM_FILE` and `PRIVATE_KEY_FILE`.
+The certificate's subject hostname shall contain the value of `SAML_SP_SERVER`.
 
 ## Container for the Apache Gateway
 
