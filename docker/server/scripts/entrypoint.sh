@@ -34,7 +34,6 @@ if [[ -f "${CA_CERT_FILE}" ]]; then
   mkdir --parents "${CA_DIR}"
   ln --symbolic --force "${CA_CERT_FILE}" "${CA_DIR}/CAcert.pem"
 else
-  unset CA_DIR
   echo "No CA certificate provided!"
 fi
 
@@ -138,11 +137,23 @@ fi
 
 # By default, disable binding the session to the client IP,
 # as the client IP cannot be determined in K8s depending, on the ingress/istio/... config.
-LOCAL_IP_RANGES=${LOCAL_IP_RANGES:-0.0.0.0/0, ::/0}
+LOCAL_IP_RANGES=${LOCAL_IP_RANGES:-0.0.0.0/0,::/0}
 # In order to mitigate the security implications,
 # limit the cookies to the duration of the Browser session.
 ENFORCE_SESSION_COOKIE=${ENFORCE_SESSION_COOKIE:-true}
 
+# Use TLS setting also for uldap.py
+case "${TLS_REQCERT:-demand}" in
+  "never")
+    ULDAP_START_TLS=0
+    ;;
+  "allow" | "try")
+    ULDAP_START_TLS=1
+    ;;
+  *)
+    ULDAP_START_TLS=2
+    ;;
+esac
 
 # TODO: Do we have to set ldap/server/ip as well?
 ucr set \
@@ -241,6 +252,7 @@ ucr set \
     ucs/server/sso/fqdn="ucs-sso.example.org" \
     ucs/server/sso/virtualhost="true" \
     ucs/web/license/requested="true" \
+    uldap/start-tls="${ULDAP_START_TLS}" \
     umc/http/autostart="yes" \
     umc/http/content-security-policy/connect-src="'self'" \
     umc/http/content-security-policy/default-src="'unsafe-eval'" \

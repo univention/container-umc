@@ -138,6 +138,7 @@ RUN \
 
 COPY disable_license_check.patch \
      disable_suffixed_cookies.patch \
+     make_uldap_start-tls_configurable.patch \
      use_try_first.patch \
      unsafe_saml_for_debug.patch \
      /
@@ -147,6 +148,8 @@ RUN  \
     rm /disable_license_check.patch && \
   patch -p 0 -d / -i /disable_suffixed_cookies.patch && \
     rm /disable_suffixed_cookies.patch && \
+  patch -p 0 -d / -i /make_uldap_start-tls_configurable.patch && \
+    rm /make_uldap_start-tls_configurable.patch && \
   patch -p 0 -d / -i /use_try_first.patch && \
     rm /use_try_first.patch && \
   patch -p 0 -d / -i /unsafe_saml_for_debug.patch && \
