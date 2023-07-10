@@ -45,11 +45,6 @@ build-umc-server:
     KANIKO_BUILD_CONTEXT: "docker/server"
     CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/umc-server"
 
-# TODO: Remove once we drop this job from common-ci
-publish-helm-charts:
-  rules:
-    - when: never
-
 push-image-souvap-gateway:
   needs:
     - job: build-umc-gateway
