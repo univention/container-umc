@@ -146,12 +146,15 @@ ENFORCE_SESSION_COOKIE=${ENFORCE_SESSION_COOKIE:-true}
 case "${TLS_REQCERT:-demand}" in
   "never")
     ULDAP_START_TLS=0
+    PAM_LDAP_TLS="off"
     ;;
   "allow" | "try")
     ULDAP_START_TLS=1
+    PAM_LDAP_TLS="starttls"
     ;;
   *)
     ULDAP_START_TLS=2
+    PAM_LDAP_TLS="starttls"
     ;;
 esac
 
@@ -303,6 +306,8 @@ univention-config-registry commit \
   /etc/pam_ldap.conf \
   /etc/pam.d/univention-management-console
 sed -i 's/password.*requisite.*pam_cracklib.so/password required  pam_cracklib.so/; /pam_unix/d; /pam_krb5/d' /etc/pam.d/univention-management-console
+
+sed --in-place --expression="s/^ssl .*\$/ssl ${PAM_LDAP_TLS}/" /etc/pam_ldap.conf
 
 ############################################################
 # Generate config files from UCR
