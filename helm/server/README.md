@@ -638,6 +638,7 @@ false
   "localIpRanges": "0.0.0.0/0,::/0",
   "machineSecretFile": "/var/secrets/machine_secret",
   "privateKeyFile": "/var/secrets/private_key",
+  "samlEnabled": true,
   "samlMetadataUrl": null,
   "samlMetadataUrlInternal": "",
   "samlSchemes": "https",
@@ -781,6 +782,15 @@ null
 </pre>
 </td>
 			<td>Path to file with the certificate's private key (.key).</td>
+		</tr>
+		<tr>
+			<td>umcServer.samlEnabled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td>Allows to switch off SAML support.</td>
 		</tr>
 		<tr>
 			<td>umcServer.samlMetadataUrl</td>

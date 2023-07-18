@@ -16,10 +16,12 @@ data:
   ENFORCE_SESSION_COOKIE: "{{ .Values.umcServer.enforceSessionCookie }}"
   LOCAL_IP_RANGES: "{{ .Values.umcServer.localIpRanges }}"
 
+  {{- if .Values.umcServer.samlEnabled }}
   SAML_METADATA_URL: {{ required "The parameter \"umcServer.samlMetadataUrl\" is required." .Values.umcServer.samlMetadataUrl | quote }}
   SAML_METADATA_URL_INTERNAL: "{{ .Values.umcServer.samlMetadataUrlInternal }}"
   SAML_SP_SERVER: {{ required "The parameter \"umcServer.samlSpServer\" is required." .Values.umcServer.samlSpServer | quote }}
   SAML_SCHEMES: "{{ .Values.umcServer.samlSchemes }}"
+  {{- end }}
 
   LDAP_SECRET_FILE: "{{ .Values.umcServer.ldapSecretFile }}"
   MACHINE_SECRET_FILE: "{{ .Values.umcServer.machineSecretFile }}"
