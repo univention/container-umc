@@ -7,7 +7,6 @@ data:
   DOMAINNAME: "{{ .Values.umcServer.domainname }}"
   HOSTNAME: "{{ .Values.umcServer.hostname }}"
   LDAP_HOST: {{ required "The parameter \"umcServer.ldapHost\" is required." .Values.umcServer.ldapHost | quote }}
-  LDAP_HOST_IP: {{ required "The parameter \"umcServer.ldapHostIp\" is required." .Values.umcServer.ldapHostIp | quote }}
   LDAP_PORT: {{ required "The parameter \"umcServer.ldapPort\" is required." .Values.umcServer.ldapPort | quote }}
   LDAP_BASE_DN: {{ required "The parameter \"umcServer.ldapBaseDn\" is required." .Values.umcServer.ldapBaseDn | quote }}
   LDAP_HOST_DN: {{ required "The parameter \"umcServer.ldapHostDn\" is required." .Values.umcServer.ldapHostDn | quote }}
