@@ -94,7 +94,7 @@ ingress:
   # -- The path configuration. The default only grabs what is handled by the UMC server.
   paths:
     - pathType: Prefix
-      path: /univention(/auth|saml|get|set|command|upload|logout($/.*))
+      path: /univention/((?:auth|saml|get|set|command|upload|logout)(?:$|/.*))
   tls:
     enabled: true
     secretName: ""

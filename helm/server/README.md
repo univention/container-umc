@@ -178,7 +178,7 @@ null
 			<td><pre lang="json">
 [
   {
-    "path": "/univention(/auth|saml|get|set|command|upload|logout($/.*))",
+    "path": "/univention/((?:auth|saml|get|set|command|upload|logout)(?:$|/.*))",
     "pathType": "Prefix"
   }
 ]
