@@ -39,6 +39,13 @@ umcServer:
   # -- DN of the UMC instance.
   # Example: `"cn=ucs-1234,cn=dc,cn=computers,dc=example,dc=org"`
   ldapHostDn: null
+  # -- Allows to set the parameter "TLS_REQCERT" in the ldap client configuration.
+  #
+  # The man page of "ldap.conf" does provide details about the allowed values and how
+  # this influences the client behavior.
+  #
+  # See: https://www.openldap.org/software//man.cgi?query=ldap.conf
+  ldapTlsReqcert: "demand"
   # -- Debug level of the UMC server.
   # (1 = errors only, 99 = most verbose)
   debugLevel: "5"

@@ -635,6 +635,7 @@ false
   "ldapHostIp": null,
   "ldapPort": "389",
   "ldapSecretFile": "/var/secrets/ldap_secret",
+  "ldapTlsReqcert": "demand",
   "localIpRanges": "0.0.0.0/0,::/0",
   "machineSecretFile": "/var/secrets/machine_secret",
   "privateKeyFile": "/var/secrets/private_key",
@@ -755,6 +756,15 @@ null
 </pre>
 </td>
 			<td>Path to file with the LDAP secret.</td>
+		</tr>
+		<tr>
+			<td>umcServer.ldapTlsReqcert</td>
+			<td>string</td>
+			<td><pre lang="json">
+"demand"
+</pre>
+</td>
+			<td>Allows to set the parameter "TLS_REQCERT" in the ldap client configuration.  The man page of "ldap.conf" does provide details about the allowed values and how this influences the client behavior.  See: https://www.openldap.org/software//man.cgi?query=ldap.conf</td>
 		</tr>
 		<tr>
 			<td>umcServer.localIpRanges</td>
