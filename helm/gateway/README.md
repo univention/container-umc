@@ -118,24 +118,6 @@ helm uninstall umc-gateway
 			<td></td>
 		</tr>
 		<tr>
-			<td>ingress.annotations."nginx.ingress.kubernetes.io/rewrite-target"</td>
-			<td>string</td>
-			<td><pre lang="json">
-"/$0"
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>ingress.annotations."nginx.ingress.kubernetes.io/use-regex"</td>
-			<td>string</td>
-			<td><pre lang="json">
-"true"
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
 			<td>ingress.enabled</td>
 			<td>bool</td>
 			<td><pre lang="json">
