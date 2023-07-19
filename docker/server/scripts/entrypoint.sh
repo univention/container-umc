@@ -24,18 +24,38 @@ umask 077
 
 
 ############################################################
-# Link certificates in place
-CA_CERT_FILE=${CA_CERT_FILE:-/run/secrets/ca_cert}
+# Prepare LDAP TLS certificates and settings
+case "${TLS_MODE:-secure}" in
+  "secure")
+    PAM_LDAP_TLS="starttls"
+    TLS_REQCERT="demand"
+    ULDAP_START_TLS=2
+    ;;
+  "unvalidated")
+    PAM_LDAP_TLS="starttls"
+    TLS_REQCERT="allow"
+    ULDAP_START_TLS=1
+    SASL_SECPROPS="none,minssf=0"
+    ;;
+  "off")
+    PAM_LDAP_TLS="off"
+    TLS_REQCERT="never"
+    ULDAP_START_TLS=0
+    SASL_SECPROPS="none,minssf=0"
+    ;;
+  *)
+    echo "TLS_MODE must be one of: secure, unvalidated, off."
+    exit 1
+esac
 
-if [[ -f "${CA_CERT_FILE}" ]]; then
-  echo "Using provided CA certificate at ${CA_CERT_FILE}"
-  CA_DIR="/etc/univention/ssl/ucsCA"
+case "${TLS_MODE:-secure}" in
+  "secure" | "unvalidated")
+    CA_CERT_FILE=${CA_CERT_FILE:-/run/secrets/ca_cert}
+    CA_DIR="/etc/univention/ssl/ucsCA"
 
-  mkdir --parents "${CA_DIR}"
-  ln --symbolic --force "${CA_CERT_FILE}" "${CA_DIR}/CAcert.pem"
-else
-  echo "No CA certificate provided!"
-fi
+    mkdir --parents "${CA_DIR}"
+    ln --symbolic --force "${CA_CERT_FILE}" "${CA_DIR}/CAcert.pem"
+esac
 
 ############################################################
 # Load SAML metadata
@@ -109,11 +129,13 @@ cat <<EOF > /etc/ldap/ldap.conf
 # This file should be world readable but not world writable.
 
 ${CA_DIR:+TLS_CACERT /etc/univention/ssl/ucsCA/CAcert.pem}
-TLS_REQCERT ${TLS_REQCERT:-demand}
+TLS_REQCERT ${TLS_REQCERT}
 
 URI ldap://${LDAP_HOST}:${LDAP_PORT}
 
 BASE ${LDAP_BASE_DN}
+
+${SASL_SECPROPS:+SASL_SECPROPS ${SASL_SECPROPS}}
 EOF
 chmod 0644 /etc/ldap/ldap.conf
 
@@ -146,22 +168,6 @@ LOCAL_IP_RANGES=${LOCAL_IP_RANGES:-0.0.0.0/0,::/0}
 # In order to mitigate the security implications,
 # limit the cookies to the duration of the Browser session.
 ENFORCE_SESSION_COOKIE=${ENFORCE_SESSION_COOKIE:-true}
-
-# Use TLS setting also for uldap.py
-case "${TLS_REQCERT:-demand}" in
-  "never")
-    ULDAP_START_TLS=0
-    PAM_LDAP_TLS="off"
-    ;;
-  "allow" | "try")
-    ULDAP_START_TLS=1
-    PAM_LDAP_TLS="starttls"
-    ;;
-  *)
-    ULDAP_START_TLS=2
-    PAM_LDAP_TLS="starttls"
-    ;;
-esac
 
 # TODO: Do we have to set ldap/server/ip as well?
 ucr set \
@@ -282,7 +288,7 @@ ucr set \
     umc/login/links/login_without_sso/text="Login without Single Sign On" \
     umc/module/timeout="600" \
     umc/module/udm/users/self/disabled="true" \
-    umc/saml/idp-server="https://ucs-sso.example.org/simplesamlphp/saml2/idp/metadata.php" \
+    umc/saml/idp-server="${SAML_METADATA_URL:-https://ucs-sso.example.org/simplesamlphp/saml2/idp/metadata.php}" \
     umc/saml/trusted/sp/primary.example.org="primary.example.org" \
     umc/server/autostart="yes" \
     umc/server/upload/max="2048" \

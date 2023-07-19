@@ -32,15 +32,13 @@ LDAP_HOST_DN=cn=ucs-1234,cn=dc,cn=computers,dc=example,dc=org
 
 ### TLS
 
-In order to use TLS you need to set these:
-```
-TLS_REQCERT=demand
-CA_CERT_FILE=/run/secrets/ca_cert
-```
+TLS can be controlled by the `TLS_MODE` flag which defaults to `"secure"`.
 The `CA_CERT_FILE` must point to the CA certificate which signed the LDAP server certificate,
 in PEM format.
 
-TLS can be disabled by setting `TLS_REQCERT=never`, which is not recommended.
+Other options are `"unvalidated"` which attempts to use TLS but will not fail
+if the server certificate cannot be validated
+or `"off"` which disables TLS completely (not recommended).
 
 
 ## SAML Configuration

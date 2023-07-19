@@ -56,10 +56,10 @@ umcServer:
   localIpRanges: "0.0.0.0/0,::/0"
   # -- Allows to switch off SAML support.
   samlEnabled: true
-  # -- SAML Metadata URL (as visible from the user/internet).
+  # -- SAML Identity Provider metadata URL (as visible from the user/internet).
   # Example: `"https://id.souvap.example.org/realms/ucs/protocol/saml/descriptor"`
   samlMetadataUrl: null
-  # -- SAML Metadata URL (as visible from inside the container), optional.
+  # -- SAML Identity Provider metadata URL (as visible from inside the container), optional.
   # Example: `"http://keycloak:8080/realms/ucs/protocol/saml/descriptor"`
   samlMetadataUrlInternal: ""
   # -- SAML Service Provider (hostname and port).
