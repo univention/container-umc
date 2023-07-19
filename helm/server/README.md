@@ -635,7 +635,6 @@ false
   "ldapHostIp": null,
   "ldapPort": "389",
   "ldapSecretFile": "/var/secrets/ldap_secret",
-  "ldapTlsReqcert": "demand",
   "localIpRanges": "0.0.0.0/0,::/0",
   "machineSecretFile": "/var/secrets/machine_secret",
   "privateKeyFile": "/var/secrets/private_key",
@@ -643,7 +642,8 @@ false
   "samlMetadataUrl": null,
   "samlMetadataUrlInternal": "",
   "samlSchemes": "https",
-  "samlSpServer": null
+  "samlSpServer": null,
+  "tlsMode": "secure"
 }
 </pre>
 </td>
@@ -758,15 +758,6 @@ null
 			<td>Path to file with the LDAP secret.</td>
 		</tr>
 		<tr>
-			<td>umcServer.ldapTlsReqcert</td>
-			<td>string</td>
-			<td><pre lang="json">
-"demand"
-</pre>
-</td>
-			<td>Allows to set the parameter "TLS_REQCERT" in the ldap client configuration.  The man page of "ldap.conf" does provide details about the allowed values and how this influences the client behavior.  See: https://www.openldap.org/software//man.cgi?query=ldap.conf</td>
-		</tr>
-		<tr>
 			<td>umcServer.localIpRanges</td>
 			<td>string</td>
 			<td><pre lang="json">
@@ -809,7 +800,7 @@ true
 null
 </pre>
 </td>
-			<td>SAML Metadata URL (as visible from the user/internet). Example: `"https://id.souvap.example.org/realms/ucs/protocol/saml/descriptor"`</td>
+			<td>SAML Identity Provider metadata URL (as visible from the user/internet). Example: `"https://id.souvap.example.org/realms/ucs/protocol/saml/descriptor"`</td>
 		</tr>
 		<tr>
 			<td>umcServer.samlMetadataUrlInternal</td>
@@ -818,7 +809,7 @@ null
 ""
 </pre>
 </td>
-			<td>SAML Metadata URL (as visible from inside the container), optional. Example: `"http://keycloak:8080/realms/ucs/protocol/saml/descriptor"`</td>
+			<td>SAML Identity Provider metadata URL (as visible from inside the container), optional. Example: `"http://keycloak:8080/realms/ucs/protocol/saml/descriptor"`</td>
 		</tr>
 		<tr>
 			<td>umcServer.samlSchemes</td>
@@ -837,6 +828,15 @@ null
 </pre>
 </td>
 			<td>SAML Service Provider (hostname and port). Example: `souvap.example.org`</td>
+		</tr>
+		<tr>
+			<td>umcServer.tlsMode</td>
+			<td>string</td>
+			<td><pre lang="json">
+"secure"
+</pre>
+</td>
+			<td>Set desired TLS mode. Options: `"secure"`, `"unvalidated"`, `"off"`.</td>
 		</tr>
 	</tbody>
 </table>

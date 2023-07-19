@@ -10,7 +10,7 @@ data:
   LDAP_PORT: {{ required "The parameter \"umcServer.ldapPort\" is required." .Values.umcServer.ldapPort | quote }}
   LDAP_BASE_DN: {{ required "The parameter \"umcServer.ldapBaseDn\" is required." .Values.umcServer.ldapBaseDn | quote }}
   LDAP_HOST_DN: {{ required "The parameter \"umcServer.ldapHostDn\" is required." .Values.umcServer.ldapHostDn | quote }}
-  TLS_REQCERT: "{{ .Values.umcServer.ldapTlsReqcert }}"
+  TLS_MODE: {{ required "The parameter \"umcServer.tlsMode\" is required." .Values.umcServer.tlsMode | quote }}
 
   DEBUG_LEVEL: "{{ .Values.umcServer.debugLevel }}"
   ENFORCE_SESSION_COOKIE: "{{ .Values.umcServer.enforceSessionCookie }}"
