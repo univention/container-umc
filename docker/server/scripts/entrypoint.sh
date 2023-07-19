@@ -40,15 +40,31 @@ fi
 ############################################################
 # Load SAML metadata
 SAML_METADATA_BASE=/usr/share/univention-management-console/saml/idp
+CERT_PEM_FILE=${CERT_PEM_FILE:-/run/secrets/cert_pem}
+PRIVATE_KEY_FILE=${PRIVATE_KEY_FILE:-/run/secrets/private_key}
 
 if [[ -n "${SAML_METADATA_URL:-}" ]]; then
+  echo "SAML Service Provider: enabled"
+
+  if [[ -z "${SAML_SP_SERVER:-}" ]]; then
+    echo "\$SAML_SP_SERVER must be set for SAML support"
+    exit 255
+  fi
+  if [[ ! -f "${CERT_PEM_FILE}" ]]; then
+    echo "\$CERT_PEM_FILE is not pointing to a file at ${CERT_PEM_FILE}"
+    exit 255
+  fi
+  if [[ ! -f "${PRIVATE_KEY_FILE}" ]]; then
+    echo "\$PRIVATE_KEY_FILE is not pointing to a file at ${PRIVATE_KEY_FILE}"
+    exit 255
+  fi
   if [[ -z "${SAML_METADATA_URL_INTERNAL:-}" ]]; then
     echo "SAML_METADATA_URL_INTERNAL is not set! Assuming it to equal SAML_METADATA_URL."
     SAML_METADATA_URL_INTERNAL=${SAML_METADATA_URL}
   fi
 
-  SAML_HOST=$(echo "${SAML_METADATA_URL}" | awk -F/ '{print $3}')
-  SAML_METADATA_PATH="${SAML_METADATA_BASE}/${SAML_HOST}.xml"
+  SAML_IDP_HOST=$(echo "${SAML_METADATA_URL}" | awk -F/ '{print $3}')
+  SAML_METADATA_PATH="${SAML_METADATA_BASE}/${SAML_IDP_HOST}.xml"
 
   echo "Trying to fetch SAML metadata from ${SAML_METADATA_URL_INTERNAL}"
   result=1
@@ -60,7 +76,7 @@ if [[ -n "${SAML_METADATA_URL:-}" ]]; then
           --quiet \
           --timeout=3 \
           --tries=2 \
-          --header="Host: ${SAML_HOST}" \
+          --header="Host: ${SAML_IDP_HOST}" \
           --output-document="${SAML_METADATA_PATH}" \
           "${SAML_METADATA_URL_INTERNAL}" \
         && result=0
@@ -78,24 +94,13 @@ if [[ -n "${SAML_METADATA_URL:-}" ]]; then
   echo "Successfully set SAML metadata in ${SAML_METADATA_PATH}"
 
   ucr set umc/saml/idp-server="${SAML_METADATA_URL}"
-fi
-
-if [[ -n "${SAML_SP_SERVER:-}" ]]; then
-  CERT_PEM_FILE=${CERT_PEM_FILE:-/run/secrets/cert_pem}
-  PRIVATE_KEY_FILE=${PRIVATE_KEY_FILE:-/run/secrets/private_key}
-  if [[ ! -f "${CERT_PEM_FILE}" ]]; then
-    echo "\$CERT_PEM_FILE is not pointing to a file at ${CERT_PEM_FILE}"
-    exit 255
-  fi
-  if [[ ! -f "${PRIVATE_KEY_FILE}" ]]; then
-    echo "\$PRIVATE_KEY_FILE is not pointing to a file at ${PRIVATE_KEY_FILE}"
-    exit 255
-  fi
-
   ucr set umc/saml/sp-server="${SAML_SP_SERVER}"
+
   mkdir --parents "/etc/univention/ssl/${SAML_SP_SERVER}"
   ln --symbolic --force "${CERT_PEM_FILE}" "/etc/univention/ssl/${SAML_SP_SERVER}/cert.pem"
   ln --symbolic --force "${PRIVATE_KEY_FILE}" "/etc/univention/ssl/${SAML_SP_SERVER}/private.key"
+else
+  echo "SAML Service Provider: disabled"
 fi
 
 ############################################################
@@ -306,6 +311,14 @@ univention-config-registry commit \
   /etc/pam_ldap.conf \
   /etc/pam.d/univention-management-console
 sed -i 's/password.*requisite.*pam_cracklib.so/password required  pam_cracklib.so/; /pam_unix/d; /pam_krb5/d' /etc/pam.d/univention-management-console
+
+if [[ -n "${SAML_SP_SERVER:-}" ]]; then
+  # use the first given SAML scheme instead of the UCR template string
+  SCHEME=$(echo "${SAML_SCHEMES}" | cut -d, -f1)
+  sed --in-place \
+    --expression="s#trusted_sp=[[:alpha:]]*#${SCHEME}#" \
+    /etc/pam.d/univention-management-console
+fi
 
 sed --in-place --expression="s/^ssl .*\$/ssl ${PAM_LDAP_TLS}/" /etc/pam_ldap.conf
 
