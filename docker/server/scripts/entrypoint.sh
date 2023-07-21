@@ -25,7 +25,9 @@ umask 077
 
 ############################################################
 # Prepare LDAP TLS certificates and settings
-case "${TLS_MODE:-secure}" in
+TLS_MODE="${TLS_MODE:-secure}"
+
+case "${TLS_MODE}" in
   "secure")
     PAM_LDAP_TLS="starttls"
     TLS_REQCERT="demand"
@@ -48,14 +50,13 @@ case "${TLS_MODE:-secure}" in
     exit 1
 esac
 
-case "${TLS_MODE:-secure}" in
-  "secure" | "unvalidated")
-    CA_CERT_FILE=${CA_CERT_FILE:-/run/secrets/ca_cert}
-    CA_DIR="/etc/univention/ssl/ucsCA"
+if [[ "${TLS_MODE}" != "off" ]]; then
+  CA_CERT_FILE=${CA_CERT_FILE:-/run/secrets/ca_cert}
+  CA_DIR="/etc/univention/ssl/ucsCA"
 
-    mkdir --parents "${CA_DIR}"
-    ln --symbolic --force "${CA_CERT_FILE}" "${CA_DIR}/CAcert.pem"
-esac
+  mkdir --parents "${CA_DIR}"
+  ln --symbolic --force "${CA_CERT_FILE}" "${CA_DIR}/CAcert.pem"
+fi
 
 ############################################################
 # Load SAML metadata
