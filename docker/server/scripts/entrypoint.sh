@@ -324,7 +324,7 @@ if [[ -n "${SAML_SP_SERVER:-}" ]]; then
   SCHEME=$(echo "${SAML_SCHEMES}" | cut -d, -f1)
   sed --in-place \
     --expression="s#trusted_sp=[[:alpha:]]*#${SCHEME}#" \
-    /etc/pam.d/univention-management-console
+    "/etc/pam.d/univention-management-console"
 fi
 
 sed --in-place --expression="s/^ssl .*\$/ssl ${PAM_LDAP_TLS}/" /etc/pam_ldap.conf
