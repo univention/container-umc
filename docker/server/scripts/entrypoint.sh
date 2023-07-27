@@ -121,6 +121,23 @@ if [[ -n "${SAML_METADATA_URL:-}" ]]; then
   ln --symbolic --force "${PRIVATE_KEY_FILE}" "/etc/univention/ssl/${SAML_SP_SERVER}/private.key"
 else
   echo "SAML Service Provider: disabled"
+
+  # These settings and certificates are not needed when SAML is disabled,
+  # we just set something to prevent errors/warnings.
+  SAML_SP_SERVER="id.example.org"
+  SAML_SCHEMES="https"
+  ucr set umc/saml/sp-server="${SAML_SP_SERVER}"
+  mkdir --parents "/etc/univention/ssl/${SAML_SP_SERVER}"
+  openssl \
+    req \
+      -x509 \
+      -newkey rsa:4096 \
+      -keyout "/etc/univention/ssl/${SAML_SP_SERVER}/private.key" \
+      -out "/etc/univention/ssl/${SAML_SP_SERVER}/cert.pem" \
+      -sha256 \
+      -days 3650 \
+      -nodes \
+      -subj "/C=US/ST=NJ/L=Fairfield/O=ACME Corporation/OU=Dummy/CN=localhost"
 fi
 
 ############################################################
