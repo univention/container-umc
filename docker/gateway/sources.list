@@ -6,7 +6,10 @@
 # deb https://updates-test.software-univention.de/ ucs504 main
 # deb https://updates-test.software-univention.de/ errata504 main
 
-deb http://apt.knut.univention.de/ ucs504 main
-deb http://apt.knut.univention.de/ errata504 main
+# deb http://apt.knut.univention.de/ ucs504 main
+# deb http://apt.knut.univention.de/ errata504 main
+
+deb http://updates.software-univention.de/ ucs504 main
+deb http://updates.software-univention.de/ errata504 main
 
 # [EOF]
