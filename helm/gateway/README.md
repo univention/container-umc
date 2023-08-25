@@ -629,7 +629,7 @@ null
 null
 </pre>
 </td>
-			<td>Whether to show cookie banner in the UMC/portal frontend. Example: `true`</td>
+			<td>The flag that triggers whether to show the cookie banner in the UMC/portal frontend. Example: `true`</td>
 		</tr>
 		<tr>
 			<td>umcGateway.ssoFqdn</td>
