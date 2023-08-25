@@ -1,14 +1,3 @@
-
-# FIXME: Once 5.0.4 has been released,
-#        grab all packages from updates.software-univention.de
-#        instead of updates-test.knut.univention.de or apt.knut.univention.de.
-
-# deb https://updates-test.software-univention.de/ ucs504 main
-# deb https://updates-test.software-univention.de/ errata504 main
-
-# deb http://apt.knut.univention.de/ ucs504 main
-# deb http://apt.knut.univention.de/ errata504 main
-
 deb http://updates.software-univention.de/ ucs504 main
 deb http://updates.software-univention.de/ errata504 main
 
