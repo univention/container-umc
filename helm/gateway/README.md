@@ -595,6 +595,10 @@ false
 			<td>object</td>
 			<td><pre lang="json">
 {
+  "cookieBannerTextDE": null,
+  "cookieBannerTextEN": null,
+  "cookieBannerTitleDE": null,
+  "cookieBannerTitleEN": null,
   "domainname": null,
   "hostname": null,
   "showCookieBanner": null,
@@ -603,6 +607,24 @@ false
 </pre>
 </td>
 			<td>Application configuration of the Univention Management Console Gateway</td>
+		</tr>
+		<tr>
+			<td>umcGateway.cookieBannerTextDE</td>
+			<td>string</td>
+			<td><pre lang="json">
+null
+</pre>
+</td>
+			<td>The text displayed in the cookie consent banner (Deutsch/English) Example: `By clicking on "Accept", you consent to the collection of information on this portal.`</td>
+		</tr>
+		<tr>
+			<td>umcGateway.cookieBannerTitleDE</td>
+			<td>string</td>
+			<td><pre lang="json">
+null
+</pre>
+</td>
+			<td>The title of the cookie consent banner (Deutsch/English) Example: `Cookie-Einwilligung`</td>
 		</tr>
 		<tr>
 			<td>umcGateway.domainname</td>
@@ -629,7 +651,7 @@ null
 null
 </pre>
 </td>
-			<td>The flag that triggers whether to show the cookie banner in the UMC/portal frontend. Example: `true`</td>
+			<td>The flag that triggers whether to show the cookie consent banner in the UMC/portal frontend. Example: `true`</td>
 		</tr>
 		<tr>
 			<td>umcGateway.ssoFqdn</td>
