@@ -56,6 +56,10 @@ ucr set \
     umc/login/content-security-policy/frame-ancestors="'self'" \
     umc/self-service/content-security-policy/frame-ancestors="'self'" \
     umc/cookie-banner/show="${SHOW_COOKIE_BANNER}" \
+    umc/cookie-banner/title/de="${COOKIE_BANNER_TITLE_DE}" \
+    umc/cookie-banner/title/en="${COOKIE_BANNER_TITLE_EN}" \
+    umc/cookie-banner/text/de="${COOKIE_BANNER_TEXT_DE}" \
+    umc/cookie-banner/text/en="${COOKIE_BANNER_TEXT_EN}" \
     portal/paths="/univention/portal/, /univention/umc/" \
     locale="de_DE.UTF-8:UTF-8 en_US.UTF-8:UTF-8" \
     ucs/server/languages/de_DE="Deutsch" \

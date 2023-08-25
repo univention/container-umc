@@ -27,9 +27,17 @@ umcGateway:
   # -- The FQDN of the identity provider.
   # Example: `https://id.souvap.example.org`
   ssoFqdn: null
-  # -- The flag that triggers whether to show the cookie banner in the UMC/portal frontend.
+  # -- The flag that triggers whether to show the cookie consent banner in the UMC/portal frontend.
   # Example: `true`
   showCookieBanner: null
+  # -- The title of the cookie consent banner (Deutsch/English)
+  # Example: `Cookie-Einwilligung`
+  cookieBannerTitleDE: null
+  cookieBannerTitleEN: null
+  # -- The text displayed in the cookie consent banner (Deutsch/English)
+  # Example: `By clicking on "Accept", you consent to the collection of information on this portal.`
+  cookieBannerTextDE: null
+  cookieBannerTextEN: null
 
 
 ## Kubernetes ingress

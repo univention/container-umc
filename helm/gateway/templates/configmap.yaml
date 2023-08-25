@@ -8,6 +8,10 @@ data:
   HOSTNAME: "{{ .Values.umcGateway.hostname }}"
   SSO_FQDN: {{ required "The parameter \"umcGateway.ssoFqdn\" is required." .Values.umcGateway.ssoFqdn | quote }}
   SHOW_COOKIE_BANNER: "{{ .Values.umcGateway.showCookieBanner | default "false" }}"
+  COOKIE_BANNER_TITLE_DE: "{{ .Values.umcGateway.cookieBannerTitleDE }}"
+  COOKIE_BANNER_TITLE_EN: "{{ .Values.umcGateway.cookieBannerTitleEN }}"
+  COOKIE_BANNER_TEXT_DE: "{{ .Values.umcGateway.cookieBannerTextDE }}"
+  COOKIE_BANNER_TEXT_EN: "{{ .Values.umcGateway.cookieBannerTextEN }}"
 {{- end }}
 {{- end }}
 ...
