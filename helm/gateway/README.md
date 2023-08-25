@@ -597,6 +597,7 @@ false
 {
   "domainname": null,
   "hostname": null,
+  "showCookieBanner": null,
   "ssoFqdn": null
 }
 </pre>
@@ -620,6 +621,15 @@ null
 </pre>
 </td>
 			<td>Host name of the instance. Example: `souvap`</td>
+		</tr>
+		<tr>
+			<td>umcGateway.showCookieBanner</td>
+			<td>string</td>
+			<td><pre lang="json">
+null
+</pre>
+</td>
+			<td>Whether to show cookie banner in the UMC/portal frontend. Example: `true`</td>
 		</tr>
 		<tr>
 			<td>umcGateway.ssoFqdn</td>

@@ -55,6 +55,7 @@ ucr set \
     umc/http/content-security-policy/style-src="'self' 'unsafe-inline'" \
     umc/login/content-security-policy/frame-ancestors="'self'" \
     umc/self-service/content-security-policy/frame-ancestors="'self'" \
+    umc/cookie-banner/show="${SHOW_COOKIE_BANNER}" \
     portal/paths="/univention/portal/, /univention/umc/" \
     locale="de_DE.UTF-8:UTF-8 en_US.UTF-8:UTF-8" \
     ucs/server/languages/de_DE="Deutsch" \

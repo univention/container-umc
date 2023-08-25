@@ -7,6 +7,7 @@ data:
   DOMAINNAME: "{{ .Values.umcGateway.domainname }}"
   HOSTNAME: "{{ .Values.umcGateway.hostname }}"
   SSO_FQDN: {{ required "The parameter \"umcGateway.ssoFqdn\" is required." .Values.umcGateway.ssoFqdn | quote }}
+  SHOW_COOKIE_BANNER: "{{ .Values.umcGateway.showCookieBanner | default "false" }}"
 {{- end }}
 {{- end }}
 ...
