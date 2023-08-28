@@ -1,7 +1,7 @@
 ---
 variables:
-  SOUVAP_HELM_PROJECT_ID: 123
-  SOUVAP_REGISTRY_PATH: souvap/tooling/images/univention-management-console
+  SOUVAP_HELM_PROJECT_ID: 155
+  SOUVAP_REGISTRY_PATH: souvap/tooling/images/univention
 
 include:
   - project: univention/customers/dataport/upx/common-ci
