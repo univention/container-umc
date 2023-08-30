@@ -634,8 +634,9 @@ false
   "cookieBannerTitleEN": null,
   "domainname": null,
   "hostname": null,
-  "showCookieBanner": null,
-  "ssoFqdn": null
+  "showCookieBanner": false,
+  "ssoFqdn": null,
+  "swpApplyUsabilityUIPatches": false
 }
 </pre>
 </td>
@@ -679,9 +680,9 @@ null
 		</tr>
 		<tr>
 			<td>umcGateway.showCookieBanner</td>
-			<td>string</td>
+			<td>bool</td>
 			<td><pre lang="json">
-null
+false
 </pre>
 </td>
 			<td>The flag that triggers whether to show the cookie consent banner in the UMC/portal frontend. Example: `true`</td>
@@ -694,6 +695,15 @@ null
 </pre>
 </td>
 			<td>The FQDN of the identity provider. Example: `https://id.souvap.example.org`</td>
+		</tr>
+		<tr>
+			<td>umcGateway.swpApplyUsabilityUIPatches</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td>The flag that triggers patching the usability changes for UMC/portal frontend. Example: `true`</td>
 		</tr>
 	</tbody>
 </table>

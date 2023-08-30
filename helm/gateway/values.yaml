@@ -29,7 +29,10 @@ umcGateway:
   ssoFqdn: null
   # -- The flag that triggers whether to show the cookie consent banner in the UMC/portal frontend.
   # Example: `true`
-  showCookieBanner: null
+  showCookieBanner: false
+  # -- The flag that triggers patching the usability changes for UMC/portal frontend.
+  # Example: `true`
+  swpApplyUsabilityUIPatches: false
   # -- The title of the cookie consent banner (Deutsch/English)
   # Example: `Cookie-Einwilligung`
   cookieBannerTitleDE: null

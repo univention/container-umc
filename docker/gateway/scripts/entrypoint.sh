@@ -65,6 +65,16 @@ ucr set \
     ucs/server/languages/de_DE="Deutsch" \
     ucs/server/languages/en_US="English"
 
+# Additional SouvAP configuration (replacing Ansible file patches)
+if [[ ${SWP_APPLY_USABILITY_UI_PATCHES:-} == "true" ]]; then
+  # "improve_usability_ui_changes | Remove setupSettingsContextMenu from setupMenus()"
+  sed --in-place --expression="/setupCertificateMenu();/d" /usr/share/univention-web/js/umc/hooks/default_menu_entries.js
+  # "improve_usability_ui_changes | Remove setupHelpMenu from setupMenus()"
+  sed --in-place --expression="/setupHelpMenu();/d" /usr/share/univention-web/js/umc/hooks/default_menu_entries.js
+  # "improve_usability_ui_changes | Set username maxLength"
+  sed --in-place --expression="s/maxLength: 999,/maxLength: 20,/" /usr/share/univention-management-console-frontend/js/umc/modules/udm/UsernameMaxLengthChecker.js
+fi
+
 # Generate config files from UCR templates
 univention-config-registry commit \
   /etc/apache2/conf-available/ucs.conf \
