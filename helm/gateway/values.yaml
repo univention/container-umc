@@ -49,8 +49,21 @@ ingress:
   host: null
   # -- The path configuration. The default only grabs what is handled by the UMC gateway.
   paths:
+    # TODO: Exact vs. Prefix
+    - pathType: Exact
+      path: /univention/languages.json
+    - pathType: Exact
+      path: /univention/meta.json
+    - pathType: Exact
+      path: /univention/theme.css
     - pathType: Prefix
-      path: /univention/(js|languages.json|login|management|meta.json|theme.css|themes($/.*))
+      path: /univention/js/
+    - pathType: Prefix
+      path: /univention/login
+    - pathType: Prefix
+      path: /univention/management
+    - pathType: Prefix
+      path: /univention/themes/
   tls:
     enabled: true
     secretName: ""
