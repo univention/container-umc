@@ -128,19 +128,28 @@ false
 			<td></td>
 		</tr>
 		<tr>
-			<td>ingress.annotations."nginx.ingress.kubernetes.io/rewrite-target"</td>
+			<td>ingress.annotations."nginx.ingress.kubernetes.io/configuration-snippet"</td>
 			<td>string</td>
 			<td><pre lang="json">
-"/$1"
+"rewrite ^/univention(/.*)$ $1 break;\n"
 </pre>
 </td>
 			<td></td>
 		</tr>
 		<tr>
-			<td>ingress.annotations."nginx.ingress.kubernetes.io/use-regex"</td>
+			<td>ingress.annotations."nginx.org/location-snippets"</td>
 			<td>string</td>
 			<td><pre lang="json">
-"true"
+"rewrite ^/univention(/.*)$ $1 break;\n"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ingress.annotations."nginx.org/mergeable-ingress-type"</td>
+			<td>string</td>
+			<td><pre lang="json">
+"minion"
 </pre>
 </td>
 			<td></td>
@@ -178,7 +187,31 @@ null
 			<td><pre lang="json">
 [
   {
-    "path": "/univention/((?:auth|saml|get|set|command|upload|logout)(?:$|/.*))",
+    "path": "/univention/auth",
+    "pathType": "Prefix"
+  },
+  {
+    "path": "/univention/saml",
+    "pathType": "Prefix"
+  },
+  {
+    "path": "/univention/get",
+    "pathType": "Prefix"
+  },
+  {
+    "path": "/univention/set",
+    "pathType": "Prefix"
+  },
+  {
+    "path": "/univention/command",
+    "pathType": "Prefix"
+  },
+  {
+    "path": "/univention/upload",
+    "pathType": "Prefix"
+  },
+  {
+    "path": "/univention/logout",
     "pathType": "Prefix"
   }
 ]

@@ -118,6 +118,15 @@ helm uninstall umc-gateway
 			<td></td>
 		</tr>
 		<tr>
+			<td>ingress.annotations."nginx.org/mergeable-ingress-type"</td>
+			<td>string</td>
+			<td><pre lang="json">
+"minion"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
 			<td>ingress.enabled</td>
 			<td>bool</td>
 			<td><pre lang="json">
@@ -150,7 +159,31 @@ null
 			<td><pre lang="json">
 [
   {
-    "path": "/univention/(js|languages.json|login|management|meta.json|theme.css|themes($/.*))",
+    "path": "/univention/languages.json",
+    "pathType": "Exact"
+  },
+  {
+    "path": "/univention/meta.json",
+    "pathType": "Exact"
+  },
+  {
+    "path": "/univention/theme.css",
+    "pathType": "Exact"
+  },
+  {
+    "path": "/univention/js/",
+    "pathType": "Prefix"
+  },
+  {
+    "path": "/univention/login",
+    "pathType": "Prefix"
+  },
+  {
+    "path": "/univention/management",
+    "pathType": "Prefix"
+  },
+  {
+    "path": "/univention/themes/",
     "pathType": "Prefix"
   }
 ]

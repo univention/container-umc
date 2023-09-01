@@ -86,6 +86,9 @@ ingress:
   annotations:
     nginx.ingress.kubernetes.io/configuration-snippet: |
       rewrite ^/univention(/.*)$ $1 break;
+    nginx.org/location-snippets: |
+      rewrite ^/univention(/.*)$ $1 break;
+    nginx.org/mergeable-ingress-type: "minion"
   # -- The hostname. This parameter has to be supplied. Example `portal.example`.
   host: null
   # -- The path configuration. The default only grabs what is handled by the UMC server.
