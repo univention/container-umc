@@ -27,14 +27,14 @@ umcGateway:
   # -- The FQDN of the identity provider.
   # Example: `https://id.souvap.example.org`
   ssoFqdn: null
-  # -- The flag that triggers whether to show the cookie consent banner in the UMC/portal frontend.
+  # -- Defines whether a cookie banner is shown in the Portal and during the login.
   # Example: `true`
   showCookieBanner: false
   # -- The flag that triggers patching the usability changes for UMC/portal frontend.
   # Example: `true`
   swpApplyUsabilityUIPatches: false
   # -- The title of the cookie consent banner (Deutsch/English)
-  # Example: `Cookie-Einwilligung`
+  # Example: `Cookie Zustimmung`
   cookieBannerTitleDE: null
   cookieBannerTitleEN: null
   # -- The text displayed in the cookie consent banner (Deutsch/English)

@@ -55,15 +55,21 @@ ucr set \
     umc/http/content-security-policy/style-src="'self' 'unsafe-inline'" \
     umc/login/content-security-policy/frame-ancestors="'self'" \
     umc/self-service/content-security-policy/frame-ancestors="'self'" \
-    umc/cookie-banner/show="${SHOW_COOKIE_BANNER}" \
-    umc/cookie-banner/title/de="${COOKIE_BANNER_TITLE_DE}" \
-    umc/cookie-banner/title/en="${COOKIE_BANNER_TITLE_EN}" \
-    umc/cookie-banner/text/de="${COOKIE_BANNER_TEXT_DE}" \
-    umc/cookie-banner/text/en="${COOKIE_BANNER_TEXT_EN}" \
     portal/paths="/univention/portal/, /univention/umc/" \
     locale="de_DE.UTF-8:UTF-8 en_US.UTF-8:UTF-8" \
     ucs/server/languages/de_DE="Deutsch" \
     ucs/server/languages/en_US="English"
+
+# Ensure proper cookie banner config
+ucr set umc/cookie-banner/show="${SHOW_COOKIE_BANNER}"
+if [[ -n "${COOKIE_BANNER_TITLE_DE:-}" && -n "${COOKIE_BANNER_TEXT_DE:-}" ]]; then
+    ucr set umc/cookie-banner/title/de="${COOKIE_BANNER_TITLE_DE}" \
+            umc/cookie-banner/text/de="${COOKIE_BANNER_TEXT_DE}"
+fi
+if [[ -n "${COOKIE_BANNER_TITLE_EN:-}" && -n "${COOKIE_BANNER_TEXT_EN:-}" ]]; then
+    ucr set umc/cookie-banner/title/en="${COOKIE_BANNER_TITLE_EN}" \
+            umc/cookie-banner/text/en="${COOKIE_BANNER_TEXT_EN}"
+fi
 
 # Additional SouvAP configuration (replacing Ansible file patches)
 if [[ ${SWP_APPLY_USABILITY_UI_PATCHES:-} == "true" ]]; then
@@ -74,6 +80,7 @@ if [[ ${SWP_APPLY_USABILITY_UI_PATCHES:-} == "true" ]]; then
   # "improve_usability_ui_changes | Set username maxLength"
   sed --in-place --expression="s/maxLength: 999,/maxLength: 20,/" /usr/share/univention-management-console-frontend/js/umc/modules/udm/UsernameMaxLengthChecker.js
 fi
+
 
 # Generate config files from UCR templates
 univention-config-registry commit \

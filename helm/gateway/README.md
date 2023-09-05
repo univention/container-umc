@@ -658,7 +658,7 @@ null
 null
 </pre>
 </td>
-			<td>The title of the cookie consent banner (Deutsch/English) Example: `Cookie-Einwilligung`</td>
+			<td>The title of the cookie consent banner (Deutsch/English) Example: `Cookie Zustimmung`</td>
 		</tr>
 		<tr>
 			<td>umcGateway.domainname</td>
@@ -685,7 +685,7 @@ null
 false
 </pre>
 </td>
-			<td>The flag that triggers whether to show the cookie consent banner in the UMC/portal frontend. Example: `true`</td>
+			<td>Defines whether a cookie banner is shown in the Portal and during the login. Example: `true`</td>
 		</tr>
 		<tr>
 			<td>umcGateway.ssoFqdn</td>
