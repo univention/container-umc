@@ -111,6 +111,8 @@ RUN \
     univention-directory-reports=12.* \
     univention-management-console-module-udm=10.* \
     univention-management-console-server=12.* \
+    univention-self-service-master \
+    univention-self-service-passwordreset-umc \
     univention-pam=13.* \
     && \
   rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* && \
@@ -406,6 +408,10 @@ COPY --from=build \
 COPY --from=build \
   ${SRC_PY_LIBS}/univention/management/console/modules/udm/*.py \
   ${DST_PY_LIBS}/univention/management/console/modules/udm/
+
+COPY --from=build \
+  ${SRC_PY_LIBS}/univention/management/console/modules/passwordreset/*.py \
+  ${DST_PY_LIBS}/univention/management/console/modules/passwordreset/
 
 # from python3-univention-management-console
 # for /usr/sbin/univention-management-console-server
