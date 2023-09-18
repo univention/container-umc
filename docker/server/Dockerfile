@@ -26,6 +26,8 @@ RUN \
       curl=7.64.* \
       gpg=2.2.* \
       gpg-agent=2.2.* \
+      memcached \
+      apache2 \
       && \
   curl -fsSL "${APT_KEY_URL}" | apt-key add - && \
   rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
@@ -107,6 +109,7 @@ RUN \
     # $PY_LIBS/univention/admindiary/events.py
     univention-admin-diary-client=2.* \
     # for /usr/sbin/univention-config-registry
+    # univention-apache=12.* \
     univention-config=15.* \
     univention-directory-reports=12.* \
     univention-management-console-module-udm=10.* \
