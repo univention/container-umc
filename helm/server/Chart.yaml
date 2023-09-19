@@ -17,5 +17,9 @@ dependencies:
   - name: "common"
     repository: "oci://gitregistry.knut.univention.de/univention/customers/dataport/upx/common-helm/helm"
     version: "^0.2.0"
+  - name: "postgresql"
+    repository: "https://charts.bitnami.com/bitnami"
+    version: "12.7.3"
+    condition: "postgresql.bundled"
 
 ...

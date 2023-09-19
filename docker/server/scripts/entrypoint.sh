@@ -309,7 +309,12 @@ ucr set \
     uuid/system="00000000-0000-0000-0000-000000000000" \
     version/erratalevel="0" \
     version/patchlevel="4" \
-    version/version="5.0"
+    version/version="5.0" \
+    self-service/backend-server="${HOSTNAME}.${DOMAINNAME}"
+
+echo "easyPassword" > /etc/self-service-db.secret
+sed -i "s/localhost/${DB_HOST}/" /usr/lib/python3/dist-packages/univention/management/console/modules/passwordreset/tokendb.py
+
 
 ############################################################
 # Configure PAM

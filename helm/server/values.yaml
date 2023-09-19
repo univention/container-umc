@@ -222,4 +222,19 @@ service:
 autoscaling:
   enabled: false
 
+# -- PostgreSQL settings.
+#
+# The bitnami helm chart does contain all details of what can be configured:
+# https://github.com/bitnami/charts/tree/main/bitnami/postgresql
+postgresql:
+  # -- Set to `true` if you want PostgreSQL to be installed as well.
+  bundled: true
+  auth:
+    username: "selfservice"
+    database: "selfservice"
+    password: "easyPassword"
+    postgresPassword: "postgres"
+  customLabels: {
+    "selfservice": "my label"
+  }
 ...
