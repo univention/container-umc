@@ -91,6 +91,7 @@ RUN \
       python3-univention-debhelper=2.* \
       # for UCR template files
       python3-univention-lib=9.* \
+      univention-self-service-master \
       && \
   rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* && \
   awk \
