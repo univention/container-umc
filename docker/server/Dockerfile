@@ -27,7 +27,6 @@ RUN \
       gpg=2.2.* \
       gpg-agent=2.2.* \
       memcached \
-      apache2 \
       && \
   curl -fsSL "${APT_KEY_URL}" | apt-key add - && \
   rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
@@ -41,6 +40,7 @@ COPY \
 
 COPY scripts/fake.sh /usr/local/bin/systemctl
 COPY scripts/fake.sh /usr/local/bin/a2dissite
+COPY scripts/fake.sh /usr/local/bin/a2ensite
 COPY scripts/fake.sh /usr/local/bin/call_joinscript
 COPY scripts/fake.sh /usr/local/bin/create_logfile
 COPY scripts/fake.sh /usr/local/bin/stop_udm_cli_server
@@ -109,12 +109,10 @@ RUN \
     # $PY_LIBS/univention/admindiary/events.py
     univention-admin-diary-client=2.* \
     # for /usr/sbin/univention-config-registry
-    # univention-apache=12.* \
     univention-config=15.* \
     univention-directory-reports=12.* \
     univention-management-console-module-udm=10.* \
     univention-management-console-server=12.* \
-    univention-self-service-master \
     univention-self-service-passwordreset-umc \
     univention-pam=13.* \
     && \
@@ -258,6 +256,9 @@ RUN \
       # for /usr/sbin/univention-management-console-web-server
       python3-cherrypy3=8.* \
       python3-pysaml2=4.5.* \
+      # for /usr/sbin/univention-management-console/modules/passwordreset
+      python3-pylibmc=1.5.* \
+      python3-psycopg2=2.7.* \
       # for $PY_LIBS/univention/management/console/server.py
       python3-sdnotify=0.* \
       # for ...
@@ -388,7 +389,7 @@ COPY --from=build \
 COPY --from=build \
   ${SRC_PY_LIBS}/univention/lib/*.py \
   ${DST_PY_LIBS}/univention/lib/
-RUN rm ${DST_PY_LIBS}/univention/lib/{__init__.py,account.py,admember.py,atjobs.py,fstab.py,ldap_extension.py,license_tools.py,listenerSharePath.py,locking.py,package_manager.py,password.py,ucrLogrotate.py,umc.py}
+RUN rm ${DST_PY_LIBS}/univention/lib/{__init__.py,account.py,admember.py,atjobs.py,fstab.py,ldap_extension.py,license_tools.py,listenerSharePath.py,locking.py,package_manager.py,password.py,ucrLogrotate.py}
 
 # from python3-univention-management-console
 # used files: acl.py auth.py base.py category.py config.py error.py ldap.py
@@ -415,6 +416,10 @@ COPY --from=build \
 COPY --from=build \
   ${SRC_PY_LIBS}/univention/management/console/modules/passwordreset/*.py \
   ${DST_PY_LIBS}/univention/management/console/modules/passwordreset/
+
+COPY --from=build \
+  ${SRC_PY_LIBS}/univention/management/console/modules/passwordreset/sending/*.* \
+  ${DST_PY_LIBS}/univention/management/console/modules/passwordreset/sending/
 
 # from python3-univention-management-console
 # for /usr/sbin/univention-management-console-server
@@ -448,6 +453,10 @@ COPY --from=build \
 COPY --from=build \
   /usr/share/univention-management-console/modules/udm.xml \
   /usr/share/univention-management-console/modules/udm.xml
+
+COPY --from=build \
+  /usr/share/univention-management-console/modules/passwordreset.xml \
+  /usr/share/univention-management-console/modules/passwordreset.xml
 
 RUN mkdir /usr/share/doc/univention-management-console-web-server/
 
