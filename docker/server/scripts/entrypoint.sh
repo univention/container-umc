@@ -327,6 +327,11 @@ if [[ -n "${SAML_SP_SERVER:-}" ]]; then
     "/etc/pam.d/univention-management-console"
 fi
 
+# Ensure proper SAML configuration
+# Replacing Ansible task "ucr settings to disable unnecessary SAML feature"
+ucr set umc/saml/in-memory-identity-cache=false \
+        saml/idp/enableSAML20-IdP=false
+
 sed --in-place --expression="s/^ssl .*\$/ssl ${PAM_LDAP_TLS}/" /etc/pam_ldap.conf
 
 ############################################################
