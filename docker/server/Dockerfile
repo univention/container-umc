@@ -1,41 +1,20 @@
 ############################################################
 # Global variables
 
-ARG DEBIAN_BASE_IMAGE_TAG=buster-slim
-ARG DOCKERHUB_CACHE
+ARG UCS_BASE_IMAGE_TAG=v0.7.2
+ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-base-505
 
 ############################################################
 # Start first stage
 
-FROM ${DOCKERHUB_CACHE}debian:${DEBIAN_BASE_IMAGE_TAG} AS build
-
-ARG APT_KEY_URL=https://updates.software-univention.de/univention-archive-key-ucs-5x.gpg
+FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} AS build
 
 SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 
 WORKDIR /apt
 
 ############################################################
-# Install Univention APT-Key
-
-RUN \
-  apt-get update && \
-  DEBIAN_FRONTEND=noninteractive \
-    apt-get --assume-yes --verbose-versions --no-install-recommends install \
-      ca-certificates=20* \
-      curl=7.64.* \
-      gpg=2.2.* \
-      gpg-agent=2.2.* \
-      && \
-  curl -fsSL "${APT_KEY_URL}" | apt-key add - && \
-  rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
-
-############################################################
 # Install scripts and configs for dpkg
-
-COPY \
-  sources.list \
-  /etc/apt/sources.list.d/15_ucs-online-version.list
 
 COPY scripts/fake.sh /usr/local/bin/systemctl
 COPY scripts/fake.sh /usr/local/bin/a2dissite
@@ -158,9 +137,7 @@ RUN  \
 ############################################################
 # Start second stage
 
-FROM ${DOCKERHUB_CACHE}debian:${DEBIAN_BASE_IMAGE_TAG} AS final
-
-ARG APT_KEY_URL=https://updates.software-univention.de/univention-archive-key-ucs-5x.gpg
+FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} AS final
 
 ARG SRC_PY_LIBS="/usr/lib/python3/dist-packages"
 ARG DST_PY_LIBS="/usr/lib/python3/dist-packages"
@@ -174,23 +151,16 @@ WORKDIR /
 
 RUN \
   apt-get --quiet update && \
-  DEBIAN_FRONTEND=noninteractive \
     apt-get --assume-yes --verbose-versions --no-install-recommends install \
       ca-certificates=20* \
       curl=7.64.* \
       gpg=2.2.* \
       gpg-agent=2.2.* \
       && \
-  curl -fsSL "${APT_KEY_URL}" | apt-key add - && \
   rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
-
-COPY \
-  sources.list \
-  /etc/apt/sources.list.d/15_ucs-online-version.list
 
 RUN \
   apt-get --quiet update && \
-  DEBIAN_FRONTEND=noninteractive \
     apt-get --assume-yes --verbose-versions --no-install-recommends install \
       libc-bin=2.28-* \
       locales=2.28-* \
@@ -208,14 +178,13 @@ RUN \
       # calling $PY_LIBS/univention/uldap.py
       cy2-saml=1.9.* \
     && \
-  rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* /etc/apt/sources.list.d/15_ucs-online-version.list
+  rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
 ############################################################
 # Install Python and entrypoint.sh requirements
 
 RUN \
   apt-get --quiet update && \
-  DEBIAN_FRONTEND=noninteractive \
     apt-get --assume-yes --verbose-versions --no-install-recommends install \
       # for $PY_LIBS/univention/admin/password.py
       python3-bcrypt=3.1.* \
