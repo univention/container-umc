@@ -68,6 +68,14 @@ In any case, using SAML requires a certificate and its private key under
 `CERT_PEM_FILE` and `PRIVATE_KEY_FILE`.
 The certificate's subject hostname shall contain the value of `SAML_SP_SERVER`.
 
+
+## Customization
+
+The container currently does contain customization for the Sovereign Workplace.
+This can be activated by setting the environment variable
+`APPLY_SWP_CUSTOMIZATION` to the value `true`.
+
+
 ## Container for the Apache Gateway
 
 This contains merely static files, such as javascript, stylesheets and images.
