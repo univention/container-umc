@@ -77,6 +77,13 @@ umcServer:
   # -- Path to file with the certificate's private key (.key).
   privateKeyFile: "/var/secrets/private_key"
 
+  # -- DN or the label of a user template which is preselected when creating a user.
+  # Example: `"cn=Groupware-Benutzer,cn=templates,cn=univention,dc=example,dc=org"`
+  usersUserAddDefault: null
+  # -- In the user wizard flag the "invite user by email" option as default and render the input field for the user's email address.
+  # Example: `false`
+  usersUserWizardInviteDefault: false
+
 
 ## Kubernetes ingress
 ingress:

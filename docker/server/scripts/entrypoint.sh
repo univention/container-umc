@@ -203,7 +203,9 @@ ucr set \
     directory/manager/web/modules/groups/group/caching/uniqueMember/timeout="300" \
     directory/manager/web/modules/groups/group/checks/circular_dependency="yes" \
     directory/manager/web/modules/search/advanced_on_open="false" \
+    directory/manager/web/modules/users/user/add/default="${USERS_USER_ADD_DEFAULT:-}" \
     directory/manager/web/modules/users/user/properties/homePostalAddress/syntax="postalAddress" \
+    directory/manager/web/modules/users/user/wizard/property/invite/default="${USERS_USER_WIZARD_INVITE_DEFAULT:-false}" \
     directory/manager/web/modules/wizards/disabled="no" \
     directory/manager/web/sizelimit="2000" \
     directory/reports/cleanup/age="43200" \

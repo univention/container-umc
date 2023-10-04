@@ -685,7 +685,9 @@ false
   "samlMetadataUrlInternal": "",
   "samlSchemes": "https",
   "samlSpServer": null,
-  "tlsMode": "secure"
+  "tlsMode": "secure",
+  "usersUserAddDefault": null,
+  "usersUserWizardInviteDefault": false
 }
 </pre>
 </td>
@@ -879,6 +881,24 @@ null
 </pre>
 </td>
 			<td>Set desired TLS mode. Options: `"secure"`, `"unvalidated"`, `"off"`.</td>
+		</tr>
+		<tr>
+			<td>umcServer.usersUserAddDefault</td>
+			<td>string</td>
+			<td><pre lang="json">
+null
+</pre>
+</td>
+			<td>DN or the label of a user template which is preselected when creating a user. Example: `"cn=Groupware-Benutzer,cn=templates,cn=univention,dc=example,dc=org"`</td>
+		</tr>
+		<tr>
+			<td>umcServer.usersUserWizardInviteDefault</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td>In the user wizard flag the "invite user by email" option as default and render the input field for the user's email address. Example: `false`</td>
 		</tr>
 	</tbody>
 </table>

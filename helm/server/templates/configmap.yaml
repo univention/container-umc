@@ -28,6 +28,9 @@ data:
   PRIVATE_KEY_FILE: "{{ .Values.umcServer.privateKeyFile }}"
   CA_CERT_FILE: "{{ .Values.umcServer.caCertFile }}"
   CERT_PEM_FILE: "{{ .Values.umcServer.certPemFile }}"
+
+  USERS_USER_ADD_DEFAULT: "{{ .Values.umcServer.usersUserAddDefault }}"
+  USERS_USER_WIZARD_INVITE_DEFAULT: "{{ .Values.umcServer.usersUserWizardInviteDefault }}"
 {{- end }}
 {{- end }}
 ...
