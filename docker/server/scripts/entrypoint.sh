@@ -311,6 +311,31 @@ ucr set \
     version/patchlevel="4" \
     version/version="5.0"
 
+
+if [[ "${APPLY_SWP_CUSTOMIZATION:-false}" = "true" ]]
+then
+  echo "Applying SWP customization."
+
+  # TODO: Move SWP customization out once a solution to customize UCR settings has
+  # been added into the UMS Stack.
+  #
+  # See: https://git.knut.univention.de/univention/customers/dataport/team-souvap/-/issues/151
+  ucr set \
+      directory/manager/web/modules/users/user/properties/mailPrimaryAddress/required="true" \
+      directory/manager/web/modules/users/user/properties/firstname/required="true" \
+      directory/manager/web/modules/wizard/disabled="No" \
+      directory/manager/web/modules/users/user/wizard/property/invite/default="True" \
+      directory/manager/web/modules/users/user/wizard/property/overridePWLength/visible="False" \
+      directory/manager/web/modules/users/user/wizard/property/overridePWLength/default="False" \
+      directory/manager/web/modules/users/user/wizard/property/pwdChangeNextLogin/visible="False" \
+      directory/manager/web/modules/users/user/wizard/property/pwdChangeNextLogin/default="True" \
+      directory/manager/web/modules/users/user/search/autosearch="False" \
+      directory/manager/web/modules/users/user/properties/username/syntax="uid"
+else
+  echo "Not applying SWP customization."
+fi
+
+
 ############################################################
 # Configure PAM
 ln --symbolic --force "${MACHINE_SECRET_FILE}" /etc/pam_ldap.secret
