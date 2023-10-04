@@ -550,8 +550,6 @@ COPY --from=build \
 
 RUN mkdir /var/cache/univention-management-console/
 
-COPY scripts/entrypoint.sh /entrypoint.sh
-
 ############################################################
 # Define runtime
 
@@ -561,6 +559,8 @@ RUN echo -en 'en_US.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8\n' >> /etc/locale.gen && \
     localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8 && \
     # Create directory for SAML IDP xml
     mkdir -p /usr/share/univention-management-console/saml/idp
+
+COPY scripts/entrypoint.sh /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
 
