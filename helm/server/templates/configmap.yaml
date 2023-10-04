@@ -4,6 +4,7 @@
 {{- define "umc-server.configMap" }}
 {{- with .top }}
 data:
+  APPLY_SWP_CUSTOMIZATION: "{{ .Values.umcServer.applySwpCustomization }}"
   DOMAINNAME: "{{ .Values.umcServer.domainname }}"
   HOSTNAME: "{{ .Values.umcServer.hostname }}"
   LDAP_HOST: {{ required "The parameter \"umcServer.ldapHost\" is required." .Values.umcServer.ldapHost | quote }}

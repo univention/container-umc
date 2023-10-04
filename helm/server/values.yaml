@@ -19,6 +19,8 @@ tolerations: []
 
 # -- Application configuration of the Univention Management Console Server
 umcServer:
+  # -- Apply SWP specific customization.
+  applySwpCustomization: false
   # -- Domain name of the instance.
   # Example: `example.org`
   domainname: null
