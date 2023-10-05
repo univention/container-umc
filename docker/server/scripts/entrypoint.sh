@@ -291,6 +291,7 @@ ucr set \
     umc/module/udm/users/self/disabled="true" \
     umc/saml/idp-server="${SAML_METADATA_URL:-https://ucs-sso.example.org/simplesamlphp/saml2/idp/metadata.php}" \
     umc/saml/trusted/sp/primary.example.org="primary.example.org" \
+    umc/saml/in-memory-identity-cache=false \
     umc/server/autostart="yes" \
     umc/server/upload/max="2048" \
     umc/server/upload/min_free_space="51200" \
@@ -326,11 +327,6 @@ if [[ -n "${SAML_SP_SERVER:-}" ]]; then
     --expression="s#trusted_sp=[[:alpha:]]*#${SCHEME}#" \
     "/etc/pam.d/univention-management-console"
 fi
-
-# Ensure proper SAML configuration
-# Replacing Ansible task "ucr settings to disable unnecessary SAML feature"
-ucr set umc/saml/in-memory-identity-cache=false \
-        saml/idp/enableSAML20-IdP=false
 
 sed --in-place --expression="s/^ssl .*\$/ssl ${PAM_LDAP_TLS}/" /etc/pam_ldap.conf
 

@@ -24,8 +24,8 @@ umcGateway:
   # -- Host name of the instance.
   # Example: `souvap`
   hostname: null
-  # -- The FQDN of the identity provider.
-  # Example: `https://id.souvap.example.org`
+  # -- The FQDN of the identity provider (w/o the protocol specification).
+  # Example: `id.souvap.example.org`
   ssoFqdn: null
   # -- Defines whether a cookie banner is shown in the Portal and during the login.
   # Example: `true`

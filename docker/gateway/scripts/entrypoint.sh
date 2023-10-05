@@ -81,7 +81,6 @@ if [[ ${SWP_APPLY_USABILITY_UI_PATCHES:-} == "true" ]]; then
   sed --in-place --expression="s/maxLength: 999,/maxLength: 20,/" /usr/share/univention-management-console-frontend/js/umc/modules/udm/UsernameMaxLengthChecker.js
 fi
 
-
 # Generate config files from UCR templates
 univention-config-registry commit \
   /etc/apache2/conf-available/ucs.conf \

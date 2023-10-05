@@ -694,7 +694,7 @@ false
 null
 </pre>
 </td>
-			<td>The FQDN of the identity provider. Example: `https://id.souvap.example.org`</td>
+			<td>The FQDN of the identity provider (w/o the protocol specification). Example: `id.souvap.example.org`</td>
 		</tr>
 		<tr>
 			<td>umcGateway.swpApplyUsabilityUIPatches</td>
