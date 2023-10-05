@@ -331,6 +331,13 @@ then
       directory/manager/web/modules/users/user/wizard/property/pwdChangeNextLogin/default="True" \
       directory/manager/web/modules/users/user/search/autosearch="False" \
       directory/manager/web/modules/users/user/properties/username/syntax="uid"
+
+  # See: https://git.knut.univention.de/univention/customers/dataport/team-souvap/-/issues/151
+  ucr set \
+      umc/http/enforce-secure-cookie="true" \
+      umc/http/enforce-session-cookie="true" \
+      umc/http/cookie/samesite="Strict"
+
 else
   echo "Not applying SWP customization."
 fi
