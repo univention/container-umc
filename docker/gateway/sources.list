@@ -1,4 +1,0 @@
-deb http://updates.software-univention.de/ ucs504 main
-deb http://updates.software-univention.de/ errata504 main
-
-# [EOF]

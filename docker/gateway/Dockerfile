@@ -1,41 +1,22 @@
 ############################################################
 # Global variables
 
-ARG DEBIAN_BASE_IMAGE_TAG=buster-slim
-ARG DOCKER_PROXY
+ARG UCS_BASE_IMAGE_TAG=v0.7.5
+ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-base-505
+ARG UCS_BASE_PYTHON_3_11=gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-base-520
+
 
 ############################################################
 # First build stage
 
-FROM ${DOCKER_PROXY}debian:${DEBIAN_BASE_IMAGE_TAG} AS build
-
-ARG APT_KEY_URL=https://updates.software-univention.de/univention-archive-key-ucs-5x.gpg
+FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} AS build
 
 SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 
 WORKDIR /apt
 
 ############################################################
-# Install Univention APT-Key
-
-RUN \
-  apt-get update && \
-  DEBIAN_FRONTEND=noninteractive \
-    apt-get --assume-yes --verbose-versions --no-install-recommends install \
-      ca-certificates=20* \
-      curl=7.64.* \
-      gpg=2.2.* \
-      gpg-agent=2.2.* \
-      && \
-  curl -fsSL "${APT_KEY_URL}" | apt-key add - && \
-  rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
-
-############################################################
 # Install scripts and configs for dpkg
-
-COPY \
-  sources.list \
-  /etc/apt/sources.list.d/15_ucs-online-version.list
 
 COPY scripts/fake.sh /usr/local/bin/systemctl
 COPY scripts/fake.sh /usr/local/bin/call_joinscript
@@ -50,22 +31,15 @@ COPY scripts/fake-uv-lib.sh /usr/local/bin/fake-uv-lib.sh
 RUN \
   apt-get --quiet update && \
   # install Univention bash helper functions dependency
-  DEBIAN_FRONTEND=noninteractive \
     apt-get --assume-yes --verbose-versions --no-install-recommends install \
       shell-univention-lib=9.* \
       && \
-  # we do not need the many bash helper-functions here
-  cp /usr/local/bin/fake-uv-lib.sh /usr/share/univention-lib/all.sh && \
-  cp /usr/local/bin/fake-uv-lib.sh /usr/share/univention-lib/join.sh && \
-  cp /usr/local/bin/fake-uv-lib.sh /usr/share/univention-lib/umc.sh && \
   # install unlisted dependencies
-  DEBIAN_FRONTEND=noninteractive \
     apt-get --assume-yes --verbose-versions --no-install-recommends install \
       python3=3.7.* \
       python3-distutils=3.7.* \
       && \
   # install UMC
-  DEBIAN_FRONTEND=noninteractive \
     apt-get --assume-yes --verbose-versions --no-install-recommends install \
             --option Dpkg::Options::="--force-confold" \
       univention-apache=12.* \
@@ -101,7 +75,7 @@ RUN \
 ############################################################
 # Start second stage
 
-FROM ${DOCKER_REGISTRY}httpd:2.4-bookworm AS final
+FROM ${UCS_BASE_PYTHON_3_11}:${UCS_BASE_IMAGE_TAG} AS final
 
 ARG LABEL_CREATED=undefined
 ARG LABEL_REVISION=undefined
@@ -116,13 +90,13 @@ WORKDIR /
 
 RUN \
   apt-get --quiet update && \
-  DEBIAN_FRONTEND=noninteractive \
     apt-get --assume-yes --verbose-versions --no-install-recommends install \
       libpython3.11=3.* \
       libapache2-mod-wsgi-py3=4.* \
       # for univention-config-registry
       python3-lazy-object-proxy=1.* \
       python3-six=1.* \
+      apache2-bin=2.* \
       && \
   rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
@@ -318,67 +292,17 @@ RUN \
     /etc/apache2/conf-available/simplesamlphp.conf \
     /etc/apache2/conf-available/php7.3-cgi.conf && \
   # Enable modules
-  echo "LoadModule unixd_module /usr/local/apache2/modules/mod_unixd.so" \
-    > /etc/apache2/mods-enabled/unixd.load && \
-  \
-  echo "LoadModule log_config_module /usr/local/apache2/modules/mod_log_config.so" \
-    > /etc/apache2/mods-enabled/log_config.load && \
+  # echo "LoadModule unixd_module /usr/local/apache2/modules/mod_unixd.so" \
+    # > /etc/apache2/mods-enabled/unixd.load && \
+  # \
+  # echo "LoadModule log_config_module /usr/local/apache2/modules/mod_log_config.so" \
+    # > /etc/apache2/mods-enabled/log_config.load && \
   \
   ln -sf /etc/apache2/mods-available/proxy_http.load \
     /etc/apache2/mods-enabled/proxy_http.load && \
   \
   # Disable modules
-  for mod in \
-    authnz_pam \
-    mod_actions \
-    mod_cgi \
-    mod_suexec \
-  ; do \
-    rm "/etc/apache2/mods-enabled/${mod}.load" || true; \
-  done && \
-  \
-  # Make modules available
-  # @todo: Not all modules are necessary!
-  for mod in \
-    mod_access_compat \
-    mod_alias \
-    mod_auth_basic \
-    mod_authn_core \
-    mod_authn_file \
-    mod_authz_core \
-    mod_authz_groupfile \
-    mod_authz_host \
-    mod_authz_user \
-    mod_autoindex \
-    mod_deflate \
-    mod_dir \
-    mod_env \
-    mod_expires \
-    mod_filter \
-    mod_headers \
-    mod_lbmethod_bybusyness \
-    mime.load \
-    mod_mpm_prefork \
-    mod_negotiation \
-    mod_proxy_balancer \
-    mod_proxy_connect \
-    mod_proxy_http \
-    mod_proxy \
-    mod_reqtimeout \
-    mod_rewrite \
-    mod_setenvif \
-    mod_slotmem_shm \
-    mod_socache_shmcb \
-    mod_ssl \
-    mod_status \
-    mod_unique_id \
-    mod_mime \
-    mod_mpm_event \
-    mod_log_config \
-  ; do \
-    ln -sf "/usr/local/apache2/modules/${mod}.so" \
-    "/usr/lib/apache2/modules/${mod}.so"; \
-  done && \
+  rm "/etc/apache2/mods-enabled/authnz_pam.load" && \
   \
   # Change/Remove some properties in the default univention apache config
   sed -i "/User \${APACHE_RUN_USER}/c User www-data" \
@@ -414,18 +338,18 @@ RUN \
   # instead the ingress/istio needs to be configured properly.
   rm \
     /etc/univention/templates/files/etc/apache2/sites-available/univention-udm.conf \
-    /etc/apache2/sites-enabled/univention-udm.conf
+    /etc/apache2/sites-enabled/univention-udm.conf && \
+  mkdir --parents /usr/local/apache2/logs/
 
 COPY \
   scripts/entrypoint.sh \
-  /entrypoint.sh
+  /entrypoint.d/50-entrypoint.sh
 
 ############################################################
 # Define runtime
 
-ENTRYPOINT ["/entrypoint.sh"]
-
-CMD ["-D", \
+CMD ["apache2", \
+     "-D", \
      "FOREGROUND", \
      "-d", "/etc/apache2/", \
      "-f", "/etc/apache2/apache2.conf"]
