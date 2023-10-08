@@ -95,6 +95,9 @@ RUN \
 ############################################################
 # Copy files from first stage
 
+COPY --from=build /entrypoint.d /
+COPY --from=build /entrypoint.sh /
+
 COPY --from=build \
   /usr/share/univention-web/ \
   /usr/share/univention-web
@@ -383,7 +386,7 @@ RUN \
 
 COPY \
   scripts/entrypoint.sh \
-  /entrypoint.sh
+  /entrypoint.d/50-umc-entrypoint.sh
 
 ############################################################
 # Define runtime
