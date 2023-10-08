@@ -1,41 +1,6 @@
-############################################################
-# Global variables
-
-ARG DEBIAN_BASE_IMAGE_TAG=buster-slim
-ARG DOCKER_PROXY
-
-############################################################
-# First build stage
-
-FROM ${DOCKER_PROXY}debian:${DEBIAN_BASE_IMAGE_TAG} AS build
-
-ARG APT_KEY_URL=https://updates.software-univention.de/univention-archive-key-ucs-5x.gpg
+FROM gitregistry.knut.univention.de/univention/customers/dataport/upx/container-ucs-base/ucs-base-504:branch-jbornhold-spike-entrypoint-plugin-point@sha256:b0eaac78f33ed137decb1b188e1552b6c82cef887ba06ae2003ae2f3094d465b AS build
 
 SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
-
-WORKDIR /apt
-
-############################################################
-# Install Univention APT-Key
-
-RUN \
-  apt-get update && \
-  DEBIAN_FRONTEND=noninteractive \
-    apt-get --assume-yes --verbose-versions --no-install-recommends install \
-      ca-certificates=20* \
-      curl=7.64.* \
-      gpg=2.2.* \
-      gpg-agent=2.2.* \
-      && \
-  curl -fsSL "${APT_KEY_URL}" | apt-key add - && \
-  rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
-
-############################################################
-# Install scripts and configs for dpkg
-
-COPY \
-  sources.list \
-  /etc/apt/sources.list.d/15_ucs-online-version.list
 
 COPY scripts/fake.sh /usr/local/bin/systemctl
 COPY scripts/fake.sh /usr/local/bin/call_joinscript
