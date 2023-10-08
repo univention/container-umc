@@ -1,6 +1,6 @@
 dependencies:
 - name: common
   repository: oci://gitregistry.knut.univention.de/univention/customers/dataport/upx/common-helm/helm
-  version: 0.2.0
-digest: sha256:32a196ba0c5a6447dd5f39f1e0b7170fd7185b7f5d67c2d705d242f4cb238c88
-generated: "2023-08-01T13:40:30.490312+02:00"
+  version: 0.3.1-pre-jbornhold-spike-plugin-entrypoint
+digest: sha256:fedc6c76225a567a92c3be6f17738fa6538887aef3f133f9627cddccededec03
+generated: "2023-10-09T01:04:01.634476+02:00"
