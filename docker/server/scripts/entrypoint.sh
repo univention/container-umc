@@ -347,6 +347,6 @@ mkdir -p /var/cache/univention-management-console/acls
 
 ############################################################
 # Run!
-exec "/usr/sbin/univention-management-console-server" "$@"
+exec "$@"
 
 # [EOF]

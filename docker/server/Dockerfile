@@ -564,6 +564,8 @@ RUN echo -en 'en_US.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8\n' >> /etc/locale.gen && \
 
 ENTRYPOINT ["/entrypoint.sh"]
 
-CMD ["--no-daemonize-module-processes", "--log-file", "stdout"]
+CMD ["/usr/sbin/univention-management-console-server", \
+     "--no-daemonize-module-processes", \
+     "--log-file", "stdout"]
 
 # [EOF]
