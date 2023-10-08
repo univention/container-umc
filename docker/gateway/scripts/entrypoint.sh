@@ -102,6 +102,9 @@ univention-config-registry commit \
 # Apache gets grumpy about PID files pre-existing
 rm -f /usr/local/apache2/logs/httpd.pid
 
-exec /usr/local/apache2/bin/httpd "$@"
+# TODO: Some entrypoint scripts want to use a hardcoded command, this seems to
+# make the approach of putting the infrastructure into ucs-base blow up.
+#
+# exec /usr/local/apache2/bin/httpd "$@"
 
 # [EOF]

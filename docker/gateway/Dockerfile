@@ -393,7 +393,8 @@ COPY \
 
 ENTRYPOINT ["/entrypoint.sh"]
 
-CMD ["-D", \
+CMD ["/usr/local/apache2/bin/httpd", \
+    "-D", \
      "FOREGROUND", \
      "-d", "/etc/apache2/", \
      "-f", "/etc/apache2/apache2.conf"]
