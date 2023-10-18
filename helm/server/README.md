@@ -43,7 +43,7 @@ helm uninstall umc-server
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://gitregistry.knut.univention.de/univention/customers/dataport/upx/common-helm/helm | common | ^0.2.0 |
+| oci://gitregistry.knut.univention.de/univention/customers/dataport/upx/common-helm/helm | common | ^0.5.0 |
 
 ## Values
 
@@ -87,6 +87,33 @@ false
 			<td>string</td>
 			<td><pre lang="json">
 ""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.configMapUcr</td>
+			<td>string</td>
+			<td><pre lang="json">
+"stack-data-swp-ucr"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.configMapUcrDefaults</td>
+			<td>string</td>
+			<td><pre lang="json">
+"stack-data-ums-ucr"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.configMapUcrForced</td>
+			<td>string</td>
+			<td><pre lang="json">
+"stack-data-dev-ucr"
 </pre>
 </td>
 			<td></td>
@@ -391,6 +418,15 @@ true
 			<td></td>
 		</tr>
 		<tr>
+			<td>mountUcr</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
 			<td>nameOverride</td>
 			<td>string</td>
 			<td><pre lang="json">
@@ -667,25 +703,9 @@ false
 {
   "caCertFile": "/var/secrets/ca_cert",
   "certPemFile": "/var/secrets/cert_pem",
-  "debugLevel": "5",
-  "domainname": null,
-  "enforceSessionCookie": "true",
-  "hostname": "",
-  "ldapBaseDn": null,
-  "ldapHost": null,
-  "ldapHostDn": null,
-  "ldapHostIp": null,
-  "ldapPort": "389",
   "ldapSecretFile": "/var/secrets/ldap_secret",
-  "localIpRanges": "0.0.0.0/0,::/0",
   "machineSecretFile": "/var/secrets/machine_secret",
-  "privateKeyFile": "/var/secrets/private_key",
-  "samlEnabled": true,
-  "samlMetadataUrl": null,
-  "samlMetadataUrlInternal": "",
-  "samlSchemes": "https",
-  "samlSpServer": null,
-  "tlsMode": "secure"
+  "privateKeyFile": "/var/secrets/private_key"
 }
 </pre>
 </td>
@@ -710,87 +730,6 @@ false
 			<td>Path to file with the certificate (.pem).</td>
 		</tr>
 		<tr>
-			<td>umcServer.debugLevel</td>
-			<td>string</td>
-			<td><pre lang="json">
-"5"
-</pre>
-</td>
-			<td>Debug level of the UMC server. (1 = errors only, 99 = most verbose)</td>
-		</tr>
-		<tr>
-			<td>umcServer.domainname</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Domain name of the instance. Example: `example.org`</td>
-		</tr>
-		<tr>
-			<td>umcServer.enforceSessionCookie</td>
-			<td>string</td>
-			<td><pre lang="json">
-"true"
-</pre>
-</td>
-			<td>Whether the UMC login cookie will be limited to the browser session (boolean).</td>
-		</tr>
-		<tr>
-			<td>umcServer.hostname</td>
-			<td>string</td>
-			<td><pre lang="json">
-""
-</pre>
-</td>
-			<td>Host name of the instance. Example: `souvap`</td>
-		</tr>
-		<tr>
-			<td>umcServer.ldapBaseDn</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Base DN of the LDAP directory. Example: `"dc=example,dc=org"`</td>
-		</tr>
-		<tr>
-			<td>umcServer.ldapHost</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Hostname of the LDAP server. Example: `"ucs-1234.univention.intranet"`</td>
-		</tr>
-		<tr>
-			<td>umcServer.ldapHostDn</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>DN of the UMC instance. Example: `"cn=ucs-1234,cn=dc,cn=computers,dc=example,dc=org"`</td>
-		</tr>
-		<tr>
-			<td>umcServer.ldapHostIp</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>IP address of the LDAP server. (This is necessary to allow resolving the LDAP fqdn and pass the certificate checks.) Example: `"10.200.0.1"`</td>
-		</tr>
-		<tr>
-			<td>umcServer.ldapPort</td>
-			<td>string</td>
-			<td><pre lang="json">
-"389"
-</pre>
-</td>
-			<td>Port to connect to the LDAP server.</td>
-		</tr>
-		<tr>
 			<td>umcServer.ldapSecretFile</td>
 			<td>string</td>
 			<td><pre lang="json">
@@ -798,15 +737,6 @@ null
 </pre>
 </td>
 			<td>Path to file with the LDAP secret.</td>
-		</tr>
-		<tr>
-			<td>umcServer.localIpRanges</td>
-			<td>string</td>
-			<td><pre lang="json">
-"0.0.0.0/0,::/0"
-</pre>
-</td>
-			<td>IP ranges for which session client IP address checks are disabled (string, comma-separated). Setting it to `0.0.0.0/0,::/0` to effectively disables the session-to-IP-address binding.</td>
 		</tr>
 		<tr>
 			<td>umcServer.machineSecretFile</td>
@@ -825,60 +755,6 @@ null
 </pre>
 </td>
 			<td>Path to file with the certificate's private key (.key).</td>
-		</tr>
-		<tr>
-			<td>umcServer.samlEnabled</td>
-			<td>bool</td>
-			<td><pre lang="json">
-true
-</pre>
-</td>
-			<td>Allows to switch off SAML support.</td>
-		</tr>
-		<tr>
-			<td>umcServer.samlMetadataUrl</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>SAML Identity Provider metadata URL (as visible from the user/internet). Example: `"https://id.souvap.example.org/realms/ucs/protocol/saml/descriptor"`</td>
-		</tr>
-		<tr>
-			<td>umcServer.samlMetadataUrlInternal</td>
-			<td>string</td>
-			<td><pre lang="json">
-""
-</pre>
-</td>
-			<td>SAML Identity Provider metadata URL (as visible from inside the container), optional. Example: `"http://keycloak:8080/realms/ucs/protocol/saml/descriptor"`</td>
-		</tr>
-		<tr>
-			<td>umcServer.samlSchemes</td>
-			<td>string</td>
-			<td><pre lang="json">
-"https"
-</pre>
-</td>
-			<td>Which address scheme to consider for SAML ACS (string, comma-separated). Example: `"https, http"`</td>
-		</tr>
-		<tr>
-			<td>umcServer.samlSpServer</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>SAML Service Provider (hostname and port). Example: `souvap.example.org`</td>
-		</tr>
-		<tr>
-			<td>umcServer.tlsMode</td>
-			<td>string</td>
-			<td><pre lang="json">
-"secure"
-</pre>
-</td>
-			<td>Set desired TLS mode. Options: `"secure"`, `"unvalidated"`, `"off"`.</td>
 		</tr>
 	</tbody>
 </table>

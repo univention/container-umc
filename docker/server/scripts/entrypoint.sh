@@ -25,32 +25,32 @@ umask 077
 
 ############################################################
 # Prepare LDAP TLS certificates and settings
-TLS_MODE="${TLS_MODE:-secure}"
+UDM_STARTTLS=$(ucr get uldap/start-tls)
+if [[ -z "${UDM_STARTTLS}" ]]; then
+  UDM_STARTTLS=2
+fi
 
-case "${TLS_MODE}" in
-  "secure")
+case "${UDM_STARTTLS}" in
+  "2")
     PAM_LDAP_TLS="starttls"
     TLS_REQCERT="demand"
-    ULDAP_START_TLS=2
     ;;
-  "unvalidated")
+  "1")
     PAM_LDAP_TLS="starttls"
     TLS_REQCERT="allow"
-    ULDAP_START_TLS=1
     SASL_SECPROPS="none,minssf=0"
     ;;
-  "off")
+  "0")
     PAM_LDAP_TLS="off"
     TLS_REQCERT="never"
-    ULDAP_START_TLS=0
     SASL_SECPROPS="none,minssf=0"
     ;;
   *)
-    echo "TLS_MODE must be one of: secure, unvalidated, off."
+    echo "UCR variable 'uldap/start-tls' must be one of: 0, 1, 2"
     exit 1
 esac
 
-if [[ "${TLS_MODE}" != "off" ]]; then
+if [[ "${TLS_REQCERT}" != "never" ]]; then
   CA_CERT_FILE=${CA_CERT_FILE:-/run/secrets/ca_cert}
   CA_DIR="/etc/univention/ssl/ucsCA"
 
@@ -61,6 +61,9 @@ fi
 ############################################################
 # Load SAML metadata
 SAML_METADATA_BASE=/usr/share/univention-management-console/saml/idp
+SAML_METADATA_URL=$(ucr get umc/saml/idp-server)
+SAML_METADATA_URL_INTERNAL=$(ucr get umc/saml/idp-server-internal)
+SAML_SP_SERVER=$(ucr get umc/saml/sp-server)
 CERT_PEM_FILE=${CERT_PEM_FILE:-/run/secrets/cert_pem}
 PRIVATE_KEY_FILE=${PRIVATE_KEY_FILE:-/run/secrets/private_key}
 
@@ -68,7 +71,7 @@ if [[ -n "${SAML_METADATA_URL:-}" ]]; then
   echo "SAML Service Provider: enabled"
 
   if [[ -z "${SAML_SP_SERVER:-}" ]]; then
-    echo "\$SAML_SP_SERVER must be set for SAML support"
+    echo "'umc/saml/sp-server' must be set for SAML support"
     exit 255
   fi
   if [[ ! -f "${CERT_PEM_FILE}" ]]; then
@@ -80,7 +83,7 @@ if [[ -n "${SAML_METADATA_URL:-}" ]]; then
     exit 255
   fi
   if [[ -z "${SAML_METADATA_URL_INTERNAL:-}" ]]; then
-    echo "SAML_METADATA_URL_INTERNAL is not set! Assuming it to equal SAML_METADATA_URL."
+    echo "'umc/saml/idp-server-internal' is not set! Assuming it equal to 'umc/saml/idp-server'."
     SAML_METADATA_URL_INTERNAL=${SAML_METADATA_URL}
   fi
 
@@ -114,9 +117,6 @@ if [[ -n "${SAML_METADATA_URL:-}" ]]; then
 
   echo "Successfully set SAML metadata in ${SAML_METADATA_PATH}"
 
-  ucr set umc/saml/idp-server="${SAML_METADATA_URL}"
-  ucr set umc/saml/sp-server="${SAML_SP_SERVER}"
-
   mkdir --parents "/etc/univention/ssl/${SAML_SP_SERVER}"
   ln --symbolic --force "${CERT_PEM_FILE}" "/etc/univention/ssl/${SAML_SP_SERVER}/cert.pem"
   ln --symbolic --force "${PRIVATE_KEY_FILE}" "/etc/univention/ssl/${SAML_SP_SERVER}/private.key"
@@ -126,6 +126,9 @@ fi
 
 ############################################################
 # Store LDAP configuration
+LDAP_HOST=$(ucr get ldap/master)
+LDAP_PORT=$(ucr get ldap/master/port)
+LDAP_BASE_DN=$(ucr get ldap/base)
 cat <<EOF > /etc/ldap/ldap.conf
 # This file should be world readable but not world writable.
 
@@ -163,155 +166,6 @@ else
   exit 1
 fi
 
-# By default, disable binding the session to the client IP,
-# as the client IP cannot be determined in K8s depending, on the ingress/istio/... config.
-LOCAL_IP_RANGES=${LOCAL_IP_RANGES:-0.0.0.0/0,::/0}
-# In order to mitigate the security implications,
-# limit the cookies to the duration of the Browser session.
-ENFORCE_SESSION_COOKIE=${ENFORCE_SESSION_COOKIE:-true}
-
-# TODO: Do we have to set ldap/server/ip as well?
-ucr set \
-    ldap/master="${LDAP_HOST}" \
-    ldap/master/port="${LDAP_PORT}" \
-    ldap/server/name="${LDAP_HOST}" \
-    ldap/server/port="${LDAP_PORT}" \
-    ldap/hostdn="${LDAP_HOST_DN}" \
-    ldap/base="${LDAP_BASE_DN}" \
-    domainname="${DOMAINNAME}" \
-    hostname="${HOSTNAME}" \
-    portal/auth-mode="saml" \
-    umc/http/allowed-session-overtake/ranges="${LOCAL_IP_RANGES}" \
-    umc/http/interface="0.0.0.0" \
-    umc/http/enforce-session-cookie="${ENFORCE_SESSION_COOKIE}" \
-    umc/http/port=8090 \
-    umc/module/debug/level="${DEBUG_LEVEL}" \
-    umc/self-service/allow-authenticated-use=true \
-    umc/self-service/profiledata/enabled=true \
-    umc/server/debug/level="${DEBUG_LEVEL}" \
-    umc/server/processes=1 \
-    umc/web/favorites/default="welcome,udm:users/user,udm:groups/group,udm:computers/computer,appcenter:appcenter,updater" \
-    umc/web/sso/enabled=true \
-    ad/member=false \
-    auth/methods="ldap" \
-    directory/manager/templates/alphanum/whitelist="" \
-    directory/manager/user/activate_ldap_attribute_mailForwardCopyToSelf="yes" \
-    directory/manager/user_group/uniqueness="true" \
-    directory/manager/web/language="de_DE.UTF-8" \
-    directory/manager/web/modules/autosearch="1" \
-    directory/manager/web/modules/computers/computer/add/default="computers/windows" \
-    directory/manager/web/modules/groups/group/caching/uniqueMember/timeout="300" \
-    directory/manager/web/modules/groups/group/checks/circular_dependency="yes" \
-    directory/manager/web/modules/search/advanced_on_open="false" \
-    directory/manager/web/modules/users/user/properties/homePostalAddress/syntax="postalAddress" \
-    directory/manager/web/modules/wizards/disabled="no" \
-    directory/manager/web/sizelimit="2000" \
-    directory/reports/cleanup/age="43200" \
-    directory/reports/cleanup/cron="0 0 * * *" \
-    directory/reports/logo="/usr/share/univention-directory-reports/univention_logo.png" \
-    directory/reports/templates/csv/computer1="computers/computer \"CSV Report\" /etc/univention/directory/reports/default computers.csv" \
-    directory/reports/templates/csv/group1="groups/group \"CSV Report\" /etc/univention/directory/reports/default groups.csv" \
-    directory/reports/templates/csv/user1="users/user \"CSV Report\" /etc/univention/directory/reports/default users.csv" \
-    directory/reports/templates/pdf/computer1="computers/computer \"PDF Document\" /etc/univention/directory/reports/default computers.rml" \
-    directory/reports/templates/pdf/group1="groups/group \"PDF Document\" /etc/univention/directory/reports/default groups.rml" \
-    directory/reports/templates/pdf/user1="users/user \"PDF Document\" /etc/univention/directory/reports/default users.rml" \
-    groups/default/domainadmins="Domain Admins" \
-    groups/default/printoperators="Printer-Admins" \
-    license/base="dc=example,dc=org" \
-    locale/default="de_DE.UTF-8:UTF-8" \
-    locale="de_DE.UTF-8:UTF-8 en_US.UTF-8:UTF-8" \
-    password/hashing/method="SHA-512" \
-    saml/idp/authsource="univention-ldap" \
-    saml/idp/certificate/certificate="/etc/simplesamlphp/ucs-sso.example.org-idp-certificate.crt" \
-    saml/idp/certificate/privatekey="/etc/simplesamlphp/ucs-sso.example.org-idp-certificate.key" \
-    saml/idp/enableSAML20-IdP="true" \
-    saml/idp/entityID="https://ucs-sso.example.org/simplesamlphp/saml2/idp/metadata.php" \
-    saml/idp/https="true" \
-    saml/idp/ldap/get_attributes="'uid', 'mailPrimaryAddress', 'memberOf', 'enabledServiceProviderIdentifier'" \
-    saml/idp/ldap/search_attributes="'uid', 'mailPrimaryAddress'" \
-    saml/idp/lookandfeel/theme="univentiontheme:univention" \
-    saml/idp/negotiate="true" \
-    saml/idp/session-duration="43200" \
-    saml/idp/show-error-reporting="true" \
-    saml/idp/show-errors="true" \
-    server/role="domaincontroller_master" \
-    ssl/ca/cipher="aes256" \
-    ssl/common="Univention Corporate Server Root CA (ID=XXX)" \
-    ssl/country="DE" \
-    ssl/crl/interval="7" \
-    ssl/crl/validity="10" \
-    ssl/default/bits="2048" \
-    ssl/default/days="1825" \
-    ssl/default/hashfunction="sha256" \
-    ssl/email="ssl@example.org" \
-    ssl/host/objectclass="univentionDomainController,univentionMemberServer,univentionClient" \
-    ssl/locality="DE" \
-    ssl/organization="DE" \
-    ssl/organizationalunit="Univention Corporate Server" \
-    ssl/state="DE" \
-    ssl/update/expired="yes" \
-    ssl/validity/check="yes" \
-    ssl/validity/host="20523" \
-    ssl/validity/root="20523" \
-    ssl/validity/warning="30" \
-    system/setup/showloginmessage="false" \
-    ucr/backup/enabled="yes" \
-    ucr/encoding/strict="true" \
-    ucs/server/languages/de_AT="Deutsch (Österreich)" \
-    ucs/server/languages/de_CH="Deutsch (Schweiz)" \
-    ucs/server/languages/de_DE="Deutsch" \
-    ucs/server/languages/en_GB="English (United Kingdom)" \
-    ucs/server/languages/en_US="English" \
-    ucs/server/robots/disallow="/" \
-    ucs/server/saml-idp-server/primary.example.org="primary.example.org" \
-    ucs/server/sso/fqdn="ucs-sso.example.org" \
-    ucs/server/sso/virtualhost="true" \
-    ucs/web/license/requested="true" \
-    uldap/start-tls="${ULDAP_START_TLS}" \
-    umc/http/autostart="yes" \
-    umc/http/content-security-policy/connect-src="'self'" \
-    umc/http/content-security-policy/default-src="'unsafe-eval'" \
-    umc/http/content-security-policy/font-src="'self'" \
-    umc/http/content-security-policy/form-action="'self'" \
-    umc/http/content-security-policy/frame-ancestors="'self'" \
-    umc/http/content-security-policy/frame-src="*" \
-    umc/http/content-security-policy/img-src="*" \
-    umc/http/content-security-policy/media-src="*" \
-    umc/http/content-security-policy/object-src="'self'" \
-    umc/http/content-security-policy/script-src="'self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com/ https://s.ytimg.com/" \
-    umc/http/content-security-policy/style-src="'self' 'unsafe-inline'" \
-    umc/http/response-timeout="310" \
-    umc/http/session/timeout="28800" \
-    umc/login/content-security-policy/frame-ancestors="'self'" \
-    umc/login/links/how_do_i_login/enabled="true" \
-    umc/login/links/login_without_sso/enabled="true" \
-    umc/login/links/login_without_sso/text/de="Ohne Single Sign-On anmelden" \
-    umc/login/links/login_without_sso/text="Login without Single Sign On" \
-    umc/module/timeout="600" \
-    umc/module/udm/users/self/disabled="true" \
-    umc/saml/idp-server="${SAML_METADATA_URL:-https://ucs-sso.example.org/simplesamlphp/saml2/idp/metadata.php}" \
-    umc/saml/trusted/sp/primary.example.org="primary.example.org" \
-    umc/saml/in-memory-identity-cache=false \
-    umc/server/autostart="yes" \
-    umc/server/upload/max="2048" \
-    umc/server/upload/min_free_space="51200" \
-    umc/web/appliance/fast_setup_mode="true" \
-    umc/web/cache_bust="1619020256" \
-    umc/web/feedback/description="[UMC-Feedback] Traceback" \
-    umc/web/feedback/mail="feedback@univention.de" \
-    umc/web/hooks/univention-management-console-module-passwordchange="passwordchange" \
-    umc/web/hooks/univention-web-js="default_menu_entries" \
-    umc/web/language="de_DE.UTF-8:UTF-8" \
-    umc/web/sso/newwindow="true" \
-    umc/web/startupdialog="false" \
-    update/available="false" \
-    update/reboot/required="false" \
-    uuid/license="00000000-0000-0000-0000-000000000000" \
-    uuid/system="00000000-0000-0000-0000-000000000000" \
-    version/erratalevel="0" \
-    version/patchlevel="4" \
-    version/version="5.0"
-
 ############################################################
 # Configure PAM
 ln --symbolic --force "${MACHINE_SECRET_FILE}" /etc/pam_ldap.secret
@@ -322,6 +176,7 @@ sed -i 's/password.*requisite.*pam_cracklib.so/password required  pam_cracklib.s
 
 if [[ -n "${SAML_SP_SERVER:-}" ]]; then
   # use the first given SAML scheme instead of the UCR template string
+  SAML_SCHEMES=$(ucr get umc/saml/schemes)
   SCHEME=$(echo "${SAML_SCHEMES}" | cut -d, -f1)
   sed --in-place \
     --expression="s#trusted_sp=[[:alpha:]]*#${SCHEME}#" \
@@ -345,9 +200,5 @@ univention-config-registry commit \
 ############################################################
 # Create storage location for ACLs, in case no volume is mounted
 mkdir -p /var/cache/univention-management-console/acls
-
-############################################################
-# Run!
-exec "/usr/sbin/univention-management-console-server" "$@"
 
 # [EOF]

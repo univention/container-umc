@@ -8,6 +8,7 @@ affinity: {}
 environment: {}
 fullnameOverride: ""
 mountSecrets: true
+mountUcr: true
 nameOverride: ""
 nodeSelector: {}
 podAnnotations: {}
@@ -16,56 +17,13 @@ replicaCount: 1
 securityContext: {}
 tolerations: []
 
+global:
+  configMapUcrDefaults: "stack-data-ums-ucr"
+  configMapUcr: "stack-data-swp-ucr"
+  configMapUcrForced: "stack-data-dev-ucr"
 
 # -- Application configuration of the Univention Management Console Server
 umcServer:
-  # -- Domain name of the instance.
-  # Example: `example.org`
-  domainname: null
-  # -- Host name of the instance.
-  # Example: `souvap`
-  hostname: ""
-  # -- Hostname of the LDAP server.
-  # Example: `"ucs-1234.univention.intranet"`
-  ldapHost: null
-  # -- IP address of the LDAP server.
-  # (This is necessary to allow resolving the LDAP fqdn and pass the certificate checks.)
-  # Example: `"10.200.0.1"`
-  ldapHostIp: null
-  # -- Port to connect to the LDAP server.
-  ldapPort: "389"
-  # -- Base DN of the LDAP directory.
-  # Example: `"dc=example,dc=org"`
-  ldapBaseDn: null
-  # -- DN of the UMC instance.
-  # Example: `"cn=ucs-1234,cn=dc,cn=computers,dc=example,dc=org"`
-  ldapHostDn: null
-  # -- Debug level of the UMC server.
-  # (1 = errors only, 99 = most verbose)
-  debugLevel: "5"
-  # -- Whether the UMC login cookie will be limited to the browser session (boolean).
-  enforceSessionCookie: "true"
-  # -- IP ranges for which session client IP address checks are disabled (string, comma-separated).
-  # Setting it to `0.0.0.0/0,::/0` to effectively disables the session-to-IP-address binding.
-  localIpRanges: "0.0.0.0/0,::/0"
-  # -- Allows to switch off SAML support.
-  samlEnabled: true
-  # -- SAML Identity Provider metadata URL (as visible from the user/internet).
-  # Example: `"https://id.souvap.example.org/realms/ucs/protocol/saml/descriptor"`
-  samlMetadataUrl: null
-  # -- SAML Identity Provider metadata URL (as visible from inside the container), optional.
-  # Example: `"http://keycloak:8080/realms/ucs/protocol/saml/descriptor"`
-  samlMetadataUrlInternal: ""
-  # -- SAML Service Provider (hostname and port).
-  # Example: `souvap.example.org`
-  samlSpServer: null
-  # -- Which address scheme to consider for SAML ACS (string, comma-separated).
-  # Example: `"https, http"`
-  samlSchemes: "https"
-
-  # -- Set desired TLS mode.
-  # Options: `"secure"`, `"unvalidated"`, `"off"`.
-  tlsMode: "secure"
   # -- Path to file with the LDAP secret.
   ldapSecretFile: "/var/secrets/ldap_secret"
   # -- Path to file with the LDAP machine secret.

@@ -7,6 +7,7 @@
 affinity: {}
 environment: {}
 fullnameOverride: ""
+mountUcr: true
 nameOverride: ""
 nodeSelector: {}
 podAnnotations: {}
@@ -15,32 +16,16 @@ replicaCount: 1
 securityContext: {}
 tolerations: []
 
+global:
+  configMapUcrDefaults: "stack-data-ums-ucr"
+  configMapUcr: "stack-data-swp-ucr"
+  configMapUcrForced: "stack-data-dev-ucr"
 
 # -- Application configuration of the Univention Management Console Gateway
 umcGateway:
-  # -- Domain name of the instance.
-  # Example: `example.org`
-  domainname: null
-  # -- Host name of the instance.
-  # Example: `souvap`
-  hostname: null
-  # -- The FQDN of the identity provider (w/o the protocol specification).
-  # Example: `id.souvap.example.org`
-  ssoFqdn: null
-  # -- Defines whether a cookie banner is shown in the Portal and during the login.
-  # Example: `true`
-  showCookieBanner: false
   # -- The flag that triggers patching the usability changes for UMC/portal frontend.
   # Example: `true`
   swpApplyUsabilityUIPatches: false
-  # -- The title of the cookie consent banner (Deutsch/English)
-  # Example: `Cookie Zustimmung`
-  cookieBannerTitleDE: ""
-  cookieBannerTitleEN: ""
-  # -- The text displayed in the cookie consent banner (Deutsch/English)
-  # Example: `By clicking on "Accept", you consent to the collection of information on this portal.`
-  cookieBannerTextDE: ""
-  cookieBannerTextEN: ""
 
 
 ## Kubernetes ingress

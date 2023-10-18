@@ -4,25 +4,6 @@
 {{- define "umc-server.configMap" }}
 {{- with .top }}
 data:
-  DOMAINNAME: "{{ .Values.umcServer.domainname }}"
-  HOSTNAME: "{{ .Values.umcServer.hostname }}"
-  LDAP_HOST: {{ required "The parameter \"umcServer.ldapHost\" is required." .Values.umcServer.ldapHost | quote }}
-  LDAP_PORT: {{ required "The parameter \"umcServer.ldapPort\" is required." .Values.umcServer.ldapPort | quote }}
-  LDAP_BASE_DN: {{ required "The parameter \"umcServer.ldapBaseDn\" is required." .Values.umcServer.ldapBaseDn | quote }}
-  LDAP_HOST_DN: {{ required "The parameter \"umcServer.ldapHostDn\" is required." .Values.umcServer.ldapHostDn | quote }}
-  TLS_MODE: {{ required "The parameter \"umcServer.tlsMode\" is required." .Values.umcServer.tlsMode | quote }}
-
-  DEBUG_LEVEL: "{{ .Values.umcServer.debugLevel }}"
-  ENFORCE_SESSION_COOKIE: "{{ .Values.umcServer.enforceSessionCookie }}"
-  LOCAL_IP_RANGES: "{{ .Values.umcServer.localIpRanges }}"
-
-  {{- if .Values.umcServer.samlEnabled }}
-  SAML_METADATA_URL: {{ required "The parameter \"umcServer.samlMetadataUrl\" is required." .Values.umcServer.samlMetadataUrl | quote }}
-  SAML_METADATA_URL_INTERNAL: "{{ .Values.umcServer.samlMetadataUrlInternal }}"
-  SAML_SP_SERVER: {{ required "The parameter \"umcServer.samlSpServer\" is required." .Values.umcServer.samlSpServer | quote }}
-  SAML_SCHEMES: "{{ .Values.umcServer.samlSchemes }}"
-  {{- end }}
-
   LDAP_SECRET_FILE: "{{ .Values.umcServer.ldapSecretFile }}"
   MACHINE_SECRET_FILE: "{{ .Values.umcServer.machineSecretFile }}"
   PRIVATE_KEY_FILE: "{{ .Values.umcServer.privateKeyFile }}"

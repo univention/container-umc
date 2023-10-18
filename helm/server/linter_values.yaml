@@ -5,20 +5,6 @@
 
 ## Application-specific
 umcServer:
-  domainname: "example.develop.souvap-univention.de"
-  hostname: "umc"
-  ldapHost: "my-ldap"
-  ldapHostIp: "192.0.2.1"
-  ldapPort: 7389
-  ldapBaseDn: "dc=exampel,dc=org"
-  ldapHostDn: "cn=ucs-1234,cn=dc,cn=computers,dc=example,dc=org"
-  enforceSessionCookie: "true"
-  localIpRanges: "192.0.2.0/0,::/0"
-  debugLevel: "5"
-  samlMetadataUrl: "https://id.example.org/realms/ucs/protocol/saml/descriptor"
-  samlMetadataUrlInternal: "http://keycloak/realms/ucs/protocol/saml/descriptor"
-  samlSpServer: "umc.example.develop.souvap-univention.de"
-  samlSchemes: "https, http"
 
 
 ## Kubernetes ingress

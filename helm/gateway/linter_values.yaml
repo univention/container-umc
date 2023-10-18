@@ -5,9 +5,6 @@
 
 ## Application-specific
 umcGateway:
-  domainname: "example.develop.souvap-univention.de"
-  hostname: "umc-gateway"
-  ssoFqdn: "https://id.example.org"
 
 
 ## Kubernetes ingress

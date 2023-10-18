@@ -42,7 +42,7 @@ helm uninstall umc-gateway
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://gitregistry.knut.univention.de/univention/customers/dataport/upx/common-helm/helm | common | ^0.2.0 |
+| oci://gitregistry.knut.univention.de/univention/customers/dataport/upx/common-helm/helm | common | ^0.5.0 |
 
 ## Values
 
@@ -77,6 +77,33 @@ helm uninstall umc-gateway
 			<td>string</td>
 			<td><pre lang="json">
 ""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.configMapUcr</td>
+			<td>string</td>
+			<td><pre lang="json">
+"stack-data-swp-ucr"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.configMapUcrDefaults</td>
+			<td>string</td>
+			<td><pre lang="json">
+"stack-data-ums-ucr"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.configMapUcrForced</td>
+			<td>string</td>
+			<td><pre lang="json">
+"stack-data-dev-ucr"
 </pre>
 </td>
 			<td></td>
@@ -354,6 +381,15 @@ true
 			<td>The paths configuration. The default only grabs what is known to be handled by the UMC gateway.</td>
 		</tr>
 		<tr>
+			<td>mountUcr</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
 			<td>nameOverride</td>
 			<td>string</td>
 			<td><pre lang="json">
@@ -628,73 +664,11 @@ false
 			<td>object</td>
 			<td><pre lang="json">
 {
-  "cookieBannerTextDE": "",
-  "cookieBannerTextEN": "",
-  "cookieBannerTitleDE": "",
-  "cookieBannerTitleEN": "",
-  "domainname": null,
-  "hostname": null,
-  "showCookieBanner": false,
-  "ssoFqdn": null,
   "swpApplyUsabilityUIPatches": false
 }
 </pre>
 </td>
 			<td>Application configuration of the Univention Management Console Gateway</td>
-		</tr>
-		<tr>
-			<td>umcGateway.cookieBannerTextDE</td>
-			<td>string</td>
-			<td><pre lang="json">
-""
-</pre>
-</td>
-			<td>The text displayed in the cookie consent banner (Deutsch/English) Example: `By clicking on "Accept", you consent to the collection of information on this portal.`</td>
-		</tr>
-		<tr>
-			<td>umcGateway.cookieBannerTitleDE</td>
-			<td>string</td>
-			<td><pre lang="json">
-""
-</pre>
-</td>
-			<td>The title of the cookie consent banner (Deutsch/English) Example: `Cookie Zustimmung`</td>
-		</tr>
-		<tr>
-			<td>umcGateway.domainname</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Domain name of the instance. Example: `example.org`</td>
-		</tr>
-		<tr>
-			<td>umcGateway.hostname</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Host name of the instance. Example: `souvap`</td>
-		</tr>
-		<tr>
-			<td>umcGateway.showCookieBanner</td>
-			<td>bool</td>
-			<td><pre lang="json">
-false
-</pre>
-</td>
-			<td>Defines whether a cookie banner is shown in the Portal and during the login. Example: `true`</td>
-		</tr>
-		<tr>
-			<td>umcGateway.ssoFqdn</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>The FQDN of the identity provider (w/o the protocol specification). Example: `id.souvap.example.org`</td>
 		</tr>
 		<tr>
 			<td>umcGateway.swpApplyUsabilityUIPatches</td>
