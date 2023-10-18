@@ -342,7 +342,7 @@ RUN \
   mkdir --parents /usr/local/apache2/logs/
 
 COPY \
-  scripts/entrypoint.sh \
+  scripts/50-entrypoint.sh \
   /entrypoint.d/50-entrypoint.sh
 
 ############################################################
