@@ -35,12 +35,12 @@ umcGateway:
   swpApplyUsabilityUIPatches: false
   # -- The title of the cookie consent banner (Deutsch/English)
   # Example: `Cookie Zustimmung`
-  cookieBannerTitleDE: null
-  cookieBannerTitleEN: null
+  cookieBannerTitleDE: ""
+  cookieBannerTitleEN: ""
   # -- The text displayed in the cookie consent banner (Deutsch/English)
   # Example: `By clicking on "Accept", you consent to the collection of information on this portal.`
-  cookieBannerTextDE: null
-  cookieBannerTextEN: null
+  cookieBannerTextDE: ""
+  cookieBannerTextEN: ""
 
 
 ## Kubernetes ingress

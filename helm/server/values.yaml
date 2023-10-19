@@ -24,7 +24,7 @@ umcServer:
   domainname: null
   # -- Host name of the instance.
   # Example: `souvap`
-  hostname: null
+  hostname: ""
   # -- Hostname of the LDAP server.
   # Example: `"ucs-1234.univention.intranet"`
   ldapHost: null

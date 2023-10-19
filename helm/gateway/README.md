@@ -628,10 +628,10 @@ false
 			<td>object</td>
 			<td><pre lang="json">
 {
-  "cookieBannerTextDE": null,
-  "cookieBannerTextEN": null,
-  "cookieBannerTitleDE": null,
-  "cookieBannerTitleEN": null,
+  "cookieBannerTextDE": "",
+  "cookieBannerTextEN": "",
+  "cookieBannerTitleDE": "",
+  "cookieBannerTitleEN": "",
   "domainname": null,
   "hostname": null,
   "showCookieBanner": false,
@@ -646,7 +646,7 @@ false
 			<td>umcGateway.cookieBannerTextDE</td>
 			<td>string</td>
 			<td><pre lang="json">
-null
+""
 </pre>
 </td>
 			<td>The text displayed in the cookie consent banner (Deutsch/English) Example: `By clicking on "Accept", you consent to the collection of information on this portal.`</td>
@@ -655,7 +655,7 @@ null
 			<td>umcGateway.cookieBannerTitleDE</td>
 			<td>string</td>
 			<td><pre lang="json">
-null
+""
 </pre>
 </td>
 			<td>The title of the cookie consent banner (Deutsch/English) Example: `Cookie Zustimmung`</td>

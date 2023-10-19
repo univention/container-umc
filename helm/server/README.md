@@ -670,7 +670,7 @@ false
   "debugLevel": "5",
   "domainname": null,
   "enforceSessionCookie": "true",
-  "hostname": null,
+  "hostname": "",
   "ldapBaseDn": null,
   "ldapHost": null,
   "ldapHostDn": null,
@@ -740,7 +740,7 @@ null
 			<td>umcServer.hostname</td>
 			<td>string</td>
 			<td><pre lang="json">
-null
+""
 </pre>
 </td>
 			<td>Host name of the instance. Example: `souvap`</td>
