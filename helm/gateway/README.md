@@ -103,7 +103,7 @@ helm uninstall umc-gateway
 			<td>global.configMapUcrForced</td>
 			<td>string</td>
 			<td><pre lang="json">
-"stack-data-dev-ucr"
+null
 </pre>
 </td>
 			<td></td>
@@ -658,26 +658,6 @@ false
 </pre>
 </td>
 			<td></td>
-		</tr>
-		<tr>
-			<td>umcGateway</td>
-			<td>object</td>
-			<td><pre lang="json">
-{
-  "swpApplyUsabilityUIPatches": false
-}
-</pre>
-</td>
-			<td>Application configuration of the Univention Management Console Gateway</td>
-		</tr>
-		<tr>
-			<td>umcGateway.swpApplyUsabilityUIPatches</td>
-			<td>bool</td>
-			<td><pre lang="json">
-false
-</pre>
-</td>
-			<td>The flag that triggers patching the usability changes for UMC/portal frontend. Example: `true`</td>
 		</tr>
 	</tbody>
 </table>

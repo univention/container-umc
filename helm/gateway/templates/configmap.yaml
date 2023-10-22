@@ -3,8 +3,7 @@
 
 {{- define "umc-gateway.configMap" }}
 {{- with .top }}
-data:
-  SWP_APPLY_USABILITY_UI_PATCHES: "{{ .Values.umcGateway.swpApplyUsabilityUIPatches }}"
+data: {}
 {{- end }}
 {{- end }}
 ...

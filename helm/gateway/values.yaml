@@ -19,14 +19,7 @@ tolerations: []
 global:
   configMapUcrDefaults: "stack-data-ums-ucr"
   configMapUcr: "stack-data-swp-ucr"
-  configMapUcrForced: "stack-data-dev-ucr"
-
-# -- Application configuration of the Univention Management Console Gateway
-umcGateway:
-  # -- The flag that triggers patching the usability changes for UMC/portal frontend.
-  # Example: `true`
-  swpApplyUsabilityUIPatches: false
-
+  configMapUcrForced: null
 
 ## Kubernetes ingress
 ingress:
