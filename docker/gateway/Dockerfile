@@ -243,6 +243,10 @@ COPY --from=build \
   /etc/univention/
 
 COPY --from=build \
+  /etc/univention/templates/scripts/symlink-web-theme.sh \
+  /etc/univention/templates/scripts/symlink-web-theme.sh
+
+COPY --from=build \
   /var/www \
   /var/www
 RUN rm -rf /var/www/saml

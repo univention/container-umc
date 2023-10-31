@@ -45,6 +45,9 @@ univention-config-registry commit \
   /var/www/univention/languages.json \
   /var/www/univention/meta.json
 
+# Symlink the theme.css according to UCR setting
+/etc/univention/templates/scripts/symlink-web-theme.sh
+
 # Apache gets grumpy about PID files pre-existing
 rm -f /usr/local/apache2/logs/httpd.pid
 
