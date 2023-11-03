@@ -4,6 +4,11 @@
 ARG UCS_BASE_IMAGE_TAG=v0.7.2
 ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-base-505
 
+ARG OX_CONNECTOR_EXTENSIONS_IMAGE=gitregistry.knut.univention.de/univention/open-xchange/provisioning/ox-connector-dependencies
+ARG OX_CONNECTOR_EXTENSIONS_TAG=0.3.0
+
+FROM ${OX_CONNECTOR_EXTENSIONS_IMAGE}:${OX_CONNECTOR_EXTENSIONS_TAG} AS ox-connector-extensions
+
 ############################################################
 # Start first stage
 
@@ -408,6 +413,9 @@ COPY --from=build \
 COPY --from=build \
   /usr/share/univention-management-console/modules/udm.xml \
   /usr/share/univention-management-console/modules/udm.xml
+
+COPY --from=ox-connector-extensions /dependencies/ox-common.xml \
+    /usr/share/univention-management-console/modules/udm-oxresources-oxresources.xml
 
 RUN mkdir /usr/share/doc/univention-management-console-web-server/
 
