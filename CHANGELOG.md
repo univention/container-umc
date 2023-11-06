@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.3.0...v0.3.1) (2023-11-06)
+
+
+### Bug Fixes
+
+* **umc-server:** fix SAML via HTTP (not HTTPS) for dev-env ([ba550f7](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/ba550f7d6233264ae617978ff06fd1ce1588317b))
+
 ## [0.3.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.2.1...v0.3.0) (2023-11-03)
 
 
