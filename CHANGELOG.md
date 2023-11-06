@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.2](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.3.1...v0.3.2) (2023-11-06)
+
+
+### Bug Fixes
+
+* **docker:** bump common-ci to build latest image ([2c17c4a](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/2c17c4a6d9324595c4d06564aa5c54d21216576c))
+
 ## [0.3.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.3.0...v0.3.1) (2023-11-06)
 
 
