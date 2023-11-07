@@ -330,6 +330,16 @@ COPY --from=build \
   ${SRC_PY_LIBS}/univention/admin/handlers/ \
   ${DST_PY_LIBS}/univention/admin/handlers/
 
+# for ox-connector
+COPY --from=ox-connector-extensions /dependencies/handlers/ \
+   ${DST_PY_LIBS}/univention/admin/handlers/
+
+COPY --from=ox-connector-extensions /dependencies/syntax.d/ \
+   ${DST_PY_LIBS}/univention/admin/syntax.d/
+
+COPY --from=ox-connector-extensions /dependencies/hooks.d/ \
+   ${DST_PY_LIBS}/univention/admin/hooks.d/
+
 # from python3-univention-condig-registry
 COPY --from=build \
   ${SRC_PY_LIBS}/univention/config_registry/ \
