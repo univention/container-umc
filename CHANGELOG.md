@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.3](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.3.2...v0.3.3) (2023-11-08)
+
+
+### Bug Fixes
+
+* **server:** ox-connector missing dependencies for portal tiles ([da13af3](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/da13af364be8c965a13d8da9e0c0b184c6622c01))
+
 ## [0.3.2](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.3.1...v0.3.2) (2023-11-06)
 
 
