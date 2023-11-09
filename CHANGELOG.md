@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.5](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.3.4...v0.3.5) (2023-11-09)
+
+
+### Bug Fixes
+
+* Revert "chore: set souvap Group as codeowner" ([f5660c9](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/f5660c987520dac192248e912b1536865110fc60))
+
 ## [0.3.4](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.3.3...v0.3.4) (2023-11-09)
 
 
