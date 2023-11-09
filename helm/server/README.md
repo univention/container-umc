@@ -113,7 +113,7 @@ false
 			<td>global.configMapUcrForced</td>
 			<td>string</td>
 			<td><pre lang="json">
-"stack-data-dev-ucr"
+null
 </pre>
 </td>
 			<td></td>

@@ -20,7 +20,7 @@ tolerations: []
 global:
   configMapUcrDefaults: "stack-data-ums-ucr"
   configMapUcr: "stack-data-swp-ucr"
-  configMapUcrForced: "stack-data-dev-ucr"
+  configMapUcrForced: null
 
 # -- Application configuration of the Univention Management Console Server
 umcServer:
