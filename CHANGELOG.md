@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.4](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.3.3...v0.3.4) (2023-11-09)
+
+
+### Bug Fixes
+
+* **server:** bump ox-connector dependencies for upstream fixes ([e3b3234](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/e3b32340093dcefed452a06158f16ad840ef10fc))
+
 ## [0.3.3](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.3.2...v0.3.3) (2023-11-08)
 
 
