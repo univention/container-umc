@@ -38,6 +38,7 @@ univention-config-registry commit \
   /etc/apache2/sites-available/000-default.conf \
   /etc/apache2/sites-available/default-ssl.conf \
   /etc/apache2/sites-available/univention.conf \
+  /etc/apache2/sites-available/univention-self-service.conf \
   /etc/apache2/sites-available/univention-server-overview.conf \
   /etc/apache2/ucs-sites.conf.d/ucs-sites.conf
 

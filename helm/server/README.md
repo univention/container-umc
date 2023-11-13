@@ -43,7 +43,9 @@ helm uninstall umc-server
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://gitregistry.knut.univention.de/univention/customers/dataport/upx/common-helm/helm | common | ^0.5.0 |
+| https://charts.bitnami.com/bitnami | memcached | ^6.7.0 |
+| https://charts.bitnami.com/bitnami | postgresql | ^12.2.1 |
+| oci://gitregistry.knut.univention.de/univention/customers/dataport/upx/common-helm/helm | ums-common(common) | ^0.5.0 |
 
 ## Values
 
@@ -409,6 +411,86 @@ true
 			<td>The paths configuration. The default only grabs what is known to be handled by the UMC server.</td>
 		</tr>
 		<tr>
+			<td>memcached</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "args": [
+    "/opt/bitnami/scripts/memcached/run.sh",
+    "--memory-limit=64",
+    "--disable-evictions"
+  ],
+  "auth": {
+    "enabled": true,
+    "password": "easyPassword",
+    "username": "selfservice"
+  },
+  "bundled": true,
+  "server": null
+}
+</pre>
+</td>
+			<td>Memcached settings.  The bitnami helm chart does contain all details of what can be configured: https://github.com/bitnami/charts/tree/main/bitnami/memcached</td>
+		</tr>
+		<tr>
+			<td>memcached.args</td>
+			<td>list</td>
+			<td><pre lang="json">
+[
+  "/opt/bitnami/scripts/memcached/run.sh",
+  "--memory-limit=64",
+  "--disable-evictions"
+]
+</pre>
+</td>
+			<td>Defaults from /ucs/management/univention-self-service/conffiles/etc/memcached_univention-self-service.conf</td>
+		</tr>
+		<tr>
+			<td>memcached.auth.enabled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td>This parameter is only used by the bundled memcached.</td>
+		</tr>
+		<tr>
+			<td>memcached.auth.password</td>
+			<td>string</td>
+			<td><pre lang="json">
+"easyPassword"
+</pre>
+</td>
+			<td>Memcached password.</td>
+		</tr>
+		<tr>
+			<td>memcached.auth.username</td>
+			<td>string</td>
+			<td><pre lang="json">
+"selfservice"
+</pre>
+</td>
+			<td>Memcached username.</td>
+		</tr>
+		<tr>
+			<td>memcached.bundled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td>Set to `true` if you want Memcached to be installed as well.</td>
+		</tr>
+		<tr>
+			<td>memcached.server</td>
+			<td>string</td>
+			<td><pre lang="json">
+null
+</pre>
+</td>
+			<td>Memcached server. This is required if you use an external memcached.  See here for possible values: https://sendapatch.se/projects/pylibmc/reference.html</td>
+		</tr>
+		<tr>
 			<td>mountSecrets</td>
 			<td>bool</td>
 			<td><pre lang="json">
@@ -461,6 +543,48 @@ true
 </pre>
 </td>
 			<td></td>
+		</tr>
+		<tr>
+			<td>postgresql</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "auth": {
+    "database": "selfservice",
+    "password": "easyPassword",
+    "postgresPassword": "postgres",
+    "username": "selfservice"
+  },
+  "bundled": true,
+  "connection": {
+    "host": null,
+    "port": null
+  }
+}
+</pre>
+</td>
+			<td>PostgreSQL settings.  The bitnami helm chart does contain all details of what can be configured: https://github.com/bitnami/charts/tree/main/bitnami/postgresql</td>
+		</tr>
+		<tr>
+			<td>postgresql.bundled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td>Set to `true` if you want PostgreSQL to be installed as well.</td>
+		</tr>
+		<tr>
+			<td>postgresql.connection</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "host": null,
+  "port": null
+}
+</pre>
+</td>
+			<td>Connection parameters. These are required if you use an external database.</td>
 		</tr>
 		<tr>
 			<td>probes.liveness.enabled</td>
@@ -705,6 +829,8 @@ false
   "certPemFile": "/var/secrets/cert_pem",
   "ldapSecretFile": "/var/secrets/ldap_secret",
   "machineSecretFile": "/var/secrets/machine_secret",
+  "memcachedSecretFile": "/var/secrets/memcached_password",
+  "postgresSecretFile": "/var/secrets/db_password",
   "privateKeyFile": "/var/secrets/private_key"
 }
 </pre>
@@ -746,6 +872,24 @@ false
 </pre>
 </td>
 			<td>Path to file with the LDAP machine secret.</td>
+		</tr>
+		<tr>
+			<td>umcServer.memcachedSecretFile</td>
+			<td>string</td>
+			<td><pre lang="json">
+"/var/secrets/memcached_password"
+</pre>
+</td>
+			<td>Path to file with Memcached password.</td>
+		</tr>
+		<tr>
+			<td>umcServer.postgresSecretFile</td>
+			<td>string</td>
+			<td><pre lang="json">
+"/var/secrets/db_password"
+</pre>
+</td>
+			<td>Path to file with Postgres password.</td>
 		</tr>
 		<tr>
 			<td>umcServer.privateKeyFile</td>

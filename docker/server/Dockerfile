@@ -85,6 +85,7 @@ RUN \
     python3-univention-admin-diary=2.* \
     python3-univention-config-registry=15.* \
     python3-univention-directory-manager=15.* \
+    python3-univention-directory-manager-rest-client=10.* \
     python3-univention-directory-reports=12.* \
     python3-univention-heimdal=10.* \
     python3-univention-lib=9.* \
@@ -100,6 +101,8 @@ RUN \
     univention-management-console-module-udm=10.* \
     univention-management-console-server=12.* \
     univention-pam=13.* \
+    # for the self-service
+    univention-self-service-passwordreset-umc=5.* \
     && \
   rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* && \
   echo 'path-exclude /usr/sbin/univention-management-console-acls' >> /etc/dpkg/dpkg.cfg.d/univention && \
@@ -127,6 +130,8 @@ RUN \
 COPY disable_license_check.patch \
      disable_suffixed_cookies.patch \
      make_uldap_start-tls_configurable.patch \
+     self_service_credentials.patch \
+     umc-change_password-pam-prompts.patch \
      use_try_first.patch \
      unsafe_saml_for_debug.patch \
      /
@@ -138,6 +143,10 @@ RUN  \
     rm /disable_suffixed_cookies.patch && \
   patch -p 0 -d / -i /make_uldap_start-tls_configurable.patch && \
     rm /make_uldap_start-tls_configurable.patch && \
+  patch -p 0 -d / -i /self_service_credentials.patch && \
+    rm /self_service_credentials.patch && \
+  patch -p 0 -d / -i /umc-change_password-pam-prompts.patch && \
+    rm /umc-change_password-pam-prompts.patch && \
   patch -p 0 -d / -i /use_try_first.patch && \
     rm /use_try_first.patch && \
   patch -p 0 -d / -i /unsafe_saml_for_debug.patch && \
@@ -180,6 +189,8 @@ RUN \
       libpam0g=1.3.* \
       libpam-ldap=186-* \
       pam-saml=1.9.* \
+      # for $PY_LIBS/univention/management/console/pam.py
+      libpam-cracklib=1.3.* \
       # for $PY_LIBS/univention/management/console/protocol/session.py
       # the debian-buster version would cause a segfault.
       python3-ldap=3.1.* \
@@ -241,6 +252,12 @@ RUN \
       python3-tzlocal=1.* \
       # for $PY_LIBS/univention/admin/__init__.py
       python3-unidecode=1.0.* \
+      # for $PY_LIBS/univention/management/console/modules/passwordreset/tokendb.py
+      python3-psycopg2=2.* \
+      # for $PY_LIBS/univention/management/console/modules/passwordreset/__init__.py
+      python3-pylibmc=1.* \
+      # for $PY_LIBS/univention/admin/rest/client/__init__.py
+      python3-uritemplate=0.6-* \
       # for the entrypoint.sh script
       wget=1.* \
       && \
@@ -325,6 +342,14 @@ COPY --from=build \
   ${SRC_PY_LIBS}/univention/admin/*.py \
   ${DST_PY_LIBS}/univention/admin/
 
+# from python3-univention-directory-manager-rest-client
+# used files: __init__.py
+# unused files: __main__.py
+COPY --from=build \
+  ${SRC_PY_LIBS}/univention/admin/rest/client/*.py \
+  ${DST_PY_LIBS}/univention/admin/rest/client/
+RUN rm ${DST_PY_LIBS}/univention/admin/rest/client/__main__.py
+
 COPY --from=build \
   ${SRC_PY_LIBS}/univention/license.cpython-37m-x86_64-linux-gnu.so \
   ${DST_PY_LIBS}/univention/license.cpython-37m-x86_64-linux-gnu.so
@@ -333,6 +358,14 @@ COPY --from=build \
 COPY --from=build \
   ${SRC_PY_LIBS}/univention/admin/handlers/ \
   ${DST_PY_LIBS}/univention/admin/handlers/
+
+# from python3-univention-directory-manager
+# used files: __init__.py
+# unused files: base.py, binary_props.py, connections.py, encoders.py, exceptions.py, helpers.py, plugins.py, udm.py, utils.py
+COPY --from=build \
+  ${SRC_PY_LIBS}/univention/udm/*.py \
+  ${DST_PY_LIBS}/univention/udm/
+RUN rm ${DST_PY_LIBS}/univention/udm/{base.py,binary_props.py,connections.py,encoders.py,exceptions.py,helpers.py,plugins.py,udm.py,utils.py}
 
 # Extension: Portal extensions
 COPY --from=portal-udm-extensions /udm/api/ \
@@ -383,11 +416,11 @@ COPY --from=build \
 # unused files: __init__.py account.py admember.py atjobs.py fstab.py
 #               ldap_extension.py license_tools.py listenerSharePath.py
 #               locking.py package_manager.py password.py
-#               ucrLogrotate.py umc.py
+#               ucrLogrotate.py
 COPY --from=build \
   ${SRC_PY_LIBS}/univention/lib/*.py \
   ${DST_PY_LIBS}/univention/lib/
-RUN rm ${DST_PY_LIBS}/univention/lib/{__init__.py,account.py,admember.py,atjobs.py,fstab.py,ldap_extension.py,license_tools.py,listenerSharePath.py,locking.py,package_manager.py,password.py,ucrLogrotate.py,umc.py}
+RUN rm ${DST_PY_LIBS}/univention/lib/{__init__.py,account.py,admember.py,atjobs.py,fstab.py,ldap_extension.py,license_tools.py,listenerSharePath.py,locking.py,package_manager.py,password.py,ucrLogrotate.py}
 
 # from python3-univention-management-console
 # used files: acl.py auth.py base.py category.py config.py error.py ldap.py
@@ -410,6 +443,11 @@ COPY --from=build \
 COPY --from=build \
   ${SRC_PY_LIBS}/univention/management/console/modules/udm/*.py \
   ${DST_PY_LIBS}/univention/management/console/modules/udm/
+
+# from univention-self-service-passwordreset-umc
+COPY --from=build \
+  ${SRC_PY_LIBS}/univention/management/console/modules/passwordreset/ \
+  ${DST_PY_LIBS}/univention/management/console/modules/passwordreset
 
 # from python3-univention-management-console
 # for /usr/sbin/univention-management-console-server
@@ -443,6 +481,12 @@ COPY --from=build \
 COPY --from=build \
   /usr/share/univention-management-console/modules/udm.xml \
   /usr/share/univention-management-console/modules/udm.xml
+
+# from univention-self-service-passwordreset-umc
+# for $PY_LIBS/univention/management/console/module.py
+COPY --from=build \
+  /usr/share/univention-management-console/modules/passwordreset.xml \
+  /usr/share/univention-management-console/modules/passwordreset.xml
 
 RUN mkdir /usr/share/doc/univention-management-console-web-server/
 
@@ -524,6 +568,11 @@ COPY --from=build \
   /usr/share/univention-directory-reports/
 RUN mkdir /usr/share/univention-management-console-module-udm/
 
+# email bodies for self-service
+COPY --from=build \
+  /usr/share/univention-self-service/email_bodies/ \
+  /usr/share/univention-self-service/email_bodies
+
 # locales
 COPY --from=build \
   /usr/share/locale/de/LC_MESSAGES/univention-*.mo \
@@ -531,6 +580,7 @@ COPY --from=build \
 COPY --from=build \
   /usr/share/univention-management-console/i18n/de/umc-core.mo \
   /usr/share/univention-management-console/i18n/de/udm.mo \
+  /usr/share/univention-management-console/i18n/de/passwordreset.mo \
   /usr/share/univention-management-console/i18n/de/
 
 COPY --from=build \
@@ -554,7 +604,9 @@ COPY --from=build \
 
 RUN mkdir /var/cache/univention-management-console/
 
-COPY scripts/50-entrypoint.sh /entrypoint.d/50-entrypoint.sh
+COPY scripts/50-entrypoint.sh \
+     scripts/60-self-service.sh \
+     /entrypoint.d/
 
 ############################################################
 # Define runtime

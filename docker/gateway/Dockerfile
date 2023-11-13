@@ -70,11 +70,20 @@ RUN \
       # for UCR template files
       python3-univention-lib=9.* \
       && \
-  rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* && \
+  # install self-service files (avoid pulling in postfix, postgres, ...)
+    apt-get download \
+      univention-self-service=5.* \
+      univention-self-service-master=5.* \
+      # for /etc/univention/templates/files/etc/apache2/sites-available/univention-self-service.conf
+      # and /usr/share/univention-management-console-frontend/js/umc/modules/passwordreset.js
+      univention-self-service-passwordreset-umc=5.* \
+      && \
+    DEBIAN_FRONTEND=noninteractive \
+    dpkg --install --force-depends /apt/* && \
+  rm -rf /apt/ /var/lib/apt/lists/* /var/cache/apt/archives/* && \
   awk \
     '/^Package: python3-univention-directory-manager-rest$/{ while(!/^Version: /){getline} print $2 }' \
     /var/lib/dpkg/status > /version
-
 
 ############################################################
 # Start second stage
@@ -131,6 +140,10 @@ COPY --from=build \
 COPY --from=build \
   /usr/share/doc/univention-management-console-frontend/ \
   /usr/share/doc/univention-management-console-frontend
+
+COPY --from=build \
+  /usr/share/univention-self-service/www/ \
+  /usr/share/univention-self-service/www
 
 COPY --from=build \
   /usr/share/doc/univention-web-style/ \
@@ -218,6 +231,11 @@ COPY --from=build \
   /etc/univention/templates/files/etc/apache2/sites-available/univention-server-overview.conf \
   /etc/univention/templates/files/etc/apache2/sites-available/univention-server-overview.conf
 RUN ln -sf /etc/apache2/sites-available/univention-server-overview.conf /etc/apache2/sites-enabled/univention-server-overview.conf
+
+COPY --from=build \
+  /etc/univention/templates/files/etc/apache2/sites-available/univention-self-service.conf \
+  /etc/univention/templates/files/etc/apache2/sites-available/univention-self-service.conf
+RUN ln -sf /etc/apache2/sites-available/univention-self-service.conf /etc/apache2/sites-enabled/univention-self-service.conf
 
 COPY --from=build \
   /etc/univention/templates/files/etc/apache2/sites-available/ssl.d/00start \
