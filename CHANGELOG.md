@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.4.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.3.5...v0.4.0) (2023-11-14)
+
+
+### Features
+
+* Add "portal-udm-extensions" ([1b48391](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/1b48391bf50bc07dc74fd4bf6553c6ff187b73d7))
+* Copy icons from "portal-udm-extensions" ([f5e1042](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/f5e1042bfcf677bec54864ed5351caaea1620ac1))
+
 ## [0.3.5](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.3.4...v0.3.5) (2023-11-09)
 
 
