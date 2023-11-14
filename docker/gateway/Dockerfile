@@ -5,6 +5,10 @@ ARG UCS_BASE_IMAGE_TAG=v0.7.5
 ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-base-505
 ARG UCS_BASE_PYTHON_3_11=gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-base-520
 
+ARG PORTAL_UDM_EXTENSIONS_IMAGE=gitregistry.knut.univention.de/univention/components/univention-portal/portal-udm-extensions
+ARG PORTAL_UDM_EXTENSIONS_TAG=0.4.3
+
+FROM ${PORTAL_UDM_EXTENSIONS_IMAGE}:${PORTAL_UDM_EXTENSIONS_TAG} AS portal-udm-extensions
 
 ############################################################
 # First build stage
@@ -282,6 +286,13 @@ COPY --from=build \
 COPY --from=build \
   /etc/apache2/mods-enabled/ \
   /etc/apache2/mods-enabled
+
+
+############################################################
+# Add files from the portal extension
+
+COPY --from=portal-udm-extensions /udm/icons/ \
+    /usr/share/univention-management-console-frontend/js/dijit/themes/umc/icons/
 
 
 ############################################################
