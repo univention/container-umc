@@ -330,7 +330,7 @@ COPY --from=build \
   ${SRC_PY_LIBS}/univention/admin/handlers/ \
   ${DST_PY_LIBS}/univention/admin/handlers/
 
-# for ox-connector
+# Extension: OX Connector
 COPY --from=ox-connector-extensions /dependencies/handlers/ \
    ${DST_PY_LIBS}/univention/admin/handlers/
 
@@ -339,6 +339,9 @@ COPY --from=ox-connector-extensions /dependencies/syntax.d/ \
 
 COPY --from=ox-connector-extensions /dependencies/hooks.d/ \
    ${DST_PY_LIBS}/univention/admin/hooks.d/
+
+COPY --from=ox-connector-extensions /dependencies/ox-common.xml \
+   /usr/share/univention-management-console/modules/udm-oxresources-oxresources.xml
 
 # from python3-univention-condig-registry
 COPY --from=build \
@@ -423,9 +426,6 @@ COPY --from=build \
 COPY --from=build \
   /usr/share/univention-management-console/modules/udm.xml \
   /usr/share/univention-management-console/modules/udm.xml
-
-COPY --from=ox-connector-extensions /dependencies/ox-common.xml \
-    /usr/share/univention-management-console/modules/udm-oxresources-oxresources.xml
 
 RUN mkdir /usr/share/doc/univention-management-console-web-server/
 
