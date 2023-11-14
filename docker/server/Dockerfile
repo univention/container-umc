@@ -4,9 +4,13 @@
 ARG UCS_BASE_IMAGE_TAG=v0.7.2
 ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-base-505
 
+ARG PORTAL_UDM_EXTENSIONS_IMAGE=gitregistry.knut.univention.de/univention/components/univention-portal/portal-udm-extensions
+ARG PORTAL_UDM_EXTENSIONS_TAG=0.4.3
+
 ARG OX_CONNECTOR_EXTENSIONS_IMAGE=gitregistry.knut.univention.de/univention/open-xchange/provisioning/ox-connector-dependencies
 ARG OX_CONNECTOR_EXTENSIONS_TAG=0.3.4
 
+FROM ${PORTAL_UDM_EXTENSIONS_IMAGE}:${PORTAL_UDM_EXTENSIONS_TAG} AS portal-udm-extensions
 FROM ${OX_CONNECTOR_EXTENSIONS_IMAGE}:${OX_CONNECTOR_EXTENSIONS_TAG} AS ox-connector-extensions
 
 ############################################################
@@ -329,6 +333,19 @@ COPY --from=build \
 COPY --from=build \
   ${SRC_PY_LIBS}/univention/admin/handlers/ \
   ${DST_PY_LIBS}/univention/admin/handlers/
+
+# Extension: Portal extensions
+COPY --from=portal-udm-extensions /udm/api/ \
+    /usr/lib/python3/dist-packages/univention/udm/modules/
+
+COPY --from=portal-udm-extensions /udm/syntax/ \
+    /usr/lib/python3/dist-packages/univention/admin/syntax.d/
+
+COPY --from=portal-udm-extensions /udm/handlers \
+    /usr/lib/python3/dist-packages/univention/admin/handlers/portals
+
+COPY --from=portal-udm-extensions /udm/univention-portal.xml \
+    /usr/share/univention-management-console/modules/univention-portal.xml
 
 # Extension: OX Connector
 COPY --from=ox-connector-extensions /dependencies/handlers/ \
