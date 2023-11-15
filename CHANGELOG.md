@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.4.0...v0.4.1) (2023-11-15)
+
+
+### Bug Fixes
+
+* **helm:** .Values.global.configMapUcrForced is unset by default ([a6bfc04](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/a6bfc04a5c3097561d4f964a8da56cf798eb9183))
+
 ## [0.4.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.3.5...v0.4.0) (2023-11-14)
 
 
