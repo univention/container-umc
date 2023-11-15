@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.4.1...v0.5.0) (2023-11-15)
+
+
+### Features
+
+* add self-service backend and frontend data ([298b186](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/298b186b2c67e391aa0992e3b932c9a3cf8ac485))
+
 ## [0.4.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.4.0...v0.4.1) (2023-11-15)
 
 
