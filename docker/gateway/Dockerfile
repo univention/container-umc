@@ -197,6 +197,7 @@ COPY --from=build \
   /etc/univention/templates/info/univention-apache.info \
   /etc/univention/templates/info/univention-directory-manager-rest.info \
   /etc/univention/templates/info/univention-management-console-web-server.info \
+  /etc/univention/templates/info/univention-self-service-passwordreset-umc.info \
   /etc/univention/templates/info/univention-server-overview.info \
   /etc/univention/templates/info/
 
