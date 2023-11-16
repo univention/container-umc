@@ -46,6 +46,8 @@ ingress:
     - pathType: Prefix
       path: /univention/management
     - pathType: Prefix
+      path: /univention/self-service
+    - pathType: Prefix
       path: /univention/themes/
   tls:
     enabled: true
@@ -76,6 +78,9 @@ istio:
       - match: "prefix"
         path: "/univention/management/"
         rewrite: "/univention/management/"
+      - match: "prefix"
+        path: "/univention/self-service/"
+        rewrite: "/univention/self-service/"
       - match: "prefix"
         path: "/univention/meta.json"
         rewrite: "/univention/meta.json"

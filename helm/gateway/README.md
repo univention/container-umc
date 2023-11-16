@@ -210,6 +210,10 @@ null
     "pathType": "Prefix"
   },
   {
+    "path": "/univention/self-service",
+    "pathType": "Prefix"
+  },
+  {
     "path": "/univention/themes/",
     "pathType": "Prefix"
   }
@@ -359,6 +363,11 @@ true
     "match": "prefix",
     "path": "/univention/management/",
     "rewrite": "/univention/management/"
+  },
+  {
+    "match": "prefix",
+    "path": "/univention/self-service/",
+    "rewrite": "/univention/self-service/"
   },
   {
     "match": "prefix",
