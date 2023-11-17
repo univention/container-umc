@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.5.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.5.0...v0.5.1) (2023-11-17)
+
+
+### Bug Fixes
+
+* **gateway:** Set content security policy for self-service pages ([c6409e8](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/c6409e8511a3aeafb5b87207c87d6e10c404551e))
+* **helm:** Gateway serves /self-service now ([f02fbb1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/f02fbb1e2886b482ed5d1874a6610c98a7d2931c))
+
 ## [0.5.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.4.1...v0.5.0) (2023-11-15)
 
 
