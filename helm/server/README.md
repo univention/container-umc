@@ -415,35 +415,27 @@ true
 			<td>object</td>
 			<td><pre lang="json">
 {
-  "args": [
-    "/opt/bitnami/scripts/memcached/run.sh",
-    "--memory-limit=64",
-    "--disable-evictions"
-  ],
   "auth": {
     "enabled": true,
     "password": "easyPassword",
     "username": "selfservice"
   },
   "bundled": true,
+  "extraEnvVars": [
+    {
+      "name": "MEMCACHED_CACHE_SIZE",
+      "value": "64"
+    },
+    {
+      "name": "MEMCACHED_EXTRA_FLAGS",
+      "value": "--disable-evictions"
+    }
+  ],
   "server": null
 }
 </pre>
 </td>
 			<td>Memcached settings.  The bitnami helm chart does contain all details of what can be configured: https://github.com/bitnami/charts/tree/main/bitnami/memcached</td>
-		</tr>
-		<tr>
-			<td>memcached.args</td>
-			<td>list</td>
-			<td><pre lang="json">
-[
-  "/opt/bitnami/scripts/memcached/run.sh",
-  "--memory-limit=64",
-  "--disable-evictions"
-]
-</pre>
-</td>
-			<td>Defaults from /ucs/management/univention-self-service/conffiles/etc/memcached_univention-self-service.conf</td>
 		</tr>
 		<tr>
 			<td>memcached.auth.enabled</td>
@@ -480,6 +472,24 @@ true
 </pre>
 </td>
 			<td>Set to `true` if you want Memcached to be installed as well.</td>
+		</tr>
+		<tr>
+			<td>memcached.extraEnvVars</td>
+			<td>list</td>
+			<td><pre lang="json">
+[
+  {
+    "name": "MEMCACHED_CACHE_SIZE",
+    "value": "64"
+  },
+  {
+    "name": "MEMCACHED_EXTRA_FLAGS",
+    "value": "--disable-evictions"
+  }
+]
+</pre>
+</td>
+			<td>Defaults from /ucs/management/univention-self-service/conffiles/etc/memcached_univention-self-service.conf</td>
 		</tr>
 		<tr>
 			<td>memcached.server</td>

@@ -204,10 +204,11 @@ memcached:
     # -- Memcached password.
     password: "easyPassword"
   # -- Defaults from /ucs/management/univention-self-service/conffiles/etc/memcached_univention-self-service.conf
-  args:
-    - "/opt/bitnami/scripts/memcached/run.sh"
-    - "--memory-limit=64"
-    - "--disable-evictions"
+  extraEnvVars:
+    - name: "MEMCACHED_CACHE_SIZE"
+      value: "64"
+    - name: "MEMCACHED_EXTRA_FLAGS"
+      value: "--disable-evictions"
 
 
 # -- PostgreSQL settings.
