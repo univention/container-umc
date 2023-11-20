@@ -26,8 +26,10 @@ data:
   {{- else }}
   SELF_SERVICE_MEMCACHED_SERVER: "{{ .Values.memcached.server }}"
   {{- end }}
+  {{- if .Values.memcached.auth.password }}
   SELF_SERVICE_MEMCACHED_USER: "{{ .Values.memcached.auth.username }}"
   SELF_SERVICE_MEMCACHED_SECRET_FILE: "{{ .Values.umcServer.memcachedSecretFile }}"
+  {{- end }}
 
 {{- end }}
 {{- end }}
