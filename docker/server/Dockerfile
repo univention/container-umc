@@ -197,6 +197,8 @@ RUN \
       # for $PY_LIBS/univention/management/console/message.py
       # calling $PY_LIBS/univention/uldap.py
       cy2-saml=1.9.* \
+      # for pylibmc (SASL authentication with memcached)
+      libsasl2-modules=2.1.*\
     && \
   rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
