@@ -39,6 +39,8 @@ umcServer:
   memcachedSecretFile: "/var/secrets/memcached_password"
   # -- Path to file with Postgres password.
   postgresSecretFile: "/var/secrets/db_password"
+  # -- Path to file with SMTP password.
+  smtpSecretFile: "/var/secrets/smtp_password"
 
 ## Kubernetes ingress
 ingress:

@@ -841,7 +841,8 @@ false
   "machineSecretFile": "/var/secrets/machine_secret",
   "memcachedSecretFile": "/var/secrets/memcached_password",
   "postgresSecretFile": "/var/secrets/db_password",
-  "privateKeyFile": "/var/secrets/private_key"
+  "privateKeyFile": "/var/secrets/private_key",
+  "smtpSecretFile": "/var/secrets/smtp_password"
 }
 </pre>
 </td>
@@ -909,6 +910,15 @@ false
 </pre>
 </td>
 			<td>Path to file with the certificate's private key (.key).</td>
+		</tr>
+		<tr>
+			<td>umcServer.smtpSecretFile</td>
+			<td>string</td>
+			<td><pre lang="json">
+"/var/secrets/smtp_password"
+</pre>
+</td>
+			<td>Path to file with SMTP password.</td>
 		</tr>
 	</tbody>
 </table>

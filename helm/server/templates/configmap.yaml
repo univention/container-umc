@@ -4,11 +4,12 @@
 {{- define "umc-server.configMap" }}
 {{- with .top }}
 data:
-  LDAP_SECRET_FILE: "{{ .Values.umcServer.ldapSecretFile }}"
-  MACHINE_SECRET_FILE: "{{ .Values.umcServer.machineSecretFile }}"
-  PRIVATE_KEY_FILE: "{{ .Values.umcServer.privateKeyFile }}"
-  CA_CERT_FILE: "{{ .Values.umcServer.caCertFile }}"
-  CERT_PEM_FILE: "{{ .Values.umcServer.certPemFile }}"
+  LDAP_SECRET_FILE: {{ .Values.umcServer.ldapSecretFile | quote }}
+  MACHINE_SECRET_FILE: {{ .Values.umcServer.machineSecretFile | quote }}
+  PRIVATE_KEY_FILE: {{ .Values.umcServer.privateKeyFile | quote }}
+  CA_CERT_FILE: {{ .Values.umcServer.caCertFile | quote }}
+  CERT_PEM_FILE: {{ .Values.umcServer.certPemFile | quote }}
+  SMTP_SECRET_FILE: {{ .Values.umcServer.smtpSecretFile | quote }}
 
   {{- if .Values.postgresql.bundled }}
   SELF_SERVICE_DB_HOST: "{{ include "common.names.dependency.fullname" (dict "chartName" "postgresql" "chartValues" .Values.postgresql "context" $.top) }}"
