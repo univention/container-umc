@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.6.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.5.1...v0.6.0) (2023-11-21)
+
+
+### Features
+
+* **server:** allow configuring self-service smtp host ([8ad73dd](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/8ad73dd25b2768bcd76ddccc1f359534d52b6bbf))
+
+
+### Bug Fixes
+
+* **docker:** include SASL library for memcached authorization ([c7f4a08](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/c7f4a080e491b7dc93c5b732098d11f28a01398e))
+* **helm:** allow using memcached without authentication ([210408f](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/210408fe093547792c2184990f258f23a05c171f))
+
 ## [0.5.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.5.0...v0.5.1) (2023-11-17)
 
 
