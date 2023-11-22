@@ -1,20 +1,15 @@
 ---
-
-variables:
-  SOUVAP_HELM_PROJECT_ID: 155
-  SOUVAP_REGISTRY_PATH: souvap/tooling/images/univention
-
 include:
   - project: "univention/customers/dataport/upx/common-ci"
-    ref: "v0.5.4"
+    ref: "v1.9.7"
     file:
-      - "defaults/souvap-workflow.yaml"
       - "defaults/stages.yaml"
-      - "templates/kaniko.yaml"
-      - "templates/semantic-release-env.yaml"
+      - "defaults/souvap-workflow.yaml"
       - "templates/souvap.yaml"
-      - "jobs/lint-commit-messages.yaml"
       - "jobs/lint-pre-commit.yaml"
+      - "jobs/lint-commit-messages.yaml"
+      - "jobs/semantic-release-env.yaml"
+      - "jobs/container-build.yaml"
       - "jobs/package-and-publish-helm-charts.yaml"
 
 lint-pre-commit:
@@ -27,48 +22,32 @@ lint-pre-commit:
 pre-semantic-release:
   extends: ".pre-semantic-release"
 
-build-umc-gateway:
-  stage: build
-  extends: .kaniko
-  needs:
-    - job: "pre-semantic-release"
-      artifacts: true
-  variables:
-    KANIKO_BUILD_CONTEXT: "docker/gateway"
-    CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/umc-gateway"
-    VERSION: "${RELEASE_VERSION}"
+.build-matrix: &build-matrix
+  - IMAGE_NAME:
+      - "umc-gateway"
+      - "umc-server"
 
-build-umc-server:
-  stage: build
-  extends: .kaniko
-  needs:
-    - job: "pre-semantic-release"
-      artifacts: true
-  variables:
-    KANIKO_BUILD_CONTEXT: "docker/server"
-    CI_REGISTRY_IMAGE: "$CI_REGISTRY_IMAGE/umc-server"
-    VERSION: "${RELEASE_VERSION}"
+container-build:
+  parallel:
+    matrix: *build-matrix
 
-push-image-souvap-gateway:
-  needs:
-    - job: build-umc-gateway
+container-generate-sbom:
+  parallel:
+    matrix: *build-matrix
+
+container-sign:
+  parallel:
+    matrix: *build-matrix
+
+container-security-scan:
+  parallel:
+    matrix: *build-matrix
+
+publish-images:
   extends: .push-image-souvap
-  variables:
-    SOUVAP_IMAGE_NAME: "umc-gateway"
-
-push-image-souvap-server:
-  needs:
-    - job: build-umc-server
-  extends: .push-image-souvap
-  variables:
-    SOUVAP_IMAGE_NAME: "umc-server"
-
-package-helm-charts:
-  needs:
-    - job: "pre-semantic-release"
-      artifacts: true
+  parallel:
+    matrix: *build-matrix
 
 publish-helm-charts-souvap:
   extends: .publish-helm-charts-souvap
-
 ...
