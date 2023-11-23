@@ -17,7 +17,3 @@ if [ -n "${SELF_SERVICE_MEMCACHED_SECRET_FILE:-}" ] \
     echo "SELF_SERVICE_MEMCACHED_SECRET_FILE at ${SELF_SERVICE_MEMCACHED_SECRET_FILE} not found."
     exit 1
 fi
-
-sed --in-place \
-    --expression '/password.*requisite.*pam_cracklib/a password required pam_ldap.so use_authtok' \
-    /etc/pam.d/univention-management-console

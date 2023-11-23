@@ -131,7 +131,7 @@ COPY disable_license_check.patch \
      disable_suffixed_cookies.patch \
      make_uldap_start-tls_configurable.patch \
      self_service_credentials.patch \
-     umc-change_password-pam-prompts.patch \
+     set_password_without_kerberos.patch \
      use_try_first.patch \
      unsafe_saml_for_debug.patch \
      /
@@ -145,8 +145,8 @@ RUN  \
     rm /make_uldap_start-tls_configurable.patch && \
   patch -p 0 -d / -i /self_service_credentials.patch && \
     rm /self_service_credentials.patch && \
-  patch -p 0 -d / -i /umc-change_password-pam-prompts.patch && \
-    rm /umc-change_password-pam-prompts.patch && \
+  patch -p 0 -d / -i /set_password_without_kerberos.patch && \
+    rm /set_password_without_kerberos.patch && \
   patch -p 0 -d / -i /use_try_first.patch && \
     rm /use_try_first.patch && \
   patch -p 0 -d / -i /unsafe_saml_for_debug.patch && \
