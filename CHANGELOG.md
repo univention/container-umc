@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.6.0...v0.6.1) (2023-11-24)
+
+
+### Bug Fixes
+
+* **server:** allow set/password without Kerberos or PAM ([571653e](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/571653e33418ff7fcc7c29a5f847d17462d16b8a))
+
 ## [0.6.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.5.1...v0.6.0) (2023-11-21)
 
 
