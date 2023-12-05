@@ -115,6 +115,11 @@ if [[ -n "${SAML_METADATA_URL:-}" ]]; then
     exit 255
   fi
 
+  # remove advertised single logout service via SOAP
+  sed --in-place --regexp-extended --expression \
+    's#<md:SingleLogoutService[^>]+Binding="[^"]+bindings:SOAP"[^>]+>[^<]*</[^>]+>##' \
+    "${SAML_METADATA_PATH}"
+
   echo "Successfully set SAML metadata in ${SAML_METADATA_PATH}"
 
   mkdir --parents "/etc/univention/ssl/${SAML_SP_SERVER}"
