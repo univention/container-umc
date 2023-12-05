@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.2](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.6.1...v0.6.2) (2023-12-05)
+
+
+### Bug Fixes
+
+* **server:** skip SingleLogoutService via SOAP, even when advertised, because umc-server cannot deal with it ([0aff4da](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/0aff4da831073ad224243f1b7b6d7793359a41f8))
+
 ## [0.6.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.6.0...v0.6.1) (2023-11-24)
 
 
