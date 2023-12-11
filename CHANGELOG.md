@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.3](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.6.2...v0.6.3) (2023-12-11)
+
+
+### Bug Fixes
+
+* **ci:** reference common-ci v1.11.x to push sbom and signature to souvap ([022c99b](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/022c99b02c4bd36d2e0aa3536ce1f74e23a43022))
+
 ## [0.6.2](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.6.1...v0.6.2) (2023-12-05)
 
 
