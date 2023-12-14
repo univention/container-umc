@@ -668,6 +668,17 @@ false
 </td>
 			<td></td>
 		</tr>
+		<tr>
+			<td>umcGateway</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "umcHtmlTitle": null
+}
+</pre>
+</td>
+			<td>Application configuration of the Univention Management Console Gateway</td>
+		</tr>
 	</tbody>
 </table>
 
