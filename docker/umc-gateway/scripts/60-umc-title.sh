@@ -31,9 +31,9 @@ set -euxo pipefail
 # SWP Config - Allow to configure the HTML title in the UMC
 # https://git.knut.univention.de/univention/customers/dataport/team-souvap/-/issues/172
 if [ -n "${UMC_HTML_TITLE}" ]; then
-  sed --in-place --expression="s|<title>.*</title>|<title>${UMC_HTML_TITLE}</title>|g" /usr/share/univention-management-console-login/index.html
-  sed --in-place --expression="s|<title>.*</title>|<title>${UMC_HTML_TITLE}</title>|g" /usr/share/univention-management-console-frontend/index.html
-  sed --in-place --expression="s|window.document.title = .*|window.document.title = '${UMC_HTML_TITLE}'|g" /usr/share/univention-management-console-frontend/main.js
+  sed --in-place --expression="s|<title>[^<]*</title>|<title>${UMC_HTML_TITLE}</title>|g" /usr/share/univention-management-console-login/index.html
+  sed --in-place --expression="s|<title>[^<]*</title>|<title>${UMC_HTML_TITLE}</title>|g" /usr/share/univention-management-console-frontend/index.html
+  sed --in-place --expression="s|window.document.title = [^;]*|window.document.title = '${UMC_HTML_TITLE}'|g" /usr/share/univention-management-console-frontend/main.js
 fi
 
 # [EOF]
