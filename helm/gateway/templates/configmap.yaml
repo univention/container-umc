@@ -3,7 +3,8 @@
 
 {{- define "umc-gateway.configMap" }}
 {{- with .top }}
-data: {}
+data:
+  UMC_HTML_TITLE: {{ .Values.umcGateway.umcHtmlTitle | default "Univention Management Console" | quote }}
 {{- end }}
 {{- end }}
 ...
