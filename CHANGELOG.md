@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.4](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.6.3...v0.6.4) (2023-12-18)
+
+
+### Bug Fixes
+
+* **ci:** add Helm chart signing and publishing to souvap via OCI, common-ci 1.12.x ([0ea6509](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/0ea650954d0de3c8fdf55120501d780f207a05e8))
+
 ## [0.6.3](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.6.2...v0.6.3) (2023-12-11)
 
 
