@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.6.4...v0.7.0) (2023-12-18)
+
+
+### Features
+
+* make the umc html title configurable ([8bead8a](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/8bead8a57f24552677620e9a2879f441277c7963))
+
 ## [0.6.4](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.6.3...v0.6.4) (2023-12-18)
 
 
