@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.2](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.7.1...v0.7.2) (2023-12-21)
+
+
+### Bug Fixes
+
+* **umc-gateway:** entrypoint scripts should not break if an env value is unset ([2bd1e91](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/2bd1e9141f052328660479c5b09b2af92aa5fa50))
+
 ## [0.7.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.7.0...v0.7.1) (2023-12-21)
 
 
