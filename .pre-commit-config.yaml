@@ -1,10 +1,29 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2023 Univention GmbH
+
 ---
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
 
 repos:
+  # "Copy .env.umc-*.examples so that docker-compose.yaml can be linted"
+  - repo: "local"
+    hooks:
+      - id: "copy-umc-gateway"
+        name: "copy-umc-gateway"
+        entry: "sh -c 'if [ ! -f .env.umc-gateway ]; then cp .env.umc-gateway.example .env.umc-gateway; fi'"
+        language: "system"
+        files: "docker-compose.yaml"
+        pass_filenames: false
+      - id: "copy-umc-server"
+        name: "copy-umc-server"
+        entry: "sh -c 'if [ ! -f .env.umc-server ]; then cp .env.umc-server.example .env.umc-server; fi'"
+        language: "system"
+        files: "docker-compose.yaml"
+        pass_filenames: false
+
   - repo: "https://github.com/pre-commit/pre-commit-hooks"
-    rev: "v4.4.0"
+    rev: "v4.5.0"
     hooks:
       # "check for added large files"
       - id: "check-added-large-files"
@@ -24,7 +43,7 @@ repos:
       - id: "trailing-whitespace"
 
   - repo: "https://git.knut.univention.de/univention/dist/pre-commit-ucr"
-    rev: "0.0.9"
+    rev: "0.0.10"
     hooks:
       # "flake8 --select E1,E2 for UCR templates"
       - id: "ucr-flake8"
@@ -38,7 +57,7 @@ repos:
         stages: ["manual"]
 
   - repo: "https://github.com/compilerla/conventional-pre-commit"
-    rev: "v2.1.1"
+    rev: "v3.0.0"
     hooks:
       - id: "conventional-pre-commit"
         stages: ["commit-msg"]
@@ -50,7 +69,7 @@ repos:
       - id: "debian-control"
 
   - repo: "https://github.com/charliermarsh/ruff-pre-commit"
-    rev: "v0.0.270"
+    rev: "v0.1.9"
     hooks:
       # "ruff"
       - id: "ruff"
@@ -65,7 +84,7 @@ repos:
   # shellcheck doesn't have it's own .pre-commit-hooks.yaml
   # https://github.com/koalaman/shellcheck/pull/1032
   - repo: "https://gitlab.com/univention/pre-commit-hooks/pre-commit-shell"
-    rev: "v1.0.6"
+    rev: "v1.0.6+uv1"
     hooks:
       # "Shell Syntax Check"
       - id: "shell-lint"
@@ -84,17 +103,23 @@ repos:
 
   # "Helm chart linter"
   - repo: https://github.com/gruntwork-io/pre-commit
-    rev: v0.1.20
+    rev: v0.1.23
     hooks:
       - id: helmlint
 
   # "Helm docs linter"
   - repo: https://github.com/norwoodj/helm-docs
-    rev: v1.11.0
+    rev: v1.12.0
     hooks:
-    - id: helm-docs
-      args:
-        - --chart-search-root=helm
-        - --template-files=README.md.gotmpl
+      - id: helm-docs
+        args:
+          - --chart-search-root=helm
+          - --template-files=README.md.gotmpl
+        always_run: true
 
+  - repo: "https://git.knut.univention.de/univention/dist/pre-commit-hooks/addlicense"
+    rev: "v1.0.1"
+    hooks:
+      - id: "addlicense"
+        name: "Check or add license headers to files"
 ...
