@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.3](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.7.2...v0.7.3) (2023-12-28)
+
+
+### Bug Fixes
+
+* **licensing/ci:** add spdx license headers, add license header checking pre-commit ([10e1dad](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/10e1dadcad75b5722132de97e14b58769287b4ba))
+
 ## [0.7.2](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.7.1...v0.7.2) (2023-12-21)
 
 
