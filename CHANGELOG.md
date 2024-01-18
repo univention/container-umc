@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.8.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.7.3...v0.8.0) (2024-01-18)
+
+
+### Features
+
+* **ci:** add debian update check jobs for scheduled pipeline ([187c2df](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/187c2dff04a135ac6cdafc589c83754d30c4e508))
+
+
+### Bug Fixes
+
+* **deps:** add renovate.json ([896731f](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/896731fbe93b6aae5481e97702d7fd2fad165dea))
+
 ## [0.7.3](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.7.2...v0.7.3) (2023-12-28)
 
 
