@@ -229,7 +229,7 @@ postgresql:
   auth:
     username: "selfservice"
     database: "selfservice"
-    password: "easyPassword"
-    postgresPassword: "postgres"
+    password: ""
+    postgresPassword: ""
 
 ...

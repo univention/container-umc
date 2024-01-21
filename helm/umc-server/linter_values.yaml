@@ -10,6 +10,11 @@ umcServer:
   ldapSecret: "password"
   machineSecret: "password"
 
+postgresql:
+  auth:
+    password: "password"
+    postgresPassword: "password"
+
 ingress:
   enabled: true
   host: "localhost"
