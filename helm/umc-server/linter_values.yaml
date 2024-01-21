@@ -6,27 +6,18 @@
 # Dummy values for running the Helm linter on the umc-server.
 # Run it like this: helm lint -f values.yaml -f linter_values.yaml .
 
-## Application-specific
 umcServer:
+  ldapSecret: "password"
+  machineSecret: "password"
 
-
-## Kubernetes ingress
 ingress:
-  enabled: false
-  host: "umc.example.develop.souvap-univention.de"
-
-
-## Istio based
-istio:
   enabled: true
-  host: "umc.example.develop.souvap-univention.de"
+  host: "localhost"
 
-## Docker image
-image:
-  tag: "branch-feature-example"
+istio:
+  enabled: false
+  host: "localhost"
 
-
-## Container deployment probes
 probes:
   liveness:
     enabled: false
