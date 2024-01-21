@@ -42,7 +42,7 @@ helm uninstall umc-gateway
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://gitregistry.knut.univention.de/univention/customers/dataport/upx/common-helm/helm | common | ^0.5.0 |
+| oci://gitregistry.knut.univention.de/univention/customers/dataport/upx/common-helm/helm | common | 0.* |
 
 ## Values
 
@@ -121,7 +121,7 @@ null
 			<td>image.registry</td>
 			<td>string</td>
 			<td><pre lang="json">
-"registry.souvap-univention.de"
+"gitregistry.knut.univention.de"
 </pre>
 </td>
 			<td></td>
@@ -130,7 +130,7 @@ null
 			<td>image.repository</td>
 			<td>string</td>
 			<td><pre lang="json">
-"souvap/tooling/images/univention-management-console/umc-gateway"
+"univention/customers/dataport/upx/container-umc/umc-gateway"
 </pre>
 </td>
 			<td></td>
@@ -456,7 +456,7 @@ true
 			<td>probes.liveness.initialDelaySeconds</td>
 			<td>int</td>
 			<td><pre lang="json">
-120
+10
 </pre>
 </td>
 			<td></td>
@@ -510,7 +510,7 @@ true
 			<td>probes.readiness.initialDelaySeconds</td>
 			<td>int</td>
 			<td><pre lang="json">
-30
+10
 </pre>
 </td>
 			<td></td>
