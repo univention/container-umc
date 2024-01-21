@@ -23,7 +23,7 @@ dependencies:
     version: "^0.6.0"
   - name: "postgresql"
     repository: "https://charts.bitnami.com/bitnami"
-    version: "^12.2.1"
+    version: "~12.7.1"
     condition: "postgresql.bundled"
   - name: "memcached"
     repository: "https://charts.bitnami.com/bitnami"
