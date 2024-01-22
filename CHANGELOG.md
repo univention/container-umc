@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.9.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.8.0...v0.9.0) (2024-01-22)
+
+
+### Features
+
+* Change version requirements for common to "0.*" ([bb2e508](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/bb2e5080ae421420bfd6842571253850e165c6b7))
+* Remove alias for dependency "common" ([a705f0d](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/a705f0d5b2dcf888f1bdac0078deecd012824cd0))
+* Remove memcached password from default configuration ([80a4a05](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/80a4a051f2ac7487f28c4056e5d0e3dd65aa4e6f))
+* **umc-server:** Compress linter_values.yaml to needed values ([f0be680](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/f0be680b82145c239c81901d10e33782292b54cc))
+* **umc-server:** Downgrade bundled memcached for compatibility ([24321fd](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/24321fd1bedc931877d2fa06ee202b1892816f41))
+* **umc-server:** Downgrade the bundled postgresql for compatibility reasons ([3a45bb4](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/3a45bb4515a70b5463f11803d48a89c23288a4bb))
+* **umc-server:** Expect ldapSecret and machineSecret without b64 encoding ([cee52a5](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/cee52a51572c15dbb0f77856b7b61d8e7f3833ac))
+* **umc-server:** Reduce defaults for liveness and readiness probes ([ed63257](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/ed6325782eb6fd05b290fa387cdc994fba1017fe))
+* **umc-server:** Reduce initial delay of probes ([d1de77e](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/d1de77e84247af86cde26a81ff4839676aa728cc))
+* **umc-server:** Remove default values for postgresql secrets ([1188f35](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/1188f353e5c96a292888f5b8d46de0840cb0731e))
+* **umc-server:** Update common-helm to version 0.6.0 ([d322774](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/d322774aec9bd4080b0562eecd70a9bfa947816e))
+
+
+### Bug Fixes
+
+* **umc-gateway:** Use the knut registry by default ([e14ae8f](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/e14ae8f24dfaf92d0fba8b6d638d39097278264c))
+* **umc-server:** Use the knut registry by default ([a15b90e](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/a15b90e43049d7c6d84a7d949f54bdb065a7bb43))
+
 ## [0.8.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.7.3...v0.8.0) (2024-01-18)
 
 
