@@ -835,18 +835,30 @@ false
 			<td>object</td>
 			<td><pre lang="json">
 {
+  "caCert": null,
   "caCertFile": "/var/secrets/ca_cert",
+  "certPem": null,
   "certPemFile": "/var/secrets/cert_pem",
   "ldapSecretFile": "/var/secrets/ldap_secret",
   "machineSecretFile": "/var/secrets/machine_secret",
   "memcachedSecretFile": "/var/secrets/memcached_password",
   "postgresSecretFile": "/var/secrets/db_password",
+  "privateKey": null,
   "privateKeyFile": "/var/secrets/private_key",
   "smtpSecretFile": "/var/secrets/smtp_password"
 }
 </pre>
 </td>
 			<td>Application configuration of the Univention Management Console Server</td>
+		</tr>
+		<tr>
+			<td>umcServer.caCert</td>
+			<td>string</td>
+			<td><pre lang="json">
+null
+</pre>
+</td>
+			<td>Additional CA Certificate to trust. The value is optional.</td>
 		</tr>
 		<tr>
 			<td>umcServer.caCertFile</td>
@@ -856,6 +868,15 @@ false
 </pre>
 </td>
 			<td>Path to file with the CA certificate.</td>
+		</tr>
+		<tr>
+			<td>umcServer.certPem</td>
+			<td>string</td>
+			<td><pre lang="json">
+null
+</pre>
+</td>
+			<td>Certificate used in the context of SAML to verify metadata signatures. A self-signed certificate will be generated together with the private key if none is provided.</td>
 		</tr>
 		<tr>
 			<td>umcServer.certPemFile</td>
@@ -901,6 +922,15 @@ false
 </pre>
 </td>
 			<td>Path to file with Postgres password.</td>
+		</tr>
+		<tr>
+			<td>umcServer.privateKey</td>
+			<td>string</td>
+			<td><pre lang="json">
+null
+</pre>
+</td>
+			<td>The private key related to "certPem" used to sign messages in the context of SAML.</td>
 		</tr>
 		<tr>
 			<td>umcServer.privateKeyFile</td>

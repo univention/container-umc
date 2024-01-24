@@ -31,7 +31,7 @@ umcServer:
   ldapSecretFile: "/var/secrets/ldap_secret"
   # -- Path to file with the LDAP machine secret.
   machineSecretFile: "/var/secrets/machine_secret"
-  # -- Additional CA Certificate to trust. Must be a base64 encoded string.
+  # -- Additional CA Certificate to trust.
   # The value is optional.
   caCert: null
   # -- Path to file with the CA certificate.
