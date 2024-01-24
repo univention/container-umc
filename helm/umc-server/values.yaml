@@ -37,6 +37,8 @@ umcServer:
   # -- Path to file with the CA certificate.
   caCertFile: "/var/secrets/ca_cert"
   # -- Certificate used in the context of SAML to verify metadata signatures.
+  # A self-signed certificate will be generated together with the
+  # private key if none is provided.
   certPem: null
   # -- The private key related to "certPem" used to sign messages in the context
   # of SAML.
