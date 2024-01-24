@@ -31,8 +31,16 @@ umcServer:
   ldapSecretFile: "/var/secrets/ldap_secret"
   # -- Path to file with the LDAP machine secret.
   machineSecretFile: "/var/secrets/machine_secret"
+  # -- Additional CA Certificate to trust. Must be a base64 encoded string.
+  # The value is optional.
+  caCert: null
   # -- Path to file with the CA certificate.
   caCertFile: "/var/secrets/ca_cert"
+  # -- Certificate used in the context of SAML to verify metadata signatures.
+  certPem: null
+  # -- The private key related to "certPem" used to sign messages in the context
+  # of SAML.
+  privateKey: null
   # -- Path to file with the certificate (.pem).
   certPemFile: "/var/secrets/cert_pem"
   # -- Path to file with the certificate's private key (.key).
