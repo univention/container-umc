@@ -398,7 +398,7 @@ COPY --from=ox-connector-extensions /dependencies/hooks.d/ \
 COPY --from=ox-connector-extensions /dependencies/ox-common.xml \
    /usr/share/univention-management-console/modules/udm-oxresources-oxresources.xml
 
-# from python3-univention-condig-registry
+# from python3-univention-config-registry
 COPY --from=build \
   ${SRC_PY_LIBS}/univention/config_registry/ \
   ${DST_PY_LIBS}/univention/config_registry/
