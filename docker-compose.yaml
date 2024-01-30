@@ -20,6 +20,14 @@ services:
       - 8090:8090
     volumes:
       - umc-acls:/var/cache/univention-management-console/acls/
+      - type: bind
+        source: ./tests/stub_data/base.conf
+        target: /etc/univention/base.conf
+        read_only: true
+      - type: bind
+        source: ./tests/stub_data/saml-certs
+        target: /etc/univention/ssl/ucs-6045.univention-organization.intranet
+        read_only: true
     env_file: .env.umc-server
     secrets:
       - ca_cert
