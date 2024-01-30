@@ -15,6 +15,11 @@ include:
       - "jobs/package-and-publish-helm-charts-souvap.yaml"
       - "jobs/check-debian-updates.yaml"
 
+  - project: "univention/dist/docker-services"
+    ref: "master"
+    file:
+      - "dind.yml"
+
 lint-pre-commit:
   before_script:
     # Compose lint would fail without the referenced env files
@@ -24,6 +29,7 @@ lint-pre-commit:
   - IMAGE_NAME:
       - "umc-gateway"
       - "umc-server"
+      - "testrunner"
 
 container-build:
   parallel:
@@ -54,4 +60,37 @@ check-debian-updates:
     matrix: *build-matrix
   variables:
     TARGET_IMAGE: "${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest"
+
+test-image-umc-server:
+  stage: "test"
+  extends: .dind
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: "never"
+    - when: "on_success"
+  image: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:24.0.7"
+  before_script:
+    # Allow that the Docker API version is negotiated between client and server
+    - unset DOCKER_API_VERSION
+    - export IMAGE_TAG=${RELEASE_VERSION}
+    - echo -e "\e[0Ksection_start:`date +%s`:docker_debug[collapsed=true]\r\e[0KDocker version details"
+    - echo $IMAGE_TAG
+    - docker version
+    - echo -e "\e[0Ksection_end:`date +%s`:docker_debug\r\e[0K"
+    - cp .env.umc-server.example .env.umc-server
+    - cp .env.umc-gateway.example .env.umc-gateway
+    - mkdir secret
+    - echo "univention" > secret/machine.secret
+    - echo "univention" > secret/ldap.secret
+    - echo -e "\e[0Ksection_start:`date +%s`:docker_compose_config[collapsed=true]\r\e[0KDocker Compose configuration"
+    - docker compose config umc-server test
+    - echo -e "\e[0Ksection_end:`date +%s`:docker_compose_config\r\e[0K"
+    - docker compose up --no-build --quiet-pull --wait --wait-timeout 60 umc-server
+  script:
+    - >
+      docker compose run --quiet-pull --rm test
+      pytest tests/integration --umc-server-url=http://umc-server:8090
+  after_script:
+    - docker compose down --volumes
+
 ...
