@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.10.0...v0.10.1) (2024-01-30)
+
+
+### Bug Fixes
+
+* Ensure that "univention.logging" is available in the final image ([882dca4](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/882dca445d26fa33befa6bd6c012d5d70e8c72e5))
+
 ## [0.10.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.9.0...v0.10.0) (2024-01-30)
 
 
