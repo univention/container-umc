@@ -30,9 +30,6 @@ services:
         read_only: true
     env_file: .env.umc-server
     secrets:
-      - ca_cert
-      - cert_pem
-      - private_key
       - ldap_secret
       - machine_secret
 
