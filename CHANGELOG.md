@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.10.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.9.0...v0.10.0) (2024-01-30)
+
+
+### Features
+
+* **umc-server:** caCert, certPem and privateKey are not expected to be base64 encoded ([10bf583](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/10bf5836d66515a5dd812fcc64018b6dbdec6090))
+* **umc-server:** Generate a self-signed certificate for SAML if none is provided ([c7cd200](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/c7cd2006d894dd7f8a1beec3a864e530f6b6ef3e))
+
+
+### Bug Fixes
+
+* **umc-server:** Define attributes in Secret via "stringData" ([8072dfd](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/8072dfd3fd911516a91a790f13d065b0efef597b))
+
 ## [0.9.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.8.0...v0.9.0) (2024-01-22)
 
 
