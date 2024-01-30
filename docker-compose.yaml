@@ -28,6 +28,20 @@ services:
       - ldap_secret
       - machine_secret
 
+  test:
+    profiles:
+      - "test"
+    platform: "linux/amd64"
+    image: gitregistry.knut.univention.de/univention/customers/dataport/upx/container-umc/testrunner:${IMAGE_TAG:-latest}
+    build:
+      context: docker/testrunner
+    environment:
+      PYTEST_ADDOPTS: --umc-server-url=http://umc-server:8090/
+    volumes:
+      - type: bind
+        source: .
+        target: /app/
+
   # Environment of the pre-commit linter.
   pre-commit:
     profiles:
