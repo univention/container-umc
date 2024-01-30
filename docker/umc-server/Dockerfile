@@ -87,6 +87,8 @@ RUN \
     # for $PY_LIBS/univention/admindiary/__init__.py
     python3-univention-admin-diary=2.* \
     python3-univention-config-registry=15.* \
+    # for univention.logging
+    python3-univention-debug=12.* \
     python3-univention-directory-manager=15.* \
     python3-univention-directory-manager-rest-client=10.* \
     python3-univention-directory-reports=12.* \
@@ -311,6 +313,7 @@ COPY --from=build \
   ${SRC_PY_LIBS}/univention/_debug.cpython-37m-x86_64-linux-gnu.so \
   ${SRC_PY_LIBS}/univention/debug.py \
   ${SRC_PY_LIBS}/univention/debug2.py \
+  ${SRC_PY_LIBS}/univention/logging.py \
   ${DST_PY_LIBS}/univention/
 
 # from python3-notifier (univention package)
