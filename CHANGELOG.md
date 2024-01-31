@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.2](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.10.1...v0.10.2) (2024-01-31)
+
+
+### Bug Fixes
+
+* Correct the build configuration in docker-compose override ([b470dcd](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/b470dcd006adbee532e14a68c5b22d58b11672b7))
+
 ## [0.10.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.10.0...v0.10.1) (2024-01-30)
 
 
