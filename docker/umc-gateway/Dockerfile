@@ -1,12 +1,11 @@
 # SPDX-License-Identifier: AGPL-3.0-only
-# SPDX-FileCopyrightText: 2023 Univention GmbH
+# SPDX-FileCopyrightText: 2024 Univention GmbH
 
 ############################################################
 # Global variables
 
-ARG UCS_BASE_IMAGE_TAG=0.10.0
+ARG UCS_BASE_IMAGE_TAG=0.11.2
 ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-base-506
-ARG UCS_BASE_PYTHON_3_11=gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-base-520
 
 ARG PORTAL_UDM_EXTENSIONS_IMAGE=gitregistry.knut.univention.de/univention/components/univention-portal/portal-udm-extensions
 ARG PORTAL_UDM_EXTENSIONS_TAG=0.4.3
@@ -91,7 +90,7 @@ RUN \
 ############################################################
 # Start second stage
 
-FROM ${UCS_BASE_PYTHON_3_11}:${UCS_BASE_IMAGE_TAG} AS final
+FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} AS final
 
 ARG LABEL_CREATED=undefined
 ARG LABEL_REVISION=undefined
@@ -107,7 +106,7 @@ WORKDIR /
 RUN \
   apt-get --quiet update && \
     apt-get --assume-yes --verbose-versions --no-install-recommends install \
-      libpython3.11=3.* \
+      libpython3.7=3.7.* \
       libapache2-mod-wsgi-py3=4.* \
       # for univention-config-registry
       python3-lazy-object-proxy=1.* \
