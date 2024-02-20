@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.10.3](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.10.2...v0.10.3) (2024-02-20)
+
+
+### Bug Fixes
+
+* add missing python3-jwt dependency ([eef79fd](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/eef79fd2b0628697f47aebd8c3e775cbbb4d659a))
+* **gateway:** remove python3.11 dependency as httpd was removed ([29f71bb](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/29f71bb44b9ea7add4ab93512d7870d4ad4e217b))
+
 ## [0.10.2](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.10.1...v0.10.2) (2024-01-31)
 
 
