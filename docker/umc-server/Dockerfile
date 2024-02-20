@@ -265,6 +265,8 @@ RUN \
       python3-pylibmc=1.* \
       # for $PY_LIBS/univention/admin/rest/client/__init__.py
       python3-uritemplate=0.6-* \
+      # for $PY_LIBS/univention/management/console/oidc.py
+      python3-jwt=1.7.* \
       # for the entrypoint.sh script
       wget=1.* \
       && \
@@ -495,6 +497,12 @@ COPY --from=build \
 COPY --from=build \
   /usr/share/univention-management-console/modules/passwordreset.xml \
   /usr/share/univention-management-console/modules/passwordreset.xml
+
+# from univention-management-console-server
+# for $PY_LIBS/univention/management/console/server.py
+COPY --from=build \
+  /usr/share/univention-management-console/oidc/oidc.json \
+  /usr/share/univention-management-console/oidc/oidc.json
 
 RUN mkdir /usr/share/doc/univention-management-console-web-server/
 
