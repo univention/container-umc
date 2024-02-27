@@ -135,7 +135,6 @@ RUN \
 COPY disable_license_check.patch \
      disable_suffixed_cookies.patch \
      make_uldap_start-tls_configurable.patch \
-     self_service_credentials.patch \
      set_password_without_kerberos.patch \
      use_try_first.patch \
      unsafe_saml_for_debug.patch \
@@ -148,8 +147,6 @@ RUN  \
     rm /disable_suffixed_cookies.patch && \
   patch -p 0 -d / -i /make_uldap_start-tls_configurable.patch && \
     rm /make_uldap_start-tls_configurable.patch && \
-  patch -p 0 -d / -i /self_service_credentials.patch && \
-    rm /self_service_credentials.patch && \
   patch -p 0 -d / -i /set_password_without_kerberos.patch && \
     rm /set_password_without_kerberos.patch && \
   patch -p 0 -d / -i /use_try_first.patch && \
