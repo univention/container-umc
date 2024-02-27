@@ -135,7 +135,6 @@ RUN \
 COPY make_uldap_start-tls_configurable.patch \
      self_service_credentials.patch \
      set_password_without_kerberos.patch \
-     use_try_first.patch \
      /
 
 RUN  \
@@ -144,9 +143,7 @@ RUN  \
   patch -p 0 -d / -i /self_service_credentials.patch && \
     rm /self_service_credentials.patch && \
   patch -p 0 -d / -i /set_password_without_kerberos.patch && \
-    rm /set_password_without_kerberos.patch && \
-  patch -p 0 -d / -i /use_try_first.patch && \
-    rm /use_try_first.patch
+    rm /set_password_without_kerberos.patch
 
 ############################################################
 # Start second stage
