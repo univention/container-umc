@@ -47,11 +47,6 @@ umcServer:
   certPemFile: "/var/secrets/cert_pem"
   # -- Path to file with the certificate's private key (.key).
   privateKeyFile: "/var/secrets/private_key"
-
-  # -- Path to file with Memcached password.
-  memcachedSecretFile: "/var/secrets/memcached_password"
-  # -- Path to file with Postgres password.
-  postgresSecretFile: "/var/secrets/db_password"
   # -- Path to file with SMTP password.
   smtpSecretFile: "/var/secrets/smtp_password"
 

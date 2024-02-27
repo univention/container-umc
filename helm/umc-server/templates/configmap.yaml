@@ -14,26 +14,11 @@ data:
   CERT_PEM_FILE: {{ .Values.umcServer.certPemFile | quote }}
   SMTP_SECRET_FILE: {{ .Values.umcServer.smtpSecretFile | quote }}
 
-  {{- if .Values.postgresql.bundled }}
-  SELF_SERVICE_DB_HOST: "{{ include "common.names.dependency.fullname" (dict "chartName" "postgresql" "chartValues" .Values.postgresql "context" $.top) }}"
-  SELF_SERVICE_DB_PORT: "{{ .Values.postgresql.primary.service.ports.postgresql }}"
-  {{- else }}
-  SELF_SERVICE_DB_HOST: "{{ .Values.postgresql.connection.host }}"
-  SELF_SERVICE_DB_PORT: "{{ .Values.postgresql.connection.port }}"
-  {{- end }}
-  SELF_SERVICE_DB_USER: "{{ .Values.postgresql.auth.username }}"
-  SELF_SERVICE_DB_NAME: "{{ .Values.postgresql.auth.database }}"
-  SELF_SERVICE_DB_SECRET_FILE: "{{ .Values.umcServer.postgresSecretFile }}"
-
-  {{- if .Values.memcached.bundled }}
-  SELF_SERVICE_MEMCACHED_SERVER: "{{ include "common.names.dependency.fullname" (dict "chartName" "memcached" "chartValues" .Values.memcached "context" $.top) }}"
-  {{- else }}
-  SELF_SERVICE_MEMCACHED_SERVER: "{{ .Values.memcached.server }}"
-  {{- end }}
-  {{- if .Values.memcached.auth.password }}
-  SELF_SERVICE_MEMCACHED_USER: "{{ .Values.memcached.auth.username }}"
-  SELF_SERVICE_MEMCACHED_SECRET_FILE: "{{ .Values.umcServer.memcachedSecretFile }}"
-  {{- end }}
+  # FIXME: When making this chart BSI compliant these passwords should be
+  # stored as secrets.
+  # Link: https://git.knut.univention.de/univention/customers/dataport/team-souvap/-/issues/429
+  SELF_SERVICE_DB_SECRET: {{ .Values.postgresql.auth.password }}
+  SELF_SERVICE_MEMCACHED_SECRET: {{ .Values.memcached.auth.password }}
 
 {{- end }}
 {{- end }}

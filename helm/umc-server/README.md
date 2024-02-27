@@ -841,8 +841,6 @@ false
   "certPemFile": "/var/secrets/cert_pem",
   "ldapSecretFile": "/var/secrets/ldap_secret",
   "machineSecretFile": "/var/secrets/machine_secret",
-  "memcachedSecretFile": "/var/secrets/memcached_password",
-  "postgresSecretFile": "/var/secrets/db_password",
   "privateKey": null,
   "privateKeyFile": "/var/secrets/private_key",
   "smtpSecretFile": "/var/secrets/smtp_password"
@@ -904,24 +902,6 @@ null
 </pre>
 </td>
 			<td>Path to file with the LDAP machine secret.</td>
-		</tr>
-		<tr>
-			<td>umcServer.memcachedSecretFile</td>
-			<td>string</td>
-			<td><pre lang="json">
-"/var/secrets/memcached_password"
-</pre>
-</td>
-			<td>Path to file with Memcached password.</td>
-		</tr>
-		<tr>
-			<td>umcServer.postgresSecretFile</td>
-			<td>string</td>
-			<td><pre lang="json">
-"/var/secrets/db_password"
-</pre>
-</td>
-			<td>Path to file with Postgres password.</td>
 		</tr>
 		<tr>
 			<td>umcServer.privateKey</td>
