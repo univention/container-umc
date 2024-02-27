@@ -132,8 +132,7 @@ RUN \
   for i in /apt/*.deb; do dpkg --extract "$i" /; done && \
   rm -rf /apt/
 
-COPY disable_suffixed_cookies.patch \
-     make_uldap_start-tls_configurable.patch \
+COPY make_uldap_start-tls_configurable.patch \
      self_service_credentials.patch \
      set_password_without_kerberos.patch \
      use_try_first.patch \
@@ -141,8 +140,6 @@ COPY disable_suffixed_cookies.patch \
      /
 
 RUN  \
-  patch -p 0 -d / -i /disable_suffixed_cookies.patch && \
-    rm /disable_suffixed_cookies.patch && \
   patch -p 0 -d / -i /make_uldap_start-tls_configurable.patch && \
     rm /make_uldap_start-tls_configurable.patch && \
   patch -p 0 -d / -i /self_service_credentials.patch && \
