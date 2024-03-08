@@ -36,11 +36,12 @@ repos:
         exclude: ^helm/.+/templates/
       # "fix end of files"
       - id: "end-of-file-fixer"
-        exclude: ^helm/.+/README.md
+        exclude: ^helm/.+/README.md|.*\.patch
       # "fix python encoding pragma"
       - id: "fix-encoding-pragma"
       # "trim trailing whitespace"
       - id: "trailing-whitespace"
+        exclude: .*\.patch
 
   - repo: "https://git.knut.univention.de/univention/dist/pre-commit-ucr"
     rev: "0.0.10"
