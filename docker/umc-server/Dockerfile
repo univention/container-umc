@@ -132,24 +132,13 @@ RUN \
   for i in /apt/*.deb; do dpkg --extract "$i" /; done && \
   rm -rf /apt/
 
-COPY disable_license_check.patch \
-     disable_suffixed_cookies.patch \
-     make_uldap_start-tls_configurable.patch \
-     set_password_without_kerberos.patch \
-     unsafe_saml_for_debug.patch \
-     /
+COPY patches/*.patch /
 
-RUN  \
-  patch -p 0 -d / -i /disable_license_check.patch && \
-    rm /disable_license_check.patch && \
-  patch -p 0 -d / -i /disable_suffixed_cookies.patch && \
-    rm /disable_suffixed_cookies.patch && \
-  patch -p 0 -d / -i /make_uldap_start-tls_configurable.patch && \
-    rm /make_uldap_start-tls_configurable.patch && \
-  patch -p 0 -d / -i /set_password_without_kerberos.patch && \
-    rm /set_password_without_kerberos.patch && \
-  patch -p 0 -d / -i /unsafe_saml_for_debug.patch && \
-    rm /unsafe_saml_for_debug.patch
+RUN \
+  patch -p 4 -d /usr/lib/python3/dist-packages/ -i /0001-disable-license-check.patch && \
+  patch -p 4 -d /usr/lib/python3/dist-packages/ -i /0002-disable-suffixed_cookie_name.patch && \
+  patch -p 4 -d /usr/lib/python3/dist-packages/ -i /0003-set-password-without-kerberos.patch && \
+  rm -v /*.patch
 
 ############################################################
 # Start second stage
