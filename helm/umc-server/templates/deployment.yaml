@@ -54,6 +54,17 @@ spec:
           {{- with .Values.image }}
           imagePullPolicy: {{ .pullPolicy }}
           {{- end }}
+          env:
+            - name: "SELF_SERVICE_DB_SECRET"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "common.names.fullname" . }}
+                  key: "db_password"
+            - name: "SELF_SERVICE_MEMCACHED_SECRET"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "common.names.fullname" . }}
+                  key: "memcached_password"
           envFrom:
             - configMapRef:
                 name: {{ include "common.names.fullname" . }}
