@@ -13,13 +13,6 @@ data:
   CA_CERT_FILE: {{ .Values.umcServer.caCertFile | quote }}
   CERT_PEM_FILE: {{ .Values.umcServer.certPemFile | quote }}
   SMTP_SECRET_FILE: {{ .Values.umcServer.smtpSecretFile | quote }}
-
-  # FIXME: When making this chart BSI compliant these passwords should be
-  # stored as secrets.
-  # Link: https://git.knut.univention.de/univention/customers/dataport/team-souvap/-/issues/429
-  SELF_SERVICE_DB_SECRET: {{ .Values.postgresql.auth.password }}
-  SELF_SERVICE_MEMCACHED_SECRET: {{ .Values.memcached.auth.password }}
-
 {{- end }}
 {{- end }}
 ...
