@@ -132,12 +132,11 @@ RUN \
   for i in /apt/*.deb; do dpkg --extract "$i" /; done && \
   rm -rf /apt/
 
-COPY set_password_without_kerberos.patch \
-     /
+COPY patches/*.patch /
 
-RUN  \
-  patch -p 0 -d / -i /set_password_without_kerberos.patch && \
-    rm /set_password_without_kerberos.patch
+RUN \
+  patch -p 4 -d /usr/lib/python3/dist-packages/ -i /0001-set-password-without-kerberos.patch && \
+  rm -v /*.patch
 
 ############################################################
 # Start second stage
