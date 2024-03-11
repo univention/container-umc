@@ -138,8 +138,6 @@ COPY make_uldap_start-tls_configurable.patch \
      /
 
 RUN  \
-  patch -p 0 -d / -i /make_uldap_start-tls_configurable.patch && \
-    rm /make_uldap_start-tls_configurable.patch && \
   patch -p 0 -d / -i /self_service_credentials.patch && \
     rm /self_service_credentials.patch && \
   patch -p 0 -d / -i /set_password_without_kerberos.patch && \
