@@ -5,7 +5,8 @@
 # Global variables
 
 ARG UCS_BASE_IMAGE_TAG=0.10.0
-ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-base-506
+# TODO: Use the regular base image again
+ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-base-dev-506
 
 ARG PORTAL_UDM_EXTENSIONS_IMAGE=gitregistry.knut.univention.de/univention/components/univention-portal/portal-udm-extensions
 ARG PORTAL_UDM_EXTENSIONS_TAG=0.4.3
@@ -41,6 +42,9 @@ COPY scripts/fake-uv-lib.sh /usr/local/bin/fake-uv-lib.sh
 # Install univention-management-console-server and required dependencies
 
 RUN \
+  # TODO: Use the regular base image again
+  # See https://git.knut.univention.de/univention/ucs/-/merge_requests/1098
+  ucs-dev-add-branch.sh jbornhold-starttls-univention-policy && \
   # For apt-get download sandbox
   chown _apt /apt && \
   mkdir /var/log/univention/ && \
