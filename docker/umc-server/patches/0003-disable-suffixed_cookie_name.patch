@@ -1,0 +1,31 @@
+From 24e92adc1c2fcb82822b07eb5ef379a0202ee2bc Mon Sep 17 00:00:00 2001
+From: Johannes Bornhold <johannes.bornhold.extern@univention.de>
+Date: Fri, 8 Mar 2024 14:46:00 +0100
+Subject: [PATCH 3/3] disable "suffixed_cookie_name"
+
+Do not generate suffixed cookies (e.g. "UMCSessionId-$PORT"),
+because the portal-frontend does not handle them correctly.
+
+The portal-frontend does contain code in the file "umc.ts" which relies on the
+cookie name and does not support suffixes.
+
+See: https://git.knut.univention.de/univention/components/univention-portal/-/blob/40c3f8c6c195b51aa6eac300885fdb0b950f2592/frontend/src/jsHelper/umc.ts#L41
+---
+ .../src/univention/management/console/resource.py                | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/management/univention-management-console/src/univention/management/console/resource.py b/management/univention-management-console/src/univention/management/console/resource.py
+index db6ae77dad..1af54656c7 100644
+--- a/management/univention-management-console/src/univention/management/console/resource.py
++++ b/management/univention-management-console/src/univention/management/console/resource.py
+@@ -186,6 +186,7 @@ class Resource(RequestHandler):
+         return default
+ 
+     def suffixed_cookie_name(self, name):
++        return name
+         _host, _, port = self.request.headers.get('Host', '').partition(':')
+         if port:
+             try:
+-- 
+2.39.2
+
