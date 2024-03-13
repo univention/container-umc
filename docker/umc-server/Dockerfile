@@ -136,6 +136,7 @@ COPY patches/*.patch /
 
 RUN \
   patch -p 4 -d /usr/lib/python3/dist-packages/ -i /0001-set-password-without-kerberos.patch && \
+  patch -p 4 -d /usr/lib/python3/dist-packages/ -i /0002-disable-license-check.patch && \
   rm -v /*.patch
 
 ############################################################
