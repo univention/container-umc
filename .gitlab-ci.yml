@@ -82,7 +82,6 @@ test-image-umc-server:
     - mkdir secret
     - echo "univention" > secret/machine.secret
     - echo "univention" > secret/ldap.secret
-    - echo "univention" > secret/self_service_db.secret
     - echo -e "\e[0Ksection_start:`date +%s`:docker_compose_config[collapsed=true]\r\e[0KDocker Compose configuration"
     - docker compose config umc-server test
     - echo -e "\e[0Ksection_end:`date +%s`:docker_compose_config\r\e[0K"

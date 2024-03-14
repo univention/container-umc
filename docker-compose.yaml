@@ -32,7 +32,6 @@ services:
     secrets:
       - ldap_secret
       - machine_secret
-      - self_service_db_secret
 
   test:
     profiles:
@@ -74,8 +73,6 @@ secrets:
     file: secret/ldap.secret
   machine_secret:
     file: secret/machine.secret
-  self_service_db_secret:
-    file: secret/self_service_db.secret
 
 volumes:
   pre-commit-cache:
