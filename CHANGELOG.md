@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.11.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.10.3...v0.11.0) (2024-03-14)
+
+
+### Features
+
+* Drop patch to allow start_tls configuration for uldap ([3bbdb74](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/3bbdb7493710bcfce10ff3e41daf88f4252267bc))
+* Embed the Deployment template into the Helm chart of umc-server ([11f0b4c](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/11f0b4c59c4c8b417a330bfd17c94a8f5e9ea7fc))
+* Update patches to reflect the current state of the errata releases ([5c83054](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/5c83054fbe1da8965d4c3ae2e73219cf58730f9f))
+
+
+### Bug Fixes
+
+* Add patch to disable the cookie suffix again ([663a936](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/663a936bfa9d4fbd78714353a03f565cdf911c39))
+* Add patch to disable the license checking again ([b7f1c2f](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/b7f1c2f5ac114085b02b0023975988a4b7f350f8))
+* enable license check ([4703170](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/470317072811d69dafed03aa8e8fb1dc49405ea0))
+* integrate upstream credential handling for PostgreSQL and Memcache ([44efd90](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/44efd907e029e96e79a88a7f201459cd4a4fbd8e))
+* Provide credentials based on Secret instead of ConfigMap ([bd67c71](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/bd67c71b2f7be89add9677cf677451e377932ef4))
+* Tests selfservice db and memcached secrets ([1229967](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/1229967c61abebef1466736985054930c951948e))
+
 ## [0.10.3](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.10.2...v0.10.3) (2024-02-20)
 
 
