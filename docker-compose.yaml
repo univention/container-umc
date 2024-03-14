@@ -7,14 +7,14 @@ name: "dev-local"
 
 services:
   umc-gateway:
-    image: gitregistry.knut.univention.de/univention/customers/dataport/upx/container-umc/umc-gateway:latest
+    image: gitregistry.knut.univention.de/univention/customers/dataport/upx/container-umc/umc-gateway:${IMAGE_TAG:-latest}
     platform: linux/amd64
     ports:
       - 8091:80
     env_file: .env.umc-gateway
 
   umc-server:
-    image: gitregistry.knut.univention.de/univention/customers/dataport/upx/container-umc/umc-server:latest
+    image: gitregistry.knut.univention.de/univention/customers/dataport/upx/container-umc/umc-server:${IMAGE_TAG:-latest}
     platform: linux/amd64
     ports:
       - 8090:8090
