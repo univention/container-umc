@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.11.0...v0.11.1) (2024-03-18)
+
+
+### Bug Fixes
+
+* **ci:** update common-ci from v1.16.2 to v1.24.4 ([ce1a01b](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/ce1a01bb6657006426eb1e467511f1dc62dd153f))
+
 ## [0.11.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.10.3...v0.11.0) (2024-03-14)
 
 
