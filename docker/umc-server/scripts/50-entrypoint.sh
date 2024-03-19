@@ -25,7 +25,7 @@ umask 077
 
 ############################################################
 # Prepare LDAP TLS certificates and settings
-UDM_STARTTLS=$(ucr get uldap/start-tls)
+UDM_STARTTLS=$(ucr get directory/manager/starttls)
 if [[ -z "${UDM_STARTTLS}" ]]; then
   UDM_STARTTLS=2
 fi
@@ -46,7 +46,7 @@ case "${UDM_STARTTLS}" in
     SASL_SECPROPS="none,minssf=0"
     ;;
   *)
-    echo "UCR variable 'uldap/start-tls' must be one of: 0, 1, 2"
+    echo "UCR variable 'directory/manager/starttls' must be one of: 0, 1, 2"
     exit 1
 esac
 
