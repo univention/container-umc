@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.2](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.11.1...v0.11.2) (2024-03-19)
+
+
+### Bug Fixes
+
+* update ucr reference ([4e29d07](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/4e29d071e3a59c98bab21041fef8edbd194d5ccc))
+
 ## [0.11.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.11.0...v0.11.1) (2024-03-18)
 
 
