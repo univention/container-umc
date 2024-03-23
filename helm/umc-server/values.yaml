@@ -24,6 +24,12 @@ global:
   configMapUcrDefaults: "stack-data-ums-ucr"
   configMapUcr: "stack-data-swp-ucr"
   configMapUcrForced: null
+  # -- Credentials to fetch images from private registry.
+  # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+  #
+  # imagePullSecrets:
+  #   - "docker-registry"
+  imagePullSecrets: []
 
 # -- Application configuration of the Univention Management Console Server
 umcServer:
@@ -128,6 +134,12 @@ istio:
       httpsRedirect: true
       secretName: ""
 
+# -- Credentials to fetch images from private registry.
+# Ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+#
+# imagePullSecrets:
+#   - "docker-registry"
+imagePullSecrets: []
 
 ## Docker image
 image:

@@ -37,10 +37,14 @@ spec:
       nodeSelector:
         {{ toYaml . | nindent 8 | trim }}
       {{- end }}
-      # TODO: Consolidate this to only support "global.imagePullSecrets"
-      {{- with (coalesce .Values.global.imagePullSecrets .Values.image.pullSecrets .Values.imagePullSecrets) }}
+      {{- if or .Values.imagePullSecrets .Values.global.imagePullSecrets  }}
       imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
+        {{- range .Values.global.imagePullSecrets }}
+        - name: "{{ . }}"
+        {{- end }}
+        {{- range .Values.imagePullSecrets }}
+        - name: "{{ . }}"
+        {{- end }}
       {{- end }}
       {{- with .Values.podSecurityContext }}
       securityContext:
