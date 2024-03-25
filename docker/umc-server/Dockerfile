@@ -138,6 +138,7 @@ RUN \
   patch -p 4 -d /usr/lib/python3/dist-packages/ -i /0001-set-password-without-kerberos.patch && \
   patch -p 4 -d /usr/lib/python3/dist-packages/ -i /0002-disable-license-check.patch && \
   patch -p 4 -d /usr/lib/python3/dist-packages/ -i /0003-disable-suffixed_cookie_name.patch && \
+  patch -p 5 -d /usr/lib/python3/dist-packages/univention/management/console/modules -i /0004-support-un-authenticated-memcached.patch && \
   rm -v /*.patch
 
 ############################################################

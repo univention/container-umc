@@ -1,0 +1,81 @@
+From 2e74f3fecf7d1087e59a825b0495bc24e3d7b52f Mon Sep 17 00:00:00 2001
+From: Thomas Kintscher <thomas.kintscher.extern@univention.de>
+Date: Wed, 3 Apr 2024 18:23:55 +0200
+Subject: [PATCH 4/4] support un/authenticated memcached
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+In Nubus we need to make the memcached host configurable and support both authenticated and unauthenticated connections.
+
+Our old implementation: https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/-/blob/3bbdb7493710bcfce10ff3e41daf88f4252267bc/docker/umc-server/self_service_credentials.patch
+Upstream fix in UCS: https://git.knut.univention.de/univention/ucs/-/commit/bdecb09fe28141e6f62f77347c118d41305a463d
+
+The upstream fix is fine for authenticated connections.
+However, openDesk provides memcache without authentication.
+This case is impossible to configure now.
+Note that `pylibmc.Client()` needs the `username` and `password` kwargs to be `None`,
+otherwise it will try to authenticate.
+Empty strings are not enough, it needs to be `None`!
+
+1. The password is read from the env variable `SELF_SERVICE_MEMCACHED_SECRET`.
+   If that variable is unset, it will try to read the password from a file.
+   If the password file does not exist, it throws an exception.
+   There is no way for the code to end up with `password=None`.
+
+2. The username is read with `ucr.get("umc/self-service/memcached/username")`.
+   The only way for this to return `None` is when the key not present in the file at all.
+   In Nubus we have read-only filesystems, and we need to provide secure defaults.
+   In this scenario it is impossible for an operator to override the default and unset the username.
+
+NB: There are no error messages in the log when the connection to Memcached fails:
+
+```
+│ 28.03.24 19:24:30.246  RESOURCES   ( INFO    ) : Searching for module providing command passwordreset/set_contact                                                                     │
+│ 28.03.24 19:24:30.246  RESOURCES   ( INFO    ) : Found module passwordreset                                                                                                           │
+│ 28.03.24 19:24:30.246  MAIN        ( INFO    ) : Checking ACLs for passwordreset/set_contact (passwordreset)                                                                          │
+│ 28.03.24 19:24:30.247  MAIN        ( INFO    ) : Passing request to module passwordreset                                                                                              │
+│ 28.03.24 19:24:30.254  MODULE      ( PROCESS ) : Received request 'passwordreset/set_contact': ('default.user', None, 'SAML', 'de_DE.UTF-8')                                          │
+│ 28.03.24 19:24:30.261  MODULE      ( PROCESS ) : Interner Server-Fehler in "passwordreset/set_contact".                                                                               │
+│ 28.03.24 19:24:30       ERROR      (       66) : 591 POST /univention/command/passwordreset/set_contact (0.0.0.0) 9.86ms                                                              │
+│ 28.03.24 19:24:30.262  MODULE      ( ALL     ) : modserver.get:406: Executed handler                                                                                                  │
+│ 28.03.24 19:24:30.264  MAIN        ( ALL     ) : resources.get:759: Received response 591                                                                                             │
+│ 28.03.24 19:24:30       ERROR      (        1) : 591 POST /univention/command/passwordreset/set_contact (10.0.0.25) 23.48ms                                                           │
+```
+
+The entire module just fails without providing any details.
+---
+ .../umc/python/passwordreset/__init__.py               | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/management/univention-self-service/umc/python/passwordreset/__init__.py b/management/univention-self-service/umc/python/passwordreset/__init__.py
+index 41d3d8abb5..40097ccf14 100644
+--- a/management/univention-self-service/umc/python/passwordreset/__init__.py
++++ b/management/univention-self-service/umc/python/passwordreset/__init__.py
+@@ -260,6 +260,7 @@ class Instance(Base):
+             atexit.register(self.db.close_db)
+             if not self.db.table_exists():
+                 self.db.create_table()
++            username = MEMCACHED_USERNAME
+             password = os.getenv("SELF_SERVICE_MEMCACHED_SECRET")
+             if not password and MEMCACHED_SECRET_FILE:
+                 try:
+@@ -267,7 +268,14 @@ class Instance(Base):
+                         password = pw_file.readline().strip()
+                 except OSError:
+                     raise UMC_Error('The memcached password is not properly configured.', status=503)
+-            self.memcache = pylibmc.Client([MEMCACHED_SOCKET], binary=True, username=MEMCACHED_USERNAME, password=password)
++            if not username:
++                # pylibmc requires username and password to be exactly `None` for unauthenticated connections
++                MODULE.debug(f"Memcached: unauthenticated connection to {MEMCACHED_SOCKET}")
++                username = None
++                password = None
++            else:
++                MODULE.debug(f"Memcached: connecting to {MEMCACHED_SOCKET} with username={username}")
++            self.memcache = pylibmc.Client([MEMCACHED_SOCKET], binary=True, username=username, password=password)
+ 
+         self.send_plugins = get_sending_plugins(MODULE.process)
+         self.password_reset_plugins = {k: v for k, v in self.send_plugins.items() if v.message_application() == 'password_reset'}
+-- 
+2.39.3 (Apple Git-146)
+

@@ -448,8 +448,7 @@ true
       "name": "MEMCACHED_EXTRA_FLAGS",
       "value": "--disable-evictions"
     }
-  ],
-  "server": null
+  ]
 }
 </pre>
 </td>
@@ -480,7 +479,7 @@ true
 "selfservice"
 </pre>
 </td>
-			<td>Memcached username.</td>
+			<td>Memcached username. This parameter is only used by the bundled memcached.</td>
 		</tr>
 		<tr>
 			<td>memcached.bundled</td>
@@ -489,7 +488,7 @@ true
 true
 </pre>
 </td>
-			<td>Set to `true` if you want Memcached to be installed as well.</td>
+			<td>Set to `true` if you want Memcached to be installed as well.  When setting this to `false` be sure to also adjust `memcached.auth.password` below, and the connection settings in the stack-data chart: `stackDataContext.umcMemcachedHostname` and `stackDataContext.umcMemcachedUsername`</td>
 		</tr>
 		<tr>
 			<td>memcached.extraEnvVars</td>
@@ -507,16 +506,7 @@ true
 ]
 </pre>
 </td>
-			<td>Defaults from /ucs/management/univention-self-service/conffiles/etc/memcached_univention-self-service.conf</td>
-		</tr>
-		<tr>
-			<td>memcached.server</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Memcached server. This is required if you use an external memcached.  See here for possible values: https://sendapatch.se/projects/pylibmc/reference.html</td>
+			<td>Defaults from /ucs/management/univention-self-service/conffiles/etc/memcached_univention-self-service.conf  These parameters are only used by the bundled memcached.</td>
 		</tr>
 		<tr>
 			<td>mountSecrets</td>
