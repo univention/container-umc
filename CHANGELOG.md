@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.3](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.11.2...v0.11.3) (2024-03-25)
+
+
+### Bug Fixes
+
+* fix umbrella/helmfile incompatible handling of imagePullSecrets ([7baee4c](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/7baee4c2f67a8d6a21b0a2e5cb4c3edd9586c5f2))
+
 ## [0.11.2](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.11.1...v0.11.2) (2024-03-19)
 
 
