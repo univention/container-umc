@@ -249,4 +249,22 @@ postgresql:
     password: ""
     postgresPassword: ""
 
+# -- This is a YAML representation of UCR variables that should be mounted into the container.
+# Example:
+# configMapUcrForcedYaml:
+#   umc:
+#     some-array:
+#       - "one"
+#       - "two"
+#     self-service:
+#       memcached:
+#         socket: nubus-umc-server-memcached.nubus-umbrella-1.svc.cluster.local
+#         username: selfservice
+#       postgresql:
+#         hostname: nubus-postgresql.nubus-umbrella-1.svc.cluster.local
+#         port: 5432
+#         username: selfservice
+
+configMapUcrForcedYaml: null
+
 ...

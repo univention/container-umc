@@ -1,0 +1,43 @@
+{{/*
+SPDX-FileCopyrightText: 2024 Univention GmbH
+SPDX-License-Identifier: AGPL-3.0-only
+*/}}
+---
+kind: "ConfigMap"
+apiVersion: "v1"
+metadata:
+  name: {{ printf "%s-base-forced" (include "common.names.fullname" .) }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels:
+    {{- include "common.labels.standard" . | nindent 4 }}
+    {{- if .Values.additionalLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.additionalLabels "context" . ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.additionalAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.additionalAnnotations "context" . ) | nindent 4 }}
+  {{- end }}
+stringData:
+  base.conf: |
+{{- $root := . -}}
+{{- define "nestedEntries" -}}
+{{- range $key, $value := .Values }}
+{{- if kindIs "map" $value }}
+{{- $newRoot := dict "Values" $value "Parent" (printf "%s/%s" $.Parent $key) -}}
+{{- include "nestedEntries" $newRoot -}}
+{{- else if kindIs "slice" $value }}
+    {{ $.Parent }}/{{ $key }}: {{ join "," $value }}
+{{- else }}
+    {{ $.Parent }}/{{ $key }}: {{ $value }}
+{{- end }}
+{{- end }}
+{{- end -}}
+{{- range $key, $value := .Values.configMapUcrForcedYaml }}
+{{- if kindIs "map" $value }}
+{{- $newRoot := dict "Values" $value "Parent" $key -}}
+{{- include "nestedEntries" $newRoot -}}
+{{- else if kindIs "slice" $value }}
+    {{ $key }}: {{ join "," $value }}
+{{- else }}
+    {{ $key }}: {{ $value }}
+{{- end }}
+{{- end }}
