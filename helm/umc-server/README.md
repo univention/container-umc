@@ -76,6 +76,15 @@ false
 			<td></td>
 		</tr>
 		<tr>
+			<td>configMapUcrForcedYaml</td>
+			<td>string</td>
+			<td><pre lang="json">
+null
+</pre>
+</td>
+			<td>This is a YAML representation of UCR variables that should be mounted into the container. Example: configMapUcrForcedYaml:   umc:     some-array:       - "one"       - "two"     self-service:       memcached:         socket: nubus-umc-server-memcached.nubus-umbrella-1.svc.cluster.local         username: selfservice       postgresql:         hostname: nubus-postgresql.nubus-umbrella-1.svc.cluster.local         port: 5432         username: selfservice</td>
+		</tr>
+		<tr>
 			<td>environment</td>
 			<td>object</td>
 			<td><pre lang="json">

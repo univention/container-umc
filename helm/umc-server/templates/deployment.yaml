@@ -86,7 +86,7 @@ spec:
               mountPath: "/etc/univention/base.conf"
               subPath: "base.conf"
             {{- end }}
-            {{- if (and .Values.mountUcr .Values.global .Values.global.configMapUcrForced) }}
+            {{- if (or .Values.configMapUcrForcedYaml (and .Values.mountUcr .Values.global .Values.global.configMapUcrForced)) }}
             - name: "config-map-ucr-forced"
               mountPath: "/etc/univention/base-forced.conf"
               subPath: "base.conf"
@@ -142,6 +142,10 @@ spec:
         - name: "config-map-ucr-forced"
           configMap:
             name: "{{ .Values.global.configMapUcrForced }}"
+        {{ else if .Values.configMapUcrForcedYaml }}
+        - name: "config-map-ucr-forced"
+          configMap:
+            name: {{ printf "%s-base-forced" (include "common.names.fullname" .) }}
         {{- end }}
         {{- if .Values.mountSecrets }}
         - name: "secrets"
