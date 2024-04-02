@@ -27,7 +27,9 @@ stringData:
 {{- else if kindIs "slice" $value }}
     {{ $.Parent }}/{{ $key }}: {{ join "," $value }}
 {{- else }}
+    {{- if ne $value "_DO_NOT_RENDER_" }}
     {{ $.Parent }}/{{ $key }}: {{ $value }}
+    {{- end }}
 {{- end }}
 {{- end }}
 {{- end -}}
@@ -38,6 +40,8 @@ stringData:
 {{- else if kindIs "slice" $value }}
     {{ $key }}: {{ join "," $value }}
 {{- else }}
+    {{- if ne $value "_DO_NOT_RENDER_" }}
     {{ $key }}: {{ $value }}
+    {{- end }}
 {{- end }}
 {{- end }}
