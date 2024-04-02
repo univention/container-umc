@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.5](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.11.4...v0.11.5) (2024-04-02)
+
+
+### Bug Fixes
+
+* replace deployment.yaml from common-helm with chart-deployed manifest (umbrella opendesk compatibility) ([0ec1711](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/0ec171101367a924bb7c0c9faa726fb647ff9981))
+
 ## [0.11.4](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.11.3...v0.11.4) (2024-03-27)
 
 
