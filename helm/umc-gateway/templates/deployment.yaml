@@ -1,14 +1,128 @@
+---
+
 # SPDX-License-Identifier: AGPL-3.0-only
 # SPDX-FileCopyrightText: 2023 Univention GmbH
 
----
-{{ include "common.deployment" (dict "top" . "overrides" "umc-gateway.deployment") }}
-...
-
-{{- define "umc-gateway.deployment" }}
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ include "common.names.fullname" . }}
+  labels:
+    {{- include "common.labels.standard" . | nindent 4 }}
 spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "common.labels.matchLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
-        checksum/config: {{ include (print .top.Template.BasePath "/configmap.yaml") .top | sha256sum | quote }}
-{{- end }}
+        checksum/config: {{ include (print .Template.BasePath "/configmap.yaml") . | sha256sum | quote }}
+      {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "common.labels.standard" . | nindent 8 }}
+    spec:
+      {{- with .Values.affinity }}
+      affinity:
+        {{ toYaml . | nindent 8 | trim }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{ toYaml . | nindent 8 | trim }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{ toYaml . | nindent 8 | trim }}
+      {{- end }}
+      {{- if or .Values.imagePullSecrets .Values.global.imagePullSecrets  }}
+      imagePullSecrets:
+        {{- range .Values.global.imagePullSecrets }}
+        - name: "{{ . }}"
+        {{- end }}
+        {{- range .Values.imagePullSecrets }}
+        - name: "{{ . }}"
+        {{- end }}
+      {{- end }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{ toYaml . | nindent 8 | trim }}
+      {{- end }}
+      containers:
+        - name: {{ include "common.names.name" . }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ include "common.images.image" ( dict "imageRoot" .Values.image "global" .Values.global ) | quote }}
+          {{- with .Values.image }}
+          imagePullPolicy: {{ .pullPolicy }}
+          {{- end }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "common.names.fullname" . }}
+          volumeMounts:
+            {{- if .Values.extraVolumeMounts }}
+            {{ toYaml .Values.extraVolumeMounts | nindent 12 }}
+            {{- end }}
+            {{- if .Values.mountUcr }}
+            - name: "config-map-ucr-defaults"
+              mountPath: "/etc/univention/base-defaults.conf"
+              subPath: "base.conf"
+            {{- end }}
+            {{- if (and .Values.mountUcr .Values.global .Values.global.configMapUcr) }}
+            - name: "config-map-ucr"
+              mountPath: "/etc/univention/base.conf"
+              subPath: "base.conf"
+            {{- end }}
+            {{- if (and .Values.mountUcr .Values.global .Values.global.configMapUcrForced) }}
+            - name: "config-map-ucr-forced"
+              mountPath: "/etc/univention/base-forced.conf"
+              subPath: "base.conf"
+            {{- end }}
+          ports:
+            {{- range $key, $value := .Values.service.ports }}
+            - name: {{ $key }}
+              containerPort: {{ $value.containerPort }}
+              protocol: {{ $value.protocol }}
+            {{- end }}
+          {{- if .Values.probes.liveness.enabled }}
+          livenessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
+            timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
+            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
+            failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
+            successThreshold: {{ .Values.probes.liveness.successThreshold }}
+          {{- end }}
+          {{- if .Values.probes.readiness.enabled }}
+          readinessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
+            timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
+            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
+            failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
+            successThreshold: {{ .Values.probes.readiness.successThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        {{- if .Values.extraVolumes }}
+        {{ toYaml .Values.extraVolumes | nindent 8 }}
+        {{- end }}
+        {{- if .Values.mountUcr }}
+        - name: "config-map-ucr-defaults"
+          configMap:
+            name: {{ required "Please provide the name of the UCR ConfigMap in .Values.global.configMapUcrDefaults!" .Values.global.configMapUcrDefaults | quote }}
+        {{- end }}
+        {{- if (and .Values.mountUcr .Values.global .Values.global.configMapUcr) }}
+        - name: "config-map-ucr"
+          configMap:
+            name: "{{ .Values.global.configMapUcr }}"
+        {{- end }}
+        {{- if (and .Values.mountUcr .Values.global .Values.global.configMapUcrForced) }}
+        - name: "config-map-ucr-forced"
+          configMap:
+            name: "{{ .Values.global.configMapUcrForced }}"
+        {{- end }}
