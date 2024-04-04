@@ -97,19 +97,19 @@ false
 			<td>global.configMapUcr</td>
 			<td>string</td>
 			<td><pre lang="json">
-"stack-data-swp-ucr"
+null
 </pre>
 </td>
-			<td></td>
+			<td>ConfigMap name to read UCR values from.</td>
 		</tr>
 		<tr>
 			<td>global.configMapUcrDefaults</td>
 			<td>string</td>
 			<td><pre lang="json">
-"stack-data-ums-ucr"
+null
 </pre>
 </td>
-			<td></td>
+			<td>ConfigMap name to read default UCR values from.</td>
 		</tr>
 		<tr>
 			<td>global.configMapUcrForced</td>
@@ -118,7 +118,7 @@ false
 null
 </pre>
 </td>
-			<td></td>
+			<td>ConfigMap name to read forced UCR values from.</td>
 		</tr>
 		<tr>
 			<td>global.imagePullSecrets</td>
@@ -130,10 +130,19 @@ null
 			<td>Credentials to fetch images from private registry. Ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/  imagePullSecrets:   - "docker-registry"</td>
 		</tr>
 		<tr>
+			<td>global.nubusDeployment</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td>Indicates wether this chart is part of a Nubus deployment.</td>
+		</tr>
+		<tr>
 			<td>image.imagePullPolicy</td>
 			<td>string</td>
 			<td><pre lang="json">
-"Always"
+"IfNotPresent"
 </pre>
 </td>
 			<td></td>
@@ -205,7 +214,7 @@ null
 			<td>ingress.enabled</td>
 			<td>bool</td>
 			<td><pre lang="json">
-true
+false
 </pre>
 </td>
 			<td>Set this to `true` in order to enable the installation on Ingress related objects.</td>
@@ -285,150 +294,6 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>istio.enabled</td>
-			<td>bool</td>
-			<td><pre lang="json">
-false
-</pre>
-</td>
-			<td>Set this to `true` in order to enable the installation on Istio related objects.</td>
-		</tr>
-		<tr>
-			<td>istio.gateway.annotations</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>istio.gateway.enabled</td>
-			<td>bool</td>
-			<td><pre lang="json">
-false
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>istio.gateway.externalGatewayName</td>
-			<td>string</td>
-			<td><pre lang="json">
-"swp-istio-gateway"
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>istio.gateway.selectorIstio</td>
-			<td>string</td>
-			<td><pre lang="json">
-"ingressgateway"
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>istio.gateway.tls.enabled</td>
-			<td>bool</td>
-			<td><pre lang="json">
-true
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>istio.gateway.tls.httpsRedirect</td>
-			<td>bool</td>
-			<td><pre lang="json">
-true
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>istio.gateway.tls.secretName</td>
-			<td>string</td>
-			<td><pre lang="json">
-""
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>istio.host</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>The hostname. This parameter has to be supplied. Example `portal.example`.</td>
-		</tr>
-		<tr>
-			<td>istio.virtualService.annotations</td>
-			<td>object</td>
-			<td><pre lang="json">
-{}
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>istio.virtualService.enabled</td>
-			<td>bool</td>
-			<td><pre lang="json">
-true
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>istio.virtualService.paths</td>
-			<td>list</td>
-			<td><pre lang="json">
-[
-  {
-    "match": "prefix",
-    "path": "/univention/auth/",
-    "rewrite": "/auth/"
-  },
-  {
-    "match": "prefix",
-    "path": "/univention/saml/",
-    "rewrite": "/saml/"
-  },
-  {
-    "match": "prefix",
-    "path": "/univention/get/",
-    "rewrite": "/get/"
-  },
-  {
-    "match": "prefix",
-    "path": "/univention/set/",
-    "rewrite": "/set/"
-  },
-  {
-    "match": "prefix",
-    "path": "/univention/command/",
-    "rewrite": "/command/"
-  },
-  {
-    "match": "prefix",
-    "path": "/univention/upload/",
-    "rewrite": "/upload/"
-  },
-  {
-    "match": "prefix",
-    "path": "/univention/logout/",
-    "rewrite": "/logout/"
-  }
-]
-</pre>
-</td>
-			<td>The paths configuration. The default only grabs what is known to be handled by the UMC server.</td>
-		</tr>
-		<tr>
 			<td>memcached</td>
 			<td>object</td>
 			<td><pre lang="json">
@@ -438,7 +303,7 @@ true
     "password": "",
     "username": "selfservice"
   },
-  "bundled": true,
+  "bundled": false,
   "extraEnvVars": [
     {
       "name": "MEMCACHED_CACHE_SIZE",
@@ -485,7 +350,7 @@ true
 			<td>memcached.bundled</td>
 			<td>bool</td>
 			<td><pre lang="json">
-true
+false
 </pre>
 </td>
 			<td>Set to `true` if you want Memcached to be installed as well.  When setting this to `false` be sure to also adjust `memcached.auth.password` below, and the connection settings in the stack-data chart: `stackDataContext.umcMemcachedHostname` and `stackDataContext.umcMemcachedUsername`</td>
@@ -573,7 +438,7 @@ true
     "postgresPassword": "",
     "username": "selfservice"
   },
-  "bundled": true,
+  "bundled": false,
   "connection": {
     "host": null,
     "port": null
@@ -587,7 +452,7 @@ true
 			<td>postgresql.bundled</td>
 			<td>bool</td>
 			<td><pre lang="json">
-true
+false
 </pre>
 </td>
 			<td>Set to `true` if you want PostgreSQL to be installed as well.</td>
@@ -803,24 +668,6 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>service.sessionAffinity.enabled</td>
-			<td>bool</td>
-			<td><pre lang="json">
-false
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>service.sessionAffinity.timeoutSeconds</td>
-			<td>int</td>
-			<td><pre lang="json">
-10800
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
 			<td>service.type</td>
 			<td>string</td>
 			<td><pre lang="json">
@@ -847,10 +694,28 @@ false
   "caCertFile": "/var/secrets/ca_cert",
   "certPem": null,
   "certPemFile": "/var/secrets/cert_pem",
+  "ldapCredentialSecret": {
+    "ldapPasswordKey": "ldap.secret",
+    "machinePasswordKey": "machine.secret",
+    "name": ""
+  },
   "ldapSecretFile": "/var/secrets/ldap_secret",
   "machineSecretFile": "/var/secrets/machine_secret",
+  "memcachedCredentialSecret": {
+    "key": "password",
+    "name": ""
+  },
+  "postgresqlCredentialSecret": {
+    "key": "password",
+    "name": ""
+  },
   "privateKey": null,
   "privateKeyFile": "/var/secrets/private_key",
+  "secretMountPath": "/var/secrets",
+  "smtpCredentialSecret": {
+    "key": "password",
+    "name": ""
+  },
   "smtpSecretFile": "/var/secrets/smtp_password"
 }
 </pre>
@@ -894,6 +759,19 @@ null
 			<td>Path to file with the certificate (.pem).</td>
 		</tr>
 		<tr>
+			<td>umcServer.ldapCredentialSecret</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "ldapPasswordKey": "ldap.secret",
+  "machinePasswordKey": "machine.secret",
+  "name": ""
+}
+</pre>
+</td>
+			<td>Optional reference to a different secret for credentials</td>
+		</tr>
+		<tr>
 			<td>umcServer.ldapSecretFile</td>
 			<td>string</td>
 			<td><pre lang="json">
@@ -928,6 +806,15 @@ null
 </pre>
 </td>
 			<td>Path to file with the certificate's private key (.key).</td>
+		</tr>
+		<tr>
+			<td>umcServer.secretMountPath</td>
+			<td>string</td>
+			<td><pre lang="json">
+"/var/secrets"
+</pre>
+</td>
+			<td>Path to mount the secrets to.</td>
 		</tr>
 		<tr>
 			<td>umcServer.smtpSecretFile</td>

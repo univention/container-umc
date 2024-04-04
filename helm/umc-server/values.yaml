@@ -21,8 +21,13 @@ securityContext: {}
 tolerations: []
 
 global:
-  configMapUcrDefaults: "stack-data-ums-ucr"
-  configMapUcr: "stack-data-swp-ucr"
+  # -- Indicates wether this chart is part of a Nubus deployment.
+  nubusDeployment: false
+  # -- ConfigMap name to read default UCR values from.
+  configMapUcrDefaults: null
+  # -- ConfigMap name to read UCR values from.
+  configMapUcr: null
+  # -- ConfigMap name to read forced UCR values from.
   configMapUcrForced: null
   # -- Credentials to fetch images from private registry.
   # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
@@ -55,11 +60,27 @@ umcServer:
   privateKeyFile: "/var/secrets/private_key"
   # -- Path to file with SMTP password.
   smtpSecretFile: "/var/secrets/smtp_password"
+  # -- Path to mount the secrets to.
+  secretMountPath: "/var/secrets"
+  # -- Optional reference to a different secret for credentials
+  ldapCredentialSecret:
+    name: ""
+    ldapPasswordKey: "ldap.secret"
+    machinePasswordKey: "machine.secret"
+  smtpCredentialSecret:
+    name: ""
+    key: "password"
+  postgresqlCredentialSecret:
+    name: ""
+    key: "password"
+  memcachedCredentialSecret:
+    name: ""
+    key: "password"
 
 ## Kubernetes ingress
 ingress:
   # -- Set this to `true` in order to enable the installation on Ingress related objects.
-  enabled: true
+  enabled: false
   ingressClassName: "nginx"
   annotations:
     nginx.ingress.kubernetes.io/configuration-snippet: |
@@ -90,50 +111,6 @@ ingress:
     enabled: true
     secretName: ""
 
-
-## Istio support
-istio:
-  # -- Set this to `true` in order to enable the installation on Istio related objects.
-  enabled: false
-  # -- The hostname. This parameter has to be supplied. Example `portal.example`.
-  host: null
-  virtualService:
-    enabled: true
-    annotations: {}
-    # -- The paths configuration.
-    # The default only grabs what is known to be handled by the UMC server.
-    paths:
-      - match: "prefix"
-        path: "/univention/auth/"
-        rewrite: "/auth/"
-      - match: "prefix"
-        path: "/univention/saml/"
-        rewrite: "/saml/"
-      - match: "prefix"
-        path: "/univention/get/"
-        rewrite: "/get/"
-      - match: "prefix"
-        path: "/univention/set/"
-        rewrite: "/set/"
-      - match: "prefix"
-        path: "/univention/command/"
-        rewrite: "/command/"
-      - match: "prefix"
-        path: "/univention/upload/"
-        rewrite: "/upload/"
-      - match: "prefix"
-        path: "/univention/logout/"
-        rewrite: "/logout/"
-  gateway:
-    enabled: false
-    annotations:
-    selectorIstio: "ingressgateway"
-    externalGatewayName: "swp-istio-gateway"
-    tls:
-      enabled: true
-      httpsRedirect: true
-      secretName: ""
-
 # -- Credentials to fetch images from private registry.
 # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 #
@@ -145,7 +122,7 @@ imagePullSecrets: []
 image:
   registry: "gitregistry.knut.univention.de"
   repository: "univention/customers/dataport/upx/container-umc/umc-server"
-  imagePullPolicy: "Always"
+  imagePullPolicy: "IfNotPresent"
   tag: "latest"
   ## Define image sha256 as an alternative to `tag`
   # sha256:
@@ -189,9 +166,6 @@ service:
       port: 80
       protocol: "TCP"
 
-  sessionAffinity:
-    enabled: false
-    timeoutSeconds: 10800
 
 # serviceAccount:
 #   # Specifies whether a service account should be created
@@ -216,7 +190,7 @@ memcached:
   # When setting this to `false` be sure to also adjust `memcached.auth.password` below,
   # and the connection settings in the stack-data chart:
   # `stackDataContext.umcMemcachedHostname` and `stackDataContext.umcMemcachedUsername`
-  bundled: true
+  bundled: false
   auth:
     # -- This parameter is only used by the bundled memcached.
     enabled: true
@@ -240,7 +214,7 @@ memcached:
 # https://github.com/bitnami/charts/tree/main/bitnami/postgresql
 postgresql:
   # -- Set to `true` if you want PostgreSQL to be installed as well.
-  bundled: true
+  bundled: false
   # -- Connection parameters. These are required if you use an external database.
   connection:
     host:

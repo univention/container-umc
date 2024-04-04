@@ -62,13 +62,23 @@ spec:
             - name: "SELF_SERVICE_DB_SECRET"
               valueFrom:
                 secretKeyRef:
+                  {{- if .Values.umcServer.postgresqlCredentialSecret.name }}
+                  name: {{ printf "%s-volume" .Values.umcServer.postgresqlCredentialSecret.name }}
+                  key: {{ .Values.umcServer.postgresqlCredentialSecret.key }}
+                  {{- else }}
                   name: {{ include "common.names.fullname" . }}
                   key: "db_password"
+                  {{- end }}
             - name: "SELF_SERVICE_MEMCACHED_SECRET"
               valueFrom:
                 secretKeyRef:
+                  {{- if .Values.umcServer.memcachedCredentialSecret.name }}
+                  name: {{ printf "%s-volume" .Values.umcServer.memcachedCredentialSecret.name | quote }}
+                  key: {{ .Values.umcServer.memcachedCredentialSecret.key | quote }}
+                  {{- else }}
                   name: {{ include "common.names.fullname" . }}
                   key: "memcached_password"
+                  {{- end }}
           envFrom:
             - configMapRef:
                 name: {{ include "common.names.fullname" . }}
@@ -81,20 +91,48 @@ spec:
               mountPath: "/etc/univention/base-defaults.conf"
               subPath: "base.conf"
             {{- end }}
-            {{- if (and .Values.mountUcr .Values.global .Values.global.configMapUcr) }}
+            {{- if (include "udm-rest-api.configMapUcr" .) }}
             - name: "config-map-ucr"
               mountPath: "/etc/univention/base.conf"
               subPath: "base.conf"
             {{- end }}
-            {{- if (and .Values.mountUcr .Values.global .Values.global.configMapUcrForced) }}
+            {{- if (include "udm-rest-api.configMapUcrForced" .) }}
             - name: "config-map-ucr-forced"
               mountPath: "/etc/univention/base-forced.conf"
               subPath: "base.conf"
             {{- end }}
             {{- if .Values.mountSecrets }}
             - name: "secrets"
-              # TODO: conflict with /run/secrets, should use a namespace
-              mountPath: "/var/secrets"
+              mountPath: "{{ .Values.umcServer.secretMountPath }}"
+            {{- else }}
+            {{- if .Values.umcServer.ldapCredentialSecret.name }}
+            - name: {{ printf "%s-volume" .Values.umcServer.ldapCredentialSecret.name | quote }}
+              mountPath: "{{ .Values.umcServer.secretMountPath }}/ldap_secret"
+              subPath: {{ .Values.umcServer.ldapCredentialSecret.ldapPasswordKey | quote }}
+              readOnly: true
+            - name: {{ printf "%s-volume" .Values.umcServer.ldapCredentialSecret.name | quote }}
+              mountPath: "{{ .Values.umcServer.secretMountPath }}/machine_secret"
+              subPath: {{ .Values.umcServer.ldapCredentialSecret.machinePasswordKey | quote }}
+              readOnly: true
+            {{- end }}
+            {{- if .Values.umcServer.smtpCredentialSecret.name }}
+            - name: {{ printf "%s-volume" .Values.umcServer.smtpCredentialSecret.name | quote }}
+              mountPath: "{{ .Values.umcServer.secretMountPath }}/smtp_secret"
+              subPath: {{ .Values.umcServer.smtpCredentialSecret.key | quote }}
+              readOnly: true
+            {{- end }}
+            {{- if .Values.umcServer.postgresqlCredentialSecret.name }}
+            - name: {{ printf "%s-volume" .Values.umcServer.postgresqlCredentialSecret.name | quote }}
+              mountPath: "{{ .Values.umcServer.secretMountPath }}/db_password"
+              subPath: {{ .Values.umcServer.postgresqlCredentialSecret.key | quote }}
+              readOnly: true
+            {{- end }}
+            {{- if .Values.umcServer.memcachedCredentialSecret.name }}
+            - name: {{ printf "%s-volume" .Values.umcServer.memcachedCredentialSecret.name | quote }}
+              mountPath: "{{ .Values.umcServer.secretMountPath }}/memcached_password"
+              subPath: {{ .Values.umcServer.memcachedCredentialSecret.key | quote }}
+              readOnly: true
+            {{- end }}
             {{- end }}
           ports:
             {{- range $key, $value := .Values.service.ports }}
@@ -131,20 +169,41 @@ spec:
         {{- if .Values.mountUcr }}
         - name: "config-map-ucr-defaults"
           configMap:
-            name: {{ required "Please provide the name of the UCR ConfigMap in .Values.global.configMapUcrDefaults!" .Values.global.configMapUcrDefaults | quote }}
+            name: {{ include "udm-rest-api.configMapUcrDefaults" . | quote }}
         {{- end }}
-        {{- if (and .Values.mountUcr .Values.global .Values.global.configMapUcr) }}
+        {{- if (include "udm-rest-api.configMapUcr" .) }}
         - name: "config-map-ucr"
           configMap:
-            name: "{{ .Values.global.configMapUcr }}"
+            name: {{ include "udm-rest-api.configMapUcr" . | quote }}
         {{- end }}
-        {{- if (and .Values.mountUcr .Values.global .Values.global.configMapUcrForced) }}
+        {{- if (include "udm-rest-api.configMapUcrForced" .) }}
         - name: "config-map-ucr-forced"
           configMap:
-            name: "{{ .Values.global.configMapUcrForced }}"
+            name: {{ include "udm-rest-api.configMapUcrForced" . | quote }}
         {{- end }}
         {{- if .Values.mountSecrets }}
         - name: "secrets"
           secret:
             secretName: {{ include "common.names.fullname" . | quote }}
+        {{- else }}
+        {{- if .Values.umcServer.ldapCredentialSecret.name }}
+        - name: {{ printf "%s-volume" .Values.umcServer.ldapCredentialSecret.name | quote }}
+          secret:
+            secretName: {{ .Values.umcServer.ldapCredentialSecret.name | quote }}
+        {{- end }}
+        {{- if .Values.umcServer.smtpCredentialSecret.name }}
+        - name: {{ printf "%s-volume" .Values.umcServer.smtpCredentialSecret.name | quote }}
+          secret:
+            secretName: {{ .Values.umcServer.smtpCredentialSecret.name | quote }}
+        {{- end }}
+        {{- if .Values.umcServer.postgresqlCredentialSecret.name }}
+        - name: {{ printf "%s-volume" .Values.umcServer.postgresqlCredentialSecret.name | quote }}
+          secret:
+            secretName: {{ .Values.umcServer.postgresqlCredentialSecret.name | quote }}
+        {{- end }}
+        {{- if .Values.umcServer.memcachedCredentialSecret.name }}
+        - name: {{ printf "%s-volume" .Values.umcServer.memcachedCredentialSecret.name | quote }}
+          secret:
+            secretName: {{ .Values.umcServer.memcachedCredentialSecret.name | quote }}
+        {{- end }}
         {{- end }}

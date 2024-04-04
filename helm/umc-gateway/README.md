@@ -85,19 +85,19 @@ helm uninstall umc-gateway
 			<td>global.configMapUcr</td>
 			<td>string</td>
 			<td><pre lang="json">
-"stack-data-swp-ucr"
+null
 </pre>
 </td>
-			<td></td>
+			<td>ConfigMap name to read UCR values from.</td>
 		</tr>
 		<tr>
 			<td>global.configMapUcrDefaults</td>
 			<td>string</td>
 			<td><pre lang="json">
-"stack-data-ums-ucr"
+null
 </pre>
 </td>
-			<td></td>
+			<td>ConfigMap name to read default UCR values from.</td>
 		</tr>
 		<tr>
 			<td>global.configMapUcrForced</td>
@@ -106,13 +106,22 @@ helm uninstall umc-gateway
 null
 </pre>
 </td>
-			<td></td>
+			<td>ConfigMap name to read forced UCR values from.</td>
+		</tr>
+		<tr>
+			<td>global.nubusDeployment</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td>Indicates wether this chart is part of a Nubus deployment.</td>
 		</tr>
 		<tr>
 			<td>image.imagePullPolicy</td>
 			<td>string</td>
 			<td><pre lang="json">
-"Always"
+"IfNotPresent"
 </pre>
 </td>
 			<td></td>
@@ -157,7 +166,7 @@ null
 			<td>ingress.enabled</td>
 			<td>bool</td>
 			<td><pre lang="json">
-true
+false
 </pre>
 </td>
 			<td>Set this to `true` in order to enable the installation on Ingress related objects.</td>
@@ -239,155 +248,6 @@ true
 </pre>
 </td>
 			<td></td>
-		</tr>
-		<tr>
-			<td>istio.enabled</td>
-			<td>bool</td>
-			<td><pre lang="json">
-false
-</pre>
-</td>
-			<td>Set this to `true` in order to enable the installation on Istio related objects.</td>
-		</tr>
-		<tr>
-			<td>istio.gateway.annotations</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>istio.gateway.enabled</td>
-			<td>bool</td>
-			<td><pre lang="json">
-false
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>istio.gateway.externalGatewayName</td>
-			<td>string</td>
-			<td><pre lang="json">
-"swp-istio-gateway"
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>istio.gateway.selectorIstio</td>
-			<td>string</td>
-			<td><pre lang="json">
-"ingressgateway"
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>istio.gateway.tls.enabled</td>
-			<td>bool</td>
-			<td><pre lang="json">
-true
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>istio.gateway.tls.httpsRedirect</td>
-			<td>bool</td>
-			<td><pre lang="json">
-true
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>istio.gateway.tls.secretName</td>
-			<td>string</td>
-			<td><pre lang="json">
-""
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>istio.host</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>The hostname. This parameter has to be supplied. Example `portal.example`.</td>
-		</tr>
-		<tr>
-			<td>istio.virtualService.annotations</td>
-			<td>object</td>
-			<td><pre lang="json">
-{}
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>istio.virtualService.enabled</td>
-			<td>bool</td>
-			<td><pre lang="json">
-true
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>istio.virtualService.paths</td>
-			<td>list</td>
-			<td><pre lang="json">
-[
-  {
-    "match": "prefix",
-    "path": "/univention/js/",
-    "rewrite": "/univention/js/"
-  },
-  {
-    "match": "prefix",
-    "path": "/univention/languages.json",
-    "rewrite": "/univention/languages.json"
-  },
-  {
-    "match": "prefix",
-    "path": "/univention/login/",
-    "rewrite": "/univention/login/"
-  },
-  {
-    "match": "prefix",
-    "path": "/univention/management/",
-    "rewrite": "/univention/management/"
-  },
-  {
-    "match": "prefix",
-    "path": "/univention/self-service/",
-    "rewrite": "/univention/self-service/"
-  },
-  {
-    "match": "prefix",
-    "path": "/univention/meta.json",
-    "rewrite": "/univention/meta.json"
-  },
-  {
-    "match": "prefix",
-    "path": "/univention/theme.css",
-    "rewrite": "/univention/theme.css"
-  },
-  {
-    "match": "prefix",
-    "path": "/univention/themes/",
-    "rewrite": "/univention/themes/"
-  }
-]
-</pre>
-</td>
-			<td>The paths configuration. The default only grabs what is known to be handled by the UMC gateway.</td>
 		</tr>
 		<tr>
 			<td>mountUcr</td>

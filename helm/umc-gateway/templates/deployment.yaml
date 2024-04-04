@@ -69,12 +69,12 @@ spec:
               mountPath: "/etc/univention/base-defaults.conf"
               subPath: "base.conf"
             {{- end }}
-            {{- if (and .Values.mountUcr .Values.global .Values.global.configMapUcr) }}
+            {{- if (include "udm-rest-api.configMapUcr" .) }}
             - name: "config-map-ucr"
               mountPath: "/etc/univention/base.conf"
               subPath: "base.conf"
             {{- end }}
-            {{- if (and .Values.mountUcr .Values.global .Values.global.configMapUcrForced) }}
+            {{- if (include "udm-rest-api.configMapUcrForced" .) }}
             - name: "config-map-ucr-forced"
               mountPath: "/etc/univention/base-forced.conf"
               subPath: "base.conf"
@@ -114,15 +114,15 @@ spec:
         {{- if .Values.mountUcr }}
         - name: "config-map-ucr-defaults"
           configMap:
-            name: {{ required "Please provide the name of the UCR ConfigMap in .Values.global.configMapUcrDefaults!" .Values.global.configMapUcrDefaults | quote }}
+            name: {{ include "udm-rest-api.configMapUcrDefaults" . | quote }}
         {{- end }}
-        {{- if (and .Values.mountUcr .Values.global .Values.global.configMapUcr) }}
+        {{- if (include "udm-rest-api.configMapUcr" .) }}
         - name: "config-map-ucr"
           configMap:
-            name: "{{ .Values.global.configMapUcr }}"
+            name: {{ include "udm-rest-api.configMapUcr" . | quote }}
         {{- end }}
-        {{- if (and .Values.mountUcr .Values.global .Values.global.configMapUcrForced) }}
+        {{- if (include "udm-rest-api.configMapUcrForced" .) }}
         - name: "config-map-ucr-forced"
           configMap:
-            name: "{{ .Values.global.configMapUcrForced }}"
+            name: {{ include "udm-rest-api.configMapUcrForced" . | quote }}
         {{- end }}
