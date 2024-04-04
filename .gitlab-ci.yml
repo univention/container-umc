@@ -64,6 +64,8 @@ check-debian-updates:
 test-image-umc-server:
   stage: "test"
   extends: .dind
+  tags:
+    - "dm-s"
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: "never"
