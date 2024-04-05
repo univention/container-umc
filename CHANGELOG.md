@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.6](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.11.5...v0.11.6) (2024-04-05)
+
+
+### Bug Fixes
+
+* allow unauthenticated connection to memcached ([85a0997](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/85a0997f5125fb3aee75d0af7a8b07929d4ee5bb))
+
 ## [0.11.5](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.11.4...v0.11.5) (2024-04-02)
 
 
