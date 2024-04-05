@@ -2,6 +2,7 @@
 SPDX-FileCopyrightText: 2024 Univention GmbH
 SPDX-License-Identifier: AGPL-3.0-only
 */}}
+
 {{- /*
 These template definitions relate to the use of this Helm chart as a sub-chart of the Nubus Umbrella Chart.
 Templates defined in other Helm sub-charts are imported to be used to configure this chart.
@@ -13,7 +14,7 @@ If the value .Values.global.nubusDeployment equates to true, the defined templat
 {{- $serviceName := include "nubusTemplates.ldap.serviceName" . | default (printf "%s-ldap-server" .Release.Name) -}}
 {{- printf "%s://%s" $protocol $serviceName -}}
 {{- else -}}
-{{ required "Either .Values.udmRestApi.ldap.uri or .Values.global.ldap.uri must be set" (coalesce .Values.udmRestApi.ldap.uri .Values.global.ldap.uri) }}
+{{- required "Either .Values.udmRestApi.ldap.uri or .Values.global.ldap.uri must be set" (coalesce .Values.udmRestApi.ldap.uri .Values.global.ldap.uri) -}}
 {{- end -}}
 {{- end -}}
 
@@ -21,16 +22,59 @@ If the value .Values.global.nubusDeployment equates to true, the defined templat
 These template definitions are only used in this chart and do not relate to templates defined elsewhere.
 */}}
 
-{{- define "udm-rest-api.configMapUcrDefaults" -}}
+{{- define "umc-server.configMapUcrDefaults" -}}
 {{- $nubusDefaultConfigMapUcrDefaults := printf "%s-stack-data-ums-ucr" .Release.Name -}}
 {{- coalesce .Values.configMapUcrDefaults .Values.global.configMapUcrDefaults $nubusDefaultConfigMapUcrDefaults (.Values.global.configMapUcrDefaults | required ".Values.global.configMapUcrDefaults must be defined.") -}}
 {{- end -}}
 
-{{- define "udm-rest-api.configMapUcr" -}}
+{{- define "umc-server.configMapUcr" -}}
 {{- $nubusDefaultConfigMapUcr := printf "%s-stack-data-ums-ucr" .Release.Name -}}
 {{- coalesce .Values.configMapUcr .Values.global.configMapUcr $nubusDefaultConfigMapUcr -}}
 {{- end -}}
 
-{{- define "udm-rest-api.configMapUcrForced" -}}
+{{- define "umc-server.configMapUcrForced" -}}
 {{- coalesce .Values.configMapUcrForced .Values.global.configMapUcrForced "null" -}}
+{{- end -}}
+
+{{- define "umc-server.secretTemplate" -}}
+{{- if (index . 2).Release.Name -}}
+{{- $secretName := printf "%s-%s-credentials" (index . 2).Release.Name (index . 0) -}}
+{{- if (index . 1).name -}}
+{{- (index . 1).name -}}
+{{- else if (index . 2).Values.global.nubusDeployment -}}
+{{- $secretName -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "umc-server.ldapCredentialSecret.name" -}}
+{{- include "umc-server.secretTemplate" (list "umc-server-ldap" .Values.umcServer.ldapCredentialSecret .) -}}
+{{- end -}}
+
+{{- define "umc-server.smtpCredentialSecret.name" -}}
+{{- include "umc-server.secretTemplate" (list "umc-server-smtp" .Values.umcServer.smtpCredentialSecret .) -}}
+{{- end -}}
+
+{{- define "umc-server.postgresqlCredentialSecret.name" -}}
+{{- include "umc-server.secretTemplate" (list "umc-server-postgresql" .Values.umcServer.postgresqlCredentialSecret .) -}}
+{{- end -}}
+
+{{- define "umc-server.postgresqlCredentialSecret.key" -}}
+{{- include "umc-server.secretTemplate" (list "umc-server-postgresql" .Values.umcServer.postgresqlCredentialSecret .) -}}
+{{- end -}}
+
+{{- define "umc-server.memcachedCredentialSecret.name" -}}
+{{- if and .Values.global.nubusDeployment .Values.memcached.bundled .Values.memcached.auth .Values.memcached.auth.enabled -}}
+{{- printf "%s-memcached" (include "common.names.fullname" .) -}}
+{{- else -}}
+{{- include "umc-server.secretTemplate" (list "umc-server-memcached" .Values.umcServer.memcachedCredentialSecret .) -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "umc-server.memcachedCredentialSecret.key" -}}
+{{- if and .Values.global.nubusDeployment .Values.memcached.bundled .Values.memcached.auth .Values.memcached.auth.enabled -}}
+memcached-password
+{{- else -}}
+{{- include "umc-server.secretTemplate" (list "umc-server-memcached" .Values.umcServer.memcachedCredentialSecret .) -}}
+{{- end -}}
 {{- end -}}

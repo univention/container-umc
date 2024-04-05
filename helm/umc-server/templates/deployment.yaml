@@ -1,42 +1,36 @@
----
-
 # SPDX-License-Identifier: AGPL-3.0-only
-# SPDX-FileCopyrightText: 2023 Univention GmbH
+# SPDX-FileCopyrightText: 2024 Univention GmbH
 
+---
 apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
 kind: Deployment
 metadata:
   name: {{ include "common.names.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
   labels:
     {{- include "common.labels.standard" . | nindent 4 }}
+    {{- if .Values.additionalLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.additionalLabels "context" . ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.additionalAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.additionalAnnotations "context" . ) | nindent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.replicaCount }}
+  strategy: {{- include "common.tplvalues.render" (dict "value" .Values.updateStrategy "context" .) | nindent 4 }}
   selector:
     matchLabels:
       {{- include "common.labels.matchLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
-        checksum/config: {{ include (print .Template.BasePath "/configmap.yaml") . | sha256sum | quote }}
-        checksum/secret: {{ include (print .Template.BasePath "/secret.yaml") . | sha256sum | quote }}
-      {{- with .Values.podAnnotations }}
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+        checksum/configmap: {{ include (print .Template.BasePath "/configmap.yaml") . | sha256sum }}
+        {{- if .Values.podAnnotations }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.podAnnotations "context" .) | nindent 8 }}
+        {{- end }}
       labels:
         {{- include "common.labels.standard" . | nindent 8 }}
     spec:
-      {{- with .Values.affinity }}
-      affinity:
-        {{ toYaml . | nindent 8 | trim }}
-      {{- end }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{ toYaml . | nindent 8 | trim }}
-      {{- end }}
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{ toYaml . | nindent 8 | trim }}
-      {{- end }}
       {{- if or .Values.imagePullSecrets .Values.global.imagePullSecrets  }}
       imagePullSecrets:
         {{- range .Values.global.imagePullSecrets }}
@@ -46,14 +40,32 @@ spec:
         - name: "{{ . }}"
         {{- end }}
       {{- end }}
-      {{- with .Values.podSecurityContext }}
-      securityContext:
-        {{ toYaml . | nindent 8 | trim }}
+      {{- if .Values.affinity }}
+      affinity: {{- include "common.tplvalues.render" (dict "value" .Values.affinity "context" .) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.tolerations }}
+      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.tolerations "context" .) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.topologySpreadConstraints }}
+      topologySpreadConstraints: {{- include "common.tplvalues.render" (dict "value" .Values.topologySpreadConstraints "context" .) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.nodeSelector "context" .) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.podSecurityContext.enabled }}
+      securityContext: {{- omit .Values.podSecurityContext "enabled" | toYaml | nindent 8 }}
+      {{- end }}
+      {{- if .Values.serviceAccount.create }}
+      serviceAccountName: {{ include "common.names.fullname" . }}
+      {{- end }}
+      {{- if .Values.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
       {{- end }}
       containers:
-        - name: {{ include "common.names.name" . }}
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
+        - name: "umc-server"
+          {{- if .Values.containerSecurityContext.enabled }}
+          securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+          {{- end }}
           image: {{ include "common.images.image" ( dict "imageRoot" .Values.image "global" .Values.global ) | quote }}
           {{- with .Values.image }}
           imagePullPolicy: {{ .pullPolicy }}
@@ -62,9 +74,9 @@ spec:
             - name: "SELF_SERVICE_DB_SECRET"
               valueFrom:
                 secretKeyRef:
-                  {{- if .Values.umcServer.postgresqlCredentialSecret.name }}
-                  name: {{ printf "%s-volume" .Values.umcServer.postgresqlCredentialSecret.name }}
-                  key: {{ .Values.umcServer.postgresqlCredentialSecret.key }}
+                  {{- if (include "umc-server.postgresqlCredentialSecret.name" . ) }}
+                  name: {{ printf "%s-volume" (include "umc-server.postgresqlCredentialSecret.name" . ) }}
+                  key: {{ (include "umc-server.postgresqlCredentialSecret.key" . ) | quote }}
                   {{- else }}
                   name: {{ include "common.names.fullname" . }}
                   key: "db_password"
@@ -72,9 +84,9 @@ spec:
             - name: "SELF_SERVICE_MEMCACHED_SECRET"
               valueFrom:
                 secretKeyRef:
-                  {{- if .Values.umcServer.memcachedCredentialSecret.name }}
-                  name: {{ printf "%s-volume" .Values.umcServer.memcachedCredentialSecret.name | quote }}
-                  key: {{ .Values.umcServer.memcachedCredentialSecret.key | quote }}
+                  {{- if (include "umc-server.memcachedCredentialSecret.name" . ) }}
+                  name: {{ printf "%s-volume" (include "umc-server.memcachedCredentialSecret.name" . ) | quote }}
+                  key: {{ (include "umc-server.memcachedCredentialSecret.key" . ) | quote }}
                   {{- else }}
                   name: {{ include "common.names.fullname" . }}
                   key: "memcached_password"
@@ -86,49 +98,49 @@ spec:
             {{- if .Values.extraVolumeMounts }}
             {{ toYaml .Values.extraVolumeMounts | nindent 12 }}
             {{- end }}
-            {{- if .Values.mountUcr }}
+            {{- if or .Values.mountUcr .Values.global.nubusDeployment }}
             - name: "config-map-ucr-defaults"
               mountPath: "/etc/univention/base-defaults.conf"
               subPath: "base.conf"
             {{- end }}
-            {{- if (include "udm-rest-api.configMapUcr" .) }}
+            {{- if (include "umc-server.configMapUcr" .) }}
             - name: "config-map-ucr"
               mountPath: "/etc/univention/base.conf"
               subPath: "base.conf"
             {{- end }}
-            {{- if (include "udm-rest-api.configMapUcrForced" .) }}
+            {{- if (include "umc-server.configMapUcrForced" .) }}
             - name: "config-map-ucr-forced"
               mountPath: "/etc/univention/base-forced.conf"
               subPath: "base.conf"
             {{- end }}
-            {{- if .Values.mountSecrets }}
+            {{- if and .Values.mountSecrets (not .Values.global.nubusDeployment) }}
             - name: "secrets"
               mountPath: "{{ .Values.umcServer.secretMountPath }}"
             {{- else }}
-            {{- if .Values.umcServer.ldapCredentialSecret.name }}
-            - name: {{ printf "%s-volume" .Values.umcServer.ldapCredentialSecret.name | quote }}
+            {{- if (include "umc-server.ldapCredentialSecret.name" . ) }}
+            - name: {{ printf "%s-volume" (include "umc-server.ldapCredentialSecret.name" . ) | quote }}
               mountPath: "{{ .Values.umcServer.secretMountPath }}/ldap_secret"
               subPath: {{ .Values.umcServer.ldapCredentialSecret.ldapPasswordKey | quote }}
               readOnly: true
-            - name: {{ printf "%s-volume" .Values.umcServer.ldapCredentialSecret.name | quote }}
+            - name: {{ printf "%s-volume" (include "umc-server.ldapCredentialSecret.name" . ) | quote }}
               mountPath: "{{ .Values.umcServer.secretMountPath }}/machine_secret"
               subPath: {{ .Values.umcServer.ldapCredentialSecret.machinePasswordKey | quote }}
               readOnly: true
             {{- end }}
-            {{- if .Values.umcServer.smtpCredentialSecret.name }}
-            - name: {{ printf "%s-volume" .Values.umcServer.smtpCredentialSecret.name | quote }}
+            {{- if (include "umc-server.smtpCredentialSecret.name" . ) }}
+            - name: {{ printf "%s-volume" (include "umc-server.smtpCredentialSecret.name" . ) | quote }}
               mountPath: "{{ .Values.umcServer.secretMountPath }}/smtp_secret"
               subPath: {{ .Values.umcServer.smtpCredentialSecret.key | quote }}
               readOnly: true
             {{- end }}
-            {{- if .Values.umcServer.postgresqlCredentialSecret.name }}
-            - name: {{ printf "%s-volume" .Values.umcServer.postgresqlCredentialSecret.name | quote }}
+            {{- if (include "umc-server.postgresqlCredentialSecret.name" . ) }}
+            - name: {{ printf "%s-volume" (include "umc-server.postgresqlCredentialSecret.name" . ) | quote }}
               mountPath: "{{ .Values.umcServer.secretMountPath }}/db_password"
               subPath: {{ .Values.umcServer.postgresqlCredentialSecret.key | quote }}
               readOnly: true
             {{- end }}
-            {{- if .Values.umcServer.memcachedCredentialSecret.name }}
-            - name: {{ printf "%s-volume" .Values.umcServer.memcachedCredentialSecret.name | quote }}
+            {{- if (include "umc-server.memcachedCredentialSecret.name" . ) }}
+            - name: {{ printf "%s-volume" (include "umc-server.memcachedCredentialSecret.name" . ) | quote }}
               mountPath: "{{ .Values.umcServer.secretMountPath }}/memcached_password"
               subPath: {{ .Values.umcServer.memcachedCredentialSecret.key | quote }}
               readOnly: true
@@ -166,44 +178,44 @@ spec:
         {{- if .Values.extraVolumes }}
         {{ toYaml .Values.extraVolumes | nindent 8 }}
         {{- end }}
-        {{- if .Values.mountUcr }}
+        {{- if or .Values.mountUcr .Values.global.nubusDeployment }}
         - name: "config-map-ucr-defaults"
           configMap:
-            name: {{ include "udm-rest-api.configMapUcrDefaults" . | quote }}
+            name: {{ include "umc-server.configMapUcrDefaults" . | quote }}
         {{- end }}
-        {{- if (include "udm-rest-api.configMapUcr" .) }}
+        {{- if (include "umc-server.configMapUcr" .) }}
         - name: "config-map-ucr"
           configMap:
-            name: {{ include "udm-rest-api.configMapUcr" . | quote }}
+            name: {{ include "umc-server.configMapUcr" . | quote }}
         {{- end }}
-        {{- if (include "udm-rest-api.configMapUcrForced" .) }}
+        {{- if (include "umc-server.configMapUcrForced" .) }}
         - name: "config-map-ucr-forced"
           configMap:
-            name: {{ include "udm-rest-api.configMapUcrForced" . | quote }}
+            name: {{ include "umc-server.configMapUcrForced" . | quote }}
         {{- end }}
-        {{- if .Values.mountSecrets }}
+        {{- if and .Values.mountSecrets (not .Values.global.nubusDeployment) }}
         - name: "secrets"
           secret:
             secretName: {{ include "common.names.fullname" . | quote }}
         {{- else }}
-        {{- if .Values.umcServer.ldapCredentialSecret.name }}
-        - name: {{ printf "%s-volume" .Values.umcServer.ldapCredentialSecret.name | quote }}
+        {{- if (include "umc-server.ldapCredentialSecret.name" . ) }}
+        - name: {{ printf "%s-volume" (include "umc-server.ldapCredentialSecret.name" . ) | quote }}
           secret:
-            secretName: {{ .Values.umcServer.ldapCredentialSecret.name | quote }}
+            secretName: {{ (include "umc-server.ldapCredentialSecret.name" . ) | quote }}
         {{- end }}
-        {{- if .Values.umcServer.smtpCredentialSecret.name }}
-        - name: {{ printf "%s-volume" .Values.umcServer.smtpCredentialSecret.name | quote }}
+        {{- if (include "umc-server.smtpCredentialSecret.name" . ) }}
+        - name: {{ printf "%s-volume" (include "umc-server.smtpCredentialSecret.name" . ) | quote }}
           secret:
-            secretName: {{ .Values.umcServer.smtpCredentialSecret.name | quote }}
+            secretName: {{ (include "umc-server.smtpCredentialSecret.name" . ) | quote }}
         {{- end }}
-        {{- if .Values.umcServer.postgresqlCredentialSecret.name }}
-        - name: {{ printf "%s-volume" .Values.umcServer.postgresqlCredentialSecret.name | quote }}
+        {{- if (include "umc-server.postgresqlCredentialSecret.name" . ) }}
+        - name: {{ printf "%s-volume" (include "umc-server.postgresqlCredentialSecret.name" . ) | quote }}
           secret:
-            secretName: {{ .Values.umcServer.postgresqlCredentialSecret.name | quote }}
+            secretName: {{ (include "umc-server.postgresqlCredentialSecret.name" . ) | quote }}
         {{- end }}
-        {{- if .Values.umcServer.memcachedCredentialSecret.name }}
-        - name: {{ printf "%s-volume" .Values.umcServer.memcachedCredentialSecret.name | quote }}
+        {{- if (include "umc-server.memcachedCredentialSecret.name" . ) }}
+        - name: {{ printf "%s-volume" (include "umc-server.memcachedCredentialSecret.name" . ) | quote }}
           secret:
-            secretName: {{ .Values.umcServer.memcachedCredentialSecret.name | quote }}
+            secretName: {{ (include "umc-server.memcachedCredentialSecret.name" . ) | quote }}
         {{- end }}
         {{- end }}

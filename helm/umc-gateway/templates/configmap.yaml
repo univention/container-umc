@@ -7,7 +7,7 @@
 {{- define "umc-gateway.configMap" }}
 {{- with .top }}
 data:
-  UMC_HTML_TITLE: {{ .Values.umcGateway.umcHtmlTitle | default "Univention Management Console" | quote }}
+  UMC_HTML_TITLE: {{ .Values.umcGateway.umcHtmlTitle | default "Nubus Management Console" | quote }}
 {{- end }}
 {{- end }}
 ...
