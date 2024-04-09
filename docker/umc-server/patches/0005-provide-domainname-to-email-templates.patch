@@ -1,0 +1,33 @@
+From 87fe8474375f961142781b1419b3e399aaa68980 Mon Sep 17 00:00:00 2001
+From: Thomas Kintscher <thomas.kintscher.extern@univention.de>
+Date: Tue, 9 Apr 2024 16:38:59 +0200
+Subject: [PATCH 5/5] provide domainname to email templates
+
+The default email templates from the self-service package are not used
+by the openDesk project, instead openDesk brings its own template:
+- The default template does not mention on which domain a password-reset was triggered.
+- The tokens are only valid for a short time (48h), the default template does not mention how to generate a new token.
+- The default template links to the "/univention/selfservice" portal. After closing/finishing/discarding the password reset dialog, one remains stranded on the selfservice portal, which does not have an obvious option to login (it is hidden in the sidebar).
+
+This patch adds two additional placeholders to be used in email templates,
+which contain the domain from which the passwordreset originated.
+---
+ .../umc/python/passwordreset/sending/send_email.py              | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/management/univention-self-service/umc/python/passwordreset/sending/send_email.py b/management/univention-self-service/umc/python/passwordreset/sending/send_email.py
+index 5f1579c8f7..17ae1614ca 100644
+--- a/management/univention-self-service/umc/python/passwordreset/sending/send_email.py
++++ b/management/univention-self-service/umc/python/passwordreset/sending/send_email.py
+@@ -109,6 +109,8 @@ class SendEmail(UniventionSelfServiceTokenEmitter):
+         fqdn = ".".join([self.ucr["hostname"], self.ucr["domainname"]])
+         frontend_server = self.ucr.get("umc/self-service/passwordreset/email/webserver_address", fqdn)
+         links = {
++            'fqdn': fqdn,
++            'domainname': self.ucr["domainname"],
+             'link': f"https://{frontend_server}/univention/selfservice/#/selfservice/newpassword/",
+             'tokenlink': "https://{fqdn}/univention/selfservice/#/selfservice/newpassword/?token={token}&username={username}".format(fqdn=frontend_server, username=quote(self.data["username"]), token=quote(self.data["token"])),
+         }
+-- 
+2.39.3 (Apple Git-146)
+
