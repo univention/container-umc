@@ -206,6 +206,18 @@ null
 			<td>ConfigMap name to read forced UCR values from.</td>
 		</tr>
 		<tr>
+			<td>global.connections.postgresql</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "host": "",
+  "port": 5432
+}
+</pre>
+</td>
+			<td>Configuration for the PostgreSQL database</td>
+		</tr>
+		<tr>
 			<td>global.imagePullSecrets</td>
 			<td>list</td>
 			<td><pre lang="json">
@@ -384,11 +396,19 @@ true
 			<td><pre lang="json">
 {
   "auth": {
+    "credentialSecret": {
+      "key": "",
+      "name": ""
+    },
     "enabled": true,
     "password": "",
     "username": "selfservice"
   },
   "bundled": true,
+  "connection": {
+    "host": "",
+    "port": ""
+  },
   "extraEnvVars": [
     {
       "name": "MEMCACHED_CACHE_SIZE",
@@ -398,12 +418,23 @@ true
       "name": "MEMCACHED_EXTRA_FLAGS",
       "value": "--disable-evictions"
     }
-  ],
-  "nameOverride": "umc-server-memcached"
+  ]
 }
 </pre>
 </td>
 			<td>Memcached settings.  The bitnami helm chart does contain all details of what can be configured: https://github.com/bitnami/charts/tree/main/bitnami/memcached</td>
+		</tr>
+		<tr>
+			<td>memcached.auth.credentialSecret</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "key": "",
+  "name": ""
+}
+</pre>
+</td>
+			<td>Memcached password secret reference.</td>
 		</tr>
 		<tr>
 			<td>memcached.auth.enabled</td>
@@ -440,6 +471,36 @@ true
 </pre>
 </td>
 			<td>Set to `true` if you want Memcached to be installed as well.  When setting this to `false` be sure to also adjust `memcached.auth.password` below, and the connection settings in the stack-data chart: `stackDataContext.umcMemcachedHostname` and `stackDataContext.umcMemcachedUsername`</td>
+		</tr>
+		<tr>
+			<td>memcached.connection</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "host": "",
+  "port": ""
+}
+</pre>
+</td>
+			<td>Connection parameters. These are required if an external service should be used (bundled is set to `false`).</td>
+		</tr>
+		<tr>
+			<td>memcached.connection.host</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>Memcached host.</td>
+		</tr>
+		<tr>
+			<td>memcached.connection.port</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>Memcached port.</td>
 		</tr>
 		<tr>
 			<td>memcached.extraEnvVars</td>
@@ -537,6 +598,10 @@ false
 			<td><pre lang="json">
 {
   "auth": {
+    "credentialSecret": {
+      "key": "",
+      "name": ""
+    },
     "database": "selfservice",
     "password": "",
     "postgresPassword": "",
@@ -544,13 +609,61 @@ false
   },
   "bundled": false,
   "connection": {
-    "host": null,
-    "port": null
+    "host": "",
+    "port": ""
   }
 }
 </pre>
 </td>
 			<td>PostgreSQL settings.  The bitnami helm chart does contain all details of what can be configured: https://github.com/bitnami/charts/tree/main/bitnami/postgresql</td>
+		</tr>
+		<tr>
+			<td>postgresql.auth.credentialSecret</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "key": "",
+  "name": ""
+}
+</pre>
+</td>
+			<td>PostgreSQL password secret reference.</td>
+		</tr>
+		<tr>
+			<td>postgresql.auth.database</td>
+			<td>string</td>
+			<td><pre lang="json">
+"selfservice"
+</pre>
+</td>
+			<td>PostgreSQL database. If bundled is set to `true` this database will be created.</td>
+		</tr>
+		<tr>
+			<td>postgresql.auth.password</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>PostgreSQL user password if bundled is set to `true`.</td>
+		</tr>
+		<tr>
+			<td>postgresql.auth.postgresPassword</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>PostgreSQL admin password if bundled is set to `true`.</td>
+		</tr>
+		<tr>
+			<td>postgresql.auth.username</td>
+			<td>string</td>
+			<td><pre lang="json">
+"selfservice"
+</pre>
+</td>
+			<td>PostgreSQL user. If bundled is set to `true` this user will be created.</td>
 		</tr>
 		<tr>
 			<td>postgresql.bundled</td>
@@ -566,12 +679,30 @@ false
 			<td>object</td>
 			<td><pre lang="json">
 {
-  "host": null,
-  "port": null
+  "host": "",
+  "port": ""
 }
 </pre>
 </td>
-			<td>Connection parameters. These are required if you use an external database.</td>
+			<td>Connection parameters. These are required if an external service should be used (bundled is set to `false`).</td>
+		</tr>
+		<tr>
+			<td>postgresql.connection.host</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>PostgreSQL host.</td>
+		</tr>
+		<tr>
+			<td>postgresql.connection.port</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>PostgreSQL port.</td>
 		</tr>
 		<tr>
 			<td>probes.liveness.enabled</td>
@@ -850,14 +981,6 @@ true
   },
   "ldapSecretFile": "/var/secrets/ldap_secret",
   "machineSecretFile": "/var/secrets/machine_secret",
-  "memcachedCredentialSecret": {
-    "key": "password",
-    "name": ""
-  },
-  "postgresqlCredentialSecret": {
-    "key": "password",
-    "name": ""
-  },
   "privateKey": null,
   "privateKeyFile": "/var/secrets/private_key",
   "secretMountPath": "/var/secrets",
