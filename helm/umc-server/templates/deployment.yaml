@@ -136,13 +136,13 @@ spec:
             {{- if (include "umc-server.postgresql.auth.credentialSecret.name" . ) }}
             - name: {{ printf "%s-volume" (include "umc-server.postgresql.auth.credentialSecret.name" . ) | quote }}
               mountPath: "{{ .Values.umcServer.secretMountPath }}/db_password"
-              subPath: {{ .Values.umcServer.postgresql.auth.credentialSecret.key | quote }}
+              subPath: {{ .Values.postgresql.auth.credentialSecret.key | quote }}
               readOnly: true
             {{- end }}
             {{- if (include "umc-server.memcached.auth.credentialSecret.name" . ) }}
             - name: {{ printf "%s-volume" (include "umc-server.memcached.auth.credentialSecret.name" . ) | quote }}
               mountPath: "{{ .Values.umcServer.secretMountPath }}/memcached_password"
-              subPath: {{ .Values.umcServer.memcached.auth.credentialSecret.key | quote }}
+              subPath: {{ .Values.memcached.auth.credentialSecret.key | quote }}
               readOnly: true
             {{- end }}
             {{- end }}

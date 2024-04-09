@@ -4,53 +4,6 @@ SPDX-License-Identifier: AGPL-3.0-only
 */}}
 {{- /*
 These template definitions relate to the use of this Helm chart as a sub-chart of the Nubus Umbrella Chart.
-They are defined so other sub-charts can read information that otherwise would be solely known to this Helm chart.
-If compatible Helm charts set .Values.global.nubusDeployment to true, the templates defined here will be imported.
-*/}}
-{{- define "nubusTemplates.umcServer.postgresql.connection.host" -}}
-{{- if .Values.global.nubusDeployment -}}
-{{- coalesce .Values.postgresql.connections.host .Values.global.postgresql.connection.host | default (printf "%s-postgresql") .Release.Name -}}
-{{- end -}}
-{{- end -}}
-
-{{- define "nubusTemplates.umcServer.postgresql.connection.port" -}}
-{{- if .Values.global.nubusDeployment -}}
-{{- coalesce .Values.postgresql.connections.port .Values.global.postgresql.connection.port | default (printf "%s-postgresql") .Release.Name -}}
-{{- end -}}
-{{- end -}}
-
-{{- define "nubusTemplates.umcServer.postgresql.auth.username" -}}
-{{- if .Values.global.nubusDeployment -}}
-{{- required "Either must .Values.postgresql.auth.username or .Values.global.postgresql.auth.username be set." (coalesce .Values.postgresql.auth.username .Values.global.postgresql.auth.username) -}}
-{{- end -}}
-{{- end -}}
-
-{{- define "nubusTemplates.umcServer.postgresql.auth.database" -}}
-{{- if .Values.global.nubusDeployment -}}
-{{- required "Either must .Values.postgresql.auth.database or .Values.global.postgresql.auth.database be set." (coalesce .Values.postgresql.auth.database .Values.global.postgresql.auth.database) -}}
-{{- end -}}
-{{- end -}}
-
-{{- define "nubusTemplates.umcServer.memcached.connection.host" -}}
-{{- if .Values.global.nubusDeployment -}}
-{{- coalesce .Values.memcached.connections.host .Values.global.memcached.connection.host | default (printf "%s-%s") .Release.Name (coalesce .Values.memcached.nameOverride "memcached") -}}
-{{- end -}}
-{{- end -}}
-
-{{- define "nubusTemplates.umcServer.memcached.connection.port" -}}
-{{- if .Values.global.nubusDeployment -}}
-{{- coalesce .Values.memcached.connections.port .Values.global.memcached.connection.port | default (printf "%s-%s") .Release.Name (coalesce .Values.memcached.nameOverride "memcached") -}}
-{{- end -}}
-{{- end -}}
-
-{{- define "nubusTemplates.umcServer.memcached.auth.username" -}}
-{{- if .Values.global.nubusDeployment -}}
-{{- required "Either must .Values.memcached.auth.username or .Values.global.memcached.auth.username be set." (coalesce .Values.memcached.auth.username .Values.global.memcached.auth.username) -}}
-{{- end -}}
-{{- end -}}
-
-{{- /*
-These template definitions relate to the use of this Helm chart as a sub-chart of the Nubus Umbrella Chart.
 Templates defined in other Helm sub-charts are imported to be used to configure this chart.
 If the value .Values.global.nubusDeployment equates to true, the defined templates are imported.
 */}}
@@ -79,7 +32,7 @@ These template definitions are only used in this chart and do not relate to temp
 {{- end -}}
 
 {{- define "umc-server.configMapUcrForced" -}}
-{{- coalesce .Values.configMapUcrForced .Values.global.configMapUcrForced "null" -}}
+{{- coalesce .Values.configMapUcrForced .Values.global.configMapUcrForced | default "" -}}
 {{- end -}}
 
 {{- define "umc-server.secretTemplate" -}}

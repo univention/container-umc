@@ -82,12 +82,12 @@ spec:
               mountPath: "/etc/univention/base-defaults.conf"
               subPath: "base.conf"
             {{- end }}
-            {{- if (include "udm-rest-api.configMapUcr" .) }}
+            {{- if (include "umc-gateway.configMapUcr" .) }}
             - name: "config-map-ucr"
               mountPath: "/etc/univention/base.conf"
               subPath: "base.conf"
             {{- end }}
-            {{- if (include "udm-rest-api.configMapUcrForced" .) }}
+            {{- if (include "umc-gateway.configMapUcrForced" .) }}
             - name: "config-map-ucr-forced"
               mountPath: "/etc/univention/base-forced.conf"
               subPath: "base.conf"
@@ -127,15 +127,15 @@ spec:
         {{- if or .Values.mountUcr .Values.global.nubusDeployment }}
         - name: "config-map-ucr-defaults"
           configMap:
-            name: {{ include "udm-rest-api.configMapUcrDefaults" . | quote }}
+            name: {{ include "umc-gateway.configMapUcrDefaults" . | quote }}
         {{- end }}
-        {{- if (include "udm-rest-api.configMapUcr" .) }}
+        {{- if (include "umc-gateway.configMapUcr" .) }}
         - name: "config-map-ucr"
           configMap:
-            name: {{ include "udm-rest-api.configMapUcr" . | quote }}
+            name: {{ include "umc-gateway.configMapUcr" . | quote }}
         {{- end }}
-        {{- if (include "udm-rest-api.configMapUcrForced" .) }}
+        {{- if (include "umc-gateway.configMapUcrForced" .) }}
         - name: "config-map-ucr-forced"
           configMap:
-            name: {{ include "udm-rest-api.configMapUcrForced" . | quote }}
+            name: {{ include "umc-gateway.configMapUcrForced" . | quote }}
         {{- end }}

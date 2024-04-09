@@ -397,7 +397,7 @@ true
 {
   "auth": {
     "credentialSecret": {
-      "key": "",
+      "key": "memcached-password",
       "name": ""
     },
     "enabled": true,
@@ -429,7 +429,7 @@ true
 			<td>object</td>
 			<td><pre lang="json">
 {
-  "key": "",
+  "key": "memcached-password",
   "name": ""
 }
 </pre>
@@ -599,7 +599,7 @@ false
 {
   "auth": {
     "credentialSecret": {
-      "key": "",
+      "key": "password",
       "name": ""
     },
     "database": "selfservice",
@@ -622,7 +622,7 @@ false
 			<td>object</td>
 			<td><pre lang="json">
 {
-  "key": "",
+  "key": "password",
   "name": ""
 }
 </pre>
