@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.7](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.11.6...v0.11.7) (2024-04-10)
+
+
+### Bug Fixes
+
+* **umc-server:** allow printing the domainname in self-service email templates ([ad47427](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/ad474275e68b578946651b17274d75ddab00bf18))
+
 ## [0.11.6](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.11.5...v0.11.6) (2024-04-05)
 
 
