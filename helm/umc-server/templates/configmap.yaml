@@ -4,6 +4,10 @@
 ---
 {{ include "common.configMap" (dict "top" . "overrides" "umc-server.configMap") }}
 
+# TODO: When making this chart BSI compliant, the SMTP secret can be passed
+# via an env variable SMTP_SECRET, instead of writing it to SMTP_SECRET_FILE.
+# https://git.knut.univention.de/univention/customers/dataport/team-souvap/-/issues/429
+
 {{- define "umc-server.configMap" }}
 {{- with .top }}
 data:
