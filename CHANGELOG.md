@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.8](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.11.7...v0.11.8) (2024-04-10)
+
+
+### Bug Fixes
+
+* **umc-server:** allow configuring SMTP authentication for self-service again ([196c108](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/196c108d30da10d4cc3902b8d55a7db4681e72c5))
+
 ## [0.11.7](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.11.6...v0.11.7) (2024-04-10)
 
 
