@@ -75,7 +75,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   {{- if (include "umc-server.postgresql.auth.credentialSecret.name" . ) }}
-                  name: {{ printf "%s-volume" (include "umc-server.postgresql.auth.credentialSecret.name" . ) }}
+                  name: {{ include "umc-server.postgresql.auth.credentialSecret.name" . | quote }}
                   key: {{ (include "umc-server.postgresql.auth.credentialSecret.key" . ) | quote }}
                   {{- else }}
                   name: {{ include "common.names.fullname" . }}
@@ -85,7 +85,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   {{- if (include "umc-server.memcached.auth.credentialSecret.name" . ) }}
-                  name: {{ printf "%s-volume" (include "umc-server.memcached.auth.credentialSecret.name" . ) | quote }}
+                  name: {{ include "umc-server.memcached.auth.credentialSecret.name" . | quote }}
                   key: {{ (include "umc-server.memcached.auth.credentialSecret.key" . ) | quote }}
                   {{- else }}
                   name: {{ include "common.names.fullname" . }}
@@ -117,20 +117,20 @@ spec:
             - name: "secrets"
               mountPath: "{{ .Values.umcServer.secretMountPath }}"
             {{- else }}
-            {{- if (include "umc-server.ldapCredentialSecret.name" . ) }}
-            - name: {{ printf "%s-volume" (include "umc-server.ldapCredentialSecret.name" . ) | quote }}
+            {{- if (include "umc-server.ldap.credentialSecret.name" . ) }}
+            - name: {{ printf "%s-volume" (include "umc-server.ldap.credentialSecret.name" . ) | quote }}
               mountPath: "{{ .Values.umcServer.secretMountPath }}/ldap_secret"
-              subPath: {{ .Values.umcServer.ldapCredentialSecret.ldapPasswordKey | quote }}
+              subPath: {{ .Values.ldap.credentialSecret.ldapPasswordKey | quote }}
               readOnly: true
-            - name: {{ printf "%s-volume" (include "umc-server.ldapCredentialSecret.name" . ) | quote }}
+            - name: {{ printf "%s-volume" (include "umc-server.ldap.credentialSecret.name" . ) | quote }}
               mountPath: "{{ .Values.umcServer.secretMountPath }}/machine_secret"
-              subPath: {{ .Values.umcServer.ldapCredentialSecret.machinePasswordKey | quote }}
+              subPath: {{ .Values.ldap.credentialSecret.machinePasswordKey | quote }}
               readOnly: true
             {{- end }}
-            {{- if (include "umc-server.smtpCredentialSecret.name" . ) }}
-            - name: {{ printf "%s-volume" (include "umc-server.smtpCredentialSecret.name" . ) | quote }}
+            {{- if (include "umc-server.smtp.credentialSecret.name" . ) }}
+            - name: {{ printf "%s-volume" (include "umc-server.smtp.credentialSecret.name" . ) | quote }}
               mountPath: "{{ .Values.umcServer.secretMountPath }}/smtp_secret"
-              subPath: {{ .Values.umcServer.smtpCredentialSecret.key | quote }}
+              subPath: {{ .Values.smtp.credentialSecret.key | quote }}
               readOnly: true
             {{- end }}
             {{- if (include "umc-server.postgresql.auth.credentialSecret.name" . ) }}
@@ -143,6 +143,24 @@ spec:
             - name: {{ printf "%s-volume" (include "umc-server.memcached.auth.credentialSecret.name" . ) | quote }}
               mountPath: "{{ .Values.umcServer.secretMountPath }}/memcached_password"
               subPath: {{ .Values.memcached.auth.credentialSecret.key | quote }}
+              readOnly: true
+            {{- end }}
+            {{- if (include "umc-server.ldap.tlsSecret.name" . ) }}
+            - name: {{ printf "%s-volume" (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
+              mountPath: "{{ .Values.umcServer.secretMountPath }}/ca_cert"
+              subPath: {{ .Values.ldap.tlsSecret.caCertKey | quote }}
+              readOnly: true
+            {{- end }}
+            {{- if (include "umc-server.ldap.tlsSecret.name" . ) }}
+            - name: {{ printf "%s-volume" (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
+              mountPath: "{{ .Values.umcServer.secretMountPath }}/cert_pem"
+              subPath: {{ .Values.ldap.tlsSecret.certificateKey | quote }}
+              readOnly: true
+            {{- end }}
+            {{- if (include "umc-server.ldap.tlsSecret.name" . ) }}
+            - name: {{ printf "%s-volume" (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
+              mountPath: "{{ .Values.umcServer.secretMountPath }}/private_key"
+              subPath: {{ .Values.ldap.tlsSecret.privateKeyKey | quote }}
               readOnly: true
             {{- end }}
             {{- end }}
@@ -198,15 +216,15 @@ spec:
           secret:
             secretName: {{ include "common.names.fullname" . | quote }}
         {{- else }}
-        {{- if (include "umc-server.ldapCredentialSecret.name" . ) }}
-        - name: {{ printf "%s-volume" (include "umc-server.ldapCredentialSecret.name" . ) | quote }}
+        {{- if (include "umc-server.ldap.credentialSecret.name" . ) }}
+        - name: {{ printf "%s-volume" (include "umc-server.ldap.credentialSecret.name" . ) | quote }}
           secret:
-            secretName: {{ (include "umc-server.ldapCredentialSecret.name" . ) | quote }}
+            secretName: {{ (include "umc-server.ldap.credentialSecret.name" . ) | quote }}
         {{- end }}
-        {{- if (include "umc-server.smtpCredentialSecret.name" . ) }}
-        - name: {{ printf "%s-volume" (include "umc-server.smtpCredentialSecret.name" . ) | quote }}
+        {{- if (include "umc-server.smtp.credentialSecret.name" . ) }}
+        - name: {{ printf "%s-volume" (include "umc-server.smtp.credentialSecret.name" . ) | quote }}
           secret:
-            secretName: {{ (include "umc-server.smtpCredentialSecret.name" . ) | quote }}
+            secretName: {{ (include "umc-server.smtp.credentialSecret.name" . ) | quote }}
         {{- end }}
         {{- if (include "umc-server.postgresql.auth.credentialSecret.name" . ) }}
         - name: {{ printf "%s-volume" (include "umc-server.postgresql.auth.credentialSecret.name" . ) | quote }}
@@ -217,5 +235,10 @@ spec:
         - name: {{ printf "%s-volume" (include "umc-server.memcached.auth.credentialSecret.name" . ) | quote }}
           secret:
             secretName: {{ (include "umc-server.memcached.auth.credentialSecret.name" . ) | quote }}
+        {{- end }}
+        {{- if (include "umc-server.ldap.tlsSecret.name" . ) }}
+        - name: {{ printf "%s-volume" (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
+          secret:
+            secretName: {{ (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
         {{- end }}
         {{- end }}

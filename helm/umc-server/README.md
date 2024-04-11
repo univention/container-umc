@@ -391,6 +391,69 @@ true
 			<td></td>
 		</tr>
 		<tr>
+			<td>ldap.credentialSecret.ldapPasswordKey</td>
+			<td>string</td>
+			<td><pre lang="json">
+"ldap.secret"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ldap.credentialSecret.machinePasswordKey</td>
+			<td>string</td>
+			<td><pre lang="json">
+"machine.secret"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ldap.credentialSecret.name</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ldap.tlsSecret.caCertKey</td>
+			<td>string</td>
+			<td><pre lang="json">
+"ca.crt"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ldap.tlsSecret.certificateKey</td>
+			<td>string</td>
+			<td><pre lang="json">
+"tls.crt"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ldap.tlsSecret.name</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ldap.tlsSecret.privateKeyKey</td>
+			<td>string</td>
+			<td><pre lang="json">
+"tls.key"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
 			<td>memcached</td>
 			<td>object</td>
 			<td><pre lang="json">
@@ -401,6 +464,7 @@ true
       "name": ""
     },
     "enabled": true,
+    "existingPasswordSecret": "",
     "password": "",
     "username": "selfservice"
   },
@@ -444,6 +508,15 @@ true
 </pre>
 </td>
 			<td>This parameter is only used by the bundled memcached.</td>
+		</tr>
+		<tr>
+			<td>memcached.auth.existingPasswordSecret</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>Memcached existing password secret (Must contain the key `memcached-password`). This parameter is only used by the bundled memcached.</td>
 		</tr>
 		<tr>
 			<td>memcached.auth.password</td>
@@ -957,6 +1030,24 @@ true
 			<td></td>
 		</tr>
 		<tr>
+			<td>smtp.credentialSecret.key</td>
+			<td>string</td>
+			<td><pre lang="json">
+"password"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>smtp.credentialSecret.name</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
 			<td>tolerations</td>
 			<td>list</td>
 			<td><pre lang="json">
@@ -970,24 +1061,16 @@ true
 			<td>object</td>
 			<td><pre lang="json">
 {
-  "caCert": null,
+  "caCert": "",
   "caCertFile": "/var/secrets/ca_cert",
   "certPem": null,
   "certPemFile": "/var/secrets/cert_pem",
-  "ldapCredentialSecret": {
-    "ldapPasswordKey": "ldap.secret",
-    "machinePasswordKey": "machine.secret",
-    "name": ""
-  },
   "ldapSecretFile": "/var/secrets/ldap_secret",
   "machineSecretFile": "/var/secrets/machine_secret",
   "privateKey": null,
   "privateKeyFile": "/var/secrets/private_key",
   "secretMountPath": "/var/secrets",
-  "smtpCredentialSecret": {
-    "key": "password",
-    "name": ""
-  },
+  "smtpSecret": "",
   "smtpSecretFile": "/var/secrets/smtp_password"
 }
 </pre>
@@ -998,7 +1081,7 @@ true
 			<td>umcServer.caCert</td>
 			<td>string</td>
 			<td><pre lang="json">
-null
+""
 </pre>
 </td>
 			<td>Additional CA Certificate to trust. The value is optional.</td>
@@ -1029,19 +1112,6 @@ null
 </pre>
 </td>
 			<td>Path to file with the certificate (.pem).</td>
-		</tr>
-		<tr>
-			<td>umcServer.ldapCredentialSecret</td>
-			<td>object</td>
-			<td><pre lang="json">
-{
-  "ldapPasswordKey": "ldap.secret",
-  "machinePasswordKey": "machine.secret",
-  "name": ""
-}
-</pre>
-</td>
-			<td>Optional reference to a different secret for credentials</td>
 		</tr>
 		<tr>
 			<td>umcServer.ldapSecretFile</td>
@@ -1087,6 +1157,15 @@ null
 </pre>
 </td>
 			<td>Path to mount the secrets to.</td>
+		</tr>
+		<tr>
+			<td>umcServer.smtpSecret</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>smtpSecret the password for the SMTP server.</td>
 		</tr>
 		<tr>
 			<td>umcServer.smtpSecretFile</td>

@@ -102,7 +102,7 @@ umcServer:
   machineSecretFile: "/var/secrets/machine_secret"
   # -- Additional CA Certificate to trust.
   # The value is optional.
-  caCert: null
+  caCert: ""
   # -- Path to file with the CA certificate.
   caCertFile: "/var/secrets/ca_cert"
   # -- Certificate used in the context of SAML to verify metadata signatures.
@@ -120,14 +120,8 @@ umcServer:
   smtpSecretFile: "/var/secrets/smtp_password"
   # -- Path to mount the secrets to.
   secretMountPath: "/var/secrets"
-  # -- Optional reference to a different secret for credentials
-  ldapCredentialSecret:
-    name: ""
-    ldapPasswordKey: "ldap.secret"
-    machinePasswordKey: "machine.secret"
-  smtpCredentialSecret:
-    name: ""
-    key: "password"
+  # -- smtpSecret the password for the SMTP server.
+  smtpSecret: ""
 
 ## Kubernetes ingress
 ingress:
@@ -257,6 +251,8 @@ memcached:
     username: "selfservice"
     # -- Memcached password.
     password: ""
+    # -- Memcached existing password secret (Must contain the key `memcached-password`). This parameter is only used by the bundled memcached.
+    existingPasswordSecret: ""
     # -- Memcached password secret reference.
     credentialSecret:
       name: ""
@@ -296,5 +292,22 @@ postgresql:
     credentialSecret:
       name: ""
       key: "password"
+
+ldap:
+  tlsSecret:
+    name: ""
+    caCertKey: "ca.crt"
+    privateKeyKey: "tls.key"
+    certificateKey: "tls.crt"
+  credentialSecret:
+    name: ""
+    ldapPasswordKey: "ldap.secret"
+    machinePasswordKey: "machine.secret"
+
+smtp:
+  credentialSecret:
+    name: ""
+    key: "password"
+
 
 ...
