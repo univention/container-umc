@@ -93,11 +93,16 @@ password
 {{- if .Values.memcached.auth.credentialSecret.name -}}
 {{- .Values.memcached.auth.credentialSecret.name -}}
 {{- else if and .Values.global.nubusDeployment .Values.memcached.bundled .Values.memcached.auth .Values.memcached.auth.enabled -}}
+{{- if .Values.memcached.auth.existingPasswordSecret -}}
+{{- .Values.memcached.auth.existingPasswordSecret -}}
+{{- else -}}
 {{- printf "%s-memcached" (include "common.names.fullname" .) -}}
+{{- end -}}
 {{- else -}}
 {{- include "umc-server.secretTemplate" (list "umc-server-memcached" .Values.memcached.auth.credentialSecret .) -}}
 {{- end -}}
 {{- end -}}
+
 
 {{- define "umc-server.memcached.auth.credentialSecret.key" -}}
 {{- if .Values.memcached.auth.credentialSecret.key -}}
