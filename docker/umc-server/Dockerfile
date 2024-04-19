@@ -172,13 +172,7 @@ RUN \
     # calling $PY_LIBS/univention/uldap.py
     cy2-saml=1.9.* \
     # for pylibmc (SASL authentication with memcached)
-    libsasl2-modules=2.1.*
-
-############################################################
-# Install Python and entrypoint.sh requirements
-
-RUN \
-  apt-get --assume-yes --verbose-versions --no-install-recommends install \
+    libsasl2-modules=2.1.* \
     # for $PY_LIBS/univention/admin/password.py
     python3-bcrypt=3.1.* \
     # for /usr/sbin/univention-management-console-server
