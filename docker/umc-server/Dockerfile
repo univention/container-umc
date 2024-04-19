@@ -152,19 +152,6 @@ SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 
 WORKDIR /
 
-############################################################
-# Install patched packages from UCS repository
-
-RUN \
-  apt-get --quiet update && \
-    apt-get --assume-yes --verbose-versions --no-install-recommends install \
-      ca-certificates=20* \
-      curl=7.64.* \
-      gpg=2.2.* \
-      gpg-agent=2.2.* \
-      && \
-  rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
-
 RUN \
   apt-get --assume-yes --verbose-versions --no-install-recommends install \
     libc-bin=2.28-* \
