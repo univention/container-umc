@@ -206,18 +206,6 @@ null
 			<td>ConfigMap name to read forced UCR values from.</td>
 		</tr>
 		<tr>
-			<td>global.connections.postgresql</td>
-			<td>object</td>
-			<td><pre lang="json">
-{
-  "host": "",
-  "port": 5432
-}
-</pre>
-</td>
-			<td>Configuration for the PostgreSQL database</td>
-		</tr>
-		<tr>
 			<td>global.imagePullSecrets</td>
 			<td>list</td>
 			<td><pre lang="json">
@@ -234,6 +222,20 @@ false
 </pre>
 </td>
 			<td>Indicates wether this chart is part of a Nubus deployment.</td>
+		</tr>
+		<tr>
+			<td>global.postgresql</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "connection": {
+    "host": "",
+    "port": 5432
+  }
+}
+</pre>
+</td>
+			<td>Configuration for the PostgreSQL database</td>
 		</tr>
 		<tr>
 			<td>image.imagePullPolicy</td>

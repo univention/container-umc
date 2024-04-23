@@ -34,9 +34,9 @@ global:
   # imagePullSecrets:
   #   - "docker-registry"
   imagePullSecrets: []
-  connections:
     # -- Configuration for the PostgreSQL database
-    postgresql:
+  postgresql:
+    connection:
       host: ""
       port: 5432
 
