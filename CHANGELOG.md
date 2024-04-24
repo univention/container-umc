@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.12.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.11.8...v0.12.0) (2024-04-24)
+
+
+### Features
+
+* Avoid calling "apt-get update" to use fixed packages set ([ac1878a](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/ac1878a7b8a0b38b8567187d81b489bf92fbf1c8))
+* Use date based ucs base image ([ad766b5](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/ad766b534d08062acf539d6565085a7a7e2b0b8b))
+
+
+### Bug Fixes
+
+* Join two consecutive RUN statements in Dockerfile of umc-server ([24c205b](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/24c205bc286fe11b16227e19f126fc478895fb0d))
+* Remove unused fragment from Dockerfile of umc-server ([70f7e07](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/70f7e0776ee8db2482cf3fc3873e2d7d207d6e31))
+
 ## [0.11.8](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.11.7...v0.11.8) (2024-04-10)
 
 
