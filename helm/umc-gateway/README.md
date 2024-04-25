@@ -121,7 +121,7 @@ null
 			<td>image.registry</td>
 			<td>string</td>
 			<td><pre lang="json">
-"gitregistry.knut.univention.de"
+"artifacts.software-univention.de"
 </pre>
 </td>
 			<td></td>
@@ -130,7 +130,7 @@ null
 			<td>image.repository</td>
 			<td>string</td>
 			<td><pre lang="json">
-"univention/customers/dataport/upx/container-umc/umc-gateway"
+"nubus/images/umc-gateway"
 </pre>
 </td>
 			<td></td>

@@ -143,8 +143,8 @@ imagePullSecrets: []
 
 ## Docker image
 image:
-  registry: "gitregistry.knut.univention.de"
-  repository: "univention/customers/dataport/upx/container-umc/umc-server"
+  registry: "artifacts.software-univention.de"
+  repository: "nubus/images/umc-server"
   imagePullPolicy: "Always"
   tag: "latest"
   ## Define image sha256 as an alternative to `tag`

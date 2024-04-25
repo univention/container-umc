@@ -112,8 +112,8 @@ istio:
 
 ## Docker image
 image:
-  registry: "gitregistry.knut.univention.de"
-  repository: "univention/customers/dataport/upx/container-umc/umc-gateway"
+  registry: "artifacts.software-univention.de"
+  repository: "nubus/images/umc-gateway"
   imagePullPolicy: "Always"
   tag: "latest"
   ## Define image sha256 as an alternative to `tag`
