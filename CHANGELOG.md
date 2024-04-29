@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.13.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.12.0...v0.13.0) (2024-04-29)
+
+
+### Features
+
+* add templating of .Values.memcached.auth.existingPasswordSecret, remove unneeded templates.ldapUri ([b46878a](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/b46878afb369f221842c561dd88d71bfbf5ceb4d))
+* changes to support the refactored umbrella values in a nubus deployment ([32c01a6](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/32c01a608636ec1afaa61ee6847a9022e7a752a9))
+* set additional nubusTemplates, added connection parameters for future compatibility (stack-data configmap removal) ([c7527a7](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/c7527a714027782405bc9de952c71541f5983c7e))
+
+
+### Bug Fixes
+
+* add default credentialSecret key,  moved postgresql and memcached configuration to .Values, fix configMapUcrForce default, removed unneeded templates, fixed udm-rest-api cp error ([e41df56](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/e41df56a8cd517eedb2f6e70feb1d939b37e9612))
+* add support for existingPasswordSecret of bundled memcached ([cd62169](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/cd621693380d4e757cc402dcb330af363733e2a3))
+* refactored template includes, ldap and smtp secret configuration, minor bugfix ([36fc76c](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/36fc76cc2c667f8ee5d9b5f5130f145af8189170))
+* rename global definition of postgresql connection ([7ae7375](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/7ae73752b1c3a6144c9e24bdf4a1079953b6aa68))
+
 ## [0.12.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.11.8...v0.12.0) (2024-04-24)
 
 
