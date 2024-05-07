@@ -35,7 +35,6 @@ COPY scripts/fake-uv-lib.sh /usr/local/bin/fake-uv-lib.sh
 # Install univention-management-console-frontend / univention-web
 
 RUN \
-  apt-get --quiet update && \
   # install Univention bash helper functions dependency
     apt-get --assume-yes --verbose-versions --no-install-recommends install \
       shell-univention-lib=9.* \
@@ -82,7 +81,7 @@ RUN \
       && \
     DEBIAN_FRONTEND=noninteractive \
     dpkg --install --force-depends /apt/* && \
-  rm -rf /apt/ /var/lib/apt/lists/* /var/cache/apt/archives/* && \
+  rm -rf /apt/ \
   awk \
     '/^Package: python3-univention-directory-manager-rest$/{ while(!/^Version: /){getline} print $2 }' \
     /var/lib/dpkg/status > /version
@@ -104,16 +103,13 @@ SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 WORKDIR /
 
 RUN \
-  apt-get --quiet update && \
     apt-get --assume-yes --verbose-versions --no-install-recommends install \
       libpython3.7=3.7.* \
       libapache2-mod-wsgi-py3=4.* \
       # for univention-config-registry
       python3-lazy-object-proxy=1.* \
       python3-six=1.* \
-      apache2-bin=2.* \
-      && \
-  rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
+      apache2-bin=2.*
 
 
 ############################################################
