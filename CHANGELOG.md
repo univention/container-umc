@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.14.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.13.0...v0.14.0) (2024-05-07)
+
+
+### Features
+
+* Avoid call to "apt-get update" in "umc-gateway" ([29d344d](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/29d344dd33c1fc2959cc4d34dd515c7fdbecb0e8))
+* Update base image to 5.0-7 ([e528503](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/e52850367edaf21537772caad24d44a74cfb0e9f))
+
+
+### Bug Fixes
+
+* Copy all Python files in from "univention" ([b92bdb9](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/b92bdb9ba3a78701d26a2f26303a2497c178357a))
+
 ## [0.13.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.12.0...v0.13.0) (2024-04-29)
 
 
