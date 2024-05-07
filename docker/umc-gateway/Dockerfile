@@ -152,26 +152,8 @@ COPY --from=build \
   /usr/share/doc/univention-web-js
 
 COPY --from=build \
-  ${SRC_PY_LIBS}/univention/debhelper.py \
-  ${DST_PY_LIBS}/univention/debhelper.py
-
-COPY --from=build \
-  ${SRC_PY_LIBS}/univention/lib/misc.py \
-  ${DST_PY_LIBS}/univention/lib/misc.py
-
-RUN touch ${DST_PY_LIBS}/univention/lib/__init__.py
-
-COPY --from=build \
-  ${SRC_PY_LIBS}/univention/config_registry/ \
-  ${DST_PY_LIBS}/univention/config_registry/
-
-COPY --from=build \
-  ${SRC_PY_LIBS}/univention/config_registry_info.py \
-  ${DST_PY_LIBS}/univention/config_registry_info.py
-
-COPY --from=build \
-  ${SRC_PY_LIBS}/univention/info_tools.py \
-  ${DST_PY_LIBS}/univention/info_tools.py
+  ${SRC_PY_LIBS}/univention/ \
+  ${DST_PY_LIBS}/univention/
 
 COPY --from=build \
   /usr/sbin/univention-config-registry \
