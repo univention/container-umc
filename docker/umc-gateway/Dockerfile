@@ -34,6 +34,7 @@ COPY scripts/fake-uv-lib.sh /usr/local/bin/fake-uv-lib.sh
 ############################################################
 # Install univention-management-console-frontend / univention-web
 
+# hadolint ignore=SC2016
 RUN \
   # install Univention bash helper functions dependency
     apt-get --assume-yes --verbose-versions --no-install-recommends install \
