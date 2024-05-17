@@ -96,7 +96,7 @@ spec:
                 name: {{ include "common.names.fullname" . }}
           volumeMounts:
             {{- if .Values.extraVolumeMounts }}
-            {{ toYaml .Values.extraVolumeMounts | nindent 12 }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumeMounts "context" $) | nindent 12 }}
             {{- end }}
             {{- if or .Values.mountUcr .Values.global.nubusDeployment }}
             - name: "config-map-ucr-defaults"
@@ -194,7 +194,7 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
         {{- if .Values.extraVolumes }}
-        {{ toYaml .Values.extraVolumes | nindent 8 }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumes "context" $) | nindent 8 }}
         {{- end }}
         {{- if or .Values.mountUcr .Values.global.nubusDeployment }}
         - name: "config-map-ucr-defaults"
