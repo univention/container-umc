@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.14.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.14.0...v0.14.1) (2024-05-20)
+
+
+### Bug Fixes
+
+* add additional templating support ([917bb5e](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/917bb5e0e2d479f3252e99c3ba0ab9ef9de5e911))
+* support for templating of global.configMapUcr ([a0b56d9](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/a0b56d9602094e70a79ce35d4a122861b2859bb8))
+
 ## [0.14.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.13.0...v0.14.0) (2024-05-07)
 
 
