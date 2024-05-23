@@ -185,6 +185,15 @@ null
 			<td>ConfigMap name to read forced UCR values from.</td>
 		</tr>
 		<tr>
+			<td>global.imageRegistry</td>
+			<td>string</td>
+			<td><pre lang="json">
+"artifacts.software-univention.de"
+</pre>
+</td>
+			<td>Container registry address.</td>
+		</tr>
+		<tr>
 			<td>global.nubusDeployment</td>
 			<td>bool</td>
 			<td><pre lang="json">
