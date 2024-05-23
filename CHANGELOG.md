@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.2](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.14.1...v0.14.2) (2024-05-23)
+
+
+### Bug Fixes
+
+* copyright dates ([e26ef45](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/e26ef45a0272767be1e25ea5452196833713d1b5))
+
 ## [0.14.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.14.0...v0.14.1) (2024-05-20)
 
 
