@@ -166,7 +166,7 @@ imagePullSecrets: []
 
 ## Docker image
 image:
-  registry: "artifacts.software-univention.de"
+  registry: ""
   repository: "nubus-dev/images/umc-server"
   imagePullPolicy: "IfNotPresent"
   tag: "latest"

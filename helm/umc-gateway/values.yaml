@@ -119,7 +119,7 @@ ingress:
 
 ## Docker image
 image:
-  registry: "artifacts.software-univention.de"
+  registry: ""
   repository: "nubus-dev/images/umc-gateway"
   imagePullPolicy: "IfNotPresent"
   tag: "latest"
