@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.3](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.14.2...v0.14.3) (2024-05-23)
+
+
+### Bug Fixes
+
+* use global registry ([5d9d831](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/5d9d831d14d4b3802b5040e9cbf2d2a973d9d8fe))
+
 ## [0.14.2](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.14.1...v0.14.2) (2024-05-23)
 
 
