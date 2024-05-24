@@ -295,7 +295,7 @@ false
 			<td>ingress.annotations."nginx.ingress.kubernetes.io/configuration-snippet"</td>
 			<td>string</td>
 			<td><pre lang="json">
-"rewrite ^/univention(/.*)$ $1 break;\n"
+"proxy_set_header X-UMC-HTTPS 'on';\nrewrite ^/univention(/.*)$ $1 break;\n"
 </pre>
 </td>
 			<td></td>
@@ -304,7 +304,7 @@ false
 			<td>ingress.annotations."nginx.org/location-snippets"</td>
 			<td>string</td>
 			<td><pre lang="json">
-"rewrite ^/univention(/.*)$ $1 break;\n"
+"proxy_set_header X-UMC-HTTPS 'on';\nrewrite ^/univention(/.*)$ $1 break;\n"
 </pre>
 </td>
 			<td></td>
