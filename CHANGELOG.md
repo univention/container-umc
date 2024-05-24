@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.5](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.14.4...v0.14.5) (2024-05-24)
+
+
+### Bug Fixes
+
+* update memcached, drop common-helm ([023e80e](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/023e80eb906d44c6c7106d693698e81286d43c96))
+
 ## [0.14.4](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.14.3...v0.14.4) (2024-05-24)
 
 
