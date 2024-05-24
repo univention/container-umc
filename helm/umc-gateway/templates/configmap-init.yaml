@@ -1,0 +1,53 @@
+---
+kind: "ConfigMap"
+apiVersion: "v1"
+metadata:
+  name: {{ printf "%s-init-configuration-scripts" (include "common.names.fullname" .) }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels:
+    {{- include "common.labels.standard" . | nindent 4 }}
+    {{- if .Values.additionalLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.additionalLabels "context" . ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.additionalAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.additionalAnnotations "context" . ) | nindent 4 }}
+  {{- end }}
+data:
+  50-entrypoint.sh: |
+    #!/bin/bash
+    set -euxo pipefail
+
+    univention-config-registry commit \
+      /etc/apache2/conf-available/ucs.conf \
+      /etc/apache2/conf-available/univention-web.conf \
+      /etc/apache2/mods-available/proxy.conf \
+      /etc/apache2/mods-available/ssl.conf \
+      /etc/apache2/ports.conf \
+      /etc/apache2/sites-available/000-default.conf \
+      /etc/apache2/sites-available/default-ssl.conf \
+      /etc/apache2/sites-available/univention.conf \
+      /etc/apache2/sites-available/univention-self-service.conf \
+      /etc/apache2/sites-available/univention-server-overview.conf \
+      /etc/apache2/ucs-sites.conf.d/ucs-sites.conf
+
+    univention-config-registry commit \
+      /var/www/univention/languages.json \
+      /var/www/univention/meta.json
+
+    # Symlink the theme.css according to UCR setting
+    /etc/univention/templates/scripts/symlink-web-theme.sh
+
+    # TODO: Is this needed with an init container?
+    # Apache gets grumpy about PID files pre-existing
+    # rm -f /usr/local/apache2/logs/httpd.pid
+
+  60-umc-title.sh: |
+    #!/bin/bash
+    set -euxo pipefail
+
+    if [ -n "${UMC_HTML_TITLE:-}" ]; then
+      sed --in-place --expression="s|<title>[^<]*</title>|<title>${UMC_HTML_TITLE}</title>|g" /usr/share/univention-management-console-login/index.html
+      sed --in-place --expression="s|<title>[^<]*</title>|<title>${UMC_HTML_TITLE}</title>|g" /usr/share/univention-management-console-frontend/index.html
+      sed --in-place --expression="s|window.document.title = [^;]*|window.document.title = '${UMC_HTML_TITLE}'|g" /usr/share/univention-management-console-frontend/main.js
+    fi
+...

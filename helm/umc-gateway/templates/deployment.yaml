@@ -61,6 +61,36 @@ spec:
       {{- if .Values.terminationGracePeriodSeconds }}
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
       {{- end }}
+      initContainers:
+        - name: "apache-configuration"
+          {{- if .Values.containerSecurityContext.enabled }}
+          securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+          {{- end }}
+          image: {{ include "common.images.image" ( dict "imageRoot" .Values.image "global" .Values.global ) | quote }}
+          {{- with .Values.image }}
+          imagePullPolicy: {{ .imagePullPolicy }}
+          {{- end }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "common.names.fullname" . }}
+          volumeMounts:
+            # NOTE: Maybe the directory will be empty, so we will have to mount on subdirectories
+            - name: "web-data"
+              mountPath: "/var/www"
+              subPath: "univention"
+            # NOTE: Maybe the directory will be empty, so we will have to mount on subdirectories
+            - name: "apache2-config"
+              mountPath: "/etc/apache2"
+            - name: "init-entrypoints"
+              mountPath: "/entrypoint.d"
+            # NOTE: Maybe the directory will be empty, so we will have to mount on subdirectories
+            - name: "univention-management-console-login"
+              mountPath: "/usr/share/univention-management-console-login"
+            # NOTE: Maybe the directory will be empty, so we will have to mount on subdirectories
+            - name: "univention-management-console-frontend"
+              mountPath: "/usr/share/univention-management-console-frontend"
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
       containers:
         - name: "umc-gateway"
           {{- if .Values.containerSecurityContext.enabled }}
@@ -68,7 +98,7 @@ spec:
           {{- end }}
           image: "{{ coalesce .Values.image.registry .Values.global.imageRegistry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           {{- with .Values.image }}
-          imagePullPolicy: {{ .pullPolicy }}
+          imagePullPolicy: {{ .imagePullPolicy }}
           {{- end }}
           envFrom:
             - configMapRef:
@@ -77,6 +107,12 @@ spec:
             {{- if .Values.extraVolumeMounts }}
             {{ toYaml .Values.extraVolumeMounts | nindent 12 }}
             {{- end }}
+            - name: "apache2-config"
+              mountPath: "/etc/apache2"
+            - name: "univention-management-console-login"
+              mountPath: "/usr/share/univention-management-console-login"
+            - name: "univention-management-console-frontend"
+              mountPath: "/usr/share/univention-management-console-frontend"
             {{- if or .Values.mountUcr .Values.global.nubusDeployment }}
             - name: "config-map-ucr-defaults"
               mountPath: "/etc/univention/base-defaults.conf"
@@ -124,6 +160,17 @@ spec:
         {{- if .Values.extraVolumes }}
         {{ toYaml .Values.extraVolumes | nindent 8 }}
         {{- end }}
+        - name: "web-data"
+          emptyDir: {}
+        - name: "apache2-config"
+          emptyDir: {}
+        - name: "init-entrypoints"
+          configMap:
+            name: {{ printf "%s-init-configuration-scripts" (include "common.names.fullname" .) }}
+        - name: "univention-management-console-login"
+          emptyDir: {}
+        - name: " univention-management-console-frontend"
+          emptyDir: {}
         {{- if or .Values.mountUcr .Values.global.nubusDeployment }}
         - name: "config-map-ucr-defaults"
           configMap:
