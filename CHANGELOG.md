@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.4](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.14.3...v0.14.4) (2024-05-24)
+
+
+### Bug Fixes
+
+* Add header "X-UMC-HTTPS" into the UMC ingress configuration ([6a4500f](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/6a4500f13a6bfbd8f8708c4704595d31da8f46f9))
+
 ## [0.14.3](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.14.2...v0.14.3) (2024-05-23)
 
 
