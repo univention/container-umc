@@ -42,7 +42,7 @@ helm uninstall umc-gateway
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://gitregistry.knut.univention.de/univention/customers/dataport/upx/common-helm/helm | common | 0.* |
+| oci://registry-1.docker.io/bitnamicharts | common | ^2.x.x |
 
 ## Values
 

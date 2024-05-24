@@ -43,9 +43,9 @@ helm uninstall umc-server
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | memcached | ~6.5.0 |
-| https://charts.bitnami.com/bitnami | postgresql | ~12.7.1 |
-| oci://gitregistry.knut.univention.de/univention/customers/dataport/upx/common-helm/helm | common | 0.* |
+| https://charts.bitnami.com/bitnami | memcached | ^7.x.x |
+| https://charts.bitnami.com/bitnami | postgresql | ^12.x.x |
+| oci://registry-1.docker.io/bitnamicharts | common | ^2.x.x |
 
 ## Values
 

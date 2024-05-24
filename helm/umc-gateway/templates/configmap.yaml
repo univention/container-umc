@@ -1,13 +1,24 @@
-# SPDX-License-Identifier: AGPL-3.0-only
-# SPDX-FileCopyrightText: 2023 Univention GmbH
-
+{{/*
+SPDX-FileCopyrightText: 2024 Univention GmbH
+SPDX-License-Identifier: AGPL-3.0-only
+*/}}
 ---
-{{ include "common.configMap" (dict "top" . "overrides" "umc-gateway.configMap") }}
-
-{{- define "umc-gateway.configMap" }}
-{{- with .top }}
+kind: "ConfigMap"
+apiVersion: "v1"
+metadata:
+  name: {{ include "common.names.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels:
+    {{- include "common.labels.standard" . | nindent 4 }}
+    {{- if .Values.additionalLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.additionalLabels "context" . ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.additionalAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.additionalAnnotations "context" . ) | nindent 4 }}
+  {{- end }}
+  # TODO: When making this chart BSI compliant, the SMTP secret can be passed
+  # via an env variable SMTP_SECRET, instead of writing it to SMTP_SECRET_FILE.
+  # https://git.knut.univention.de/univention/customers/dataport/team-souvap/-/issues/429
 data:
   UMC_HTML_TITLE: {{ .Values.umcGateway.umcHtmlTitle | default "Nubus Management Console" | quote }}
-{{- end }}
-{{- end }}
 ...

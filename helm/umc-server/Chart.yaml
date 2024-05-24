@@ -18,15 +18,15 @@ appVersion: "12.0.29"
 
 dependencies:
   - name: "common"
-    repository: "oci://gitregistry.knut.univention.de/univention/customers/dataport/upx/common-helm/helm"
-    version: "0.*"
+    version: "^2.x.x"
+    repository: "oci://registry-1.docker.io/bitnamicharts"
   - name: "postgresql"
     repository: "https://charts.bitnami.com/bitnami"
-    version: "~12.7.1"
+    version: "^12.x.x"
     condition: "postgresql.bundled"
   - name: "memcached"
     repository: "https://charts.bitnami.com/bitnami"
-    version: "~6.5.0"
+    version: "^7.x.x"
     condition: "memcached.bundled"
 
 ...

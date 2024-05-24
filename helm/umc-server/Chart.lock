@@ -1,12 +1,12 @@
 dependencies:
 - name: common
-  repository: oci://gitregistry.knut.univention.de/univention/customers/dataport/upx/common-helm/helm
-  version: 0.6.1
+  repository: oci://registry-1.docker.io/bitnamicharts
+  version: 2.19.3
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
-  version: 12.7.3
+  version: 12.12.10
 - name: memcached
   repository: https://charts.bitnami.com/bitnami
-  version: 6.5.9
-digest: sha256:1668ad1f28b3877026276adc91926794b19455a3a9ba2d7ef5c1fcacc46ea3f1
-generated: "2024-05-22T13:52:31.715159639+02:00"
+  version: 7.4.1
+digest: sha256:84e3f05255bab1cb9579be7d8f3aa4eb59fb08428c22c06e8064e4b26680234e
+generated: "2024-05-24T17:56:57.920528+02:00"
