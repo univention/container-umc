@@ -52,7 +52,7 @@ containerSecurityContext:
     drop:
       - "ALL"
   # -- Enable security context.
-  enabled: false
+  enabled: true
   # -- Process user id.
   runAsUser: 1000
   # -- Process group id.
@@ -70,7 +70,7 @@ containerSecurityContext:
 # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
 podSecurityContext:
   # -- Enable security context.
-  enabled: false
+  enabled: true
 
   # -- If specified, all processes of the container are also part of the supplementary group.
   fsGroup: 1000
