@@ -73,22 +73,25 @@ spec:
           envFrom:
             - configMapRef:
                 name: {{ include "common.names.fullname" . }}
+          command:
+            - sh
+            - -c
+            - 'cp -a /var/www/* /target/var/www/; cp -a /etc/apache2/* /target/etc/apache2/; cp -a /usr/share/univention-management-console-login/* /target/usr/share/univention-management-console-login/; cp -a /usr/share/univention-management-console-frontend/* /target/usr/share/univention-management-console-frontend/'
           volumeMounts:
             # NOTE: Maybe the directory will be empty, so we will have to mount on subdirectories
             - name: "web-data"
-              mountPath: "/var/www"
-              subPath: "univention"
+              mountPath: "/target/var/www"
             # NOTE: Maybe the directory will be empty, so we will have to mount on subdirectories
             - name: "apache2-config"
-              mountPath: "/etc/apache2"
+              mountPath: "/target/etc/apache2"
             - name: "init-entrypoints"
               mountPath: "/entrypoint.d"
             # NOTE: Maybe the directory will be empty, so we will have to mount on subdirectories
             - name: "univention-management-console-login"
-              mountPath: "/usr/share/univention-management-console-login"
+              mountPath: "/target/usr/share/univention-management-console-login"
             # NOTE: Maybe the directory will be empty, so we will have to mount on subdirectories
             - name: "univention-management-console-frontend"
-              mountPath: "/usr/share/univention-management-console-frontend"
+              mountPath: "/target/usr/share/univention-management-console-frontend"
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       containers:
@@ -169,7 +172,7 @@ spec:
             name: {{ printf "%s-init-configuration-scripts" (include "common.names.fullname" .) }}
         - name: "univention-management-console-login"
           emptyDir: {}
-        - name: " univention-management-console-frontend"
+        - name: "univention-management-console-frontend"
           emptyDir: {}
         {{- if or .Values.mountUcr .Values.global.nubusDeployment }}
         - name: "config-map-ucr-defaults"
