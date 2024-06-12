@@ -5,15 +5,26 @@
 
 # Dummy values for running the Helm linter on the umc-server.
 # Run it like this: helm lint -f values.yaml -f linter_values.yaml .
+mountSecrets: true
+
+global:
+  configMapUcrDefaults: "something"
+  nubusDeployment: false
 
 umcServer:
   ldapSecret: "password"
   machineSecret: "password"
+  certPem: ""
+  privateKey: ""
 
 postgresql:
   auth:
     password: "password"
     postgresPassword: "password"
+
+memcached:
+  containerSecurityContext:
+    readOnlyRootFilesystem: false
 
 ingress:
   enabled: true
