@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.6](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.14.5...v0.14.6) (2024-06-13)
+
+
+### Bug Fixes
+
+* **umc-server:** certificate generation generated after declaration ([c863be9](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/c863be9cd82155b208ffc845ec9087a1103005af))
+
 ## [0.14.5](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.14.4...v0.14.5) (2024-05-24)
 
 
