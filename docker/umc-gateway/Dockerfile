@@ -7,10 +7,10 @@
 ARG UCS_BASE_IMAGE_TAG=0.12.0-build-2024-04-25
 ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-base-507
 
-ARG PORTAL_UDM_EXTENSIONS_IMAGE=gitregistry.knut.univention.de/univention/components/univention-portal/portal-udm-extensions
-ARG PORTAL_UDM_EXTENSIONS_TAG=0.4.3
+ARG PORTAL_EXTENSION_IMAGE=gitregistry.knut.univention.de/univention/components/univention-portal/portal-extension
+ARG PORTAL_EXTENSION_TAG=0.4.3
 
-FROM ${PORTAL_UDM_EXTENSIONS_IMAGE}:${PORTAL_UDM_EXTENSIONS_TAG} AS portal-udm-extensions
+FROM ${PORTAL_EXTENSION_IMAGE}:${PORTAL_EXTENSION_TAG} AS portal-extension
 
 ############################################################
 # First build stage
@@ -291,7 +291,7 @@ COPY --from=build \
 ############################################################
 # Add files from the portal extension
 
-COPY --from=portal-udm-extensions /udm/icons/ \
+COPY --from=portal-extension /plugins/umc-icons/ \
     /usr/share/univention-management-console-frontend/js/dijit/themes/umc/icons/
 
 
