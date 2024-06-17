@@ -7,13 +7,13 @@
 ARG UCS_BASE_IMAGE_TAG=0.12.0-build-2024-04-25
 ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-base-507
 
-ARG PORTAL_UDM_EXTENSIONS_IMAGE=gitregistry.knut.univention.de/univention/components/univention-portal/portal-udm-extensions
-ARG PORTAL_UDM_EXTENSIONS_TAG=0.4.3
+ARG PORTAL_EXTENSION_IMAGE=gitregistry.knut.univention.de/univention/components/univention-portal/portal-extension
+ARG PORTAL_EXTENSION_TAG=0.4.3
 
 ARG OX_CONNECTOR_EXTENSIONS_IMAGE=gitregistry.knut.univention.de/univention/open-xchange/provisioning/ox-connector-dependencies
 ARG OX_CONNECTOR_EXTENSIONS_TAG=0.3.4
 
-FROM ${PORTAL_UDM_EXTENSIONS_IMAGE}:${PORTAL_UDM_EXTENSIONS_TAG} AS portal-udm-extensions
+FROM ${PORTAL_EXTENSION_IMAGE}:${PORTAL_EXTENSION_TAG} AS portal-extension
 FROM ${OX_CONNECTOR_EXTENSIONS_IMAGE}:${OX_CONNECTOR_EXTENSIONS_TAG} AS ox-connector-extensions
 
 ############################################################
@@ -336,17 +336,17 @@ COPY --from=build \
 RUN rm ${DST_PY_LIBS}/univention/udm/{base.py,binary_props.py,connections.py,encoders.py,exceptions.py,helpers.py,plugins.py,udm.py,utils.py}
 
 # Extension: Portal extensions
-COPY --from=portal-udm-extensions /udm/api/ \
+COPY --from=portal-extension /plugins/udm-modules/ \
     /usr/lib/python3/dist-packages/univention/udm/modules/
 
-COPY --from=portal-udm-extensions /udm/syntax/ \
+COPY --from=portal-extension /plugins/udm-syntax.d/ \
     /usr/lib/python3/dist-packages/univention/admin/syntax.d/
 
-COPY --from=portal-udm-extensions /udm/handlers \
-    /usr/lib/python3/dist-packages/univention/admin/handlers/portals
+COPY --from=portal-extension /plugins/udm-handlers/ \
+    /usr/lib/python3/dist-packages/univention/admin/handlers/
 
-COPY --from=portal-udm-extensions /udm/univention-portal.xml \
-    /usr/share/univention-management-console/modules/univention-portal.xml
+COPY --from=portal-extension /plugins/umc-modules/ \
+    /usr/share/univention-management-console/modules/
 
 # Extension: OX Connector
 COPY --from=ox-connector-extensions /dependencies/handlers/ \
