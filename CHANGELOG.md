@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.15.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.14.6...v0.15.0) (2024-06-19)
+
+
+### Features
+
+* **umc-gateway:** Adjust dockerfile to new structure of portal-extension ([be1c053](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/be1c0537505126834076ad82f5c90715d8f52885))
+* **umc-server:** Adjust dockerfile to new structure of portal-extensions ([3077401](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/3077401a2aef648ab7605642823e0cdf02c0428c))
+* Update the portal-extensions version to 0.26.0 ([f2cef06](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/f2cef0643d57b5ba35f30b8446a061d95ea1a799))
+
 ## [0.14.6](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.14.5...v0.14.6) (2024-06-13)
 
 
