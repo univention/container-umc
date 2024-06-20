@@ -157,6 +157,28 @@ COPY --from=build \
   ${DST_PY_LIBS}/univention/
 
 COPY --from=build \
+  ${SRC_PY_LIBS}/ldap/ \
+  ${DST_PY_LIBS}/ldap/
+
+COPY --from=build \
+  ${SRC_PY_LIBS}/_ldap* \
+  ${SRC_PY_LIBS}/ldapurl.py \
+  ${SRC_PY_LIBS}/ldif.py \
+  ${DST_PY_LIBS}/
+
+COPY --from=build \
+  ${SRC_PY_LIBS}/pyasn1 \
+  ${DST_PY_LIBS}/pyasn1
+
+COPY --from=build \
+  ${SRC_PY_LIBS}/pyasn1_modules \
+  ${DST_PY_LIBS}/pyasn1_modules
+
+COPY --from=build \
+  /usr/lib/x86_64-linux-gnu/libuniventiondebug.* \
+  /usr/lib/x86_64-linux-gnu/
+
+COPY --from=build \
   /usr/sbin/univention-config-registry \
   /usr/sbin/univention-config-registry
 
