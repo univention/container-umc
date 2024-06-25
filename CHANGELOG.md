@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.15.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.15.0...v0.15.1) (2024-06-25)
+
+
+### Bug Fixes
+
+* bump ucs-base to 5.0-8 ([06de57e](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/06de57eb3a8bcb0860c8aa9e68f4a3356ab9fc9f))
+* copy missing python modules to make the 5.0-8 image work ([93030ff](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/93030ff98dd8d49ef5589bd23ef084685417b5a3))
+
 ## [0.15.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.14.6...v0.15.0) (2024-06-19)
 
 
