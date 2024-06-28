@@ -128,6 +128,12 @@ image:
   ## Define image sha256 as an alternative to `tag`
   # sha256:
 
+portalPlugin:
+  image:
+    registry: ""
+    repository: "nubus/images/portal-extension"
+    imagePullPolicy: "IfNotPresent"
+    tag: "0.26.3"
 
 ## Container deployment probes
 probes:

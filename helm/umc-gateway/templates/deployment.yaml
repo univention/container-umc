@@ -61,6 +61,32 @@ spec:
       {{- if .Values.terminationGracePeriodSeconds }}
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
       {{- end }}
+      initContainers:
+        - name: "load-internal-plugins"
+          {{- if .Values.containerSecurityContext.enabled }}
+          securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+          {{- end }}
+          image: "{{ coalesce .Values.image.registry .Values.global.imageRegistry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ coalesce .Values.image.imagePullPolicy .Values.global.imagePullPolicy | quote }}
+          command:
+            - sh
+            - -c
+            - |
+              cp -av /usr/share/univention-management-console-frontend/js/dijit/themes/umc/icons /target/umc-icons
+          volumeMounts:
+            - name: plugin-targets
+              mountPath: /target
+          resources: {{- include "common.tplvalues.render" (dict "value" .Values.initResources "context" .) | nindent 12 }}
+        - name: "load-portal-plugin"
+          {{- if .Values.containerSecurityContext.enabled }}
+          securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+          {{- end }}
+          image: "{{ coalesce .Values.portalPlugin.image.registry .Values.global.imageRegistry }}/{{ .Values.portalPlugin.image.repository }}:{{ .Values.portalPlugin.image.tag }}"
+          imagePullPolicy: {{ coalesce .Values.portalPlugin.image.imagePullPolicy .Values.global.imagePullPolicy | quote }}
+          volumeMounts:
+            - name: plugin-targets
+              mountPath: /target
+          resources: {{- include "common.tplvalues.render" (dict "value" .Values.initResources "context" .) | nindent 12 }}
       containers:
         - name: "umc-gateway"
           {{- if .Values.containerSecurityContext.enabled }}
@@ -92,6 +118,9 @@ spec:
               mountPath: "/etc/univention/base-forced.conf"
               subPath: "base.conf"
             {{- end }}
+            - name: plugin-targets
+              mountPath: /usr/share/univention-management-console-frontend/js/dijit/themes/umc/icons/
+              subPath: umc-icons
           ports:
             {{- range $key, $value := .Values.service.ports }}
             - name: {{ $key }}
@@ -139,3 +168,5 @@ spec:
           configMap:
             name: {{ include "umc-gateway.configMapUcrForced" . | quote }}
         {{- end }}
+        - name: plugin-targets
+          emptyDir: { }

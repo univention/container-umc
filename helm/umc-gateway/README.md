@@ -398,6 +398,42 @@ false
 			<td>Change ownership and permission of the volume before being exposed inside a Pod.</td>
 		</tr>
 		<tr>
+			<td>portalPlugin.image.imagePullPolicy</td>
+			<td>string</td>
+			<td><pre lang="json">
+"IfNotPresent"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>portalPlugin.image.registry</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>portalPlugin.image.repository</td>
+			<td>string</td>
+			<td><pre lang="json">
+"nubus/images/portal-extension"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>portalPlugin.image.tag</td>
+			<td>string</td>
+			<td><pre lang="json">
+"0.26.3"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
 			<td>probes.liveness.enabled</td>
 			<td>bool</td>
 			<td><pre lang="json">
