@@ -7,15 +7,6 @@
 ARG UCS_BASE_IMAGE_TAG=0.13.0-build-2024-06-18
 ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-base-508
 
-ARG PORTAL_EXTENSION_IMAGE=gitregistry.knut.univention.de/univention/components/univention-portal/portal-extension
-ARG PORTAL_EXTENSION_TAG=0.26.0
-
-ARG OX_EXTENSION_IMAGE=gitregistry.knut.univention.de/univention/open-xchange/provisioning/ox-extension
-ARG OX_EXTENSION_TAG=0.9.0
-
-FROM ${PORTAL_EXTENSION_IMAGE}:${PORTAL_EXTENSION_TAG} AS portal-extension
-FROM ${OX_EXTENSION_IMAGE}:${OX_EXTENSION_TAG} AS ox-extension
-
 ############################################################
 # Start first stage
 
@@ -334,32 +325,6 @@ COPY --from=build \
   ${SRC_PY_LIBS}/univention/udm/*.py \
   ${DST_PY_LIBS}/univention/udm/
 RUN rm ${DST_PY_LIBS}/univention/udm/{base.py,binary_props.py,connections.py,encoders.py,exceptions.py,helpers.py,plugins.py,udm.py,utils.py}
-
-# Extension: Portal extensions
-COPY --from=portal-extension /plugins/udm-modules/ \
-    /usr/lib/python3/dist-packages/univention/udm/modules/
-
-COPY --from=portal-extension /plugins/udm-syntax.d/ \
-    /usr/lib/python3/dist-packages/univention/admin/syntax.d/
-
-COPY --from=portal-extension /plugins/udm-handlers/ \
-    /usr/lib/python3/dist-packages/univention/admin/handlers/
-
-COPY --from=portal-extension /plugins/umc-modules/ \
-    /usr/share/univention-management-console/modules/
-
-# Extension: OX Connector
-COPY --from=ox-extension /plugins/udm-handlers/ \
-   ${DST_PY_LIBS}/univention/admin/handlers/
-
-COPY --from=ox-extension /plugins/udm-syntax.d/ \
-   ${DST_PY_LIBS}/univention/admin/syntax.d/
-
-COPY --from=ox-extension /plugins/udm-hooks.d/ \
-   ${DST_PY_LIBS}/univention/admin/hooks.d/
-
-COPY --from=ox-extension /plugins/umc-modules/ox-common.xml \
-   /usr/share/univention-management-console/modules/udm-oxresources-oxresources.xml
 
 # from python3-univention-config-registry
 COPY --from=build \
