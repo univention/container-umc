@@ -8,7 +8,7 @@ ARG UCS_BASE_IMAGE_TAG=0.13.0-build-2024-06-18
 ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-base-508
 
 ARG PORTAL_EXTENSION_IMAGE=gitregistry.knut.univention.de/univention/components/univention-portal/portal-extension
-ARG PORTAL_EXTENSION_TAG=0.26.0
+ARG PORTAL_EXTENSION_TAG=0.26.3
 
 FROM ${PORTAL_EXTENSION_IMAGE}:${PORTAL_EXTENSION_TAG} AS portal-extension
 
