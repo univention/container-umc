@@ -96,6 +96,19 @@ serviceAccount:
 # -- Optionally specify a secret to create (primarily intended to be used in development environments to provide custom certificates)
 extraSecrets: []
 
+oxPlugin:
+  image:
+    registry: "artifacts.software-univention.de"
+    repository: "nubus/images/ox-extension"
+    imagePullPolicy: "IfNotPresent"
+    tag: "0.10.0"
+portalPlugin:
+  image:
+    registry: "artifacts.software-univention.de"
+    repository: "nubus/images/portal-extension"
+    imagePullPolicy: "IfNotPresent"
+    tag: "0.26.3"
+
 # -- Application configuration of the Univention Management Console Server
 umcServer:
   # -- Path to file with the LDAP secret.

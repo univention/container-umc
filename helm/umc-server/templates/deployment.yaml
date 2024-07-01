@@ -61,6 +61,49 @@ spec:
       {{- if .Values.terminationGracePeriodSeconds }}
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
       {{- end }}
+      initContainers:
+        - name: "load-internal-plugins"
+          {{- if .Values.containerSecurityContext.enabled }}
+          securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+          {{- end }}
+          image: "{{ coalesce .Values.image.registry .Values.global.imageRegistry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ coalesce .Values.image.imagePullPolicy .Values.global.imagePullPolicy | quote }}
+          command:
+            - sh
+            - -c
+            - |
+              cp -Rv /usr/lib/python3/dist-packages/univention/udm/modules /target/udm-modules
+              cp -Rv /usr/lib/python3/dist-packages/univention/admin/hooks.d /target/udm-hooks.d
+              cp -Rv /usr/lib/python3/dist-packages/univention/admin/syntax.d /target/udm-syntax.d
+              cp -Rv /usr/lib/python3/dist-packages/univention/admin/handlers /target/udm-handlers
+          volumeMounts:
+            - name: plugin-targets
+              mountPath: /target
+          resources: {{- include "common.tplvalues.render" (dict "value" .Values.initResources "context" .) | nindent 12 }}
+        - name: "load-portal-plugin"
+          {{- if .Values.containerSecurityContext.enabled }}
+          securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+          {{- end }}
+          image: "{{ coalesce .Values.portalPlugin.image.registry .Values.global.imageRegistry }}/{{ .Values.portalPlugin.image.repository }}:{{ .Values.portalPlugin.image.tag }}"
+          imagePullPolicy: {{ coalesce .Values.portalPlugin.image.imagePullPolicy .Values.global.imagePullPolicy | quote }}
+          volumeMounts:
+            - name: plugin-targets
+              mountPath: /target
+          resources: {{- include "common.tplvalues.render" (dict "value" .Values.initResources "context" .) | nindent 12 }}
+        - name: "load-ox-plugin"
+          {{- if .Values.containerSecurityContext.enabled }}
+          securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+          {{- else }}
+          # temporary workaround: run as root
+          securityContext:
+            runAsUser: 0
+          {{- end }}
+          image: "{{ coalesce .Values.oxPlugin.image.registry .Values.global.imageRegistry }}/{{ .Values.oxPlugin.image.repository }}:{{ .Values.oxPlugin.image.tag }}"
+          imagePullPolicy: {{ coalesce .Values.portalPlugin.image.imagePullPolicy .Values.global.imagePullPolicy | quote }}
+          volumeMounts:
+            - name: plugin-targets
+              mountPath: /target
+          resources: {{- include "common.tplvalues.render" (dict "value" .Values.initResources "context" .) | nindent 12 }}
       containers:
         - name: "umc-server"
           {{- if .Values.containerSecurityContext.enabled }}
@@ -164,6 +207,24 @@ spec:
               readOnly: true
             {{- end }}
             {{- end }}
+            - name: plugin-targets
+              mountPath: /usr/lib/python3/dist-packages/univention/udm/modules
+              subPath: udm-modules
+            - name: plugin-targets
+              mountPath: /usr/lib/python3/dist-packages/univention/admin/hooks.d
+              subPath: udm-hooks.d
+            - name: plugin-targets
+              mountPath: /usr/lib/python3/dist-packages/univention/admin/syntax.d
+              subPath: udm-syntax.d
+            - name: plugin-targets
+              mountPath: /usr/lib/python3/dist-packages/univention/admin/handlers
+              subPath: udm-handlers
+            - name: plugin-targets
+              mountPath: /usr/share/univention-management-console-frontend/js/dijit/themes/umc/icons/
+              subPath: umc-icons
+            - name: plugin-targets
+              mountPath: /usr/share/univention-management-console/modules/
+              subPath: umc-modules
           ports:
             {{- range $key, $value := .Values.service.ports }}
             - name: {{ $key }}
@@ -242,3 +303,5 @@ spec:
             secretName: {{ (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
         {{- end }}
         {{- end }}
+        - name: plugin-targets
+          emptyDir: {}
