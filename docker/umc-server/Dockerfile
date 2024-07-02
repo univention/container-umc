@@ -163,11 +163,11 @@ RUN \
     libpam0g=1.5.* \
     # TODO: https://wiki.debian.org/LDAP/PAM
     # https://git.knut.univention.de/univention/ucs/-/issues/1774
+    # https://git.knut.univention.de/univention/ucs/-/commit/a0954cc96eefd741ecda992319fd6fc90ca8a119
     libpam-ldapd=0.9.* \
+    libnss-ldapd=0.9.* \
     pam-saml=3.0.* \
     # for $PY_LIBS/univention/management/console/pam.py
-    # TODO: Cannot find a package, either python3-cracklib or libpam-pwquality
-    # libpam-cracklib=1.3.* \
     libpam-pwquality=1.4.* \
     # for $PY_LIBS/univention/management/console/protocol/session.py
     # the debian-buster version would cause a segfault.
@@ -482,6 +482,11 @@ COPY --from=build \
   /etc/univention/templates/info/univention-pam.info \
   /etc/univention/templates/info/univention-pam.info
 # TODO: See what happened with pam_ldap.conf
+# Removed in https://git.knut.univention.de/univention/ucs/-/commit/a0954cc96eefd741ecda992319fd6fc90ca8a119
+# COPY --from=build \
+#   /etc/univention/templates/files/etc/pam_ldap.conf \
+#   /etc/univention/templates/files/etc/pam_ldap.conf
+
 COPY --from=build \
   /etc/univention/templates/files/etc/sssd/sssd.conf \
   /etc/univention/templates/files/etc/sssd/sssd.conf

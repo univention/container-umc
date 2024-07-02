@@ -173,10 +173,13 @@ fi
 
 ############################################################
 # Configure PAM
-ln --symbolic --force "${MACHINE_SECRET_FILE}" /etc/pam_ldap.secret
-univention-config-registry commit \
-  /etc/pam_ldap.conf \
-  /etc/pam.d/univention-management-console
+# NOTE: All the config is now in /etc/sssd/sssd.conf
+
+# ln --symbolic --force "${MACHINE_SECRET_FILE}" /etc/pam_ldap.secret
+# univention-config-registry commit \
+  # /etc/pam_ldap.conf \
+  # /etc/pam.d/univention-management-console
+
 sed -i '/pam_unix/d; /pam_krb5/d' /etc/pam.d/univention-management-console
 
 if [[ -n "${SAML_SP_SERVER:-}" ]]; then
