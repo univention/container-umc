@@ -24,41 +24,6 @@ umask 077
 
 
 ############################################################
-# Prepare LDAP TLS certificates and settings
-UDM_STARTTLS=$(ucr get directory/manager/starttls)
-if [[ -z "${UDM_STARTTLS}" ]]; then
-  UDM_STARTTLS=2
-fi
-
-case "${UDM_STARTTLS}" in
-  "2")
-    PAM_LDAP_TLS="starttls"
-    TLS_REQCERT="demand"
-    ;;
-  "1")
-    PAM_LDAP_TLS="starttls"
-    TLS_REQCERT="allow"
-    SASL_SECPROPS="none,minssf=0"
-    ;;
-  "0")
-    PAM_LDAP_TLS="off"
-    TLS_REQCERT="never"
-    SASL_SECPROPS="none,minssf=0"
-    ;;
-  *)
-    echo "UCR variable 'directory/manager/starttls' must be one of: 0, 1, 2"
-    exit 1
-esac
-
-if [[ "${TLS_REQCERT}" != "never" ]]; then
-  CA_CERT_FILE=${CA_CERT_FILE:-/run/secrets/ca_cert}
-  CA_DIR="/etc/univention/ssl/ucsCA"
-
-  mkdir --parents "${CA_DIR}"
-  ln --symbolic --force "${CA_CERT_FILE}" "${CA_DIR}/CAcert.pem"
-fi
-
-############################################################
 # Load SAML metadata
 SAML_METADATA_BASE=/usr/share/univention-management-console/saml/idp
 SAML_METADATA_URL=$(ucr get umc/saml/idp-server)
@@ -130,10 +95,94 @@ else
 fi
 
 ############################################################
+# Store SSSD configuration
+
+univention-config-registry commit /etc/sssd/sssd.conf
+
+# Set LDAP machine authentication
+MACHINE_SECRET_FILE=${MACHINE_SECRET_FILE:-/run/secrets/machine_secret}
+if [[ -f "${MACHINE_SECRET_FILE}" ]]; then
+  echo "Using LDAP machine secret"
+  ln --symbolic --force "${MACHINE_SECRET_FILE}" /etc/machine.secret
+  cat <<EOF >> /etc/sssd/sssd.conf
+ldap_default_authtok_type = password
+ldap_default_authtok = $(cat "$MACHINE_SECRET_FILE")
+EOF
+else
+  echo "No LDAP machine secret provided!"
+fi
+
+# NOTE: This is required for the UMC passwordreset module
+# during the use-case of set recovery email. Otherwise, it will error with
+# "Changing contact data failed"
+LDAP_SECRET_FILE=${LDAP_SECRET_FILE:-/run/secrets/ldap_secret}
+if [[ -f "${LDAP_SECRET_FILE}" ]]; then
+  echo "Using LDAP admin secret"
+  ln --symbolic --force "${LDAP_SECRET_FILE}" /etc/ldap.secret
+else
+  echo "No LDAP admin secret provided!"
+fi
+
+############################################################
+# Prepare LDAP TLS certificates and settings
+UDM_STARTTLS=$(ucr get directory/manager/starttls)
+if [[ -z "${UDM_STARTTLS}" ]]; then
+  UDM_STARTTLS=2
+fi
+
+case "${UDM_STARTTLS}" in
+  "2")
+    TLS_REQCERT="demand"
+    cat <<EOF >> /etc/sssd/sssd.conf
+ldap_tls_reqcert = demand
+ldap_id_use_start_tls = true
+ldap_tls_cipher_suite = HIGH:MEDIUM:!aNULL:!MD5:!RC4
+EOF
+    ;;
+  "1")
+    TLS_REQCERT="allow"
+    SASL_SECPROPS="none,minssf=0"
+    cat <<EOF >> /etc/sssd/sssd.conf
+ldap_tls_reqcert = allow
+ldap_id_use_start_tls = true
+ldap_sasl_minssf = 0
+ldap_tls_cipher_suite = HIGH:MEDIUM:!aNULL:!MD5:!RC4
+EOF
+    ;;
+  "0")
+    TLS_REQCERT="never"
+    SASL_SECPROPS="none,minssf=0"
+    cat <<EOF >> /etc/sssd/sssd.conf
+ldap_tls_reqcert = never
+ldap_id_use_start_tls = false
+ldap_auth_disable_tls_never_use_in_production = true
+ldap_sasl_minssf = 0
+EOF
+    ;;
+  *)
+    echo "UCR variable 'directory/manager/starttls' must be one of: 0, 1, 2"
+    exit 1
+esac
+
+if [[ "${TLS_REQCERT}" != "never" ]]; then
+  CA_CERT_FILE=${CA_CERT_FILE:-/run/secrets/ca_cert}
+  CA_DIR="/etc/univention/ssl/ucsCA"
+
+  mkdir --parents "${CA_DIR}"
+  ln --symbolic --force "${CA_CERT_FILE}" "${CA_DIR}/CAcert.pem"
+
+  cat <<EOF >> /etc/sssd/sssd.conf
+ldap_tls_cacert = ${CA_DIR}/CAcert.pem
+EOF
+
+fi
+
+############################################################
 # Store LDAP configuration
 LDAP_HOST=$(ucr get ldap/master)
 LDAP_PORT=$(ucr get ldap/master/port)
 LDAP_BASE_DN=$(ucr get ldap/base)
+mkdir /etc/ldap
 cat <<EOF > /etc/ldap/ldap.conf
 # This file should be world readable but not world writable.
 
@@ -148,35 +197,12 @@ ${SASL_SECPROPS:+SASL_SECPROPS ${SASL_SECPROPS}}
 EOF
 chmod 0644 /etc/ldap/ldap.conf
 
-# TODO: Does this container really need to know this secret?
-LDAP_SECRET_FILE=${LDAP_SECRET_FILE:-/run/secrets/ldap_secret}
-if [[ -f "${LDAP_SECRET_FILE}" ]]; then
-  echo "Using LDAP admin secret"
-  ln --symbolic --force "${LDAP_SECRET_FILE}" /etc/ldap.secret
-else
-  echo "No LDAP admin secret provided!"
-fi
-
-# Password which belongs to the LDAP_HOST_DN machine account
-MACHINE_SECRET_FILE=${MACHINE_SECRET_FILE:-/run/secrets/machine_secret}
-if [[ -f "${MACHINE_SECRET_FILE}" ]]; then
-  echo "Using LDAP machine secret from file"
-  ln --symbolic --force "${MACHINE_SECRET_FILE}" /etc/machine.secret
-elif [[ -n "${MACHINE_SECRET}" ]]; then
-  echo "Using LDAP machine secret from env"
-  echo -n "${MACHINE_SECRET}" > /etc/machine.secret
-else
-  echo "No LDAP machine secret found at ${MACHINE_SECRET_FILE} and \$MACHINE_SECRET not set!"
-  echo "Check the \$MACHINE_SECRET_FILE variable and the file that it points to."
-  exit 1
-fi
-
 ############################################################
 # Configure PAM
-ln --symbolic --force "${MACHINE_SECRET_FILE}" /etc/pam_ldap.secret
-univention-config-registry commit \
-  /etc/pam_ldap.conf \
-  /etc/pam.d/univention-management-console
+
+univention-config-registry commit /etc/pam.d/univention-management-console
+
+# Disable kerberos and unix pam modules
 sed -i '/pam_unix/d; /pam_krb5/d' /etc/pam.d/univention-management-console
 
 if [[ -n "${SAML_SP_SERVER:-}" ]]; then
@@ -187,8 +213,6 @@ if [[ -n "${SAML_SP_SERVER:-}" ]]; then
     --expression="s#trusted_sp=[[:alpha:]]*#${SCHEME}#" \
     "/etc/pam.d/univention-management-console"
 fi
-
-sed --in-place --expression="s/^ssl .*\$/ssl ${PAM_LDAP_TLS}/" /etc/pam_ldap.conf
 
 ############################################################
 # Generate config files from UCR
