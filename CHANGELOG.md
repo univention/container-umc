@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.18.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.17.0...v0.18.0) (2024-07-02)
+
+
+### Features
+
+* UMC server extensions ([af1e301](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/af1e3013154c2a49c2250312dbddd2a55cf48ee6))
+
 ## [0.17.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.16.0...v0.17.0) (2024-07-02)
 
 
