@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.17.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.16.0...v0.17.0) (2024-07-02)
+
+
+### Features
+
+* remove extension load from build time ([222e629](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/222e629121ceb4fc41828a989077cde77bcafcbd))
+
 ## [0.16.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.15.1...v0.16.0) (2024-06-27)
 
 
