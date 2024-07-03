@@ -25,5 +25,5 @@ data:
   PRIVATE_KEY_FILE: {{ .Values.umcServer.privateKeyFile | quote }}
   CA_CERT_FILE: {{ .Values.umcServer.caCertFile | quote }}
   CERT_PEM_FILE: {{ .Values.umcServer.certPemFile | quote }}
-  SMTP_SECRET_FILE: {{ .Values.umcServer.smtpSecretFile | quote }}
+  SMTP_SECRET_FILE: "{{ .Values.umcServer.secretMountPath }}/smtp_password"
 ...

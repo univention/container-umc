@@ -174,7 +174,7 @@ spec:
             {{- end }}
             {{- if (include "umc-server.smtp.credentialSecret.name" . ) }}
             - name: {{ printf "%s-volume" (include "umc-server.smtp.credentialSecret.name" . ) | quote }}
-              mountPath: "{{ .Values.umcServer.secretMountPath }}/smtp_secret"
+              mountPath: "{{ .Values.umcServer.secretMountPath }}/smtp_password"
               subPath: {{ .Values.smtp.credentialSecret.key | quote }}
               readOnly: true
             {{- end }}
