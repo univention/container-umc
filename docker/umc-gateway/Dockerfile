@@ -4,8 +4,8 @@
 ############################################################
 # Global variables
 
-ARG UCS_BASE_IMAGE_TAG=0.13.0-build-2024-06-18
-ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-base-508
+ARG UCS_BASE_IMAGE_TAG=0.13.1-build-2024-07-02
+ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-base-520
 
 ############################################################
 # First build stage
@@ -33,47 +33,48 @@ COPY scripts/fake-uv-lib.sh /usr/local/bin/fake-uv-lib.sh
 RUN \
   # install Univention bash helper functions dependency
     apt-get --assume-yes --verbose-versions --no-install-recommends install \
-      shell-univention-lib=9.* \
+      shell-univention-lib=11.* \
       && \
   # install unlisted dependencies
     apt-get --assume-yes --verbose-versions --no-install-recommends install \
-      python3=3.7.* \
-      python3-distutils=3.7.* \
+      python3=3.11.* \
+      python3-distutils=3.11.* \
       && \
   # install UMC
     apt-get --assume-yes --verbose-versions --no-install-recommends install \
             --option Dpkg::Options::="--force-confold" \
-      univention-apache=12.* \
+      univention-apache=14.* \
       # also for /etc/apache2/sites-available/univention-udm.conf
-      univention-directory-manager-rest=10.* \
-      univention-management-console-login=12.* \
-      univention-management-console-frontend=12.* \
+      univention-directory-manager-rest=12.* \
+      univention-management-console-login=14.* \
+      univention-management-console-frontend=14.* \
       # for /etc/apache2/sites-available/univention.conf
-      univention-management-console-web-server=12.* \
+      univention-management-console-web-server=14.* \
       # for /etc/univention/templates/files/var/www/univention/meta.json
-      univention-management-console-server=12.* \
+      univention-management-console-server=14.* \
       # for /usr/share/univention-management-console-frontend/js/dijit/themes/umc/icons/scalable/.*
-      univention-saml=7.* \
+      univention-saml=9.* \
       # for /usr/share/univention-management-console-frontend/js/dijit/themes/umc/icons/scalable/.*
-      univention-portal=4.* \
+      univention-portal=6.* \
       # for /etc/apache2/sites-available/univention-server-overview.conf
-      univention-server-overview=3.* \
-      univention-web-js=4.* \
-      univention-web-style=4.* \
+      univention-server-overview=5.* \
+      univention-web-js=6.* \
+      univention-web-style=6.* \
       # for /usr/sbin/univention-config-registry
-      python3-univention-config-registry=15.* \
-      univention-config=15.* \
-      python3-univention-debhelper=2.* \
+      python3-univention-config-registry=17.* \
+      univention-config=17.* \
+      python3-univention-debhelper=4.* \
       # for UCR template files
-      python3-univention-lib=9.* \
+      python3-univention-lib=11.* \
       && \
   # install self-service files (avoid pulling in postfix, postgres, ...)
+    chown _apt /apt && \
     apt-get download \
-      univention-self-service=5.* \
-      univention-self-service-master=5.* \
+      univention-self-service=7.* \
+      univention-self-service-master=7.* \
       # for /etc/univention/templates/files/etc/apache2/sites-available/univention-self-service.conf
       # and /usr/share/univention-management-console-frontend/js/umc/modules/passwordreset.js
-      univention-self-service-passwordreset-umc=5.* \
+      univention-self-service-passwordreset-umc=7.* \
       && \
     DEBIAN_FRONTEND=noninteractive \
     dpkg --install --force-depends /apt/* && \
@@ -100,7 +101,7 @@ WORKDIR /
 
 RUN \
     apt-get --assume-yes --verbose-versions --no-install-recommends install \
-      libpython3.7=3.7.* \
+      libpython3.11=3.11.* \
       libapache2-mod-wsgi-py3=4.* \
       # for univention-config-registry
       python3-lazy-object-proxy=1.* \
@@ -232,11 +233,6 @@ COPY --from=build \
 RUN ln -sf /etc/apache2/sites-available/univention-server-overview.conf /etc/apache2/sites-enabled/univention-server-overview.conf
 
 COPY --from=build \
-  /etc/univention/templates/files/etc/apache2/sites-available/univention-self-service.conf \
-  /etc/univention/templates/files/etc/apache2/sites-available/univention-self-service.conf
-RUN ln -sf /etc/apache2/sites-available/univention-self-service.conf /etc/apache2/sites-enabled/univention-self-service.conf
-
-COPY --from=build \
   /etc/univention/templates/files/etc/apache2/sites-available/ssl.d/00start \
   /etc/univention/templates/files/etc/apache2/sites-available/ssl.d/10hsts \
   /etc/univention/templates/files/etc/apache2/sites-available/ssl.d/99end \
@@ -313,15 +309,8 @@ RUN \
   # Disable configs
   rm \
     /etc/apache2/conf-enabled/other-vhosts-access-log.conf \
-    /etc/apache2/conf-available/simplesamlphp.conf \
-    /etc/apache2/conf-available/php7.3-cgi.conf && \
+  && \
   # Enable modules
-  # echo "LoadModule unixd_module /usr/local/apache2/modules/mod_unixd.so" \
-    # > /etc/apache2/mods-enabled/unixd.load && \
-  # \
-  # echo "LoadModule log_config_module /usr/local/apache2/modules/mod_log_config.so" \
-    # > /etc/apache2/mods-enabled/log_config.load && \
-  \
   ln -sf /etc/apache2/mods-available/proxy_http.load \
     /etc/apache2/mods-enabled/proxy_http.load && \
   \
