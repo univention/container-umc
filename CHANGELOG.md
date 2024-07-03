@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.18.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.18.0...v0.18.1) (2024-07-03)
+
+
+### Bug Fixes
+
+* create all directories and copy umc-modules ([ef1cdbd](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/ef1cdbd274dec5fe28784462550bf4f704a60bee))
+
 ## [0.18.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.17.0...v0.18.0) (2024-07-02)
 
 
