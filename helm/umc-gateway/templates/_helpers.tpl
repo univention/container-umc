@@ -19,3 +19,13 @@ These template definitions are only used in this chart and do not relate to temp
 {{- define "umc-gateway.configMapUcrForced" -}}
 {{- tpl (coalesce .Values.configMapUcrForced .Values.global.configMapUcrForced | default "") .  -}}
 {{- end -}}
+
+{{- define "umc-gateway.ingress.tls.secretName" -}}
+{{- if .Values.ingress.tls.secretName -}}
+{{- tpl .Values.ingress.tls.secretName . -}}
+{{- else if .Values.global.nubusDeployment -}}
+{{- printf "%s-portal-tls" .Release.Name -}}
+{{- else -}}
+{{- required ".Values.ingress.tls.secretName must be defined" .Values.ingress.tls.secretName -}}
+{{- end -}}
+{{- end -}}

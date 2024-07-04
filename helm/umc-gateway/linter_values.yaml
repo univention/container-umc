@@ -6,15 +6,21 @@
 # Dummy values for running the Helm linter on the umc-gateway.
 # Run it like this: helm lint -f values.yaml -f linter_values.yaml .
 
+global:
+  configMapUcrDefaults: "something"
+  nubusDeployment: false
 ## Application-specific
 umcGateway:
+  umcHtmlTitle: "Univention Management Console"
 
 
 ## Kubernetes ingress
 ingress:
   enabled: false
   host: "umc-gateway.example.develop.souvap-univention.de"
-
+  ingressClassName: "nginx"
+  tls:
+    enabled: false
 
 ## Istio based
 istio:
@@ -24,7 +30,6 @@ istio:
 ## Docker image
 image:
   tag: "branch-feature-example"
-
 
 ## Container deployment probes
 probes:

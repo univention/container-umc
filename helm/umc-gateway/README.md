@@ -55,6 +55,15 @@ helm uninstall umc-gateway
 	</thead>
 	<tbody>
 		<tr>
+			<td>additionalLabels</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td>Additional custom labels to add to all deployed objects.</td>
+		</tr>
+		<tr>
 			<td>affinity</td>
 			<td>object</td>
 			<td><pre lang="json">
@@ -266,40 +275,43 @@ false
 			<td></td>
 		</tr>
 		<tr>
-			<td>ingress.annotations."nginx.org/mergeable-ingress-type"</td>
-			<td>string</td>
+			<td>ingress.annotations</td>
+			<td>object</td>
 			<td><pre lang="json">
-"minion"
+{
+  "nginx.ingress.kubernetes.io/rewrite-target": "/$2$3",
+  "nginx.ingress.kubernetes.io/use-regex": "true"
+}
 </pre>
 </td>
-			<td></td>
+			<td>Define ingress annotations.</td>
 		</tr>
 		<tr>
 			<td>ingress.enabled</td>
 			<td>bool</td>
 			<td><pre lang="json">
-false
+true
 </pre>
 </td>
-			<td>Set this to `true` in order to enable the installation on Ingress related objects.</td>
+			<td>Enable creation of Ingress.</td>
 		</tr>
 		<tr>
 			<td>ingress.host</td>
 			<td>string</td>
 			<td><pre lang="json">
-null
+""
 </pre>
 </td>
-			<td>The hostname. This parameter has to be supplied. Example `portal.example`.</td>
+			<td>Define the Fully Qualified Domain Name (FQDN) where application should be reachable.</td>
 		</tr>
 		<tr>
 			<td>ingress.ingressClassName</td>
 			<td>string</td>
 			<td><pre lang="json">
-"nginx"
+""
 </pre>
 </td>
-			<td></td>
+			<td>The Ingress controller class name.</td>
 		</tr>
 		<tr>
 			<td>ingress.paths</td>
@@ -307,41 +319,29 @@ null
 			<td><pre lang="json">
 [
   {
-    "path": "/univention/languages.json",
-    "pathType": "Exact"
+    "path": "/()(univention/)(languages.json|meta.json|theme.css)",
+    "pathType": "ImplementationSpecific"
   },
   {
-    "path": "/univention/meta.json",
-    "pathType": "Exact"
-  },
-  {
-    "path": "/univention/theme.css",
-    "pathType": "Exact"
-  },
-  {
-    "path": "/univention/js/",
-    "pathType": "Prefix"
-  },
-  {
-    "path": "/univention/login",
-    "pathType": "Prefix"
-  },
-  {
-    "path": "/univention/management",
-    "pathType": "Prefix"
-  },
-  {
-    "path": "/univention/self-service",
-    "pathType": "Prefix"
-  },
-  {
-    "path": "/univention/themes/",
-    "pathType": "Prefix"
+    "path": "/()(univention/)((js|login|management|themes)/.*)",
+    "pathType": "ImplementationSpecific"
   }
 ]
 </pre>
 </td>
-			<td>The path configuration. The default only grabs what is handled by the UMC gateway.</td>
+			<td>Define the Ingress paths.</td>
+		</tr>
+		<tr>
+			<td>ingress.tls</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "enabled": true,
+  "secretName": ""
+}
+</pre>
+</td>
+			<td>Secure an Ingress by specifying a Secret that contains a TLS private key and certificate.  Ref.: https://kubernetes.io/docs/concepts/services-networking/ingress/#tls</td>
 		</tr>
 		<tr>
 			<td>ingress.tls.enabled</td>
@@ -350,7 +350,7 @@ null
 true
 </pre>
 </td>
-			<td></td>
+			<td>Enable TLS/SSL/HTTPS for Ingress.</td>
 		</tr>
 		<tr>
 			<td>ingress.tls.secretName</td>
@@ -359,7 +359,7 @@ true
 ""
 </pre>
 </td>
-			<td></td>
+			<td>The name of the kubernetes secret which contains a TLS private key and certificate. Hint: This secret is not created by this chart and must be provided.</td>
 		</tr>
 		<tr>
 			<td>mountUcr</td>

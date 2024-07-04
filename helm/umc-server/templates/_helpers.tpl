@@ -89,7 +89,6 @@ password
 {{- end -}}
 {{- end -}}
 
-
 {{- define "umc-server.memcached.auth.credentialSecret.key" -}}
 {{- if .Values.memcached.auth.credentialSecret.key -}}
 {{- .Values.memcached.auth.credentialSecret.key -}}
@@ -97,5 +96,15 @@ password
 memcached-password
 {{- else -}}
 {{- include "umc-server.secretTemplate" (list "umc-server-memcached" .Values.memcached.auth.credentialSecret .) -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "umc-server.ingress.tls.secretName" -}}
+{{- if .Values.ingress.tls.secretName -}}
+{{- tpl .Values.ingress.tls.secretName . -}}
+{{- else if .Values.global.nubusDeployment -}}
+{{- printf "%s-portal-tls" .Release.Name -}}
+{{- else -}}
+{{- required ".Values.ingress.tls.secretName must be defined" .Values.ingress.tls.secretName -}}
 {{- end -}}
 {{- end -}}

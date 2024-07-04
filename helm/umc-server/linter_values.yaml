@@ -29,6 +29,9 @@ memcached:
 ingress:
   enabled: true
   host: "localhost"
+  ingressClassName: "nginx"
+  tls:
+    enabled: false
 
 istio:
   enabled: false
