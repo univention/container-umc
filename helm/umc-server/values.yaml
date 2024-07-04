@@ -30,6 +30,12 @@ global:
   configMapUcr: null
   # -- ConfigMap name to read forced UCR values from.
   configMapUcrForced: null
+
+  # -- Allows to configure extensions globally.
+  extensions: []
+  # -- Allows to configure system extensions globally.
+  systemExtensions: []
+
   # -- Credentials to fetch images from private registry.
   # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
   #
@@ -41,6 +47,15 @@ global:
     connection:
       host: ""
       port: 5432
+
+# -- Extensions to load. This will override the configuration in
+# `global.extensions`.
+extensions: []
+
+# -- Allows to configure the system extensions to load. This is intended for
+# internal usage, prefer to use `extensions` for user configured extensions.
+# This value will override the configuration in `global.systemExtensions`.
+systemExtensions: []
 
 # Security Context.
 # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
@@ -95,19 +110,6 @@ serviceAccount:
 
 # -- Optionally specify a secret to create (primarily intended to be used in development environments to provide custom certificates)
 extraSecrets: []
-
-oxPlugin:
-  image:
-    registry: "artifacts.software-univention.de"
-    repository: "nubus/images/ox-extension"
-    imagePullPolicy: "IfNotPresent"
-    tag: "0.10.0"
-portalPlugin:
-  image:
-    registry: "artifacts.software-univention.de"
-    repository: "nubus/images/portal-extension"
-    imagePullPolicy: "IfNotPresent"
-    tag: "0.26.3"
 
 # -- Application configuration of the Univention Management Console Server
 umcServer:

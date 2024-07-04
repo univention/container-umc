@@ -161,6 +161,15 @@ true
 			<td></td>
 		</tr>
 		<tr>
+			<td>extensions</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td>Extensions to load. This will override the configuration in `global.extensions`.</td>
+		</tr>
+		<tr>
 			<td>extraSecrets</td>
 			<td>list</td>
 			<td><pre lang="json">
@@ -206,6 +215,15 @@ null
 			<td>ConfigMap name to read forced UCR values from.</td>
 		</tr>
 		<tr>
+			<td>global.extensions</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td>Allows to configure extensions globally.</td>
+		</tr>
+		<tr>
 			<td>global.imagePullSecrets</td>
 			<td>list</td>
 			<td><pre lang="json">
@@ -245,6 +263,15 @@ false
 </pre>
 </td>
 			<td>Configuration for the PostgreSQL database</td>
+		</tr>
+		<tr>
+			<td>global.systemExtensions</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td>Allows to configure system extensions globally.</td>
 		</tr>
 		<tr>
 			<td>image.imagePullPolicy</td>
@@ -641,42 +668,6 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>oxPlugin.image.imagePullPolicy</td>
-			<td>string</td>
-			<td><pre lang="json">
-"IfNotPresent"
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>oxPlugin.image.registry</td>
-			<td>string</td>
-			<td><pre lang="json">
-"artifacts.software-univention.de"
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>oxPlugin.image.repository</td>
-			<td>string</td>
-			<td><pre lang="json">
-"nubus/images/ox-extension"
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>oxPlugin.image.tag</td>
-			<td>string</td>
-			<td><pre lang="json">
-"0.10.0"
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
 			<td>podAnnotations</td>
 			<td>object</td>
 			<td><pre lang="json">
@@ -711,42 +702,6 @@ false
 </pre>
 </td>
 			<td>Change ownership and permission of the volume before being exposed inside a Pod.</td>
-		</tr>
-		<tr>
-			<td>portalPlugin.image.imagePullPolicy</td>
-			<td>string</td>
-			<td><pre lang="json">
-"IfNotPresent"
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>portalPlugin.image.registry</td>
-			<td>string</td>
-			<td><pre lang="json">
-"artifacts.software-univention.de"
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>portalPlugin.image.repository</td>
-			<td>string</td>
-			<td><pre lang="json">
-"nubus/images/portal-extension"
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>portalPlugin.image.tag</td>
-			<td>string</td>
-			<td><pre lang="json">
-"0.26.3"
-</pre>
-</td>
-			<td></td>
 		</tr>
 		<tr>
 			<td>postgresql</td>
@@ -1129,6 +1084,15 @@ true
 </pre>
 </td>
 			<td></td>
+		</tr>
+		<tr>
+			<td>systemExtensions</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td>Allows to configure the system extensions to load. This is intended for internal usage, prefer to use `extensions` for user configured extensions. This value will override the configuration in `global.systemExtensions`.</td>
 		</tr>
 		<tr>
 			<td>tolerations</td>

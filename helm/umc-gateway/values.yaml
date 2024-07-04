@@ -29,6 +29,20 @@ global:
   # -- ConfigMap name to read forced UCR values from.
   configMapUcrForced: null
 
+  # -- Allows to configure extensions globally.
+  extensions: []
+  # -- Allows to configure system extensions globally.
+  systemExtensions: []
+
+# -- Extensions to load. This will override the configuration in
+# `global.extensions`.
+extensions: []
+
+# -- Allows to configure the system extensions to load. This is intended for
+# internal usage, prefer to use `extensions` for user configured extensions.
+# This value will override the configuration in `global.systemExtensions`.
+systemExtensions: []
+
 # Security Context.
 # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
 containerSecurityContext:
@@ -128,12 +142,6 @@ image:
   ## Define image sha256 as an alternative to `tag`
   # sha256:
 
-portalPlugin:
-  image:
-    registry: ""
-    repository: "nubus/images/portal-extension"
-    imagePullPolicy: "IfNotPresent"
-    tag: "0.26.3"
 
 ## Container deployment probes
 probes:
