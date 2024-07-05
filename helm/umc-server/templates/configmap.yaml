@@ -26,4 +26,24 @@ data:
   CA_CERT_FILE: {{ .Values.umcServer.caCertFile | quote }}
   CERT_PEM_FILE: {{ .Values.umcServer.certPemFile | quote }}
   SMTP_SECRET_FILE: {{ .Values.umcServer.smtpSecretFile | quote }}
+
+---
+
+kind: "ConfigMap"
+apiVersion: "v1"
+metadata:
+  name: {{ include "common.names.fullname" . }}-pw-reset-email-body
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels:
+    {{- include "common.labels.standard" . | nindent 4 }}
+    {{- if .Values.additionalLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.additionalLabels "context" . ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.additionalAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.additionalAnnotations "context" . ) | nindent 4 }}
+  {{- end }}
+data:
+  passwordreset_email_body.txt: |-
+{{ .Values.selfService.passwordresetEmailBody | indent 4 }}
+
 ...

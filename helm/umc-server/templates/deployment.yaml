@@ -223,6 +223,8 @@ spec:
             - name: plugin-targets
               mountPath: /usr/share/univention-management-console/modules/
               subPath: umc-modules
+            - name: passwordreset-email-body
+              mountPath: /usr/share/univention-self-service/email_bodies
           ports:
             {{- range $key, $value := .Values.service.ports }}
             - name: {{ $key }}
@@ -301,5 +303,9 @@ spec:
             secretName: {{ (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
         {{- end }}
         {{- end }}
+        - name: passwordreset-email-body
+          configMap:
+            name: {{ include "common.names.fullname" . }}-pw-reset-email-body
+            defaultMode: 0444
         - name: plugin-targets
           emptyDir: {}

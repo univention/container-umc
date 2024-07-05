@@ -140,6 +140,34 @@ umcServer:
   # -- smtpSecret the password for the SMTP server.
   smtpSecret: ""
 
+## -- Self-service configuration
+selfService:
+  # -- Content of the email sent for new user sign-ups and password reset requests.
+  # The text can contain the following strings which will be substituted accordingly:
+  # * {username}: The user wishing to reset his/her password.
+  # * {token}: The token to be sent.
+  # * {link}: Link to the “Password Reset” website.
+  # * {tokenlink}: Link to the “Password Reset” website with the user name and token already entered.
+  passwordresetEmailBody: |
+    Dear user {username},
+
+    we have received a password reset request for your account. If you did not
+    wish to change your password, you can safely ignore this message.
+
+    To change your password please follow this link:
+
+    {tokenlink}
+
+    If the link does not work, you can go to
+
+    {link}
+
+    and enter the following token manually:
+
+    {token}
+
+    Greetings from your password self service system.
+
 ## Kubernetes ingress
 ingress:
   # -- Set this to `true` in order to enable the installation on Ingress related objects.

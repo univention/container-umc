@@ -978,6 +978,15 @@ true
 			<td></td>
 		</tr>
 		<tr>
+			<td>selfService.passwordresetEmailBody</td>
+			<td>string</td>
+			<td><pre lang="json">
+"Dear user {username},\n\nwe have received a password reset request for your account. If you did not\nwish to change your password, you can safely ignore this message.\n\nTo change your password please follow this link:\n\n{tokenlink}\n\nIf the link does not work, you can go to\n\n{link}\n\nand enter the following token manually:\n\n{token}\n\nGreetings from your password self service system.\n"
+</pre>
+</td>
+			<td>Content of the email sent for new user sign-ups and password reset requests. The text can contain the following strings which will be substituted accordingly: * {username}: The user wishing to reset his/her password. * {token}: The token to be sent. * {link}: Link to the “Password Reset” website. * {tokenlink}: Link to the “Password Reset” website with the user name and token already entered.</td>
+		</tr>
+		<tr>
 			<td>service.enabled</td>
 			<td>bool</td>
 			<td><pre lang="json">
