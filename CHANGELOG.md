@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.19.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.18.1...v0.19.0) (2024-07-05)
+
+
+### Features
+
+* Add support for dynamic extension configuration ([0f1d0c0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/0f1d0c09201efe14733ac52a6c6406dd8a6afd99))
+
 ## [0.18.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.18.0...v0.18.1) (2024-07-03)
 
 
