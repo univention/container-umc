@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.20.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.19.0...v0.20.0) (2024-07-05)
+
+
+### Features
+
+* make content of password reset email customizable ([6b4bb25](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/6b4bb25c30321c3902a2ef324193c393c562d869))
+
 ## [0.19.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.18.1...v0.19.0) (2024-07-05)
 
 
