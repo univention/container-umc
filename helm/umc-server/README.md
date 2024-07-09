@@ -1110,7 +1110,7 @@ true
   "privateKeyFile": "/var/secrets/private_key",
   "secretMountPath": "/var/secrets",
   "smtpSecret": "",
-  "smtpSecretFile": "/var/secrets/smtp_password"
+  "smtpSecretFile": "/var/secrets/smtp_secret"
 }
 </pre>
 </td>
@@ -1210,7 +1210,7 @@ null
 			<td>umcServer.smtpSecretFile</td>
 			<td>string</td>
 			<td><pre lang="json">
-"/var/secrets/smtp_password"
+"/var/secrets/smtp_secret"
 </pre>
 </td>
 			<td>Path to file with SMTP password.</td>

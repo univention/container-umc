@@ -137,7 +137,7 @@ umcServer:
   # -- Path to file with the certificate's private key (.key).
   privateKeyFile: "/var/secrets/private_key"
   # -- Path to file with SMTP password.
-  smtpSecretFile: "/var/secrets/smtp_password"
+  smtpSecretFile: "/var/secrets/smtp_secret"
   # -- Path to mount the secrets to.
   secretMountPath: "/var/secrets"
   # -- smtpSecret the password for the SMTP server.
