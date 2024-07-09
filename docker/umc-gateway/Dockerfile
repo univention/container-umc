@@ -356,8 +356,7 @@ RUN \
 
 COPY \
   scripts/50-entrypoint.sh \
-  scripts/60-umc-title.sh \
-  /entrypoint.d/
+  /entrypoint.d/50-entrypoint.sh
 
 ############################################################
 # Define runtime

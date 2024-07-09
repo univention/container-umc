@@ -101,12 +101,6 @@ serviceAccount:
   # -- Additional custom labels for the ServiceAccount.
   labels: {}
 
-# -- Application configuration of the Univention Management Console Gateway
-umcGateway:
-  umcHtmlTitle: null
-  # -- The FQDN of the identity provider.
-  # Example: `https://id.souvap.example.org`
-
 ## Kubernetes ingress
 ingress:
   # -- Enable creation of Ingress.

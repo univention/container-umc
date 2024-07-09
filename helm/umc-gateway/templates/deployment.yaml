@@ -24,7 +24,6 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/configmap: {{ include (print .Template.BasePath "/configmap.yaml") . | sha256sum }}
         {{- if .Values.podAnnotations }}
         {{- include "common.tplvalues.render" (dict "value" .Values.podAnnotations "context" .) | nindent 8 }}
         {{- end }}
@@ -107,9 +106,6 @@ spec:
           {{- with .Values.image }}
           imagePullPolicy: {{ .pullPolicy }}
           {{- end }}
-          envFrom:
-            - configMapRef:
-                name: {{ include "common.names.fullname" . }}
           volumeMounts:
             {{- if .Values.extraVolumeMounts }}
             {{ toYaml .Values.extraVolumeMounts | nindent 12 }}

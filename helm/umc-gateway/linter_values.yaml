@@ -9,10 +9,6 @@
 global:
   configMapUcrDefaults: "something"
   nubusDeployment: false
-## Application-specific
-umcGateway:
-  umcHtmlTitle: "Univention Management Console"
-
 
 ## Kubernetes ingress
 ingress:
