@@ -552,7 +552,10 @@ RUN echo -en 'en_US.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8\n' >> /etc/locale.gen && \
     localedef -i de_DE -c -f UTF-8 -A /usr/share/locale/locale.alias de_DE.UTF-8 && \
     localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8 && \
     # Create directory for SAML IDP xml
-    mkdir -p /usr/share/univention-management-console/saml/idp
+    mkdir -p /usr/share/univention-management-console/saml/idp && \
+    # Read by udm_ldap.py UMC module
+    mkdir -p /var/lib/univention-appcenter/attributes && \
+    echo '{"en_US": {}, "de_DE": {}}' > /var/lib/univention-appcenter/attributes/mapping.json
 
 CMD ["/usr/sbin/univention-management-console-server", \
      "--no-daemonize-module-processes", \
