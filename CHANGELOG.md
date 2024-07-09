@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.22.2](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.22.1...v0.22.2) (2024-07-09)
+
+
+### Bug Fixes
+
+* extraVolumeMounts for sssd ([ca1adc7](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/ca1adc713855c322a487fd8b41a4e421b3b01b6b))
+
 ## [0.22.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.22.0...v0.22.1) (2024-07-09)
 
 
