@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.21.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.20.0...v0.21.0) (2024-07-09)
+
+
+### Features
+
+* adjust ingress configuration to support Nubus deployment without stack-gateway or centralized ingress configuration ([78c9a87](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/78c9a87def81cf98fd18e3f7b305fd43bf006d0b))
+
 ## [0.20.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.19.0...v0.20.0) (2024-07-05)
 
 
