@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.22.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.21.0...v0.22.0) (2024-07-09)
+
+
+### Features
+
+* **umc-gateway:** migrate umc-gateway to ucs-base-520 ([f21ce51](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/f21ce51c3cf11de9d4cc6e9858c0108fd36f2260))
+* **umc-server:** migrate umc-server to ucs-base-520 ([5afd209](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/5afd20972cd00f7fad7329668495c6caff26a30f))
+
 ## [0.21.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.20.0...v0.21.0) (2024-07-09)
 
 
