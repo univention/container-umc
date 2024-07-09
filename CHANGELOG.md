@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.22.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.22.0...v0.22.1) (2024-07-09)
+
+
+### Bug Fixes
+
+* **Helm:** Change default value of smtpSecretFile ([69678b8](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/69678b8d7b401880a96e0e49056214bb58ecf021))
+
 ## [0.22.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.21.0...v0.22.0) (2024-07-09)
 
 
