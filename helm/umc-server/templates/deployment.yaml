@@ -103,81 +103,6 @@ spec:
         {{- end }}
 
       containers:
-        - name: "sssd-sidecar"
-          {{- if .Values.containerSecurityContext.enabled }}
-          securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
-          {{- end }}
-          image: "{{ coalesce .Values.image.registry .Values.global.imageRegistry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          {{- with .Values.image }}
-          imagePullPolicy: {{ .pullPolicy }}
-          {{- end }}
-          command:
-            - sh
-            - -c
-            - |
-              /entrypoint.d/50-entrypoint.sh
-              mkdir /var/lib/sss/pipes/private
-              chmod 750 /var/lib/sss/pipes/private/
-              sssd -i --logger stderr --debug-level 2
-          envFrom:
-            - configMapRef:
-                name: {{ include "common.names.fullname" . }}
-          volumeMounts:
-            - name: "sssd-socket"
-              mountPath: "/var/lib/sss/pipes/"
-            {{- if .Values.extraVolumeMounts }}
-            {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumeMounts "context" $) | nindent 12 }}
-            {{- end }}
-            {{- if or .Values.mountUcr .Values.global.nubusDeployment }}
-            - name: "config-map-ucr-defaults"
-              mountPath: "/etc/univention/base-defaults.conf"
-              subPath: "base.conf"
-            {{- end }}
-            {{- if (include "umc-server.configMapUcr" .) }}
-            - name: "config-map-ucr"
-              mountPath: "/etc/univention/base.conf"
-              subPath: "base.conf"
-            {{- end }}
-            {{- if (include "umc-server.configMapUcrForced" .) }}
-            - name: "config-map-ucr-forced"
-              mountPath: "/etc/univention/base-forced.conf"
-              subPath: "base.conf"
-            {{- end }}
-            {{- if and .Values.mountSecrets (not .Values.global.nubusDeployment) }}
-            - name: "secrets"
-              mountPath: "{{ .Values.umcServer.secretMountPath }}"
-            {{- else }}
-            {{- if (include "umc-server.ldap.credentialSecret.name" . ) }}
-            - name: {{ printf "%s-volume" (include "umc-server.ldap.credentialSecret.name" . ) | quote }}
-              mountPath: "{{ .Values.umcServer.secretMountPath }}/ldap_secret"
-              subPath: {{ .Values.ldap.credentialSecret.ldapPasswordKey | quote }}
-              readOnly: true
-            - name: {{ printf "%s-volume" (include "umc-server.ldap.credentialSecret.name" . ) | quote }}
-              mountPath: "{{ .Values.umcServer.secretMountPath }}/machine_secret"
-              subPath: {{ .Values.ldap.credentialSecret.machinePasswordKey | quote }}
-              readOnly: true
-            {{- end }}
-            {{- if (include "umc-server.ldap.tlsSecret.name" . ) }}
-            - name: {{ printf "%s-volume" (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
-              mountPath: "{{ .Values.umcServer.secretMountPath }}/ca_cert"
-              subPath: {{ .Values.ldap.tlsSecret.caCertKey | quote }}
-              readOnly: true
-            {{- end }}
-            {{- if (include "umc-server.ldap.tlsSecret.name" . ) }}
-            - name: {{ printf "%s-volume" (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
-              mountPath: "{{ .Values.umcServer.secretMountPath }}/cert_pem"
-              subPath: {{ .Values.ldap.tlsSecret.certificateKey | quote }}
-              readOnly: true
-            {{- end }}
-            {{- if (include "umc-server.ldap.tlsSecret.name" . ) }}
-            - name: {{ printf "%s-volume" (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
-              mountPath: "{{ .Values.umcServer.secretMountPath }}/private_key"
-              subPath: {{ .Values.ldap.tlsSecret.privateKeyKey | quote }}
-              readOnly: true
-            {{- end }}
-            {{- end }}
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
         - name: "umc-server"
           {{- if .Values.containerSecurityContext.enabled }}
           securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
@@ -328,6 +253,81 @@ spec:
             failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
             successThreshold: {{ .Values.probes.readiness.successThreshold }}
           {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+        - name: "sssd-sidecar"
+          {{- if .Values.containerSecurityContext.enabled }}
+          securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+          {{- end }}
+          image: "{{ coalesce .Values.image.registry .Values.global.imageRegistry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          {{- with .Values.image }}
+          imagePullPolicy: {{ .pullPolicy }}
+          {{- end }}
+          command:
+            - sh
+            - -c
+            - |
+              /entrypoint.d/50-entrypoint.sh
+              mkdir /var/lib/sss/pipes/private
+              chmod 750 /var/lib/sss/pipes/private/
+              sssd -i --logger stderr --debug-level 2
+          envFrom:
+            - configMapRef:
+                name: {{ include "common.names.fullname" . }}
+          volumeMounts:
+            - name: "sssd-socket"
+              mountPath: "/var/lib/sss/pipes/"
+            {{- if .Values.extraVolumeMounts }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumeMounts "context" $) | nindent 12 }}
+            {{- end }}
+            {{- if or .Values.mountUcr .Values.global.nubusDeployment }}
+            - name: "config-map-ucr-defaults"
+              mountPath: "/etc/univention/base-defaults.conf"
+              subPath: "base.conf"
+            {{- end }}
+            {{- if (include "umc-server.configMapUcr" .) }}
+            - name: "config-map-ucr"
+              mountPath: "/etc/univention/base.conf"
+              subPath: "base.conf"
+            {{- end }}
+            {{- if (include "umc-server.configMapUcrForced" .) }}
+            - name: "config-map-ucr-forced"
+              mountPath: "/etc/univention/base-forced.conf"
+              subPath: "base.conf"
+            {{- end }}
+            {{- if and .Values.mountSecrets (not .Values.global.nubusDeployment) }}
+            - name: "secrets"
+              mountPath: "{{ .Values.umcServer.secretMountPath }}"
+            {{- else }}
+            {{- if (include "umc-server.ldap.credentialSecret.name" . ) }}
+            - name: {{ printf "%s-volume" (include "umc-server.ldap.credentialSecret.name" . ) | quote }}
+              mountPath: "{{ .Values.umcServer.secretMountPath }}/ldap_secret"
+              subPath: {{ .Values.ldap.credentialSecret.ldapPasswordKey | quote }}
+              readOnly: true
+            - name: {{ printf "%s-volume" (include "umc-server.ldap.credentialSecret.name" . ) | quote }}
+              mountPath: "{{ .Values.umcServer.secretMountPath }}/machine_secret"
+              subPath: {{ .Values.ldap.credentialSecret.machinePasswordKey | quote }}
+              readOnly: true
+            {{- end }}
+            {{- if (include "umc-server.ldap.tlsSecret.name" . ) }}
+            - name: {{ printf "%s-volume" (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
+              mountPath: "{{ .Values.umcServer.secretMountPath }}/ca_cert"
+              subPath: {{ .Values.ldap.tlsSecret.caCertKey | quote }}
+              readOnly: true
+            {{- end }}
+            {{- if (include "umc-server.ldap.tlsSecret.name" . ) }}
+            - name: {{ printf "%s-volume" (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
+              mountPath: "{{ .Values.umcServer.secretMountPath }}/cert_pem"
+              subPath: {{ .Values.ldap.tlsSecret.certificateKey | quote }}
+              readOnly: true
+            {{- end }}
+            {{- if (include "umc-server.ldap.tlsSecret.name" . ) }}
+            - name: {{ printf "%s-volume" (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
+              mountPath: "{{ .Values.umcServer.secretMountPath }}/private_key"
+              subPath: {{ .Values.ldap.tlsSecret.privateKeyKey | quote }}
+              readOnly: true
+            {{- end }}
+            {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
