@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.22.3](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.22.2...v0.22.3) (2024-07-09)
+
+
+### Bug Fixes
+
+* change containers order so logs and shells default to it ([390da3f](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/390da3faba188ee2c242fc20154c876dab2eb978))
+
 ## [0.22.2](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.22.1...v0.22.2) (2024-07-09)
 
 
