@@ -125,6 +125,9 @@ spec:
           volumeMounts:
             - name: "sssd-socket"
               mountPath: "/var/lib/sss/pipes/"
+            {{- if .Values.extraVolumeMounts }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumeMounts "context" $) | nindent 12 }}
+            {{- end }}
             {{- if or .Values.mountUcr .Values.global.nubusDeployment }}
             - name: "config-map-ucr-defaults"
               mountPath: "/etc/univention/base-defaults.conf"
