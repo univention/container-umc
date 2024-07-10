@@ -36,6 +36,10 @@ global:
   extensions: []
   # -- Allows to configure system extensions globally.
   systemExtensions: []
+  domain: ""
+  subdomains:
+    portal: "portal"
+    keycloak: "id"
 
 # -- Extensions to load. This will override the configuration in
 # `global.extensions`.
