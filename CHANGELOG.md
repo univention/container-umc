@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.23.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.22.4...v0.23.0) (2024-07-10)
+
+
+### Features
+
+* remove license patch ([484336e](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/484336e7a02f1feb3b8835312a631c8b595014a8))
+
 ## [0.22.4](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.22.3...v0.22.4) (2024-07-10)
 
 
