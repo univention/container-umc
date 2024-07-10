@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.22.4](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.22.3...v0.22.4) (2024-07-10)
+
+
+### Bug Fixes
+
+* silence uldap warning of missing appcenter attribute mapping file ([0f16e38](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/0f16e38c1958e54cb7da46acf73fc97220aa6fe2))
+
 ## [0.22.3](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.22.2...v0.22.3) (2024-07-09)
 
 
