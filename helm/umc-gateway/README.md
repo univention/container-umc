@@ -203,6 +203,15 @@ null
 			<td>ConfigMap name to read forced UCR values from.</td>
 		</tr>
 		<tr>
+			<td>global.domain</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
 			<td>global.extensions</td>
 			<td>list</td>
 			<td><pre lang="json">
@@ -228,6 +237,24 @@ false
 </pre>
 </td>
 			<td>Indicates wether this chart is part of a Nubus deployment.</td>
+		</tr>
+		<tr>
+			<td>global.subdomains.keycloak</td>
+			<td>string</td>
+			<td><pre lang="json">
+"id"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.subdomains.portal</td>
+			<td>string</td>
+			<td><pre lang="json">
+"portal"
+</pre>
+</td>
+			<td></td>
 		</tr>
 		<tr>
 			<td>global.systemExtensions</td>
