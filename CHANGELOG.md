@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.24.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.23.0...v0.24.0) (2024-07-11)
+
+
+### Features
+
+* cors headers for umc-gateway ([6801d3b](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/6801d3beb6ed1cf97e57b56ea05c03b5333f5fe6))
+
 ## [0.23.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.22.4...v0.23.0) (2024-07-10)
 
 
