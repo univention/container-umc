@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.24.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.24.0...v0.24.1) (2024-07-16)
+
+
+### Bug Fixes
+
+* remove UMC title patch, now set via UCR ([3f39276](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/3f39276c7b7a0b6dac53b4aba40ad00a4fb3afe5))
+
 ## [0.24.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.23.0...v0.24.0) (2024-07-11)
 
 
