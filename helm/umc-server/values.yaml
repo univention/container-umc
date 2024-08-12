@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: AGPL-3.0-only
-# SPDX-FileCopyrightText: 2023 Univention GmbH
+# SPDX-FileCopyrightText: 2024 Univention GmbH
 
 ---
 # Default values for univention-management-console-server
@@ -171,6 +171,27 @@ selfService:
 
     Greetings from your password self service system.
 
+# -- Configuration for the loadBalancer with session stickiness.
+proxy:
+  replicaCount: 1
+  image:
+    registry: "artifacts.software-univention.de"
+    repository: "library/traefik"
+    tag: "3.0@sha256:a208c74fd80a566d4ea376053bff73d31616d7af3f1465a7747b8b89ee34d97e"
+    pullPolicy: "IfNotPresent"
+
+  logLevel: "INFO"
+
+  ## Kubernetes Service for the loadBalancer
+  service:
+    enabled: true
+    type: "ClusterIP"
+    ports:
+      http:
+        containerPort: 80
+        port: 80
+        protocol: "TCP"
+
 ## Kubernetes ingress
 ingress:
   # -- Enable creation of Ingress.
@@ -264,14 +285,15 @@ resources:
     memory: "4Gi"
     cpu: "4"
 
-## Kubernetes Service
+## Kubernetes Service for the loadBalancer
 service:
   enabled: true
   type: "ClusterIP"
+  clusterIP: "None"
   ports:
     http:
       containerPort: 8090
-      port: 80
+      port: 8090
       protocol: "TCP"
 
 

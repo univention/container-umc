@@ -3,7 +3,7 @@
 
 ---
 apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
-kind: Deployment
+kind: "StatefulSet"
 metadata:
   name: {{ include "common.names.fullname" . }}
   namespace: {{ include "common.names.namespace" . | quote }}

@@ -1,0 +1,52 @@
+{{/*
+SPDX-FileCopyrightText: 2024 Univention GmbH
+SPDX-License-Identifier: AGPL-3.0-only
+*/}}
+---
+kind: "ConfigMap"
+apiVersion: "v1"
+metadata:
+  name: "{{ include "common.names.fullname" . }}-proxy"
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels:
+    {{- include "common.labels.standard" . | nindent 4 }}
+    {{- if .Values.additionalLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.additionalLabels "context" . ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.additionalAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.additionalAnnotations "context" . ) | nindent 4 }}
+  {{- end }}
+data:
+  traefik.yaml: |
+    log:
+      level: {{ .Values.proxy.logLevel }}
+    accessLog:
+      filePath: /dev/stdout
+    ping:
+      entryPoint: http
+    entryPoints:
+      http:
+        address: ":80"
+    providers:
+      file:
+        filename: /etc/traefik/dynamic.yaml
+  dynamic.yaml: |
+    http:
+      routers:
+        umc-server:
+          service: umc-server
+          rule: PathPrefix(`/`)
+      services:
+        umc-server:
+          loadBalancer:
+            sticky:
+              cookie:
+                name: traefik_session
+            servers:
+              {{- $root := . }}
+              {{- $replicaCount := int .Values.replicaCount }}
+              {{- range $i := until (int .Values.replicaCount) }}
+              - url: http://{{ include "common.names.fullname" $root }}-{{ $i }}:8090
+              {{- end }}
+
+...

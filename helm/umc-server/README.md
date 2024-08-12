@@ -907,6 +907,35 @@ true
 			<td></td>
 		</tr>
 		<tr>
+			<td>proxy</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "image": {
+    "pullPolicy": "IfNotPresent",
+    "registry": "artifacts.software-univention.de",
+    "repository": "library/traefik",
+    "tag": "3.0@sha256:a208c74fd80a566d4ea376053bff73d31616d7af3f1465a7747b8b89ee34d97e"
+  },
+  "logLevel": "INFO",
+  "replicaCount": 1,
+  "service": {
+    "enabled": true,
+    "ports": {
+      "http": {
+        "containerPort": 80,
+        "port": 80,
+        "protocol": "TCP"
+      }
+    },
+    "type": "ClusterIP"
+  }
+}
+</pre>
+</td>
+			<td>Configuration for the loadBalancer with session stickiness.</td>
+		</tr>
+		<tr>
 			<td>replicaCount</td>
 			<td>int</td>
 			<td><pre lang="json">
@@ -970,6 +999,15 @@ true
 			<td>Content of the email sent for new user sign-ups and password reset requests. The text can contain the following strings which will be substituted accordingly: * {username}: The user wishing to reset his/her password. * {token}: The token to be sent. * {link}: Link to the “Password Reset” website. * {tokenlink}: Link to the “Password Reset” website with the user name and token already entered.</td>
 		</tr>
 		<tr>
+			<td>service.clusterIP</td>
+			<td>string</td>
+			<td><pre lang="json">
+"None"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
 			<td>service.enabled</td>
 			<td>bool</td>
 			<td><pre lang="json">
@@ -991,7 +1029,7 @@ true
 			<td>service.ports.http.port</td>
 			<td>int</td>
 			<td><pre lang="json">
-80
+8090
 </pre>
 </td>
 			<td></td>

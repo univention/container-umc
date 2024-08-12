@@ -1,0 +1,41 @@
+{{/*
+SPDX-FileCopyrightText: 2024 Univention GmbH
+SPDX-License-Identifier: AGPL-3.0-only
+*/}}
+{{- if .Values.proxy.service.enabled }}
+---
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  name: "{{ include "common.names.fullname" . }}"
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels:
+    {{- $commonLabels := include "common.labels.standard" . | fromYaml }}
+    {{- $uiLabels := dict "app.kubernetes.io/name" (printf "%s-proxy" (include "common.names.fullname" .)) }}
+    {{- $mergedLabels := merge $uiLabels $commonLabels}}
+    {{- toYaml $mergedLabels | nindent 4 }}
+  annotations:
+    {{- if .Values.proxy.service.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.proxy.service.annotations "context" . ) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.additionalAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.additionalAnnotations "context" . ) | nindent 4 }}
+    {{- end }}
+spec:
+  type: "{{ .Values.proxy.service.type }}"
+  ports:
+    {{- range $key, $value := .Values.proxy.service.ports }}
+    - name: "{{ $key }}"
+      port: {{ $value.port }}
+      targetPort: {{ $key | quote }}
+      protocol: "{{ $value.protocol | default "TCP" }}"
+      {{- if and $value.nodePort (not (eq $.Values.proxy.service.type "ClusterIP")) }}
+      nodePort: {{ $value.nodePort }}
+      {{- end }}
+    {{- end }}
+  selector:
+    {{- $commonLabels := include "common.labels.matchLabels" . | fromYaml }}
+    {{- $uiLabels := dict "app.kubernetes.io/name" (printf "%s-proxy" (include "common.names.fullname" .)) }}
+    {{- merge $uiLabels $commonLabels | toYaml | nindent 4}}
+...
+{{- end }}

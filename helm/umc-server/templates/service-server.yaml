@@ -1,0 +1,55 @@
+{{/*
+SPDX-FileCopyrightText: 2024 Univention GmbH
+SPDX-License-Identifier: AGPL-3.0-only
+*/}}
+{{- if .Values.service.enabled }}
+{{- $root := . }}
+{{- $replicaCount := int .Values.replicaCount }}
+{{- range $i := until $replicaCount }}
+---
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  name: "{{ include "common.names.fullname" $root }}-{{ $i }}"
+  namespace: {{ include "common.names.namespace" $root | quote }}
+  labels:
+    {{- include "common.labels.standard" $root | nindent 4 }}
+    {{- if $root.Values.additionalLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" $root.Values.additionalLabels "context" $root ) | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- if $root.Values.service.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" $root.Values.service.annotations "context" $root ) | nindent 4 }}
+    {{- end }}
+    {{- if $root.Values.additionalAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" $root.Values.additionalAnnotations "context" $root ) | nindent 4 }}
+    {{- end }}
+spec:
+  type: "{{ $root.Values.service.type }}"
+  {{- if $root.Values.service.clusterIP }}
+  clusterIP: {{ $root.Values.service.clusterIP }}
+  {{- end }}
+  ports:
+    {{- if $root.Values.service.ports.http }}
+    - name: http
+      port: {{ $root.Values.service.ports.http.port }}
+      targetPort: http
+      protocol: {{ $root.Values.service.ports.http.protocol | default "TCP" }}
+      {{- if and (eq $root.Values.service.type "NodePort") (hasKey $root.Values.service.ports.http "nodePort") }}
+      nodePort: {{ $root.Values.service.ports.http.nodePort }}
+      {{- end }}
+    {{- end }}
+    {{- if $root.Values.service.ports.https }}
+    - name: https
+      port: {{ $root.Values.service.ports.https.port }}
+      targetPort: https
+      protocol: {{ $root.Values.service.ports.https.protocol | default "TCP" }}
+      {{- if and (eq $root.Values.service.type "NodePort") (hasKey $root.Values.service.ports.https "nodePort") }}
+      nodePort: {{ $root.Values.service.ports.https.nodePort }}
+      {{- end }}
+    {{- end }}
+  selector:
+    {{- include "common.labels.matchLabels" $root | nindent 4 }}
+    statefulset.kubernetes.io/pod-name: "{{ include "common.names.fullname" $root }}-{{ $i }}"
+{{- end }}
+{{- end }}
