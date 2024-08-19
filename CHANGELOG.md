@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.26.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.25.0...v0.26.0) (2024-08-19)
+
+
+### Features
+
+* **umc-server:** Session stickyness ([a7bcd05](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/a7bcd0549b62fecde572b1a24acb1e3802b5c5f4))
+
 ## [0.25.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.24.1...v0.25.0) (2024-08-15)
 
 
