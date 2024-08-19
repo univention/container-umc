@@ -81,7 +81,7 @@ spec:
           volumeMounts:
             - name: plugin-targets
               mountPath: /target
-          resources: {{- include "common.tplvalues.render" (dict "value" .Values.initResources "context" .) | nindent 12 }}
+          resources: {{- include "common.tplvalues.render" (dict "value" .Values.resources "context" .) | nindent 12 }}
         {{- $systemExtensions := default (list) (coalesce .Values.systemExtensions .Values.global.systemExtensions) -}}
         {{- $extensions := default (list) (coalesce .Values.extensions .Values.global.extensions) -}}
         {{- range (concat $systemExtensions $extensions) }}
@@ -99,7 +99,7 @@ spec:
           volumeMounts:
             - name: plugin-targets
               mountPath: /target
-          resources: {{- include "common.tplvalues.render" (dict "value" $.Values.initResources "context" $) | nindent 12 }}
+          resources: {{- include "common.tplvalues.render" (dict "value" $.Values.resources "context" $) | nindent 12 }}
         {{- end }}
 
       containers:
@@ -132,12 +132,36 @@ spec:
                   name: {{ include "common.names.fullname" . }}
                   key: "memcached_password"
                   {{- end }}
+            - name: "PYTHONDONTWRITEBYTECODE"
+              value: "1"
           envFrom:
             - configMapRef:
                 name: {{ include "common.names.fullname" . }}
           volumeMounts:
+            - name: "etc-ldap"
+              mountPath: "/etc/ldap"
+            - name: "etc-sssd"
+              mountPath: "/etc/sssd"
+            - name: "etc-univention-ssl"
+              mountPath: "/etc/univention/ssl"
+            - name: "etc-univention-reports"
+              mountPath: "/etc/univention/directory/reports"
+            - name: "acl-cache"
+              mountPath: "/var/cache/univention-management-console/acls"
+            - name: "config-cache"
+              mountPath: "/var/cache/univention-config"
+            - name: "univention-logs"
+              mountPath: "/var/log/univention"
             - name: "sssd-socket"
               mountPath: "/var/lib/sss/pipes/"
+            - name: "var-www-univention"
+              mountPath: "/var/www/univention"
+            - name: "run-umc"
+              mountPath: "/run/univention-management-console"
+            - name: "tmp"
+              mountPath: "/tmp"
+            - name: "usr-share-umc-saml-idp"
+              mountPath: "/usr/share/univention-management-console/saml/idp"
             {{- if .Values.extraVolumeMounts }}
             {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumeMounts "context" $) | nindent 12 }}
             {{- end }}
@@ -155,11 +179,11 @@ spec:
             {{- else }}
             {{- if (include "umc-server.ldap.credentialSecret.name" . ) }}
             - name: {{ printf "%s-volume" (include "umc-server.ldap.credentialSecret.name" . ) | quote }}
-              mountPath: "{{ .Values.umcServer.secretMountPath }}/ldap_secret"
+              mountPath: "/etc/ldap.secret"
               subPath: {{ .Values.ldap.credentialSecret.ldapPasswordKey | quote }}
               readOnly: true
             - name: {{ printf "%s-volume" (include "umc-server.ldap.credentialSecret.name" . ) | quote }}
-              mountPath: "{{ .Values.umcServer.secretMountPath }}/machine_secret"
+              mountPath: "/etc/machine.secret"
               subPath: {{ .Values.ldap.credentialSecret.machinePasswordKey | quote }}
               readOnly: true
             {{- end }}
@@ -268,6 +292,14 @@ spec:
             - configMapRef:
                 name: {{ include "common.names.fullname" . }}
           volumeMounts:
+            - name: "etc-ldap"
+              mountPath: "/etc/ldap"
+            - name: "etc-sssd"
+              mountPath: "/etc/sssd"
+            - name: "etc-univention-ssl"
+              mountPath: "/etc/univention/ssl"
+            - name: "usr-share-umc-saml-idp"
+              mountPath: "/usr/share/univention-management-console/saml/idp"
             - name: "sssd-socket"
               mountPath: "/var/lib/sss/pipes/"
             {{- if .Values.extraVolumeMounts }}
@@ -287,11 +319,11 @@ spec:
             {{- else }}
             {{- if (include "umc-server.ldap.credentialSecret.name" . ) }}
             - name: {{ printf "%s-volume" (include "umc-server.ldap.credentialSecret.name" . ) | quote }}
-              mountPath: "{{ .Values.umcServer.secretMountPath }}/ldap_secret"
+              mountPath: "/etc/ldap.secret"
               subPath: {{ .Values.ldap.credentialSecret.ldapPasswordKey | quote }}
               readOnly: true
             - name: {{ printf "%s-volume" (include "umc-server.ldap.credentialSecret.name" . ) | quote }}
-              mountPath: "{{ .Values.umcServer.secretMountPath }}/machine_secret"
+              mountPath: "/etc/machine.secret"
               subPath: {{ .Values.ldap.credentialSecret.machinePasswordKey | quote }}
               readOnly: true
             {{- end }}
@@ -320,7 +352,29 @@ spec:
         {{- if .Values.extraVolumes }}
         {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumes "context" $) | nindent 8 }}
         {{- end }}
+        - name: "etc-ldap"
+          emptyDir: {}
+        - name: "etc-sssd"
+          emptyDir: {}
+        - name: "etc-univention-ssl"
+          emptyDir: {}
+        - name: "etc-univention-reports"
+          emptyDir: {}
+        - name: "acl-cache"
+          emptyDir: {}
+        - name: "config-cache"
+          emptyDir: {}
+        - name: "univention-logs"
+          emptyDir: {}
         - name: "sssd-socket"
+          emptyDir: {}
+        - name: "var-www-univention"
+          emptyDir: {}
+        - name: "run-umc"
+          emptyDir: {}
+        - name: "tmp"
+          emptyDir: {}
+        - name: "usr-share-umc-saml-idp"
           emptyDir: {}
         {{- if (include "umc-server.configMapUcr" .) }}
         - name: "config-map-ucr"

@@ -110,7 +110,7 @@ false
 			<td>containerSecurityContext.enabled</td>
 			<td>bool</td>
 			<td><pre lang="json">
-false
+true
 </pre>
 </td>
 			<td>Enable security context.</td>
@@ -188,6 +188,15 @@ true
 			<td>Optionally specify a secret to create (primarily intended to be used in development environments to provide custom certificates)</td>
 		</tr>
 		<tr>
+			<td>extraVolumeMounts</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
 			<td>fullnameOverride</td>
 			<td>string</td>
 			<td><pre lang="json">
@@ -213,6 +222,15 @@ null
 </pre>
 </td>
 			<td>Allows to configure extensions globally.</td>
+		</tr>
+		<tr>
+			<td>global.imagePullPolicy</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td></td>
 		</tr>
 		<tr>
 			<td>global.imagePullSecrets</td>
@@ -672,7 +690,7 @@ true
 			<td>podSecurityContext.enabled</td>
 			<td>bool</td>
 			<td><pre lang="json">
-false
+true
 </pre>
 </td>
 			<td>Enable security context.</td>
@@ -990,15 +1008,6 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>securityContext</td>
-			<td>object</td>
-			<td><pre lang="json">
-{}
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
 			<td>selfService.passwordresetEmailBody</td>
 			<td>string</td>
 			<td><pre lang="json">
@@ -1132,6 +1141,15 @@ true
 </pre>
 </td>
 			<td>Allows to configure the system extensions to load. This is intended for internal usage, prefer to use `extensions` for user configured extensions. This value will override the configuration in `global.systemExtensions`.</td>
+		</tr>
+		<tr>
+			<td>terminationGracePeriodSeconds</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td></td>
 		</tr>
 		<tr>
 			<td>tolerations</td>

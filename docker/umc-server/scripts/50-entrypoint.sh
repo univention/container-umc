@@ -103,7 +103,8 @@ univention-config-registry commit /etc/sssd/sssd.conf
 MACHINE_SECRET_FILE=${MACHINE_SECRET_FILE:-/run/secrets/machine_secret}
 if [[ -f "${MACHINE_SECRET_FILE}" ]]; then
   echo "Using LDAP machine secret"
-  ln --symbolic --force "${MACHINE_SECRET_FILE}" /etc/machine.secret
+  # TODO(BSI compliance artifact): drop this line
+  # ln --symbolic --force "${MACHINE_SECRET_FILE}" /etc/machine.secret
   cat <<EOF >> /etc/sssd/sssd.conf
 ldap_default_authtok_type = password
 ldap_default_authtok = $(cat "$MACHINE_SECRET_FILE")
@@ -118,7 +119,8 @@ fi
 LDAP_SECRET_FILE=${LDAP_SECRET_FILE:-/run/secrets/ldap_secret}
 if [[ -f "${LDAP_SECRET_FILE}" ]]; then
   echo "Using LDAP admin secret"
-  ln --symbolic --force "${LDAP_SECRET_FILE}" /etc/ldap.secret
+  # TODO(BSI compliance artifact): drop this line
+  # ln --symbolic --force "${LDAP_SECRET_FILE}" /etc/ldap.secret
 else
   echo "No LDAP admin secret provided!"
 fi
