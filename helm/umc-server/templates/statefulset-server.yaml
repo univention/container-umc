@@ -138,6 +138,9 @@ spec:
             - configMapRef:
                 name: {{ include "common.names.fullname" . }}
           volumeMounts:
+            - name: "entrypoint-overrides"
+              mountPath: "/entrypoint.d/50-entrypoint.sh"
+              subPath: "50-entrypoint.sh"
             - name: "etc-ldap"
               mountPath: "/etc/ldap"
             - name: "etc-sssd"
@@ -292,6 +295,9 @@ spec:
             - configMapRef:
                 name: {{ include "common.names.fullname" . }}
           volumeMounts:
+            - name: "entrypoint-overrides"
+              mountPath: "/entrypoint.d/50-entrypoint.sh"
+              subPath: "50-entrypoint.sh"
             - name: "etc-ldap"
               mountPath: "/etc/ldap"
             - name: "etc-sssd"
@@ -352,6 +358,9 @@ spec:
         {{- if .Values.extraVolumes }}
         {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumes "context" $) | nindent 8 }}
         {{- end }}
+        - name: entrypoint-overrides
+          configMap:
+            name: {{ include "common.names.fullname" . }}-entrypoint-overrides
         - name: "etc-ldap"
           emptyDir: {}
         - name: "etc-sssd"

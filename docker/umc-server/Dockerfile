@@ -536,8 +536,17 @@ COPY --from=build \
   /version
 
 ############################################################
+# Interim code modifications and patches
+
+# Apply patch to support setting individual attributes to read-only in self-service
+RUN sed --in-place \
+--expression="s@'editable': bool(prop.may_change),@'editable': bool(prop.may_change and not ucr.is_true(f'self-service/udm_attributes/{propname}/readonly')),@" \
+/usr/lib/python3/dist-packages/univention/management/console/modules/passwordreset/__init__.py
+
+############################################################
 # Copy Docker-specific files
 
+# hadolint ignore=DL3059
 RUN mkdir /var/cache/univention-management-console/
 
 COPY scripts/50-entrypoint.sh \
