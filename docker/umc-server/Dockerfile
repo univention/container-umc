@@ -535,36 +535,64 @@ COPY --from=build \
   /version \
   /version
 
-############################################################
-# Interim code modifications and patches
-
-# Apply patch to support setting individual attributes to read-only in self-service
-RUN sed --in-place \
---expression="s@'editable': bool(prop.may_change),@'editable': bool(prop.may_change and not ucr.is_true(f'self-service/udm_attributes/{propname}/readonly')),@" \
-/usr/lib/python3/dist-packages/univention/management/console/modules/passwordreset/__init__.py
+RUN mkdir /var/cache/univention-management-console/
 
 ############################################################
 # Copy Docker-specific files
-
-# hadolint ignore=DL3059
-RUN mkdir /var/cache/univention-management-console/
 
 COPY scripts/50-entrypoint.sh \
      scripts/60-self-service.sh \
      /entrypoint.d/
 
-############################################################
-# Define runtime
 
-# build all locales
-RUN echo -en 'en_US.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8\n' >> /etc/locale.gen && \
-    localedef -i de_DE -c -f UTF-8 -A /usr/share/locale/locale.alias de_DE.UTF-8 && \
-    localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8 && \
-    # Create directory for SAML IDP xml
-    mkdir -p /usr/share/univention-management-console/saml/idp && \
-    # Read by udm_ldap.py UMC module
-    mkdir -p /var/lib/univention-appcenter/attributes && \
-    echo '{"en_US": {}, "de_DE": {}}' > /var/lib/univention-appcenter/attributes/mapping.json
+     ############################################################
+     # Define runtime
+
+     # build all locales
+     RUN echo -en 'en_US.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8\n' >> /etc/locale.gen && \
+     localedef -i de_DE -c -f UTF-8 -A /usr/share/locale/locale.alias de_DE.UTF-8 && \
+     localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8 && \
+     # Create directory for SAML IDP xml
+     mkdir -p /usr/share/univention-management-console/saml/idp && \
+     # Read by udm_ldap.py UMC module
+     mkdir -p /var/lib/univention-appcenter/attributes && \
+     echo '{"en_US": {}, "de_DE": {}}' > /var/lib/univention-appcenter/attributes/mapping.json
+
+############################################################
+# Set permissions
+
+RUN chown -R 1000:1000 \
+    /usr/sbin/univention-management-console-server \
+    /usr/sbin/univention-management-console-module \
+    /usr/share/univention-management-console \
+    /var/cache/univention-management-console \
+    /var/log/univention \
+    /etc/univention \
+    /usr/lib/python3/dist-packages/univention \
+    /usr/share/locale/de/LC_MESSAGES \
+    /var/lib/univention-appcenter \
+    /var/cache/univention-config \
+    && chmod -R 755 \
+    /entrypoint.d \
+    /usr/sbin/univention-management-console-server \
+    /usr/sbin/univention-management-console-module \
+    /usr/share/univention-management-console \
+    /var/cache/univention-management-console \
+    /var/log/univention \
+    /etc/univention \
+    /usr/lib/python3/dist-packages/univention \
+    /usr/share/locale/de/LC_MESSAGES \
+    /var/lib/univention-appcenter \
+    /var/cache/univention-config
+
+############################################################
+# Interim code modifications and patches
+
+# Apply patch to support setting individual attributes to read-only in self-service
+# hadolint ignore=DL3059
+RUN sed --in-place \
+--expression="s@'editable': bool(prop.may_change),@'editable': bool(prop.may_change and not ucr.is_true(f'self-service/udm_attributes/{propname}/readonly')),@" \
+/usr/lib/python3/dist-packages/univention/management/console/modules/passwordreset/__init__.py
 
 CMD ["/usr/sbin/univention-management-console-server", \
      "--no-daemonize-module-processes", \

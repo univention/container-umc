@@ -111,6 +111,11 @@ spec:
           {{- with .Values.image }}
           imagePullPolicy: {{ .pullPolicy }}
           {{- end }}
+          command:
+            - /bin/bash
+            - -c
+            - |
+              tail -f /dev/null
           env:
             - name: "SELF_SERVICE_DB_SECRET"
               valueFrom:
