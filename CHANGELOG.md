@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.27.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.26.0...v0.27.0) (2024-08-21)
+
+
+### Features
+
+* **umc-server:** Add certManager template for ingress ([7c8423e](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/7c8423e5424f8305e6e5afcf6a4bd1dd6a47c415))
+
 ## [0.26.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.25.0...v0.26.0) (2024-08-19)
 
 
