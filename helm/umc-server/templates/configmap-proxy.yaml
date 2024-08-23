@@ -30,6 +30,7 @@ data:
     providers:
       file:
         filename: /etc/traefik/dynamic.yaml
+        watch: false
   dynamic.yaml: |
     http:
       routers:
