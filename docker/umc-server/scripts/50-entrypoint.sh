@@ -85,9 +85,12 @@ if [[ -n "${SAML_METADATA_URL:-}" ]]; then
     's#<md:SingleLogoutService[^>]+Binding="[^"]+bindings:SOAP"[^>]+>[^<]*</[^>]+>##' \
     "${SAML_METADATA_PATH}"
 
+  chmod 0640 "${SAML_METADATA_PATH}"
+
   echo "Successfully set SAML metadata in ${SAML_METADATA_PATH}"
 
   mkdir --parents "/etc/univention/ssl/${SAML_SP_SERVER}"
+  chmod 755 "/etc/univention/ssl/${SAML_SP_SERVER}"
   ln --symbolic --force "${CERT_PEM_FILE}" "/etc/univention/ssl/${SAML_SP_SERVER}/cert.pem"
   ln --symbolic --force "${PRIVATE_KEY_FILE}" "/etc/univention/ssl/${SAML_SP_SERVER}/private.key"
 else
@@ -97,14 +100,16 @@ fi
 ############################################################
 # Store SSSD configuration
 
+if [[ ! -d /etc/sssd/conf.d ]]; then
+  mkdir -p /etc/sssd/conf.d
+fi
+
 univention-config-registry commit /etc/sssd/sssd.conf
 
 # Set LDAP machine authentication
-MACHINE_SECRET_FILE=${MACHINE_SECRET_FILE:-/run/secrets/machine_secret}
+MACHINE_SECRET_FILE=${MACHINE_SECRET_FILE:-/etc/machine.secret}
 if [[ -f "${MACHINE_SECRET_FILE}" ]]; then
   echo "Using LDAP machine secret"
-  # TODO(BSI compliance artifact): drop this line
-  # ln --symbolic --force "${MACHINE_SECRET_FILE}" /etc/machine.secret
   cat <<EOF >> /etc/sssd/sssd.conf
 ldap_default_authtok_type = password
 ldap_default_authtok = $(cat "$MACHINE_SECRET_FILE")
@@ -116,11 +121,9 @@ fi
 # NOTE: This is required for the UMC passwordreset module
 # during the use-case of set recovery email. Otherwise, it will error with
 # "Changing contact data failed"
-LDAP_SECRET_FILE=${LDAP_SECRET_FILE:-/run/secrets/ldap_secret}
+LDAP_SECRET_FILE=${LDAP_SECRET_FILE:-/etc/ldap.secret}
 if [[ -f "${LDAP_SECRET_FILE}" ]]; then
   echo "Using LDAP admin secret"
-  # TODO(BSI compliance artifact): drop this line
-  # ln --symbolic --force "${LDAP_SECRET_FILE}" /etc/ldap.secret
 else
   echo "No LDAP admin secret provided!"
 fi
@@ -184,7 +187,9 @@ fi
 LDAP_HOST=$(ucr get ldap/master)
 LDAP_PORT=$(ucr get ldap/master/port)
 LDAP_BASE_DN=$(ucr get ldap/base)
-mkdir /etc/ldap
+if [[ ! -d /etc/ldap ]]; then
+  mkdir /etc/ldap
+fi
 cat <<EOF > /etc/ldap/ldap.conf
 # This file should be world readable but not world writable.
 

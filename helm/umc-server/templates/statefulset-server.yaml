@@ -62,6 +62,130 @@ spec:
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
       {{- end }}
       initContainers:
+        - name: "prepare-config"
+          {{- if .Values.containerSecurityContextInit.enabled }}
+          securityContext: {{- omit .Values.containerSecurityContextInit "enabled" | toYaml | nindent 12 }}
+          {{- end }}
+          resources: {{- include "common.tplvalues.render" (dict "value" .Values.resources "context" .) | nindent 12 }}
+          image: "{{ coalesce .Values.image.registry .Values.global.imageRegistry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ coalesce .Values.image.imagePullPolicy .Values.global.imagePullPolicy | quote }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "common.names.fullname" . }}
+          command:
+            - bash
+            - -c
+            - |
+              set -x
+              ls -la /etc/ldap
+              /entrypoint.d/50-entrypoint.sh
+              cp -a /var/lib/sss/* /target/var/lib/sss/
+              if [[ ! -d /target/var/lib/sss/pipes/private ]]; then
+                mkdir -p /target/var/lib/sss/pipes/private
+              fi
+              chmod 750 /target/var/lib/sss/pipes/private/
+              chown root:root -R /target/var/lib/sss/pipes /target/var/lib/sss/db /etc/sssd/sssd.conf
+              chmod 0600 /etc/sssd/sssd.conf
+
+          volumeMounts:
+            # - name: "entrypoint-overrides"
+            #   mountPath: "/entrypoint.d/50-entrypoint.sh"
+            #   subPath: "50-entrypoint.sh"
+            - name: "etc-ldap"
+              mountPath: "/etc/ldap"
+            - name: "etc-pam"
+              mountPath: "/etc/pam.d"
+            - name: "etc-sssd"
+              mountPath: "/etc/sssd"
+            - name: "etc-univention-ssl"
+              mountPath: "/etc/univention/ssl"
+            - name: "etc-univention-reports"
+              mountPath: "/etc/univention/directory/reports"
+            - name: "acl-cache"
+              mountPath: "/var/cache/univention-management-console/acls"
+            - name: "config-cache"
+              mountPath: "/var/cache/univention-config"
+            - name: "univention-logs"
+              mountPath: "/var/log/univention"
+            - name: "var-lib-sss"
+              mountPath: "/target/var/lib/sss"
+            - name: "var-www-univention"
+              mountPath: "/var/www/univention"
+            - name: "run"
+              mountPath: "/run"
+            - name: "tmp"
+              mountPath: "/tmp"
+            - name: "usr-share-umc-saml-idp"
+              mountPath: "/usr/share/univention-management-console/saml/idp"
+            {{- if .Values.extraVolumeMounts }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumeMounts "context" $) | nindent 12 }}
+            {{- end }}
+            {{- if or .Values.mountUcr .Values.global.nubusDeployment }}
+            - name: "config-map-ucr-defaults"
+              mountPath: "/etc/univention/base-defaults.conf"
+              subPath: "base.conf"
+            {{- end }}
+            {{- if (include "umc-server.configMapUcr" .) }}
+            - name: "config-map-ucr"
+              mountPath: "/etc/univention/base.conf"
+              subPath: "base.conf"
+            {{- end }}
+            {{- if (include "umc-server.configMapUcrForced" .) }}
+            - name: "config-map-ucr-forced"
+              mountPath: "/etc/univention/base-forced.conf"
+              subPath: "base.conf"
+            {{- end }}
+            {{- if and .Values.mountSecrets (not .Values.global.nubusDeployment) }}
+            - name: "secrets"
+              mountPath: "{{ .Values.umcServer.secretMountPath }}"
+            {{- else }}
+            {{- if (include "umc-server.ldap.credentialSecret.name" . ) }}
+            - name: {{ printf "%s-volume" (include "umc-server.ldap.credentialSecret.name" . ) | quote }}
+              mountPath: "/etc/ldap.secret"
+              subPath: {{ .Values.ldap.credentialSecret.ldapPasswordKey | quote }}
+              readOnly: true
+            - name: {{ printf "%s-volume" (include "umc-server.ldap.credentialSecret.name" . ) | quote }}
+              mountPath: "/etc/machine.secret"
+              subPath: {{ .Values.ldap.credentialSecret.machinePasswordKey | quote }}
+              readOnly: true
+            {{- end }}
+            {{- if (include "umc-server.smtp.credentialSecret.name" . ) }}
+            - name: {{ printf "%s-volume" (include "umc-server.smtp.credentialSecret.name" . ) | quote }}
+              mountPath: "{{ .Values.umcServer.secretMountPath }}/smtp_secret"
+              subPath: {{ .Values.smtp.credentialSecret.key | quote }}
+              readOnly: true
+            {{- end }}
+            {{- if (include "umc-server.postgresql.auth.credentialSecret.name" . ) }}
+            - name: {{ printf "%s-volume" (include "umc-server.postgresql.auth.credentialSecret.name" . ) | quote }}
+              mountPath: "{{ .Values.umcServer.secretMountPath }}/db_password"
+              subPath: {{ .Values.postgresql.auth.credentialSecret.key | quote }}
+              readOnly: true
+            {{- end }}
+            {{- if (include "umc-server.memcached.auth.credentialSecret.name" . ) }}
+            - name: {{ printf "%s-volume" (include "umc-server.memcached.auth.credentialSecret.name" . ) | quote }}
+              mountPath: "{{ .Values.umcServer.secretMountPath }}/memcached_password"
+              subPath: {{ .Values.memcached.auth.credentialSecret.key | quote }}
+              readOnly: true
+            {{- end }}
+            {{- if (include "umc-server.ldap.tlsSecret.name" . ) }}
+            - name: {{ printf "%s-volume" (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
+              mountPath: "{{ .Values.umcServer.secretMountPath }}/ca_cert"
+              subPath: {{ .Values.ldap.tlsSecret.caCertKey | quote }}
+              readOnly: true
+            {{- end }}
+            {{- if (include "umc-server.ldap.tlsSecret.name" . ) }}
+            - name: {{ printf "%s-volume" (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
+              mountPath: "{{ .Values.umcServer.secretMountPath }}/cert_pem"
+              subPath: {{ .Values.ldap.tlsSecret.certificateKey | quote }}
+              readOnly: true
+            {{- end }}
+            {{- if (include "umc-server.ldap.tlsSecret.name" . ) }}
+            - name: {{ printf "%s-volume" (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
+              mountPath: "{{ .Values.umcServer.secretMountPath }}/private_key"
+              subPath: {{ .Values.ldap.tlsSecret.privateKeyKey | quote }}
+              readOnly: true
+            {{- end }}
+            {{- end }}
         - name: "load-internal-plugins"
           {{- if .Values.containerSecurityContext.enabled }}
           securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
@@ -115,7 +239,9 @@ spec:
             - /bin/bash
             - -c
             - |
-              tail -f /dev/null
+              /usr/sbin/univention-management-console-server \
+              --no-daemonize-module-processes \
+              --log-file stdout
           env:
             - name: "SELF_SERVICE_DB_SECRET"
               valueFrom:
@@ -143,11 +269,13 @@ spec:
             - configMapRef:
                 name: {{ include "common.names.fullname" . }}
           volumeMounts:
-            - name: "entrypoint-overrides"
-              mountPath: "/entrypoint.d/50-entrypoint.sh"
-              subPath: "50-entrypoint.sh"
+            # - name: "entrypoint-overrides"
+            #   mountPath: "/entrypoint.d/50-entrypoint.sh"
+            #   subPath: "50-entrypoint.sh"
             - name: "etc-ldap"
               mountPath: "/etc/ldap"
+            - name: "etc-pam"
+              mountPath: "/etc/pam.d"
             - name: "etc-sssd"
               mountPath: "/etc/sssd"
             - name: "etc-univention-ssl"
@@ -160,12 +288,12 @@ spec:
               mountPath: "/var/cache/univention-config"
             - name: "univention-logs"
               mountPath: "/var/log/univention"
-            - name: "sssd-socket"
-              mountPath: "/var/lib/sss/pipes/"
+            - name: "var-lib-sss"
+              mountPath: "/var/lib/sss"
             - name: "var-www-univention"
               mountPath: "/var/www/univention"
-            - name: "run-umc"
-              mountPath: "/run/univention-management-console"
+            - name: "run"
+              mountPath: "/run"
             - name: "tmp"
               mountPath: "/tmp"
             - name: "usr-share-umc-saml-idp"
@@ -281,8 +409,8 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
         - name: "sssd-sidecar"
-          {{- if .Values.containerSecurityContext.enabled }}
-          securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+          {{- if .Values.containerSecurityContextSssd.enabled }}
+          securityContext: {{- omit .Values.containerSecurityContextSssd "enabled" | toYaml | nindent 12 }}
           {{- end }}
           image: "{{ coalesce .Values.image.registry .Values.global.imageRegistry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           {{- with .Values.image }}
@@ -292,27 +420,31 @@ spec:
             - sh
             - -c
             - |
-              /entrypoint.d/50-entrypoint.sh
-              mkdir /var/lib/sss/pipes/private
-              chmod 750 /var/lib/sss/pipes/private/
+              # tail -f /dev/null
               sssd -i --logger stderr --debug-level 2
           envFrom:
             - configMapRef:
                 name: {{ include "common.names.fullname" . }}
           volumeMounts:
-            - name: "entrypoint-overrides"
-              mountPath: "/entrypoint.d/50-entrypoint.sh"
-              subPath: "50-entrypoint.sh"
+            # - name: "entrypoint-overrides"
+            #   mountPath: "/entrypoint.d/50-entrypoint.sh"
+            #   subPath: "50-entrypoint.sh"
             - name: "etc-ldap"
               mountPath: "/etc/ldap"
+            - name: "etc-pam"
+              mountPath: "/etc/pam.d"
             - name: "etc-sssd"
               mountPath: "/etc/sssd"
             - name: "etc-univention-ssl"
               mountPath: "/etc/univention/ssl"
+            - name: "run"
+              mountPath: "/run"
             - name: "usr-share-umc-saml-idp"
               mountPath: "/usr/share/univention-management-console/saml/idp"
-            - name: "sssd-socket"
-              mountPath: "/var/lib/sss/pipes/"
+            - name: "var-lib-sss"
+              mountPath: "/var/lib/sss"
+            - name: "sssd-db"
+              mountPath: "/var/lib/sss/db/"
             {{- if .Values.extraVolumeMounts }}
             {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumeMounts "context" $) | nindent 12 }}
             {{- end }}
@@ -366,7 +498,10 @@ spec:
         - name: entrypoint-overrides
           configMap:
             name: {{ include "common.names.fullname" . }}-entrypoint-overrides
+            defaultMode: 0555
         - name: "etc-ldap"
+          emptyDir: {}
+        - name: "etc-pam"
           emptyDir: {}
         - name: "etc-sssd"
           emptyDir: {}
@@ -382,13 +517,17 @@ spec:
           emptyDir: {}
         - name: "sssd-socket"
           emptyDir: {}
+        - name: "var-lib-sss"
+          emptyDir: {}
         - name: "var-www-univention"
           emptyDir: {}
-        - name: "run-umc"
+        - name: "run"
           emptyDir: {}
         - name: "tmp"
           emptyDir: {}
         - name: "usr-share-umc-saml-idp"
+          emptyDir: {}
+        - name: "sssd-db"
           emptyDir: {}
         {{- if (include "umc-server.configMapUcr" .) }}
         - name: "config-map-ucr"

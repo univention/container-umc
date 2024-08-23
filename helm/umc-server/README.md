@@ -128,7 +128,7 @@ true
 			<td>containerSecurityContext.runAsGroup</td>
 			<td>int</td>
 			<td><pre lang="json">
-1000
+0
 </pre>
 </td>
 			<td>Process group id.</td>
@@ -137,7 +137,7 @@ true
 			<td>containerSecurityContext.runAsNonRoot</td>
 			<td>bool</td>
 			<td><pre lang="json">
-true
+false
 </pre>
 </td>
 			<td>Run container as a user.</td>
@@ -146,13 +146,190 @@ true
 			<td>containerSecurityContext.runAsUser</td>
 			<td>int</td>
 			<td><pre lang="json">
-1000
+0
 </pre>
 </td>
 			<td>Process user id.</td>
 		</tr>
 		<tr>
 			<td>containerSecurityContext.seccompProfile.type</td>
+			<td>string</td>
+			<td><pre lang="json">
+"RuntimeDefault"
+</pre>
+</td>
+			<td>Disallow custom Seccomp profile by setting it to RuntimeDefault.</td>
+		</tr>
+		<tr>
+			<td>containerSecurityContextInit.allowPrivilegeEscalation</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td>Enable container privileged escalation.</td>
+		</tr>
+		<tr>
+			<td>containerSecurityContextInit.capabilities</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "add": [
+    "DAC_OVERRIDE",
+    "SETGID",
+    "SETUID",
+    "SYS_ADMIN",
+    "NET_ADMIN",
+    "AUDIT_CONTROL",
+    "CHOWN",
+    "FOWNER"
+  ],
+  "drop": [
+    "ALL"
+  ]
+}
+</pre>
+</td>
+			<td>Security capabilities for container.</td>
+		</tr>
+		<tr>
+			<td>containerSecurityContextInit.enabled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td>Enable security context.</td>
+		</tr>
+		<tr>
+			<td>containerSecurityContextInit.readOnlyRootFilesystem</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td>Mounts the container's root filesystem as read-only.</td>
+		</tr>
+		<tr>
+			<td>containerSecurityContextInit.runAsGroup</td>
+			<td>int</td>
+			<td><pre lang="json">
+0
+</pre>
+</td>
+			<td>Process group id.</td>
+		</tr>
+		<tr>
+			<td>containerSecurityContextInit.runAsNonRoot</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td>Run container as a user.</td>
+		</tr>
+		<tr>
+			<td>containerSecurityContextInit.runAsUser</td>
+			<td>int</td>
+			<td><pre lang="json">
+0
+</pre>
+</td>
+			<td>Process user id.</td>
+		</tr>
+		<tr>
+			<td>containerSecurityContextInit.seccompProfile.type</td>
+			<td>string</td>
+			<td><pre lang="json">
+"RuntimeDefault"
+</pre>
+</td>
+			<td>Disallow custom Seccomp profile by setting it to RuntimeDefault.</td>
+		</tr>
+		<tr>
+			<td>containerSecurityContextSssd.allowPrivilegeEscalation</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td>Enable container privileged escalation.</td>
+		</tr>
+		<tr>
+			<td>containerSecurityContextSssd.capabilities</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "add": [
+    "DAC_OVERRIDE",
+    "SETGID",
+    "AUDIT_WRITE",
+    "SETUID",
+    "CHOWN",
+    "SETPCAP",
+    "FOWNER",
+    "FSETID",
+    "KILL",
+    "MKNOD",
+    "NET_RAW",
+    "NET_BIND_SERVICE",
+    "SYS_CHROOT"
+  ],
+  "drop": [
+    "ALL"
+  ]
+}
+</pre>
+</td>
+			<td>Security capabilities for container.</td>
+		</tr>
+		<tr>
+			<td>containerSecurityContextSssd.enabled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td>Enable security context.</td>
+		</tr>
+		<tr>
+			<td>containerSecurityContextSssd.readOnlyRootFilesystem</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td>Mounts the container's root filesystem as read-only.</td>
+		</tr>
+		<tr>
+			<td>containerSecurityContextSssd.runAsGroup</td>
+			<td>int</td>
+			<td><pre lang="json">
+0
+</pre>
+</td>
+			<td>Process group id.</td>
+		</tr>
+		<tr>
+			<td>containerSecurityContextSssd.runAsNonRoot</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td>Run container as a user.</td>
+		</tr>
+		<tr>
+			<td>containerSecurityContextSssd.runAsUser</td>
+			<td>int</td>
+			<td><pre lang="json">
+0
+</pre>
+</td>
+			<td>Process user id.</td>
+		</tr>
+		<tr>
+			<td>containerSecurityContextSssd.seccompProfile.type</td>
 			<td>string</td>
 			<td><pre lang="json">
 "RuntimeDefault"
@@ -699,7 +876,7 @@ true
 			<td>podSecurityContext.fsGroup</td>
 			<td>int</td>
 			<td><pre lang="json">
-1000
+0
 </pre>
 </td>
 			<td>If specified, all processes of the container are also part of the supplementary group.</td>
@@ -1169,8 +1346,6 @@ true
   "caCertFile": "/var/secrets/ca_cert",
   "certPem": null,
   "certPemFile": "/var/secrets/cert_pem",
-  "ldapSecretFile": "/var/secrets/ldap_secret",
-  "machineSecretFile": "/var/secrets/machine_secret",
   "privateKey": null,
   "privateKeyFile": "/var/secrets/private_key",
   "secretMountPath": "/var/secrets",
@@ -1216,24 +1391,6 @@ null
 </pre>
 </td>
 			<td>Path to file with the certificate (.pem).</td>
-		</tr>
-		<tr>
-			<td>umcServer.ldapSecretFile</td>
-			<td>string</td>
-			<td><pre lang="json">
-"/var/secrets/ldap_secret"
-</pre>
-</td>
-			<td>Path to file with the LDAP secret.</td>
-		</tr>
-		<tr>
-			<td>umcServer.machineSecretFile</td>
-			<td>string</td>
-			<td><pre lang="json">
-"/var/secrets/machine_secret"
-</pre>
-</td>
-			<td>Path to file with the LDAP machine secret.</td>
 		</tr>
 		<tr>
 			<td>umcServer.privateKey</td>

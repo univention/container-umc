@@ -68,9 +68,9 @@ containerSecurityContext:
     drop:
       - "ALL"
   # -- Process user id.
-  runAsUser: 1000
+  runAsUser: 0
   # -- Process group id.
-  runAsGroup: 1000
+  runAsGroup: 0
   # Set Seccomp profile.
   seccompProfile:
     # -- Disallow custom Seccomp profile by setting it to RuntimeDefault.
@@ -78,7 +78,78 @@ containerSecurityContext:
   # -- Mounts the container's root filesystem as read-only.
   readOnlyRootFilesystem: true
   # -- Run container as a user.
-  runAsNonRoot: true
+  runAsNonRoot: false
+
+# Security Context.
+# Ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+containerSecurityContextInit:
+  # -- Enable security context.
+  enabled: false
+  # -- Enable container privileged escalation.
+  allowPrivilegeEscalation: false
+  # -- Security capabilities for container.
+  capabilities:
+    drop:
+      - "ALL"
+    add:
+      - "DAC_OVERRIDE"
+      - "SETGID"
+      - "SETUID"
+      - "SYS_ADMIN"
+      - "NET_ADMIN"
+      - "AUDIT_CONTROL"
+      - "CHOWN"
+      - "FOWNER"
+  # -- Process user id.
+  runAsUser: 0
+  # -- Process group id.
+  runAsGroup: 0
+  # Set Seccomp profile.
+  seccompProfile:
+    # -- Disallow custom Seccomp profile by setting it to RuntimeDefault.
+    type: "RuntimeDefault"
+  # -- Mounts the container's root filesystem as read-only.
+  readOnlyRootFilesystem: true
+  # -- Run container as a user.
+  runAsNonRoot: false
+
+# Security Context.
+# Ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+containerSecurityContextSssd:
+  # -- Enable security context.
+  enabled: true
+  # -- Enable container privileged escalation.
+  allowPrivilegeEscalation: true
+  # -- Security capabilities for container.
+  capabilities:
+    drop:
+      - "ALL"
+    add:
+      - "DAC_OVERRIDE"
+      - "SETGID"
+      - "AUDIT_WRITE"
+      - "SETUID"
+      - "CHOWN"
+      - "SETPCAP"
+      - "FOWNER"
+      - "FSETID"
+      - "KILL"
+      - "MKNOD"
+      - "NET_RAW"
+      - "NET_BIND_SERVICE"
+      - "SYS_CHROOT"
+  # -- Process user id.
+  runAsUser: 0
+  # -- Process group id.
+  runAsGroup: 0
+  # Set Seccomp profile.
+  seccompProfile:
+    # -- Disallow custom Seccomp profile by setting it to RuntimeDefault.
+    type: "RuntimeDefault"
+  # -- Mounts the container's root filesystem as read-only.
+  readOnlyRootFilesystem: true
+  # -- Run container as a user.
+  runAsNonRoot: false
 
 # Pod Security Context.
 # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
@@ -86,7 +157,7 @@ podSecurityContext:
   # -- Enable security context.
   enabled: true
   # -- If specified, all processes of the container are also part of the supplementary group.
-  fsGroup: 1000
+  fsGroup: 0
   # -- Change ownership and permission of the volume before being exposed inside a Pod.
   fsGroupChangePolicy: "Always"
 
@@ -112,10 +183,6 @@ extraSecrets: []
 
 # -- Application configuration of the Univention Management Console Server
 umcServer:
-  # -- Path to file with the LDAP secret.
-  ldapSecretFile: "/var/secrets/ldap_secret"
-  # -- Path to file with the LDAP machine secret.
-  machineSecretFile: "/var/secrets/machine_secret"
   # -- Additional CA Certificate to trust.
   # The value is optional.
   caCert: ""
