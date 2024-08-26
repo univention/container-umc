@@ -98,7 +98,7 @@ false
 			<td>containerSecurityContext.enabled</td>
 			<td>bool</td>
 			<td><pre lang="json">
-false
+true
 </pre>
 </td>
 			<td>Enable security context.</td>
@@ -141,6 +141,82 @@ true
 		</tr>
 		<tr>
 			<td>containerSecurityContext.seccompProfile.type</td>
+			<td>string</td>
+			<td><pre lang="json">
+"RuntimeDefault"
+</pre>
+</td>
+			<td>Disallow custom Seccomp profile by setting it to RuntimeDefault.</td>
+		</tr>
+		<tr>
+			<td>containerSecurityContextInit.allowPrivilegeEscalation</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td>Enable container privileged escalation.</td>
+		</tr>
+		<tr>
+			<td>containerSecurityContextInit.capabilities</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "drop": [
+    "ALL"
+  ]
+}
+</pre>
+</td>
+			<td>Security capabilities for container.</td>
+		</tr>
+		<tr>
+			<td>containerSecurityContextInit.enabled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td>Enable security context.</td>
+		</tr>
+		<tr>
+			<td>containerSecurityContextInit.readOnlyRootFilesystem</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td>Mounts the container's root filesystem as read-only.</td>
+		</tr>
+		<tr>
+			<td>containerSecurityContextInit.runAsGroup</td>
+			<td>int</td>
+			<td><pre lang="json">
+1000
+</pre>
+</td>
+			<td>Process group id.</td>
+		</tr>
+		<tr>
+			<td>containerSecurityContextInit.runAsNonRoot</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td>Run container as a user.</td>
+		</tr>
+		<tr>
+			<td>containerSecurityContextInit.runAsUser</td>
+			<td>int</td>
+			<td><pre lang="json">
+1000
+</pre>
+</td>
+			<td>Process user id.</td>
+		</tr>
+		<tr>
+			<td>containerSecurityContextInit.seccompProfile.type</td>
 			<td>string</td>
 			<td><pre lang="json">
 "RuntimeDefault"
@@ -437,7 +513,7 @@ true
 			<td>podSecurityContext.enabled</td>
 			<td>bool</td>
 			<td><pre lang="json">
-false
+true
 </pre>
 </td>
 			<td>Enable security context.</td>

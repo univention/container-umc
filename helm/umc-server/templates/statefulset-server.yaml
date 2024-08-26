@@ -76,8 +76,6 @@ spec:
             - bash
             - -c
             - |
-              set -x
-              ls -la /etc/ldap
               /entrypoint.d/50-entrypoint.sh
               cp -a /var/lib/sss/* /target/var/lib/sss/
               if [[ ! -d /target/var/lib/sss/pipes/private ]]; then
@@ -86,7 +84,6 @@ spec:
               chmod 750 /target/var/lib/sss/pipes/private/
               chown root:root -R /target/var/lib/sss/pipes /target/var/lib/sss/db /etc/sssd/sssd.conf
               chmod 0600 /etc/sssd/sssd.conf
-
           volumeMounts:
             # - name: "entrypoint-overrides"
             #   mountPath: "/entrypoint.d/50-entrypoint.sh"
@@ -269,9 +266,6 @@ spec:
             - configMapRef:
                 name: {{ include "common.names.fullname" . }}
           volumeMounts:
-            # - name: "entrypoint-overrides"
-            #   mountPath: "/entrypoint.d/50-entrypoint.sh"
-            #   subPath: "50-entrypoint.sh"
             - name: "etc-ldap"
               mountPath: "/etc/ldap"
             - name: "etc-pam"
@@ -420,15 +414,11 @@ spec:
             - sh
             - -c
             - |
-              # tail -f /dev/null
               sssd -i --logger stderr --debug-level 2
           envFrom:
             - configMapRef:
                 name: {{ include "common.names.fullname" . }}
           volumeMounts:
-            # - name: "entrypoint-overrides"
-            #   mountPath: "/entrypoint.d/50-entrypoint.sh"
-            #   subPath: "50-entrypoint.sh"
             - name: "etc-ldap"
               mountPath: "/etc/ldap"
             - name: "etc-pam"
@@ -447,47 +437,6 @@ spec:
               mountPath: "/var/lib/sss/db/"
             {{- if .Values.extraVolumeMounts }}
             {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumeMounts "context" $) | nindent 12 }}
-            {{- end }}
-            {{- if (include "umc-server.configMapUcr" .) }}
-            - name: "config-map-ucr"
-              mountPath: "/etc/univention/base.conf"
-              subPath: "base.conf"
-            - name: "config-map-ucr"
-              mountPath: "/etc/univention/base-defaults.conf"
-              subPath: "base-defaults.conf"
-            {{- end }}
-            {{- if and .Values.mountSecrets (not .Values.global.nubusDeployment) }}
-            - name: "secrets"
-              mountPath: "{{ .Values.umcServer.secretMountPath }}"
-            {{- else }}
-            {{- if (include "umc-server.ldap.credentialSecret.name" . ) }}
-            - name: {{ printf "%s-volume" (include "umc-server.ldap.credentialSecret.name" . ) | quote }}
-              mountPath: "/etc/ldap.secret"
-              subPath: {{ .Values.ldap.credentialSecret.ldapPasswordKey | quote }}
-              readOnly: true
-            - name: {{ printf "%s-volume" (include "umc-server.ldap.credentialSecret.name" . ) | quote }}
-              mountPath: "/etc/machine.secret"
-              subPath: {{ .Values.ldap.credentialSecret.machinePasswordKey | quote }}
-              readOnly: true
-            {{- end }}
-            {{- if (include "umc-server.ldap.tlsSecret.name" . ) }}
-            - name: {{ printf "%s-volume" (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
-              mountPath: "{{ .Values.umcServer.secretMountPath }}/ca_cert"
-              subPath: {{ .Values.ldap.tlsSecret.caCertKey | quote }}
-              readOnly: true
-            {{- end }}
-            {{- if (include "umc-server.ldap.tlsSecret.name" . ) }}
-            - name: {{ printf "%s-volume" (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
-              mountPath: "{{ .Values.umcServer.secretMountPath }}/cert_pem"
-              subPath: {{ .Values.ldap.tlsSecret.certificateKey | quote }}
-              readOnly: true
-            {{- end }}
-            {{- if (include "umc-server.ldap.tlsSecret.name" . ) }}
-            - name: {{ printf "%s-volume" (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
-              mountPath: "{{ .Values.umcServer.secretMountPath }}/private_key"
-              subPath: {{ .Values.ldap.tlsSecret.privateKeyKey | quote }}
-              readOnly: true
-            {{- end }}
             {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
