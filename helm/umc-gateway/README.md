@@ -626,7 +626,7 @@ true
 			<td>service.ports.http.containerPort</td>
 			<td>int</td>
 			<td><pre lang="json">
-80
+8080
 </pre>
 </td>
 			<td></td>

@@ -114,20 +114,13 @@ spec:
             {{- if .Values.extraVolumeMounts }}
             {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumeMounts "context" $) | nindent 12 }}
             {{- end }}
-            {{- if or .Values.mountUcr .Values.global.nubusDeployment }}
-            - name: "config-map-ucr-defaults"
-              mountPath: "/etc/univention/base-defaults.conf"
-              subPath: "base.conf"
-            {{- end }}
             {{- if (include "umc-server.configMapUcr" .) }}
             - name: "config-map-ucr"
               mountPath: "/etc/univention/base.conf"
               subPath: "base.conf"
-            {{- end }}
-            {{- if (include "umc-server.configMapUcrForced" .) }}
-            - name: "config-map-ucr-forced"
-              mountPath: "/etc/univention/base-forced.conf"
-              subPath: "base.conf"
+            - name: "config-map-ucr"
+              mountPath: "/etc/univention/base-defaults.conf"
+              subPath: "base-defaults.conf"
             {{- end }}
             {{- if and .Values.mountSecrets (not .Values.global.nubusDeployment) }}
             - name: "secrets"
@@ -456,10 +449,6 @@ spec:
         {{- if .Values.extraVolumes }}
         {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumes "context" $) | nindent 8 }}
         {{- end }}
-        - name: entrypoint-overrides
-          configMap:
-            name: {{ include "common.names.fullname" . }}-entrypoint-overrides
-            defaultMode: 0555
         - name: "etc-ldap"
           emptyDir:
             medium: "Memory"

@@ -94,7 +94,7 @@ spec:
           livenessProbe:
             httpGet:
               path: "/ping"
-              port: 80
+              port: {{ .Values.proxy.service.ports.http.containerPort }}
             initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
             timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
             periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
@@ -105,7 +105,7 @@ spec:
           readinessProbe:
             httpGet:
               path: "/ping"
-              port: 80
+              port: {{ .Values.proxy.service.ports.http.containerPort }}
             initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
             timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
             periodSeconds: {{ .Values.probes.readiness.periodSeconds }}

@@ -1127,7 +1127,7 @@ true
     "enabled": true,
     "ports": {
       "http": {
-        "containerPort": 80,
+        "containerPort": 8080,
         "port": 80,
         "protocol": "TCP"
       }

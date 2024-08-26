@@ -26,7 +26,7 @@ data:
       entryPoint: http
     entryPoints:
       http:
-        address: ":80"
+        address: ":{{ .Values.proxy.service.ports.http.containerPort }}"
     providers:
       file:
         filename: /etc/traefik/dynamic.yaml

@@ -94,6 +94,9 @@ spec:
             - -c
             - |
               /entrypoint.d/50-entrypoint.sh
+              echo "Listen {{ .Values.service.ports.http.containerPort }}" > /etc/apache2/ports.conf
+              sed -e 's,<VirtualHost \*:80>,<VirtualHost *:{{ .Values.service.ports.http.containerPort }}>,g' -i /etc/apache2/sites-available/000-default.conf
+              cat /etc/apache2/sites-available/000-default.conf
           volumeMounts:
             - name: "etc-apache2"
               mountPath: "/etc/apache2"
@@ -105,20 +108,13 @@ spec:
               mountPath: "/var/cache/univention-config"
             - name: "univention-logs"
               mountPath: "/var/log/univention"
-            {{- if or .Values.mountUcr .Values.global.nubusDeployment }}
-            - name: "config-map-ucr-defaults"
-              mountPath: "/etc/univention/base-defaults.conf"
-              subPath: "base.conf"
-            {{- end }}
             {{- if (include "umc-gateway.configMapUcr" .) }}
             - name: "config-map-ucr"
               mountPath: "/etc/univention/base.conf"
               subPath: "base.conf"
-            {{- end }}
-            {{- if (include "umc-gateway.configMapUcrForced" .) }}
-            - name: "config-map-ucr-forced"
-              mountPath: "/etc/univention/base-forced.conf"
-              subPath: "base.conf"
+            - name: "config-map-ucr"
+              mountPath: "/etc/univention/base-defaults.conf"
+              subPath: "base-defaults.conf"
             {{- end }}
         - name: "load-internal-plugins"
           {{- if .Values.containerSecurityContext.enabled }}
@@ -200,7 +196,7 @@ spec:
           {{- if .Values.probes.liveness.enabled }}
           livenessProbe:
             tcpSocket:
-              port: http
+              port: {{ .Values.service.ports.http.containerPort }}
             initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
             timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
             periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
@@ -210,7 +206,7 @@ spec:
           {{- if .Values.probes.readiness.enabled }}
           readinessProbe:
             tcpSocket:
-              port: http
+              port: {{ .Values.service.ports.http.containerPort }}
             initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
             timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
             periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
