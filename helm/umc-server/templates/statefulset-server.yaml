@@ -141,20 +141,13 @@ spec:
             {{- if .Values.extraVolumeMounts }}
             {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumeMounts "context" $) | nindent 12 }}
             {{- end }}
-            {{- if or .Values.mountUcr .Values.global.nubusDeployment }}
-            - name: "config-map-ucr-defaults"
-              mountPath: "/etc/univention/base-defaults.conf"
-              subPath: "base.conf"
-            {{- end }}
             {{- if (include "umc-server.configMapUcr" .) }}
             - name: "config-map-ucr"
               mountPath: "/etc/univention/base.conf"
               subPath: "base.conf"
-            {{- end }}
-            {{- if (include "umc-server.configMapUcrForced" .) }}
-            - name: "config-map-ucr-forced"
-              mountPath: "/etc/univention/base-forced.conf"
-              subPath: "base.conf"
+            - name: "config-map-ucr"
+              mountPath: "/etc/univention/base-defaults.conf"
+              subPath: "base-defaults.conf"
             {{- end }}
             {{- if and .Values.mountSecrets (not .Values.global.nubusDeployment) }}
             - name: "secrets"
@@ -280,20 +273,13 @@ spec:
             {{- if .Values.extraVolumeMounts }}
             {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumeMounts "context" $) | nindent 12 }}
             {{- end }}
-            {{- if or .Values.mountUcr .Values.global.nubusDeployment }}
-            - name: "config-map-ucr-defaults"
-              mountPath: "/etc/univention/base-defaults.conf"
-              subPath: "base.conf"
-            {{- end }}
             {{- if (include "umc-server.configMapUcr" .) }}
             - name: "config-map-ucr"
               mountPath: "/etc/univention/base.conf"
               subPath: "base.conf"
-            {{- end }}
-            {{- if (include "umc-server.configMapUcrForced" .) }}
-            - name: "config-map-ucr-forced"
-              mountPath: "/etc/univention/base-forced.conf"
-              subPath: "base.conf"
+            - name: "config-map-ucr"
+              mountPath: "/etc/univention/base-defaults.conf"
+              subPath: "base-defaults.conf"
             {{- end }}
             {{- if and .Values.mountSecrets (not .Values.global.nubusDeployment) }}
             - name: "secrets"
@@ -336,20 +322,10 @@ spec:
         {{- end }}
         - name: "sssd-socket"
           emptyDir: {}
-        {{- if or .Values.mountUcr .Values.global.nubusDeployment }}
-        - name: "config-map-ucr-defaults"
-          configMap:
-            name: {{ include "umc-server.configMapUcrDefaults" . | quote }}
-        {{- end }}
         {{- if (include "umc-server.configMapUcr" .) }}
         - name: "config-map-ucr"
           configMap:
             name: {{ include "umc-server.configMapUcr" . | quote }}
-        {{- end }}
-        {{- if (include "umc-server.configMapUcrForced" .) }}
-        - name: "config-map-ucr-forced"
-          configMap:
-            name: {{ include "umc-server.configMapUcrForced" . | quote }}
         {{- end }}
         {{- if and .Values.mountSecrets (not .Values.global.nubusDeployment) }}
         - name: "secrets"

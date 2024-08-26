@@ -110,20 +110,13 @@ spec:
             {{- if .Values.extraVolumeMounts }}
             {{ toYaml .Values.extraVolumeMounts | nindent 12 }}
             {{- end }}
-            {{- if or .Values.mountUcr .Values.global.nubusDeployment }}
-            - name: "config-map-ucr-defaults"
-              mountPath: "/etc/univention/base-defaults.conf"
-              subPath: "base.conf"
-            {{- end }}
             {{- if (include "umc-gateway.configMapUcr" .) }}
             - name: "config-map-ucr"
               mountPath: "/etc/univention/base.conf"
               subPath: "base.conf"
-            {{- end }}
-            {{- if (include "umc-gateway.configMapUcrForced" .) }}
-            - name: "config-map-ucr-forced"
-              mountPath: "/etc/univention/base-forced.conf"
-              subPath: "base.conf"
+            - name: "config-map-ucr"
+              mountPath: "/etc/univention/base-defaults.conf"
+              subPath: "base-defaults.conf"
             {{- end }}
             - name: plugin-targets
               mountPath: /usr/share/univention-management-console-frontend/js/dijit/themes/umc/icons/
@@ -160,20 +153,10 @@ spec:
         {{- if .Values.extraVolumes }}
         {{ toYaml .Values.extraVolumes | nindent 8 }}
         {{- end }}
-        {{- if or .Values.mountUcr .Values.global.nubusDeployment }}
-        - name: "config-map-ucr-defaults"
-          configMap:
-            name: {{ include "umc-gateway.configMapUcrDefaults" . | quote }}
-        {{- end }}
         {{- if (include "umc-gateway.configMapUcr" .) }}
         - name: "config-map-ucr"
           configMap:
             name: {{ include "umc-gateway.configMapUcr" . | quote }}
-        {{- end }}
-        {{- if (include "umc-gateway.configMapUcrForced" .) }}
-        - name: "config-map-ucr-forced"
-          configMap:
-            name: {{ include "umc-gateway.configMapUcrForced" . | quote }}
         {{- end }}
         - name: plugin-targets
           emptyDir: { }
