@@ -62,8 +62,8 @@ spec:
       {{- end }}
       initContainers:
         - name: "copy-config"
-          {{- if .Values.containerSecurityContextInit.enabled }}
-          securityContext: {{- omit .Values.containerSecurityContextInit "enabled" | toYaml | nindent 12 }}
+          {{- if .Values.containerSecurityContext.enabled }}
+          securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
           {{- end }}
           resources: {{- include "common.tplvalues.render" (dict "value" .Values.resources "context" .) | nindent 12 }}
           image: "{{ coalesce .Values.image.registry .Values.global.imageRegistry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -72,7 +72,6 @@ spec:
             - bash
             - -c
             - |
-              set -x
               cp -a /etc/univention/* /target/etc/univention/
               cp -a /etc/apache2/* /target/etc/apache2/
               cp -a /var/www/univention/* /target/var/www/univention/
@@ -84,8 +83,8 @@ spec:
             - name: "etc-univention"
               mountPath: "/target/etc/univention"
         - name: "prepare-config"
-          {{- if .Values.containerSecurityContextInit.enabled }}
-          securityContext: {{- omit .Values.containerSecurityContextInit "enabled" | toYaml | nindent 12 }}
+          {{- if .Values.containerSecurityContext.enabled }}
+          securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
           {{- end }}
           resources: {{- include "common.tplvalues.render" (dict "value" .Values.resources "context" .) | nindent 12 }}
           image: "{{ coalesce .Values.image.registry .Values.global.imageRegistry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -94,8 +93,6 @@ spec:
             - bash
             - -c
             - |
-              set -x
-              # tail -f /dev/null
               /entrypoint.d/50-entrypoint.sh
           volumeMounts:
             - name: "etc-apache2"
@@ -145,11 +142,6 @@ spec:
         - name: "load-{{ .name }}-extension"
           {{- if $.Values.containerSecurityContext.enabled }}
           securityContext: {{- omit $.Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
-          {{- else }}
-          # TODO: Remove once the UMC server has been adjusted to run as a non
-          # privileged user.
-          securityContext:
-            runAsUser: 0
           {{- end }}
           image: "{{ coalesce .image.registry $.Values.global.imageRegistry }}/{{ .image.repository }}:{{ .image.tag }}"
           imagePullPolicy: {{ coalesce .image.imagePullPolicy $.Values.global.imagePullPolicy | quote }}
@@ -172,7 +164,6 @@ spec:
             - bash
             - -c
             - |
-              # tail -f /dev/null
               apache2 -D FOREGROUND \
               -d /etc/apache2/ \
               -f /etc/apache2/apache2.conf
@@ -191,12 +182,15 @@ spec:
             - name: plugin-targets
               mountPath: /usr/share/univention-management-console-frontend/js/dijit/themes/umc/icons/
               subPath: umc-icons
+              readOnly: true
             - name: "apache2-logs"
               mountPath: "/usr/local/apache2/logs"
             - name: "etc-apache2"
               mountPath: "/etc/apache2"
+              readOnly: true
             - name: "var-www-univention"
               mountPath: "/var/www/univention"
+              readOnly: true
           ports:
             {{- range $key, $value := .Values.service.ports }}
             - name: {{ $key }}
