@@ -18,6 +18,11 @@ metadata:
   {{- end }}
 data:
   traefik.yaml: |
+    global:
+      checkNewVersion: false
+      sendAnonymousUsage: false
+    api:
+      dashboard: false
     log:
       level: {{ .Values.proxy.logLevel }}
     accessLog:
