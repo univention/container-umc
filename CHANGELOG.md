@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.27.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.27.0...v0.27.1) (2024-08-27)
+
+
+### Bug Fixes
+
+* do not watch the configuration file for live updates ([1fbfc3b](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/1fbfc3bfc8f4e5feb2b75cb71ff461f813e8ac03))
+
 ## [0.27.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.26.0...v0.27.0) (2024-08-21)
 
 
