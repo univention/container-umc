@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.27.2](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.27.1...v0.27.2) (2024-08-27)
+
+
+### Reverts
+
+* remove license patch ([6580190](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/6580190034e08f8d91d2129a40d858bbb3586df6))
+
 ## [0.27.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.27.0...v0.27.1) (2024-08-27)
 
 
