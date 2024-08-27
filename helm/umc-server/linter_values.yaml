@@ -8,7 +8,6 @@
 mountSecrets: true
 
 global:
-  configMapUcrDefaults: "something"
   nubusDeployment: false
 
 umcServer:
