@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.28.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.27.2...v0.28.0) (2024-08-28)
+
+
+### Features
+
+* unify UCR configuration ([124e13e](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/124e13e531015bd98b439cd14fd91a2203a4d526))
+
 ## [0.27.2](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.27.1...v0.27.2) (2024-08-27)
 
 
