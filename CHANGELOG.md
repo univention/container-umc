@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.29.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.28.0...v0.29.0) (2024-09-03)
+
+
+### Features
+
+* changes relating to BSI compliance ([a005474](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/a00547418d1e7a0e40d0308cf3dd8475d585ab6b))
+* run umc-gateway as non privileged user with ro fs ([f92ee32](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/f92ee325887babd0c53b5be465b63ca6f38b8c80))
+
+
+### Bug Fixes
+
+* move entrypoint execution to init container ([2a1011e](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/2a1011e988833f0127a692e8fa733869d2fdc24e))
+* move sed call from stack-data entrypoint script to Dockerfile ([e6f7350](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/e6f73507015aa76edc6212464f0abd0d00a296d7))
+* set emtpyDir medium to Memory where applicable, unify securityContexts where possible, remove development artifacts ([7aa4aeb](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/7aa4aebb6fcd2dbe4739373b7af4d0feef73f843))
+* set permissions for files and directories created in Dockerfile ([996b545](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/996b5456ca3c1e93c46d92d9927d4e79b4869848))
+* use container port 8080 instead of 80 to support running as non-root user ([148e54e](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/148e54e5c592b6fffaabc01850304bcf68fda96e))
+
 ## [0.28.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.27.2...v0.28.0) (2024-08-28)
 
 
