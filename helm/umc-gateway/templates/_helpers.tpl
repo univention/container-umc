@@ -20,3 +20,13 @@ These template definitions are only used in this chart and do not relate to temp
 {{- required ".Values.ingress.tls.secretName must be defined" .Values.ingress.tls.secretName -}}
 {{- end -}}
 {{- end -}}
+
+{{- define "umc-gateway.ingress.enableLoginPath" -}}
+{{- if .Values.ingress.enableLoginPath -}}
+{{- .Values.ingress.enableLoginPath -}}
+{{- else if .Values.global.nubusDeployment -}}
+{{- include "nubusTemplates.enablePlainUmcLogin" . -}}
+{{- else -}}
+false
+{{- end -}}
+{{- end -}}

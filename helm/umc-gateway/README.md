@@ -323,6 +323,15 @@ true
 			<td>Name of cert-manager.io Issuer resource.</td>
 		</tr>
 		<tr>
+			<td>ingress.enableLoginPath</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>Enable plain UMC login path (non IdP). Defaults to false.</td>
+		</tr>
+		<tr>
 			<td>ingress.enabled</td>
 			<td>bool</td>
 			<td><pre lang="json">
@@ -350,6 +359,24 @@ true
 			<td>The Ingress controller class name.</td>
 		</tr>
 		<tr>
+			<td>ingress.loginPath[0].path</td>
+			<td>string</td>
+			<td><pre lang="json">
+"/()(univention/)(login/.*)"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ingress.loginPath[0].pathType</td>
+			<td>string</td>
+			<td><pre lang="json">
+"ImplementationSpecific"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
 			<td>ingress.paths</td>
 			<td>list</td>
 			<td><pre lang="json">
@@ -359,7 +386,11 @@ true
     "pathType": "ImplementationSpecific"
   },
   {
-    "path": "/()(univention/)((js|login|management|themes)/.*)",
+    "path": "/()(univention/)((js|management|themes)/.*)",
+    "pathType": "ImplementationSpecific"
+  },
+  {
+    "path": "/()(univention/login/)(dialog.js|main.js|LoginDialog.js|i18n/en/main.json)",
     "pathType": "ImplementationSpecific"
   }
 ]

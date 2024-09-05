@@ -146,8 +146,17 @@ ingress:
     #   path: /univention/themes/
       - path: /()(univention/)(languages.json|meta.json|theme.css)
         pathType: ImplementationSpecific
-      - path: /()(univention/)((js|login|management|themes)/.*)
+      - path: /()(univention/)((js|management|themes)/.*)
         pathType: ImplementationSpecific
+      - path: /()(univention/login/)(dialog.js|main.js|LoginDialog.js|i18n/en/main.json)
+        pathType: ImplementationSpecific
+
+  # -- Enable plain UMC login path (non IdP). Defaults to false.
+  enableLoginPath: ""
+  loginPath:
+  - path: /()(univention/)(login/.*)
+    pathType: ImplementationSpecific
+
   # -- Secure an Ingress by specifying a Secret that contains a TLS private key and certificate.
   #
   # Ref.: https://kubernetes.io/docs/concepts/services-networking/ingress/#tls

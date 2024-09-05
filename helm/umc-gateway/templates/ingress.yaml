@@ -36,6 +36,12 @@ spec:
             path: {{ tpl .path $ }}
             backend: {{- include "common.ingress.backend" (dict "serviceName" (include "common.names.fullname" $) "servicePort" "http" "context" $) | nindent 14 }}
           {{- end }}
-
+          {{- if eq ( include "umc-gateway.ingress.enableLoginPath" . ) "true" }}
+          {{- range .Values.ingress.loginPath }}
+          - path: {{ tpl .path $ }}
+            pathType: {{ .pathType }}
+            backend: {{- include "common.ingress.backend" (dict "serviceName" (include "common.names.fullname" $) "servicePort" "http" "context" $) | nindent 14 }}
+          {{- end }}
+          {{- end }}
 ...
 {{- end }}
