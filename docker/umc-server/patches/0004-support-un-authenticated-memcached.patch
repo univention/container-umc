@@ -1,7 +1,7 @@
-From 2e74f3fecf7d1087e59a825b0495bc24e3d7b52f Mon Sep 17 00:00:00 2001
+From 4db7e1ed908ee52798b83a8ab7c074f3a3d5588d Mon Sep 17 00:00:00 2001
 From: Thomas Kintscher <thomas.kintscher.extern@univention.de>
 Date: Wed, 3 Apr 2024 18:23:55 +0200
-Subject: [PATCH 4/4] support un/authenticated memcached
+Subject: [PATCH 4/6] support un/authenticated memcached
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -48,11 +48,11 @@ The entire module just fails without providing any details.
  .../umc/python/passwordreset/__init__.py               | 10 +++++++++-
  1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/management/univention-self-service/umc/python/passwordreset/__init__.py b/management/univention-self-service/umc/python/passwordreset/__init__.py
-index 41d3d8abb5..40097ccf14 100644
---- a/management/univention-self-service/umc/python/passwordreset/__init__.py
-+++ b/management/univention-self-service/umc/python/passwordreset/__init__.py
-@@ -260,6 +260,7 @@ class Instance(Base):
+diff --git management/univention-self-service/umc/python/passwordreset/__init__.py management/univention-self-service/umc/python/passwordreset/__init__.py
+index 0f360e1c2a1..002a697f0ed 100644
+--- management/univention-self-service/umc/python/passwordreset/__init__.py
++++ management/univention-self-service/umc/python/passwordreset/__init__.py
+@@ -259,6 +259,7 @@ class Instance(Base):
              atexit.register(self.db.close_db)
              if not self.db.table_exists():
                  self.db.create_table()
@@ -60,7 +60,7 @@ index 41d3d8abb5..40097ccf14 100644
              password = os.getenv("SELF_SERVICE_MEMCACHED_SECRET")
              if not password and MEMCACHED_SECRET_FILE:
                  try:
-@@ -267,7 +268,14 @@ class Instance(Base):
+@@ -266,7 +267,14 @@ class Instance(Base):
                          password = pw_file.readline().strip()
                  except OSError:
                      raise UMC_Error('The memcached password is not properly configured.', status=503)
@@ -77,5 +77,5 @@ index 41d3d8abb5..40097ccf14 100644
          self.send_plugins = get_sending_plugins(MODULE.process)
          self.password_reset_plugins = {k: v for k, v in self.send_plugins.items() if v.message_application() == 'password_reset'}
 -- 
-2.39.3 (Apple Git-146)
+2.39.2
 

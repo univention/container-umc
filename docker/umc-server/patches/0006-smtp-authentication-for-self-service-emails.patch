@@ -1,4 +1,4 @@
-From 603b1f8d093e5cb18f6e84af59e7f9fa7724caf3 Mon Sep 17 00:00:00 2001
+From c659bcb4006999c9aa46e176af0561d76e350f27 Mon Sep 17 00:00:00 2001
 From: Thomas Kintscher <thomas.kintscher.extern@univention.de>
 Date: Wed, 10 Apr 2024 13:41:34 +0200
 Subject: [PATCH 6/6] smtp authentication for self service emails
@@ -19,11 +19,11 @@ This patch adds configuration options regarding
  .../passwordreset/sending/send_email.py       | 29 ++++++++++++++++++-
  1 file changed, 28 insertions(+), 1 deletion(-)
 
-diff --git a/management/univention-self-service/umc/python/passwordreset/sending/send_email.py b/management/univention-self-service/umc/python/passwordreset/sending/send_email.py
-index 17ae1614ca..96848b05be 100644
---- a/management/univention-self-service/umc/python/passwordreset/sending/send_email.py
-+++ b/management/univention-self-service/umc/python/passwordreset/sending/send_email.py
-@@ -49,6 +49,7 @@
+diff --git management/univention-self-service/umc/python/passwordreset/sending/send_email.py management/univention-self-service/umc/python/passwordreset/sending/send_email.py
+index 936cafbdcea..6e29a0d8737 100644
+--- management/univention-self-service/umc/python/passwordreset/sending/send_email.py
++++ management/univention-self-service/umc/python/passwordreset/sending/send_email.py
+@@ -48,6 +48,7 @@
  #
  
  import email.charset
@@ -31,9 +31,9 @@ index 17ae1614ca..96848b05be 100644
  import os.path
  import smtplib
  from email.mime.nonmultipart import MIMENonMultipart
-@@ -69,6 +70,26 @@ class SendEmail(UniventionSelfServiceTokenEmitter):
+@@ -67,6 +68,26 @@ class SendEmail(UniventionSelfServiceTokenEmitter):
      def __init__(self, *args, **kwargs):
-         super(SendEmail, self).__init__(*args, **kwargs)
+         super().__init__(*args, **kwargs)
          self.server = self.ucr.get("umc/self-service/passwordreset/email/server", "localhost")
 +        self.port = self.ucr.get_int("umc/self-service/passwordreset/email/server/port", 0)
 +        self.user = self.ucr.get("umc/self-service/passwordreset/email/server/user")
@@ -58,7 +58,7 @@ index 17ae1614ca..96848b05be 100644
  
      @staticmethod
      def send_method():
-@@ -130,7 +151,13 @@ class SendEmail(UniventionSelfServiceTokenEmitter):
+@@ -128,7 +149,13 @@ class SendEmail(UniventionSelfServiceTokenEmitter):
          msg["To"] = self.data["address"]
          msg.set_payload(txt, charset=cs)
  
@@ -74,5 +74,5 @@ index 17ae1614ca..96848b05be 100644
          smtp.quit()
          self.log("Sent mail with token to address {}.".format(self.data["address"]))
 -- 
-2.39.3 (Apple Git-146)
+2.39.2
 
