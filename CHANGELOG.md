@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.30.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.29.0...v0.30.0) (2024-09-10)
+
+
+### Features
+
+* **umc-gateway:** disable plain UMC login ([b5103f6](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/b5103f6fe82c992190605510a924cac5e6125351))
+
 ## [0.29.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.28.0...v0.29.0) (2024-09-03)
 
 
