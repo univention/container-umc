@@ -21,4 +21,5 @@ The output should be a bunch of patch files:
 0004-support-un-authenticated-memcached.patch
 0005-provide-domainname-to-email-templates.patch
 0006-smtp-authentication-for-self-service-emails.patch
+0007-remove-UDM-import.patch
 ```

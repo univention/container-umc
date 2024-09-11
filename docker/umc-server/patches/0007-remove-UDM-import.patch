@@ -1,0 +1,44 @@
+From 34280709ce5065e542435ac3b963c13daf4b2da8 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Carlos=20Garc=C3=ADa-Mauri=C3=B1o?=
+ <garcia-maurino@univention.de>
+Date: Wed, 11 Sep 2024 13:21:14 +0200
+Subject: [PATCH 7/7] remove UDM import
+
+It's used for configuring the shared SQL connection feature. Look for
+`SQL_CONNECTION_ENV_VAR`.`
+---
+ .../src/univention/management/console/server.py       | 11 -----------
+ 1 file changed, 11 deletions(-)
+
+diff --git management/univention-management-console/src/univention/management/console/server.py management/univention-management-console/src/univention/management/console/server.py
+index 515e5b64279..9d1cce086c9 100755
+--- management/univention-management-console/src/univention/management/console/server.py
++++ management/univention-management-console/src/univention/management/console/server.py
+@@ -63,7 +63,6 @@ from univention.management.console.resources import (
+ from univention.management.console.saml import SamlACS, SamlIframeACS, SamlLogout, SamlMetadata, SamlSingleLogout
+ from univention.management.console.session import categoryManager, moduleManager
+ from univention.management.console.shared_memory import shared_memory
+-from univention.udm import UDM
+ 
+ 
+ try:
+@@ -223,16 +222,6 @@ class Server:
+         # bind sockets
+         sockets = bind_sockets(self.options.port, ucr.get('umc/http/interface', '127.0.0.1'), backlog=ucr.get_int('umc/http/requestqueuesize', 100), reuse_port=True)
+ 
+-        if os.environ.get(SQL_CONNECTION_ENV_VAR, None) is None:
+-            try:
+-                settings_data_mod = UDM.machine().version(3).get('settings/data')
+-                umc_settings_position = f"cn=umc,cn=data,cn=univention,{ucr.get('ldap/base')}"
+-                umc_settings_obj = settings_data_mod.get(umc_settings_position)
+-                settings_obj = json.loads(umc_settings_obj.props.data.raw.decode('utf-8'))
+-                os.environ[SQL_CONNECTION_ENV_VAR] = settings_obj['sqlURI']
+-            except Exception as exc:
+-                CORE.info('Could not read from umc settings/data object. Continuing without shared db session %s' % (exc,))
+-
+         # start sub worker processes
+         if self.options.processes != 1:
+             # start sharing memory (before fork, before first usage, after import)
+-- 
+2.39.2
+

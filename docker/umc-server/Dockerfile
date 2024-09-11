@@ -129,6 +129,7 @@ RUN \
   patch -p 4 -d /usr/lib/python3/dist-packages/univention/management/console/modules -i /0004-support-un-authenticated-memcached.patch && \
   patch -p 4 -d /usr/lib/python3/dist-packages/univention/management/console/modules -i /0005-provide-domainname-to-email-templates.patch && \
   patch -p 4 -d /usr/lib/python3/dist-packages/univention/management/console/modules -i /0006-smtp-authentication-for-self-service-emails.patch && \
+  patch -p 3 -d /usr/lib/python3/dist-packages/ -i /0007-remove-UDM-import.patch && \
   rm -v /*.patch
 
 ############################################################
