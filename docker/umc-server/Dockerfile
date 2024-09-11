@@ -199,6 +199,8 @@ RUN \
     python3-passlib=1.7.* \
     # for ...
     python3-pycurl=7.* \
+    # for /usr/sbin/univention-management-console-server
+    python3-sqlalchemy=1.4.* \
     # for /usr/sbin/univention-management-console-web-server
     python3-cherrypy3=18.* \
     python3-pysaml2=7.0.* \
