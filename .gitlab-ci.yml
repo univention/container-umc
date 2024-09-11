@@ -78,6 +78,8 @@ test-image-umc-server:
     - docker compose config umc-server test
     - echo -e "\e[0Ksection_end:`date +%s`:docker_compose_config\r\e[0K"
     - docker compose up --no-build --quiet-pull --wait --wait-timeout 60 umc-server
+    - sleep 10
+    - docker logs dev-local-umc-server-1
   script:
     - >
       docker compose run --quiet-pull --rm test
