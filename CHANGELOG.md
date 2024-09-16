@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.31.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.30.0...v0.31.0) (2024-09-16)
+
+
+### Features
+
+* update UCS base image to 2024-09-09 ([805bee9](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/805bee9d1d1f58dbcf0440a8ae263e9598178e8b))
+
+
+### Bug Fixes
+
+* add missing dependency ([11840c3](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/11840c3b3022f39b6d2a106d1afcb44e8e28f0a7))
+* add patch for removing UDM import ([9210733](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/921073387041ee6a081ad911640858fa4116be97))
+
 ## [0.30.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.29.0...v0.30.0) (2024-09-10)
 
 
