@@ -131,6 +131,7 @@ RUN \
   patch -p 4 -d /usr/lib/python3/dist-packages/univention/management/console/modules -i /0006-smtp-authentication-for-self-service-emails.patch && \
   patch -p 3 -d /usr/lib/python3/dist-packages/ -i /0007-remove-UDM-import.patch && \
   patch -p 3 -d /usr/lib/python3/dist-packages/ -i /0008-enforce-JPEG-conversion-for-all-profile-pictures.patch && \
+  patch -p 3 -d /usr/lib/python3/dist-packages/ -i /0009-replace-PAM-login-with-UDM-login-for-password-change.patch && \
   rm -v /*.patch
 
 ############################################################
