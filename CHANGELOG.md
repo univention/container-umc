@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.31.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.31.0...v0.31.1) (2024-09-18)
+
+
+### Bug Fixes
+
+* **umc-server:** specify unwanted configuration ([37a8983](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/37a8983dc14f3cc8df35bcb85d5594ae0efacd0a))
+
 ## [0.31.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.30.0...v0.31.0) (2024-09-16)
 
 
