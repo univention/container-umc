@@ -23,4 +23,5 @@ The output should be a bunch of patch files:
 0006-smtp-authentication-for-self-service-emails.patch
 0007-remove-UDM-import.patch
 0008-enforce-JPEG-conversion-for-all-profile-pictures.patch
+0009-replace-PAM-login-with-UDM-login-for-password-change.patch
 ```
