@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.32.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.31.1...v0.32.0) (2024-09-23)
+
+
+### Features
+
+* enforce conversion of all profile pictures to JPEG ([1fcbd39](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/1fcbd3932a43e2f9cfc2a7b6d35d469d0e1db2b0))
+
 ## [0.31.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.31.0...v0.31.1) (2024-09-18)
 
 
