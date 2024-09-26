@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.33.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.32.0...v0.33.0) (2024-09-26)
+
+
+### Features
+
+* **ci:** enable malware scanning, disable sbom generation ([0b5ea87](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/0b5ea87a8e296328c2005754dedfb864c283e030))
+
 ## [0.32.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.31.1...v0.32.0) (2024-09-23)
 
 
