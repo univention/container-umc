@@ -362,7 +362,7 @@ true
 			<td>ingress.loginPath[0].path</td>
 			<td>string</td>
 			<td><pre lang="json">
-"/()(univention/)(login/.*)"
+"/()(univention/)(login/.*)$"
 </pre>
 </td>
 			<td></td>
@@ -382,15 +382,15 @@ true
 			<td><pre lang="json">
 [
   {
-    "path": "/()(univention/)(languages.json|meta.json|theme.css)",
+    "path": "/()(univention/)(languages.json|meta.json|theme.css)$",
     "pathType": "ImplementationSpecific"
   },
   {
-    "path": "/()(univention/)((js|management|themes)/.*)",
+    "path": "/()(univention/)((js|management|themes)/.*)$",
     "pathType": "ImplementationSpecific"
   },
   {
-    "path": "/()(univention/login/)(dialog.js|main.js|LoginDialog.js|i18n/en/main.json)",
+    "path": "/()(univention/login/)(dialog.js|main.js|LoginDialog.js|i18n/en/main.json)$",
     "pathType": "ImplementationSpecific"
   }
 ]
