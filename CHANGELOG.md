@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.34.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.33.0...v0.34.0) (2024-10-02)
+
+
+### Features
+
+* add patch for replacing PAM login with UDM login for password change ([bbb3376](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/bbb33769d05943c3fed74a0c66ff0032e6a34dab))
+
 ## [0.33.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.32.0...v0.33.0) (2024-09-26)
 
 
