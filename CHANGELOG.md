@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.34.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.34.0...v0.34.1) (2024-10-09)
+
+
+### Bug Fixes
+
+* fix ingress paths ([8f5812e](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/8f5812e76caa2576ab3515931fd48fd69bc88eaa))
+
 ## [0.34.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.33.0...v0.34.0) (2024-10-02)
 
 
