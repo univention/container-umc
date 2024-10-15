@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.34.2](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.34.1...v0.34.2) (2024-10-15)
+
+
+### Bug Fixes
+
+* **umc-server:** Build umc-server with erratum 1133 to fix selfservice dos ([0a6a1fe](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/0a6a1fe016afc1012621a99ca294ae2489c8c794)), closes [univention/customers/dataport/team-souvap#880](https://git.knut.univention.de/univention/customers/dataport/team-souvap/issues/880)
+
 ## [0.34.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.34.0...v0.34.1) (2024-10-09)
 
 
