@@ -199,8 +199,6 @@ umcServer:
   certPemFile: "/var/secrets/cert_pem"
   # -- Path to file with the certificate's private key (.key).
   privateKeyFile: "/var/secrets/private_key"
-  # -- Path to file with SMTP password.
-  smtpSecretFile: "/var/secrets/smtp_secret"
   # -- Path to mount the secrets to.
   secretMountPath: "/var/secrets"
   # -- smtpSecret the password for the SMTP server.
@@ -453,6 +451,17 @@ ldap:
     machinePasswordKey: "machine.secret"
 
 smtp:
+  # TODO: "connection" is not processed at the moment
+  connection:
+    host: ~
+    port: ~
+  auth:  # TODO: Configuration regarding the authentication
+    # NOTE: UMC does currently use the username out of the UCR values
+    # Key: umc/self-service/passwordreset/email/server/user
+    username: ~
+    password: ~
+
+  # TODO: adjust
   credentialSecret:
     name: ""
     key: "password"

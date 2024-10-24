@@ -122,6 +122,7 @@ spec:
               mountPath: "/etc/univention/base-defaults.conf"
               subPath: "base-defaults.conf"
             {{- end }}
+            # TODO: Remove this distinction of "mountSecrets" and "nubusDeployment"
             {{- if and .Values.mountSecrets (not .Values.global.nubusDeployment) }}
             - name: "secrets"
               mountPath: "{{ .Values.umcServer.secretMountPath }}"
@@ -134,12 +135,6 @@ spec:
             - name: {{ printf "%s-volume" (include "umc-server.ldap.credentialSecret.name" . ) | quote }}
               mountPath: "/etc/machine.secret"
               subPath: {{ .Values.ldap.credentialSecret.machinePasswordKey | quote }}
-              readOnly: true
-            {{- end }}
-            {{- if (include "umc-server.smtp.credentialSecret.name" . ) }}
-            - name: {{ printf "%s-volume" (include "umc-server.smtp.credentialSecret.name" . ) | quote }}
-              mountPath: "{{ .Values.umcServer.secretMountPath }}/smtp_secret"
-              subPath: {{ .Values.smtp.credentialSecret.key | quote }}
               readOnly: true
             {{- end }}
             {{- if (include "umc-server.postgresql.auth.credentialSecret.name" . ) }}
@@ -173,6 +168,16 @@ spec:
               readOnly: true
             {{- end }}
             {{- end }}
+
+            # Simplified style of secret mounting
+
+            # TODO: This particular secret is not in use in this container, check and clean up.
+            - name: secret-smtp
+              # NOTE: There is no use of having the mountPath configurable,
+              # writing down the path as-is is fine.
+              mountPath: "/var/secrets/smtp"
+              readOnly: true
+
         - name: "load-internal-plugins"
           {{- if .Values.containerSecurityContext.enabled }}
           securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
@@ -310,12 +315,6 @@ spec:
               subPath: {{ .Values.ldap.credentialSecret.machinePasswordKey | quote }}
               readOnly: true
             {{- end }}
-            {{- if (include "umc-server.smtp.credentialSecret.name" . ) }}
-            - name: {{ printf "%s-volume" (include "umc-server.smtp.credentialSecret.name" . ) | quote }}
-              mountPath: "{{ .Values.umcServer.secretMountPath }}/smtp_secret"
-              subPath: {{ .Values.smtp.credentialSecret.key | quote }}
-              readOnly: true
-            {{- end }}
             {{- if (include "umc-server.postgresql.auth.credentialSecret.name" . ) }}
             - name: {{ printf "%s-volume" (include "umc-server.postgresql.auth.credentialSecret.name" . ) | quote }}
               mountPath: "{{ .Values.umcServer.secretMountPath }}/db_password"
@@ -374,6 +373,15 @@ spec:
             - name: passwordreset-email-body
               mountPath: /usr/share/univention-self-service/email_bodies
               readOnly: true
+
+            # Simplified style of secret mounting
+            - name: secret-smtp
+              # NOTE: There is no use of having the mountPath configurable,
+              # writing down the path as-is is fine if this is internal to the
+              # current component.
+              mountPath: "/var/secrets/smtp"
+              readOnly: true
+
           ports:
             {{- range $key, $value := .Values.service.ports }}
             - name: {{ $key }}
@@ -508,11 +516,11 @@ spec:
           secret:
             secretName: {{ (include "umc-server.ldap.credentialSecret.name" . ) | quote }}
         {{- end }}
-        {{- if (include "umc-server.smtp.credentialSecret.name" . ) }}
-        - name: {{ printf "%s-volume" (include "umc-server.smtp.credentialSecret.name" . ) | quote }}
+
+        - name: secret-smtp
           secret:
-            secretName: {{ (include "umc-server.smtp.credentialSecret.name" . ) | quote }}
-        {{- end }}
+            secretName: {{ printf "%s-smtp" (include "common.names.fullname" .) | quote }}
+
         {{- if (include "umc-server.postgresql.auth.credentialSecret.name" . ) }}
         - name: {{ printf "%s-volume" (include "umc-server.postgresql.auth.credentialSecret.name" . ) | quote }}
           secret:
