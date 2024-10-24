@@ -463,11 +463,6 @@ smtp:
     existingSecret:
       name: ~
 
-  # TODO: adjust
-  credentialSecret:
-    name: ""
-    key: "password"
-
 terminationGracePeriodSeconds: ""
 extraVolumeMounts: []
 

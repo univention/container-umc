@@ -42,10 +42,6 @@ These template definitions are only used in this chart and do not relate to temp
 {{- include "umc-server.tlsSecretTemplate" (list "umc-server-ldap" .Values.ldap.tlsSecret .) -}}
 {{- end -}}
 
-{{- define "umc-server.smtp.credentialSecret.name" -}}
-{{- include "umc-server.secretTemplate" (list "umc-server-smtp" .Values.smtp.credentialSecret .) -}}
-{{- end -}}
-
 {{- define "umc-server.postgresql.auth.credentialSecret.name" -}}
 {{- if .Values.postgresql.auth.credentialSecret.name -}}
 {{- .Values.postgresql.auth.credentialSecret.name -}}
