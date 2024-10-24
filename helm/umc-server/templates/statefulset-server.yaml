@@ -519,7 +519,10 @@ spec:
 
         - name: secret-smtp
           secret:
-            secretName: {{ include "common.secrets.name" (dict "existingSecret" .Values.smtp.auth.existingSecret "defaultNameSuffix" "smtp" "context" .) }}
+            # NOTE: Templating the secret name seems to be a common need, we may
+            # end up adding a utility for this, e.g. "nubus-common.secrets.name"
+            # or "nubus-common.secrets.tplname".
+            secretName: {{ tpl (include "common.secrets.name" (dict "existingSecret" .Values.smtp.auth.existingSecret "defaultNameSuffix" "smtp" "context" .)) . }}
 
         {{- if (include "umc-server.postgresql.auth.credentialSecret.name" . ) }}
         - name: {{ printf "%s-volume" (include "umc-server.postgresql.auth.credentialSecret.name" . ) | quote }}
