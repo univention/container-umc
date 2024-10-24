@@ -59,6 +59,9 @@ global:
       password: ~
       existingSecret:
         name: ~
+        # keyMappings:
+        #   username: ~
+        #   password: ~
 
 # -- Extensions to load. This will override the configuration in
 # `global.extensions`.
@@ -474,6 +477,9 @@ smtp:
     password: ~
     existingSecret:
       name: ~
+      # keyMappings:
+      #   username: ~
+      #   password: ~
 
 terminationGracePeriodSeconds: ""
 extraVolumeMounts: []

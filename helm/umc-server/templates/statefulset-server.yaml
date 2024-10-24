@@ -173,9 +173,19 @@ spec:
 
             # TODO: This particular secret is not in use in this container, check and clean up.
             - name: secret-smtp
+
               # NOTE: There is no use of having the mountPath configurable,
               # writing down the path as-is is fine.
-              mountPath: "/var/secrets/smtp"
+              mountPath: "/var/secrets/smtp/password"
+
+              # NOTE: Handling the "global and local" case seems to be common,
+              # most likely we will benefit from having utilities to help with
+              # this. Esp. since there are corner cases, e.g. configure an
+              # existingSecret globally and try to override with plain values
+              # locally.
+              {{- $existingSecret := ternary .Values.smtp.auth.existingSecret .Values.global.smtp.auth.existingSecret (not (empty .Values.smtp.auth.existingSecret.name)) }}
+
+              subPath: {{ include "common.secrets.key" (dict "existingSecret" $existingSecret "key" "password") }}
               readOnly: true
 
         - name: "load-internal-plugins"
