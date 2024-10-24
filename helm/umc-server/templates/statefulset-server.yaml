@@ -519,7 +519,7 @@ spec:
 
         - name: secret-smtp
           secret:
-            secretName: {{ printf "%s-smtp" (include "common.names.fullname" .) | quote }}
+            secretName: {{ include "common.secrets.name" (dict "existingSecret" .Values.smtp.auth.existingSecret "defaultNameSuffix" "smtp" "context" .) }}
 
         {{- if (include "umc-server.postgresql.auth.credentialSecret.name" . ) }}
         - name: {{ printf "%s-volume" (include "umc-server.postgresql.auth.credentialSecret.name" . ) | quote }}

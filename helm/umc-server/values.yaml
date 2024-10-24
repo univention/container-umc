@@ -460,6 +460,8 @@ smtp:
     # Key: umc/self-service/passwordreset/email/server/user
     username: ~
     password: ~
+    existingSecret:
+      name: ~
 
   # TODO: adjust
   credentialSecret:
