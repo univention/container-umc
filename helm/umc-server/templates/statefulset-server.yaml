@@ -519,10 +519,18 @@ spec:
 
         - name: secret-smtp
           secret:
+
+            # NOTE: Handling the "global and local" case seems to be common,
+            # most likely we will benefit from having utilities to help with
+            # this. Esp. since there are corner cases, e.g. configure an
+            # existingSecret globally and try to override with plain values
+            # locally.
+            {{- $existingSecret := ternary .Values.smtp.auth.existingSecret .Values.global.smtp.auth.existingSecret (not (empty .Values.smtp.auth.existingSecret.name)) }}
+
             # NOTE: Templating the secret name seems to be a common need, we may
             # end up adding a utility for this, e.g. "nubus-common.secrets.name"
             # or "nubus-common.secrets.tplname".
-            secretName: {{ tpl (include "common.secrets.name" (dict "existingSecret" .Values.smtp.auth.existingSecret "defaultNameSuffix" "smtp" "context" .)) . }}
+            secretName: {{ tpl (include "common.secrets.name" (dict "existingSecret" $existingSecret "defaultNameSuffix" "smtp" "context" .)) . }}
 
         {{- if (include "umc-server.postgresql.auth.credentialSecret.name" . ) }}
         - name: {{ printf "%s-volume" (include "umc-server.postgresql.auth.credentialSecret.name" . ) | quote }}

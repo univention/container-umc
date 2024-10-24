@@ -47,6 +47,19 @@ global:
       host: ""
       port: 5432
 
+  smtp:
+    # TODO: "connection" is not processed at the moment
+    connection:
+      host: ~
+      port: ~
+    auth:
+      # NOTE: UMC does currently use the username out of the UCR values
+      # Key: umc/self-service/passwordreset/email/server/user
+      username: ~
+      password: ~
+      existingSecret:
+        name: ~
+
 # -- Extensions to load. This will override the configuration in
 # `global.extensions`.
 extensions: []
@@ -450,12 +463,13 @@ ldap:
     ldapPasswordKey: "ldap.secret"
     machinePasswordKey: "machine.secret"
 
+
 smtp:
   # TODO: "connection" is not processed at the moment
   connection:
     host: ~
     port: ~
-  auth:  # TODO: Configuration regarding the authentication
+  auth:
     # NOTE: UMC does currently use the username out of the UCR values
     # Key: umc/self-service/passwordreset/email/server/user
     username: ~
