@@ -327,7 +327,7 @@ image:
   registry: ""
   repository: "nubus-dev/images/umc-server"
   imagePullPolicy: "IfNotPresent"
-  tag: "latest"
+  tag: "0.34.2"
   ## Define image sha256 as an alternative to `tag`
   # sha256:
 
