@@ -494,6 +494,8 @@ smtp:
     host: ~
     port: ~
   auth:
+    enabled: true
+
     # NOTE: UMC does currently use the username out of the UCR values
     # Key: umc/self-service/passwordreset/email/server/user
     username: ~
