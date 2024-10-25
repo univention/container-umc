@@ -127,16 +127,6 @@ spec:
             - name: "secrets"
               mountPath: "{{ .Values.umcServer.secretMountPath }}"
             {{- else }}
-            {{- if (include "umc-server.ldap.credentialSecret.name" . ) }}
-            - name: {{ printf "%s-volume" (include "umc-server.ldap.credentialSecret.name" . ) | quote }}
-              mountPath: "/etc/ldap.secret"
-              subPath: {{ .Values.ldap.credentialSecret.ldapPasswordKey | quote }}
-              readOnly: true
-            - name: {{ printf "%s-volume" (include "umc-server.ldap.credentialSecret.name" . ) | quote }}
-              mountPath: "/etc/machine.secret"
-              subPath: {{ .Values.ldap.credentialSecret.machinePasswordKey | quote }}
-              readOnly: true
-            {{- end }}
             {{- if (include "umc-server.postgresql.auth.credentialSecret.name" . ) }}
             - name: {{ printf "%s-volume" (include "umc-server.postgresql.auth.credentialSecret.name" . ) | quote }}
               mountPath: "{{ .Values.umcServer.secretMountPath }}/db_password"
@@ -170,6 +160,17 @@ spec:
             {{- end }}
 
             # Simplified style of secret mounting
+
+            # TODO: This particular secret is not in use in this container, check and clean up.
+            {{- $existingSecret := ternary .Values.ldap.auth.existingSecret .Values.global.ldap.auth.existingSecret (not (empty .Values.ldap.auth.existingSecret.name)) }}
+            - name: secret-ldap
+              mountPath: "/etc/ldap.secret"
+              subPath: {{ include "common.secrets.key" (dict "existingSecret" $existingSecret "key" "password") }}
+              readOnly: true
+            - name: secret-ldap
+              mountPath: "/etc/machine.secret"
+              subPath: {{ include "common.secrets.key" (dict "existingSecret" $existingSecret "key" "password") }}
+              readOnly: true
 
             # TODO: This particular secret is not in use in this container, check and clean up.
             - name: secret-smtp
@@ -315,16 +316,6 @@ spec:
             - name: "secrets"
               mountPath: "{{ .Values.umcServer.secretMountPath }}"
             {{- else }}
-            {{- if (include "umc-server.ldap.credentialSecret.name" . ) }}
-            - name: {{ printf "%s-volume" (include "umc-server.ldap.credentialSecret.name" . ) | quote }}
-              mountPath: "/etc/ldap.secret"
-              subPath: {{ .Values.ldap.credentialSecret.ldapPasswordKey | quote }}
-              readOnly: true
-            - name: {{ printf "%s-volume" (include "umc-server.ldap.credentialSecret.name" . ) | quote }}
-              mountPath: "/etc/machine.secret"
-              subPath: {{ .Values.ldap.credentialSecret.machinePasswordKey | quote }}
-              readOnly: true
-            {{- end }}
             {{- if (include "umc-server.postgresql.auth.credentialSecret.name" . ) }}
             - name: {{ printf "%s-volume" (include "umc-server.postgresql.auth.credentialSecret.name" . ) | quote }}
               mountPath: "{{ .Values.umcServer.secretMountPath }}/db_password"
@@ -385,6 +376,16 @@ spec:
               readOnly: true
 
             # Simplified style of secret mounting
+            {{- $existingSecret := ternary .Values.ldap.auth.existingSecret .Values.global.ldap.auth.existingSecret (not (empty .Values.ldap.auth.existingSecret.name)) }}
+            - name: secret-ldap
+              mountPath: "/etc/ldap.secret"
+              subPath: {{ include "common.secrets.key" (dict "existingSecret" $existingSecret "key" "password") }}
+              readOnly: true
+            - name: secret-ldap
+              mountPath: "/etc/machine.secret"
+              subPath: {{ include "common.secrets.key" (dict "existingSecret" $existingSecret "key" "password") }}
+              readOnly: true
+
             - name: secret-smtp
 
               # NOTE: There is no use of having the mountPath configurable,
@@ -530,11 +531,11 @@ spec:
           secret:
             secretName: {{ include "common.names.fullname" . | quote }}
         {{- else }}
-        {{- if (include "umc-server.ldap.credentialSecret.name" . ) }}
-        - name: {{ printf "%s-volume" (include "umc-server.ldap.credentialSecret.name" . ) | quote }}
+
+        - name: secret-ldap
           secret:
-            secretName: {{ (include "umc-server.ldap.credentialSecret.name" . ) | quote }}
-        {{- end }}
+            {{- $existingSecret := ternary .Values.ldap.auth.existingSecret .Values.global.ldap.auth.existingSecret (not (empty .Values.ldap.auth.existingSecret.name)) }}
+            secretName: {{ tpl (include "common.secrets.name" (dict "existingSecret" $existingSecret "defaultNameSuffix" "ldap" "context" .)) . }}
 
         - name: secret-smtp
           secret:

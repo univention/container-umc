@@ -34,10 +34,6 @@ These template definitions are only used in this chart and do not relate to temp
 {{- end -}}
 {{- end -}}
 
-{{- define "umc-server.ldap.credentialSecret.name" -}}
-{{- include "umc-server.secretTemplate" (list "umc-server-ldap" .Values.ldap.credentialSecret .) -}}
-{{- end -}}
-
 {{- define "umc-server.ldap.tlsSecret.name" -}}
 {{- include "umc-server.tlsSecretTemplate" (list "umc-server-ldap" .Values.ldap.tlsSecret .) -}}
 {{- end -}}

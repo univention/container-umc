@@ -486,10 +486,6 @@ ldap:
     caCertKey: "ca.crt"
     privateKeyKey: "tls.key"
     certificateKey: "tls.crt"
-  credentialSecret:
-    name: ""
-    ldapPasswordKey: "ldap.secret"
-    machinePasswordKey: "machine.secret"
 
 
 smtp:
