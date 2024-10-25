@@ -41,6 +41,20 @@ global:
   #   - "docker-registry"
   imagePullSecrets: []
   imagePullPolicy: ""
+
+  ldap:
+    # NOTE: Connection configuration would find its place here
+    connection:
+      host: ~
+    auth:
+      username: ~
+      password: ~
+      existingSecret:
+        name: ~
+        # keyMappings:
+        #   username: ~
+        #   password: ~
+
     # -- Configuration for the PostgreSQL database
   postgresql:
     connection:
@@ -454,6 +468,19 @@ postgresql:
       key: "password"
 
 ldap:
+  # NOTE: Connection configuration would find its place here
+  connection:
+    host: ~
+  auth:
+    username: ~
+    password: ~
+    existingSecret:
+      name: ~
+      # keyMappings:
+      #   username: ~
+      #   password: ~
+
+  # TODO: Below is legacy configuration
   tlsSecret:
     name: ""
     caCertKey: "ca.crt"
