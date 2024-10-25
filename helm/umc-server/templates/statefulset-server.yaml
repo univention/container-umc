@@ -386,10 +386,19 @@ spec:
 
             # Simplified style of secret mounting
             - name: secret-smtp
+
               # NOTE: There is no use of having the mountPath configurable,
-              # writing down the path as-is is fine if this is internal to the
-              # current component.
-              mountPath: "/var/secrets/smtp"
+              # writing down the path as-is is fine.
+              mountPath: "/var/secrets/smtp/password"
+
+              # NOTE: Handling the "global and local" case seems to be common,
+              # most likely we will benefit from having utilities to help with
+              # this. Esp. since there are corner cases, e.g. configure an
+              # existingSecret globally and try to override with plain values
+              # locally.
+              {{- $existingSecret := ternary .Values.smtp.auth.existingSecret .Values.global.smtp.auth.existingSecret (not (empty .Values.smtp.auth.existingSecret.name)) }}
+
+              subPath: {{ include "common.secrets.key" (dict "existingSecret" $existingSecret "key" "password") }}
               readOnly: true
 
           ports:
