@@ -47,12 +47,12 @@ global:
     connection:
       host: ~
     auth:
-      username: ~
+      bindDn: ~
       password: ~
       existingSecret:
         name: ~
         # keyMappings:
-        #   username: ~
+        #   bindDn: ~
         #   password: ~
 
     # -- Configuration for the PostgreSQL database
@@ -472,12 +472,12 @@ ldap:
   connection:
     host: ~
   auth:
-    username: ~
+    bindDn: ~
     password: ~
     existingSecret:
       name: ~
       # keyMappings:
-      #   username: ~
+      #   bindDn: ~
       #   password: ~
 
   # TODO: Below is legacy configuration
