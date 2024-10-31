@@ -78,7 +78,7 @@ RUN \
       && \
     DEBIAN_FRONTEND=noninteractive \
     dpkg --install --force-depends /apt/* && \
-  rm -rf /apt/ \
+  rm -rf /apt/ && \
   awk \
     '/^Package: python3-univention-directory-manager-rest$/{ while(!/^Version: /){getline} print $2 }' \
     /var/lib/dpkg/status > /version
@@ -300,6 +300,10 @@ COPY --from=build \
   /etc/apache2/mods-enabled/ \
   /etc/apache2/mods-enabled
 
+COPY --from=build \
+  /var/lib/dpkg/status \
+  /var/lib/dpkg/status.build
+
 ############################################################
 # Copy Docker-specific files
 
@@ -352,7 +356,12 @@ RUN \
   rm \
     /etc/univention/templates/files/etc/apache2/sites-available/univention-udm.conf \
     /etc/apache2/sites-enabled/univention-udm.conf && \
-  mkdir --parents /usr/local/apache2/logs/
+  mkdir --parents /usr/local/apache2/logs/ && \
+  # Copy package information from build stage, so that it gets found by the SBOM scanner.
+  # TODO: Just copying the `univention-web-*` packages is probably not enough.
+  #       But we cannot copy the entire file, because not all packages from the build stage end up in the final stage.
+  sed -n '/Package: univention-web-.*/,/^\s*$/p' /var/lib/dpkg/status.build >> /var/lib/dpkg/status && \
+  rm /var/lib/dpkg/status.build
 
 COPY \
   scripts/50-entrypoint.sh \
