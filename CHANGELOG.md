@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.34.3](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.34.2...v0.34.3) (2024-11-01)
+
+
+### Bug Fixes
+
+* **umc-gateway:** make univention-web-* packages appear in SBOM, so the license information is shown ([7685861](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/7685861f6e47b9e8ef70ca4b4f2e1f8c3ef693b0))
+
 ## [0.34.2](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.34.1...v0.34.2) (2024-10-15)
 
 
