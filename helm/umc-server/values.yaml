@@ -240,7 +240,7 @@ proxy:
   image:
     registry: "artifacts.software-univention.de"
     repository: "library/traefik"
-    tag: "3.0@sha256:a208c74fd80a566d4ea376053bff73d31616d7af3f1465a7747b8b89ee34d97e"
+    tag: "3.2@sha256:66e37237b371f2b25ce5f247cc371976929dcb18c041e05685f1de1df6422b72"
     pullPolicy: "IfNotPresent"
 
   logLevel: "INFO"
