@@ -2,7 +2,7 @@
 
 A Helm chart for the Univention Management Console Server
 
-- **Version**: 0.1.0
+- **Version**: 0.34.3
 - **Type**: application
 - **AppVersion**: 12.0.29
 - **Homepage:** <https://www.univention.de/>
@@ -616,25 +616,7 @@ true
 			<td>The name of the kubernetes secret which contains a TLS private key and certificate. Hint: This secret is not created by this chart and must be provided.</td>
 		</tr>
 		<tr>
-			<td>ldap.credentialSecret.ldapPasswordKey</td>
-			<td>string</td>
-			<td><pre lang="json">
-"ldap.secret"
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>ldap.credentialSecret.machinePasswordKey</td>
-			<td>string</td>
-			<td><pre lang="json">
-"machine.secret"
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>ldap.credentialSecret.name</td>
+			<td>ldap.existingSecret.name</td>
 			<td>string</td>
 			<td><pre lang="json">
 ""
@@ -684,12 +666,11 @@ true
 			<td><pre lang="json">
 {
   "auth": {
-    "credentialSecret": {
-      "key": "memcached-password",
-      "name": ""
-    },
     "enabled": true,
     "existingPasswordSecret": "",
+    "existingSecret": {
+      "name": ""
+    },
     "password": "",
     "username": "selfservice"
   },
@@ -714,18 +695,6 @@ true
 			<td>Memcached settings.  The bitnami helm chart does contain all details of what can be configured: https://github.com/bitnami/charts/tree/main/bitnami/memcached</td>
 		</tr>
 		<tr>
-			<td>memcached.auth.credentialSecret</td>
-			<td>object</td>
-			<td><pre lang="json">
-{
-  "key": "memcached-password",
-  "name": ""
-}
-</pre>
-</td>
-			<td>Memcached password secret reference.</td>
-		</tr>
-		<tr>
 			<td>memcached.auth.enabled</td>
 			<td>bool</td>
 			<td><pre lang="json">
@@ -742,6 +711,17 @@ true
 </pre>
 </td>
 			<td>Memcached existing password secret (Must contain the key `memcached-password`). This parameter is only used by the bundled memcached.</td>
+		</tr>
+		<tr>
+			<td>memcached.auth.existingSecret</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "name": ""
+}
+</pre>
+</td>
+			<td>Memcached password secret reference.</td>
 		</tr>
 		<tr>
 			<td>memcached.auth.password</td>
@@ -896,11 +876,10 @@ true
 			<td><pre lang="json">
 {
   "auth": {
-    "credentialSecret": {
-      "key": "password",
+    "database": "selfservice",
+    "existingSecret": {
       "name": ""
     },
-    "database": "selfservice",
     "password": "",
     "postgresPassword": "",
     "username": "selfservice"
@@ -916,18 +895,6 @@ true
 			<td>PostgreSQL settings.  The bitnami helm chart does contain all details of what can be configured: https://github.com/bitnami/charts/tree/main/bitnami/postgresql</td>
 		</tr>
 		<tr>
-			<td>postgresql.auth.credentialSecret</td>
-			<td>object</td>
-			<td><pre lang="json">
-{
-  "key": "password",
-  "name": ""
-}
-</pre>
-</td>
-			<td>PostgreSQL password secret reference.</td>
-		</tr>
-		<tr>
 			<td>postgresql.auth.database</td>
 			<td>string</td>
 			<td><pre lang="json">
@@ -935,6 +902,17 @@ true
 </pre>
 </td>
 			<td>PostgreSQL database. If bundled is set to `true` this database will be created.</td>
+		</tr>
+		<tr>
+			<td>postgresql.auth.existingSecret</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "name": ""
+}
+</pre>
+</td>
+			<td>PostgreSQL password secret reference.</td>
 		</tr>
 		<tr>
 			<td>postgresql.auth.password</td>
@@ -1293,16 +1271,7 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>smtp.credentialSecret.key</td>
-			<td>string</td>
-			<td><pre lang="json">
-"password"
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>smtp.credentialSecret.name</td>
+			<td>smtp.existingSecret.name</td>
 			<td>string</td>
 			<td><pre lang="json">
 ""

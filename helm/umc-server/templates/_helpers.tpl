@@ -34,60 +34,8 @@ These template definitions are only used in this chart and do not relate to temp
 {{- end -}}
 {{- end -}}
 
-{{- define "umc-server.ldap.credentialSecret.name" -}}
-{{- include "umc-server.secretTemplate" (list "umc-server-ldap" .Values.ldap.credentialSecret .) -}}
-{{- end -}}
-
 {{- define "umc-server.ldap.tlsSecret.name" -}}
 {{- include "umc-server.tlsSecretTemplate" (list "umc-server-ldap" .Values.ldap.tlsSecret .) -}}
-{{- end -}}
-
-{{- define "umc-server.smtp.credentialSecret.name" -}}
-{{- include "umc-server.secretTemplate" (list "umc-server-smtp" .Values.smtp.credentialSecret .) -}}
-{{- end -}}
-
-{{- define "umc-server.postgresql.auth.credentialSecret.name" -}}
-{{- if .Values.postgresql.auth.credentialSecret.name -}}
-{{- .Values.postgresql.auth.credentialSecret.name -}}
-{{- else if .Values.global.nubusDeployment -}}
-{{- printf "%s-umc-server-postgresql-credentials" .Release.Name -}}
-{{- else -}}
-{{- include "umc-server.secretTemplate" (list "umc-server-postgresql" .Values.postgresql.auth.credentialSecret .) -}}
-{{- end -}}
-{{- end -}}
-
-{{- define "umc-server.postgresql.auth.credentialSecret.key" -}}
-{{- if .Values.postgresql.auth.credentialSecret.key -}}
-{{- .Values.postgresql.auth.credentialSecret.key -}}
-{{- else if .Values.global.nubusDeployment -}}
-password
-{{- else -}}
-{{- include "umc-server.secretTemplate" (list "umc-server-postgresql" .Values.postgresql.auth.credentialSecret .) -}}
-{{- end -}}
-{{- end -}}
-
-{{- define "umc-server.memcached.auth.credentialSecret.name" -}}
-{{- if .Values.memcached.auth.credentialSecret.name -}}
-{{- .Values.memcached.auth.credentialSecret.name -}}
-{{- else if and .Values.global.nubusDeployment .Values.memcached.bundled .Values.memcached.auth .Values.memcached.auth.enabled -}}
-{{- if .Values.memcached.auth.existingPasswordSecret -}}
-{{- tpl .Values.memcached.auth.existingPasswordSecret . -}}
-{{- else -}}
-{{- printf "%s-memcached" (include "common.names.fullname" .) -}}
-{{- end -}}
-{{- else -}}
-{{- include "umc-server.secretTemplate" (list "umc-server-memcached" .Values.memcached.auth.credentialSecret .) -}}
-{{- end -}}
-{{- end -}}
-
-{{- define "umc-server.memcached.auth.credentialSecret.key" -}}
-{{- if .Values.memcached.auth.credentialSecret.key -}}
-{{- .Values.memcached.auth.credentialSecret.key -}}
-{{- else if and .Values.global.nubusDeployment .Values.memcached.bundled .Values.memcached.auth .Values.memcached.auth.enabled -}}
-memcached-password
-{{- else -}}
-{{- include "umc-server.secretTemplate" (list "umc-server-memcached" .Values.memcached.auth.credentialSecret .) -}}
-{{- end -}}
 {{- end -}}
 
 {{- define "umc-server.ingress.tls.secretName" -}}

@@ -20,6 +20,10 @@ postgresql:
   auth:
     password: "password"
     postgresPassword: "password"
+    existingSecret:
+      name: "custom-postgres-credentials"
+      keyMapping:
+        password: "custom-password"
 
 memcached:
   containerSecurityContext:
