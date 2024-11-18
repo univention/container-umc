@@ -59,6 +59,7 @@ systemExtensions: []
 # Security Context.
 # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
 containerSecurityContext:
+  privileged: false
   # -- Enable security context.
   enabled: true
   # -- Enable container privileged escalation.
@@ -83,8 +84,9 @@ containerSecurityContext:
 # Security Context.
 # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
 containerSecurityContextInit:
+  privileged: false
   # -- Enable security context.
-  enabled: false
+  enabled: true
   # -- Enable container privileged escalation.
   allowPrivilegeEscalation: false
   # -- Security capabilities for container.
@@ -116,6 +118,7 @@ containerSecurityContextInit:
 # Security Context.
 # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
 containerSecurityContextSssd:
+  privileged: false
   # -- Enable security context.
   enabled: true
   # -- Enable container privileged escalation.
@@ -341,6 +344,53 @@ probes:
     periodSeconds: 30
     failureThreshold: 3
     successThreshold: 1
+  readiness:
+    enabled: true
+    initialDelaySeconds: 10
+    timeoutSeconds: 3
+    periodSeconds: 30
+    failureThreshold: 3
+    successThreshold: 1
+
+sssd:
+  probes:
+    liveness:
+      enabled: true
+      # -- Number of failed executions until container is terminated.
+      failureThreshold: 10
+      # -- Delay after container start until LivenessProbe is executed.
+      initialDelaySeconds: 15
+      # -- Time between probe executions.
+      periodSeconds: 20
+      # -- Number of successful executions after failed ones until container is marked healthy.
+      successThreshold: 1
+      # -- Timeout for command return.
+      timeoutSeconds: 5
+      exec:
+        command:
+          - sh
+          - -c
+          - |
+            exit 0
+    readiness:
+      enabled: true
+      # -- Number of failed executions until container is terminated.
+      failureThreshold: 10
+      # -- Delay after container start until LivenessProbe is executed.
+      initialDelaySeconds: 15
+      # -- Time between probe executions.
+      periodSeconds: 20
+      # -- Number of successful executions after failed ones until container is marked healthy.
+      successThreshold: 1
+      # -- Timeout for command return.
+      timeoutSeconds: 5
+      exec:
+        command:
+          - sh
+          - -c
+          - |
+            exit 0
+
 
   readiness:
     enabled: true
@@ -404,6 +454,8 @@ memcached:
     # -- Memcached password secret reference.
     existingSecret:
       name: ""
+  containerSecurityContext:
+    readOnlyRootFilesystem: false
   # -- Defaults from /ucs/management/univention-self-service/conffiles/etc/memcached_univention-self-service.conf
   #
   # These parameters are only used by the bundled memcached.

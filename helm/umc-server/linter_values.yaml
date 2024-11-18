@@ -40,11 +40,4 @@ istio:
   enabled: false
   host: "localhost"
 
-probes:
-  liveness:
-    enabled: false
-
-  readiness:
-    enabled: false
-
 ...

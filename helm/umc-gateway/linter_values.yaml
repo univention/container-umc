@@ -26,12 +26,4 @@ istio:
 image:
   tag: "branch-feature-example"
 
-## Container deployment probes
-probes:
-  liveness:
-    enabled: false
-
-  readiness:
-    enabled: false
-
 ...
