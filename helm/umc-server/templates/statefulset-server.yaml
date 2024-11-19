@@ -447,23 +447,23 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- if .Values.sssd.probes.liveness.enabled }}
           livenessProbe:
-            tcpSocket:
-              port: http
             initialDelaySeconds: {{ .Values.sssd.probes.liveness.initialDelaySeconds }}
             timeoutSeconds: {{ .Values.sssd.probes.liveness.timeoutSeconds }}
             periodSeconds: {{ .Values.sssd.probes.liveness.periodSeconds }}
             failureThreshold: {{ .Values.sssd.probes.liveness.failureThreshold }}
             successThreshold: {{ .Values.sssd.probes.liveness.successThreshold }}
+            exec:
+              command: {{ .Values.sssd.probes.liveness.command }}
           {{- end }}
           {{- if .Values.sssd.probes.readiness.enabled }}
           readinessProbe:
-            tcpSocket:
-              port: http
             initialDelaySeconds: {{ .Values.sssd.probes.readiness.initialDelaySeconds }}
             timeoutSeconds: {{ .Values.sssd.probes.readiness.timeoutSeconds }}
             periodSeconds: {{ .Values.sssd.probes.readiness.periodSeconds }}
             failureThreshold: {{ .Values.sssd.probes.readiness.failureThreshold }}
             successThreshold: {{ .Values.sssd.probes.readiness.successThreshold }}
+            exec:
+              command: {{ .Values.sssd.probes.readiness.command }}
           {{- end }}
       volumes:
         {{- if .Values.extraVolumes }}
