@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.35.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.34.3...v0.35.0) (2024-11-21)
+
+
+### Features
+
+* migrate component secret ([849525d](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/849525dbb5cb6a825b78d71458c6b7c6d30277d2))
+
 ## [0.34.3](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.34.2...v0.34.3) (2024-11-01)
 
 
