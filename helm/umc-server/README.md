@@ -1292,7 +1292,7 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>sssd.probes.liveness.enabled</td>
+			<td>sssdProbes.liveness.enabled</td>
 			<td>bool</td>
 			<td><pre lang="json">
 true
@@ -1301,7 +1301,7 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>sssd.probes.liveness.exec.command[0]</td>
+			<td>sssdProbes.liveness.exec.command[0]</td>
 			<td>string</td>
 			<td><pre lang="json">
 "sh"
@@ -1310,7 +1310,7 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>sssd.probes.liveness.exec.command[1]</td>
+			<td>sssdProbes.liveness.exec.command[1]</td>
 			<td>string</td>
 			<td><pre lang="json">
 "-c"
@@ -1319,7 +1319,7 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>sssd.probes.liveness.exec.command[2]</td>
+			<td>sssdProbes.liveness.exec.command[2]</td>
 			<td>string</td>
 			<td><pre lang="json">
 "exit 0\n"
@@ -1328,7 +1328,7 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>sssd.probes.liveness.failureThreshold</td>
+			<td>sssdProbes.liveness.failureThreshold</td>
 			<td>int</td>
 			<td><pre lang="json">
 10
@@ -1337,7 +1337,7 @@ true
 			<td>Number of failed executions until container is terminated.</td>
 		</tr>
 		<tr>
-			<td>sssd.probes.liveness.initialDelaySeconds</td>
+			<td>sssdProbes.liveness.initialDelaySeconds</td>
 			<td>int</td>
 			<td><pre lang="json">
 15
@@ -1346,7 +1346,7 @@ true
 			<td>Delay after container start until LivenessProbe is executed.</td>
 		</tr>
 		<tr>
-			<td>sssd.probes.liveness.periodSeconds</td>
+			<td>sssdProbes.liveness.periodSeconds</td>
 			<td>int</td>
 			<td><pre lang="json">
 20
@@ -1355,7 +1355,7 @@ true
 			<td>Time between probe executions.</td>
 		</tr>
 		<tr>
-			<td>sssd.probes.liveness.successThreshold</td>
+			<td>sssdProbes.liveness.successThreshold</td>
 			<td>int</td>
 			<td><pre lang="json">
 1
@@ -1364,7 +1364,7 @@ true
 			<td>Number of successful executions after failed ones until container is marked healthy.</td>
 		</tr>
 		<tr>
-			<td>sssd.probes.liveness.timeoutSeconds</td>
+			<td>sssdProbes.liveness.timeoutSeconds</td>
 			<td>int</td>
 			<td><pre lang="json">
 5
@@ -1373,7 +1373,7 @@ true
 			<td>Timeout for command return.</td>
 		</tr>
 		<tr>
-			<td>sssd.probes.readiness.enabled</td>
+			<td>sssdProbes.readiness.enabled</td>
 			<td>bool</td>
 			<td><pre lang="json">
 true
@@ -1382,7 +1382,7 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>sssd.probes.readiness.exec.command[0]</td>
+			<td>sssdProbes.readiness.exec.command[0]</td>
 			<td>string</td>
 			<td><pre lang="json">
 "sh"
@@ -1391,7 +1391,7 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>sssd.probes.readiness.exec.command[1]</td>
+			<td>sssdProbes.readiness.exec.command[1]</td>
 			<td>string</td>
 			<td><pre lang="json">
 "-c"
@@ -1400,7 +1400,7 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>sssd.probes.readiness.exec.command[2]</td>
+			<td>sssdProbes.readiness.exec.command[2]</td>
 			<td>string</td>
 			<td><pre lang="json">
 "exit 0\n"
@@ -1409,7 +1409,7 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>sssd.probes.readiness.failureThreshold</td>
+			<td>sssdProbes.readiness.failureThreshold</td>
 			<td>int</td>
 			<td><pre lang="json">
 10
@@ -1418,7 +1418,7 @@ true
 			<td>Number of failed executions until container is terminated.</td>
 		</tr>
 		<tr>
-			<td>sssd.probes.readiness.initialDelaySeconds</td>
+			<td>sssdProbes.readiness.initialDelaySeconds</td>
 			<td>int</td>
 			<td><pre lang="json">
 15
@@ -1427,7 +1427,7 @@ true
 			<td>Delay after container start until LivenessProbe is executed.</td>
 		</tr>
 		<tr>
-			<td>sssd.probes.readiness.periodSeconds</td>
+			<td>sssdProbes.readiness.periodSeconds</td>
 			<td>int</td>
 			<td><pre lang="json">
 20
@@ -1436,7 +1436,7 @@ true
 			<td>Time between probe executions.</td>
 		</tr>
 		<tr>
-			<td>sssd.probes.readiness.successThreshold</td>
+			<td>sssdProbes.readiness.successThreshold</td>
 			<td>int</td>
 			<td><pre lang="json">
 1
@@ -1445,67 +1445,13 @@ true
 			<td>Number of successful executions after failed ones until container is marked healthy.</td>
 		</tr>
 		<tr>
-			<td>sssd.probes.readiness.timeoutSeconds</td>
+			<td>sssdProbes.readiness.timeoutSeconds</td>
 			<td>int</td>
 			<td><pre lang="json">
 5
 </pre>
 </td>
 			<td>Timeout for command return.</td>
-		</tr>
-		<tr>
-			<td>sssd.readiness.enabled</td>
-			<td>bool</td>
-			<td><pre lang="json">
-true
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>sssd.readiness.failureThreshold</td>
-			<td>int</td>
-			<td><pre lang="json">
-30
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>sssd.readiness.initialDelaySeconds</td>
-			<td>int</td>
-			<td><pre lang="json">
-10
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>sssd.readiness.periodSeconds</td>
-			<td>int</td>
-			<td><pre lang="json">
-10
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>sssd.readiness.successThreshold</td>
-			<td>int</td>
-			<td><pre lang="json">
-1
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>sssd.readiness.timeoutSeconds</td>
-			<td>int</td>
-			<td><pre lang="json">
-3
-</pre>
-</td>
-			<td></td>
 		</tr>
 		<tr>
 			<td>systemExtensions</td>

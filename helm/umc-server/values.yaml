@@ -350,53 +350,43 @@ probes:
     failureThreshold: 3
     successThreshold: 1
 
-sssd:
-  probes:
-    liveness:
-      enabled: true
-      # -- Number of failed executions until container is terminated.
-      failureThreshold: 10
-      # -- Delay after container start until LivenessProbe is executed.
-      initialDelaySeconds: 15
-      # -- Time between probe executions.
-      periodSeconds: 20
-      # -- Number of successful executions after failed ones until container is marked healthy.
-      successThreshold: 1
-      # -- Timeout for command return.
-      timeoutSeconds: 5
-      exec:
-        command:
-          - sh
-          - -c
-          - |
-            exit 0
-    readiness:
-      enabled: true
-      # -- Number of failed executions until container is terminated.
-      failureThreshold: 10
-      # -- Delay after container start until LivenessProbe is executed.
-      initialDelaySeconds: 15
-      # -- Time between probe executions.
-      periodSeconds: 20
-      # -- Number of successful executions after failed ones until container is marked healthy.
-      successThreshold: 1
-      # -- Timeout for command return.
-      timeoutSeconds: 5
-      exec:
-        command:
-          - sh
-          - -c
-          - |
-            exit 0
-
-
+sssdProbes:
+  liveness:
+    enabled: true
+    # -- Number of failed executions until container is terminated.
+    failureThreshold: 10
+    # -- Delay after container start until LivenessProbe is executed.
+    initialDelaySeconds: 15
+    # -- Time between probe executions.
+    periodSeconds: 20
+    # -- Number of successful executions after failed ones until container is marked healthy.
+    successThreshold: 1
+    # -- Timeout for command return.
+    timeoutSeconds: 5
+    exec:
+      command:
+        - sh
+        - -c
+        - |
+          exit 0
   readiness:
     enabled: true
-    initialDelaySeconds: 10
-    timeoutSeconds: 3
-    periodSeconds: 10
-    failureThreshold: 30
+    # -- Number of failed executions until container is terminated.
+    failureThreshold: 10
+    # -- Delay after container start until LivenessProbe is executed.
+    initialDelaySeconds: 15
+    # -- Time between probe executions.
+    periodSeconds: 20
+    # -- Number of successful executions after failed ones until container is marked healthy.
     successThreshold: 1
+    # -- Timeout for command return.
+    timeoutSeconds: 5
+    exec:
+      command:
+        - sh
+        - -c
+        - |
+          exit 0
 
 
 ## Deployment resources

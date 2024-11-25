@@ -380,22 +380,15 @@ spec:
               containerPort: {{ $value.containerPort }}
               protocol: {{ $value.protocol }}
             {{- end }}
-          livenessProbe:
-            tcpSocket:
-              port: http
-            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
-            timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
-            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
-            failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
-            successThreshold: {{ .Values.probes.liveness.successThreshold }}
-          readinessProbe:
-            tcpSocket:
-              port: http
-            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
-            timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
-            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
-            failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
-            successThreshold: {{ .Values.probes.readiness.successThreshold }}
+          {{- if .Values.probes.liveness }}
+          livenessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.probes.liveness "context" $) | nindent 12 }}
+          {{- end }}
+          {{- if .Values.probes.startup }}
+          startupProbe: {{- include "common.tplvalues.render" (dict "value" .Values.probes.startup "context" $) | nindent 12 }}
+          {{- end }}
+          {{- if .Values.probes.readiness }}
+          readinessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.probes.readiness "context" $) | nindent 12 }}
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
         - name: "sssd-sidecar"
@@ -441,8 +434,12 @@ spec:
             {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          livenessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.sssd.probes.liveness "context" .) | nindent 12 }}
-          readinessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.sssd.probes.readiness "context" .) | nindent 12 }}
+          {{- if .Values.sssdProbes.liveness }}
+          livenessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.sssdProbes.liveness "context" .) | nindent 12 }}
+          {{- end }}
+          {{- if .Values.sssdProbes.readiness }}
+          readinessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.sssdProbes.readiness "context" .) | nindent 12 }}
+          {{- end }}
       volumes:
         {{- if .Values.extraVolumes }}
         {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumes "context" $) | nindent 8 }}
