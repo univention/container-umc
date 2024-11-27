@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.35.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.35.0...v0.35.1) (2024-11-27)
+
+
+### Bug Fixes
+
+* add a systemExtension to the linter_values.yaml file ([57f451d](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/57f451dbf0841f9aeeecf0539cb79d131f8f7daa))
+* Kyverno lint ([58e942b](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/58e942b4a3d41544000c7004d33f709f215cc463))
+* make probes optional ([166b09d](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/166b09d29386d7d8f7112b76a6e6998fa9211ad2))
+* sssd probes ([35de8aa](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/35de8aac333792b085316859424ef8b8e1aaa217))
+
 ## [0.35.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.34.3...v0.35.0) (2024-11-21)
 
 
