@@ -1047,6 +1047,15 @@ false
 			<td></td>
 		</tr>
 		<tr>
+			<td>probes.liveness.tcpSocket.port</td>
+			<td>string</td>
+			<td><pre lang="json">
+"http"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
 			<td>probes.liveness.timeoutSeconds</td>
 			<td>int</td>
 			<td><pre lang="json">
@@ -1087,6 +1096,15 @@ false
 			<td>int</td>
 			<td><pre lang="json">
 1
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>probes.readiness.tcpSocket.port</td>
+			<td>string</td>
+			<td><pre lang="json">
+"http"
 </pre>
 </td>
 			<td></td>

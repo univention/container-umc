@@ -343,12 +343,16 @@ probes:
     periodSeconds: 30
     failureThreshold: 3
     successThreshold: 1
+    tcpSocket:
+      port: http
   readiness:
     initialDelaySeconds: 10
     timeoutSeconds: 3
     periodSeconds: 30
     failureThreshold: 3
     successThreshold: 1
+    tcpSocket:
+      port: http
 
 sssdProbes:
   liveness:
