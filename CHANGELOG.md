@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.35.2](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.35.1...v0.35.2) (2024-11-28)
+
+
+### Bug Fixes
+
+* probes ([051f763](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/051f763fd16e37e1d17e947d35725f2e82014bcc))
+
 ## [0.35.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.35.0...v0.35.1) (2024-11-27)
 
 
