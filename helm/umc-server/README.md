@@ -1310,15 +1310,6 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>sssdProbes.liveness.enabled</td>
-			<td>bool</td>
-			<td><pre lang="json">
-true
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
 			<td>sssdProbes.liveness.exec.command[0]</td>
 			<td>string</td>
 			<td><pre lang="json">
@@ -1389,15 +1380,6 @@ true
 </pre>
 </td>
 			<td>Timeout for command return.</td>
-		</tr>
-		<tr>
-			<td>sssdProbes.readiness.enabled</td>
-			<td>bool</td>
-			<td><pre lang="json">
-true
-</pre>
-</td>
-			<td></td>
 		</tr>
 		<tr>
 			<td>sssdProbes.readiness.exec.command[0]</td>

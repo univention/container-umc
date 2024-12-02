@@ -356,7 +356,6 @@ probes:
 
 sssdProbes:
   liveness:
-    enabled: true
     # -- Number of failed executions until container is terminated.
     failureThreshold: 10
     # -- Delay after container start until LivenessProbe is executed.
@@ -374,7 +373,6 @@ sssdProbes:
         - |
           exit 0
   readiness:
-    enabled: true
     # -- Number of failed executions until container is terminated.
     failureThreshold: 10
     # -- Delay after container start until LivenessProbe is executed.
