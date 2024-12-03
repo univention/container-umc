@@ -1141,6 +1141,9 @@ false
       }
     },
     "type": "ClusterIP"
+  },
+  "updateStrategy": {
+    "type": "RollingUpdate"
   }
 }
 </pre>
@@ -1579,6 +1582,15 @@ null
 </pre>
 </td>
 			<td>Path to file with SMTP password.</td>
+		</tr>
+		<tr>
+			<td>updateStrategy.type</td>
+			<td>string</td>
+			<td><pre lang="json">
+"RollingUpdate"
+</pre>
+</td>
+			<td>Set to Recreate if you use persistent volume that cannot be mounted by more than one pods to make sure the pods are destroyed first.</td>
 		</tr>
 	</tbody>
 </table>

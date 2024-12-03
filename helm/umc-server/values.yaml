@@ -258,6 +258,9 @@ proxy:
         port: 80
         protocol: "TCP"
 
+  updateStrategy:
+    type: "RollingUpdate"
+
 ## Kubernetes ingress
 ingress:
   # -- Enable creation of Ingress.
@@ -496,5 +499,20 @@ smtp:
 
 terminationGracePeriodSeconds: ""
 extraVolumeMounts: []
+
+# Set up update strategy.
+#
+# Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
+#
+# Example:
+# updateStrategy:
+#  type: RollingUpdate
+#  rollingUpdate:
+#    maxSurge: 25%
+#    maxUnavailable: 25%
+updateStrategy:
+  # -- Set to Recreate if you use persistent volume that cannot be mounted by more than one pods to make sure the pods
+  # are destroyed first.
+  type: "RollingUpdate"
 
 ...
