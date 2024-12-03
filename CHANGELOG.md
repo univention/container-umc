@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.35.4](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.35.3...v0.35.4) (2024-12-03)
+
+
+### Bug Fixes
+
+* add missing update strategy ([ae0ee31](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/ae0ee31a69b04f22763000ecba9eac15c949f398))
+
 ## [0.35.3](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.35.2...v0.35.3) (2024-12-03)
 
 
