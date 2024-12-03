@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.35.3](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.35.2...v0.35.3) (2024-12-03)
+
+
+### Bug Fixes
+
+* kubernetes warning ([8b0b88b](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/8b0b88b98cc0b04f0737ca9478d5c9b1e9553bcb))
+
 ## [0.35.2](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.35.1...v0.35.2) (2024-11-28)
 
 
