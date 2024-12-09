@@ -438,6 +438,15 @@ true
 			<td>The name of the kubernetes secret which contains a TLS private key and certificate. Hint: This secret is not created by this chart and must be provided.</td>
 		</tr>
 		<tr>
+			<td>initResources</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
 			<td>mountUcr</td>
 			<td>bool</td>
 			<td><pre lang="json">
@@ -618,37 +627,10 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>resources.limits.cpu</td>
-			<td>string</td>
+			<td>resources</td>
+			<td>object</td>
 			<td><pre lang="json">
-"4"
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>resources.limits.memory</td>
-			<td>string</td>
-			<td><pre lang="json">
-"4Gi"
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>resources.requests.cpu</td>
-			<td>string</td>
-			<td><pre lang="json">
-"250m"
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>resources.requests.memory</td>
-			<td>string</td>
-			<td><pre lang="json">
-"512Mi"
+{}
 </pre>
 </td>
 			<td></td>

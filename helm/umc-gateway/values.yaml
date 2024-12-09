@@ -200,13 +200,9 @@ probes:
 
 
 ## Deployment resources
-resources:
-  requests:
-    memory: "512Mi"
-    cpu: "250m"
-  limits:
-    memory: "4Gi"
-    cpu: "4"
+resources: {}
+
+initResources: {}
 
 
 ## Kubernetes Service
