@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.35.5](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.35.4...v0.35.5) (2024-12-10)
+
+
+### Bug Fixes
+
+* kyverno lint for umc-gateway ([6f96380](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/6f963808d9e92cfdcd69d08800297b9d9f5a3316))
+
 ## [0.35.4](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.35.3...v0.35.4) (2024-12-03)
 
 
