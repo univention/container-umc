@@ -4,7 +4,7 @@
 ############################################################
 # Global variables
 
-ARG UCS_BASE_IMAGE_TAG=0.13.3-build-2024-10-15
+ARG UCS_BASE_IMAGE_TAG=0.14.0-build-2024-12-12
 ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-base-520
 
 ############################################################
