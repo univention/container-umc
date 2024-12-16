@@ -1,7 +1,7 @@
-From 4db7e1ed908ee52798b83a8ab7c074f3a3d5588d Mon Sep 17 00:00:00 2001
+From 29dea4eeb7339f9546aef870f6adfbbcb2bece7f Mon Sep 17 00:00:00 2001
 From: Thomas Kintscher <thomas.kintscher.extern@univention.de>
 Date: Wed, 3 Apr 2024 18:23:55 +0200
-Subject: [PATCH 4/6] support un/authenticated memcached
+Subject: [PATCH 4/8] support un/authenticated memcached
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -77,5 +77,5 @@ index 0f360e1c2a1..002a697f0ed 100644
          self.send_plugins = get_sending_plugins(MODULE.process)
          self.password_reset_plugins = {k: v for k, v in self.send_plugins.items() if v.message_application() == 'password_reset'}
 -- 
-2.39.2
+2.39.5
 

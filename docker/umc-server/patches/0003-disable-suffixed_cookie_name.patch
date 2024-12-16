@@ -1,7 +1,7 @@
-From aa99edf74d8c88dc91aa7255f81cb53fe2381f5a Mon Sep 17 00:00:00 2001
+From ac8a10ed68d75d3044c383de2c6ff1934adef659 Mon Sep 17 00:00:00 2001
 From: Johannes Bornhold <johannes.bornhold.extern@univention.de>
 Date: Fri, 8 Mar 2024 14:46:00 +0100
-Subject: [PATCH 3/6] disable "suffixed_cookie_name"
+Subject: [PATCH 3/8] disable "suffixed_cookie_name"
 
 Do not generate suffixed cookies (e.g. "UMCSessionId-$PORT"),
 because the portal-frontend does not handle them correctly.
@@ -27,5 +27,5 @@ index 391e3d4cf53..85a36363ac5 100644
          if port:
              try:
 -- 
-2.39.2
+2.39.5
 

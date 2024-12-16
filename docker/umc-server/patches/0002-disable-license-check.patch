@@ -1,7 +1,7 @@
-From b180a473f7160451fffbadebe2306d3bca66f148 Mon Sep 17 00:00:00 2001
+From 875edd30892779b066413e6a6eb2bdac86de495f Mon Sep 17 00:00:00 2001
 From: Johannes Bornhold <johannes.bornhold.extern@univention.de>
 Date: Fri, 8 Mar 2024 14:58:48 +0100
-Subject: [PATCH 2/6] disable license check
+Subject: [PATCH 2/8] disable license check
 
 The license checking code is not yet supporting the starttls related changes and
 it does not yet support a custom port to be used for reaching the ldap server.
@@ -13,7 +13,7 @@ See: https://git.knut.univention.de/univention/ucs/-/merge_requests/1098
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git management/univention-directory-manager-modules/modules/univention/admin/license.py management/univention-directory-manager-modules/modules/univention/admin/license.py
-index 5f39ac8e0f9..085bc97fe7a 100644
+index 115218afedd..a97ed93b799 100644
 --- management/univention-directory-manager-modules/modules/univention/admin/license.py
 +++ management/univention-directory-manager-modules/modules/univention/admin/license.py
 @@ -189,7 +189,7 @@ class License:
@@ -26,5 +26,5 @@ index 5f39ac8e0f9..085bc97fe7a 100644
      def _load_license_via_python(self, module, lo):
          # Try to set the version even if the license load was not successful
 -- 
-2.39.2
+2.39.5
 
