@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.36.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.35.5...v0.36.0) (2024-12-20)
+
+
+### Features
+
+* update umc-server patches ([0328930](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/0328930effe4a71efd5ff6afb26ea13ac6a2122b))
+* upgrade UCS base image to 2024-12-12 ([37cbc98](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/37cbc989ea10aceb499a687d7881d8abd4f7df09))
+
 ## [0.35.5](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.35.4...v0.35.5) (2024-12-10)
 
 
