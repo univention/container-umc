@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.36.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.36.0...v0.36.1) (2025-02-10)
+
+
+### Bug Fixes
+
+* add .kyverno to helmignore ([ac27f4d](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/ac27f4d9fd2783f09641b4818f814738829d043d))
+
 ## [0.36.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.35.5...v0.36.0) (2024-12-20)
 
 
