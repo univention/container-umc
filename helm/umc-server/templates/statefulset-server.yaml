@@ -228,7 +228,9 @@ spec:
             - name: "SELF_SERVICE_DB_SECRET"
               valueFrom:
                 secretKeyRef:
-                  {{- if .Values.postgresql.auth.existingSecret.name }}
+                  {{/* Special case handling so that it is possible to use the bundled postgresql for development purposes
+                       by setting .Values.postgresql.auth.existingSecret to null. */}}
+                  {{- if and .Values.postgresql.auth.existingSecret .Values.postgresql.auth.existingSecret.name }}
                   name: {{ tpl .Values.postgresql.auth.existingSecret.name . }}
                   key: {{ include "common.secrets.key" (dict "existingSecret" .Values.postgresql.auth.existingSecret "key" "password") }}
                   {{- else }}
