@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.36.2](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.36.1...v0.36.2) (2025-02-17)
+
+
+### Bug Fixes
+
+* **umc-server:** Make the handling of "postgresql.auth.existingSecret" more robust ([6b90518](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/6b9051811913678a7e9637428ac5bca8c61e5e65))
+
 ## [0.36.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.36.0...v0.36.1) (2025-02-10)
 
 
