@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.37.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.36.2...v0.37.0) (2025-02-26)
+
+
+### Features
+
+* Bump ucs-base-image to use released apt sources ([e75f8d4](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/e75f8d4ee25d1a4db4b7d9de261135f0732c9749))
+
 ## [0.36.2](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.36.1...v0.36.2) (2025-02-17)
 
 
