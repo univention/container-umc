@@ -225,11 +225,16 @@ RUN \
     # for $PY_LIBS/univention/management/console/oidc.py
     python3-jwt=2.6.* \
     # for the entrypoint.sh script
-    wget=1.* \
-    # TODO: Remove once sssd dependency is dropped
-    sssd=2.8.*
+    wget=1.*
 
-
+# NOTE: Spike on sssd as non-root
+# FIXME: We probably do not want to allow insecure repositories
+RUN echo \
+    "deb [ allow-insecure=yes ] https://deb.debian.org/debian testing main\ndeb-src [ allow-insecure=yes ] https://deb.debian.org/debian testing main" \
+    > /etc/apt/sources.list.d/testing.list \
+    && apt-get update \
+    && apt-get --assume-yes --verbose-versions --allow-unauthenticated --no-install-recommends install \
+    sssd=2.10.*
 
 ############################################################
 # Copy files from first stage
@@ -565,7 +570,9 @@ COPY scripts/50-entrypoint.sh \
 ############################################################
 # Set permissions
 
-RUN chown -R 1000:1000 \
+RUN adduser app
+
+RUN chown -R app:app \
     /usr/sbin/univention-management-console-server \
     /usr/sbin/univention-management-console-module \
     /usr/share/univention-management-console \
@@ -588,6 +595,8 @@ RUN chown -R 1000:1000 \
     /usr/share/locale/de/LC_MESSAGES \
     /var/lib/univention-appcenter \
     /var/cache/univention-config
+
+USER app
 
 ############################################################
 # Interim code modifications and patches
