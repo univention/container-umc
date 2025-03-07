@@ -30,6 +30,7 @@ lint-pre-commit:
       - "umc-gateway"
       - "umc-server"
       - "testrunner"
+      - "umc-sssd"
 
 container-build:
   parallel:
