@@ -1,0 +1,54 @@
+{{/*
+SPDX-FileCopyrightText: 2024 Univention GmbH
+SPDX-License-Identifier: AGPL-3.0-only
+*/}}
+---
+kind: "ConfigMap"
+apiVersion: "v1"
+metadata:
+  name: {{ printf "%s-sssd" (include "common.names.fullname" .) }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels:
+    {{- include "common.labels.standard" . | nindent 4 }}
+    {{- if .Values.additionalLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.additionalLabels "context" . ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.additionalAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.additionalAnnotations "context" . ) | nindent 4 }}
+  {{- end }}
+data:
+  sssd.conf: |-
+    [sssd]
+    services = nss, pam
+    domains = jconde.univention.dev, nonposixldap
+    certificate_verification = no_ocsp
+
+    [nss]
+
+    [pam]
+    pam_app_services = univention-management-console
+
+
+    [application/nonposixldap]
+    inherit_from = jconde.univention.dev
+    domain_type = application
+    ldap_user_object_class = person
+
+    [domain/jconde.univention.dev]
+    id_provider = ldap
+    ldap_uri = ldap://ldap-server:389
+    ldap_search_base = dc=univention-organization,dc=intranet
+    ldap_referrals = false
+    cache_credentials = false
+    case_sensitive = Preserving
+    pwfield = x
+    ldap_default_bind_dn = cn=admin,dc=univention-organization,dc=intranet
+
+    ldap_default_authtok_type = password
+    ldap_default_authtok = univention
+    ldap_tls_reqcert = never
+    ldap_id_use_start_tls = false
+    ldap_auth_disable_tls_never_use_in_production = true
+    ldap_sasl_minssf = 0
+
+...

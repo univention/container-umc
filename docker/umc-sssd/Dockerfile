@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2025 Univention GmbH
+
 ARG UCS_BASE_IMAGE_TAG=0.16.1-build-2025-02-20
 ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-base-520
 
@@ -5,7 +8,7 @@ FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} AS build
 
 SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 
-RUN apt-get --assume-yes --verbose-versions --no-install-recommends install ca-certificates
+RUN apt-get --assume-yes --verbose-versions --no-install-recommends install ca-certificates=2023*
 
 # NOTE: Install from testing to get the latest version of sssd
 # RUN printf \
@@ -20,9 +23,9 @@ RUN getent group sssd >/dev/null || groupadd -r sssd \
 
 # NOTE: Dependencies needed for getting the source code and building (not included in the build-dep below)
 RUN apt-get install --assume-yes --verbose-versions --allow-unauthenticated --no-install-recommends \
-    wget \
-    winbind \
-    libcap-dev \
+    wget=1.* \
+    winbind=2:4.* \
+    libcap-dev=1:2.* \
     && cp /usr/lib/x86_64-linux-gnu/samba/libidmap-private-samba.so.0 /usr/lib/x86_64-linux-gnu/samba/libidmap-private-samba.so
 
 WORKDIR /sssd
@@ -34,28 +37,27 @@ RUN wget https://github.com/SSSD/sssd/releases/download/2.10.2/sssd-2.10.2.tar.g
     && ./configure \
     --with-sssd-user=sssd \
     # Other stuff we may not need
-    --disable-krb5-locator-plugin \
-    --disable-pac-responder \
-    --disable-cifs-idmap-plugin \
-    --without-python2-bindings \
-    --without-autofs \
-    --without-samba \
-    --without-nfsv4-idmapd-plugin \
-    --without-libwbclient \
-    --without-libnl \
-    --disable-nls \
-    --disable-rpath \
+    # --disable-krb5-locator-plugin \
+    # --disable-pac-responder \
+    # --disable-cifs-idmap-plugin \
+    # --without-python2-bindings \
+    # --without-autofs \
+    # --without-samba \
+    # --without-nfsv4-idmapd-plugin \
+    # --without-libwbclient \
+    # --without-libnl \
+    # --disable-nls \
+    # --disable-rpath \
     && make \
     && make install
 
 # NOTE: Needed for `sssctl config-check`
 RUN apt-get --assume-yes --verbose-versions --no-install-recommends install \
-    libsss-certmap0 \
+    libsss-certmap0=2.* \
     # others
-    libsss-sudo \
-    libsss-idmap0 \
-    libsss-nss-idmap0 \
-    sssd-ldap
+    libsss-sudo=2.* \
+    libsss-idmap0=2.* \
+    libsss-nss-idmap0=2.*
 
 USER sssd
 

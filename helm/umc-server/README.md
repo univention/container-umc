@@ -137,7 +137,7 @@ true
 			<td>containerSecurityContext.runAsGroup</td>
 			<td>int</td>
 			<td><pre lang="json">
-0
+1000
 </pre>
 </td>
 			<td>Process group id.</td>
@@ -146,7 +146,7 @@ true
 			<td>containerSecurityContext.runAsNonRoot</td>
 			<td>bool</td>
 			<td><pre lang="json">
-false
+true
 </pre>
 </td>
 			<td>Run container as a user.</td>
@@ -155,7 +155,7 @@ false
 			<td>containerSecurityContext.runAsUser</td>
 			<td>int</td>
 			<td><pre lang="json">
-0
+1000
 </pre>
 </td>
 			<td>Process user id.</td>
@@ -268,7 +268,7 @@ false
 			<td>containerSecurityContextSssd.allowPrivilegeEscalation</td>
 			<td>bool</td>
 			<td><pre lang="json">
-true
+false
 </pre>
 </td>
 			<td>Enable container privileged escalation.</td>
@@ -332,7 +332,7 @@ true
 			<td>containerSecurityContextSssd.runAsGroup</td>
 			<td>int</td>
 			<td><pre lang="json">
-0
+999
 </pre>
 </td>
 			<td>Process group id.</td>
@@ -341,7 +341,7 @@ true
 			<td>containerSecurityContextSssd.runAsNonRoot</td>
 			<td>bool</td>
 			<td><pre lang="json">
-false
+true
 </pre>
 </td>
 			<td>Run container as a user.</td>
@@ -350,7 +350,7 @@ false
 			<td>containerSecurityContextSssd.runAsUser</td>
 			<td>int</td>
 			<td><pre lang="json">
-0
+999
 </pre>
 </td>
 			<td>Process user id.</td>
@@ -1308,6 +1308,42 @@ true
 			<td>string</td>
 			<td><pre lang="json">
 ""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>sssd.image.imagePullPolicy</td>
+			<td>string</td>
+			<td><pre lang="json">
+"IfNotPresent"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>sssd.image.registry</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>sssd.image.repository</td>
+			<td>string</td>
+			<td><pre lang="json">
+"nubus-dev/images/umc-server-sssd"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>sssd.image.tag</td>
+			<td>string</td>
+			<td><pre lang="json">
+"latest"
 </pre>
 </td>
 			<td></td>

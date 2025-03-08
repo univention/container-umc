@@ -565,6 +565,8 @@ COPY scripts/50-entrypoint.sh \
 ############################################################
 # Set permissions
 
+# RUN adduser app
+
 RUN chown -R 1000:1000 \
     /usr/sbin/univention-management-console-server \
     /usr/sbin/univention-management-console-module \
@@ -588,6 +590,8 @@ RUN chown -R 1000:1000 \
     /usr/share/locale/de/LC_MESSAGES \
     /var/lib/univention-appcenter \
     /var/cache/univention-config
+
+# USER app
 
 ############################################################
 # Interim code modifications and patches

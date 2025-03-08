@@ -61,7 +61,7 @@ systemExtensions: []
 containerSecurityContext:
   privileged: false
   # -- Enable security context.
-  enabled: true
+  enabled: false
   # -- Enable container privileged escalation.
   allowPrivilegeEscalation: false
   # -- Security capabilities for container.
@@ -69,9 +69,9 @@ containerSecurityContext:
     drop:
       - "ALL"
   # -- Process user id.
-  runAsUser: 0
+  runAsUser: 1000
   # -- Process group id.
-  runAsGroup: 0
+  runAsGroup: 1000
   # Set Seccomp profile.
   seccompProfile:
     # -- Disallow custom Seccomp profile by setting it to RuntimeDefault.
@@ -79,7 +79,7 @@ containerSecurityContext:
   # -- Mounts the container's root filesystem as read-only.
   readOnlyRootFilesystem: true
   # -- Run container as a user.
-  runAsNonRoot: false
+  runAsNonRoot: true
 
 # Security Context.
 # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
@@ -122,7 +122,7 @@ containerSecurityContextSssd:
   # -- Enable security context.
   enabled: true
   # -- Enable container privileged escalation.
-  allowPrivilegeEscalation: true
+  allowPrivilegeEscalation: false
   # -- Security capabilities for container.
   capabilities:
     drop:
@@ -142,9 +142,9 @@ containerSecurityContextSssd:
       - "NET_BIND_SERVICE"
       - "SYS_CHROOT"
   # -- Process user id.
-  runAsUser: 0
+  runAsUser: 999
   # -- Process group id.
-  runAsGroup: 0
+  runAsGroup: 999
   # Set Seccomp profile.
   seccompProfile:
     # -- Disallow custom Seccomp profile by setting it to RuntimeDefault.
@@ -152,7 +152,7 @@ containerSecurityContextSssd:
   # -- Mounts the container's root filesystem as read-only.
   readOnlyRootFilesystem: true
   # -- Run container as a user.
-  runAsNonRoot: false
+  runAsNonRoot: true
 
 # Pod Security Context.
 # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
@@ -337,6 +337,12 @@ image:
   ## Define image sha256 as an alternative to `tag`
   # sha256:
 
+sssd:
+  image:
+    registry: ""
+    repository: "nubus-dev/images/umc-server-sssd"
+    imagePullPolicy: "IfNotPresent"
+    tag: "latest"
 
 ## Container deployment probes
 probes:
