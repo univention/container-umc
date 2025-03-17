@@ -227,7 +227,8 @@ RUN \
     # for the entrypoint.sh script
     wget=1.* \
     # TODO: Remove once sssd dependency is dropped
-    sssd=2.8.*
+    sssd=2.8.* \
+    pamtester
 
 
 

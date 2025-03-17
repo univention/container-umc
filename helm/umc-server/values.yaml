@@ -337,6 +337,13 @@ image:
   ## Define image sha256 as an alternative to `tag`
   # sha256:
 
+sssd:
+  image:
+    registry: "artifacts.software-univention.de"
+    repository: "univention/umc-server-sssd"
+    tag: "latest"
+    pullPolicy: "IfNotPresent"
+
 
 ## Container deployment probes
 probes:
