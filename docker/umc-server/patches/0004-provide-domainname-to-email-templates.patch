@@ -1,7 +1,7 @@
-From e97e98f43d50e78b18b44543eee3f2d60f6c944c Mon Sep 17 00:00:00 2001
+From 6315637bc43e755a53b1efeb66d083b06a8bc36e Mon Sep 17 00:00:00 2001
 From: Thomas Kintscher <thomas.kintscher.extern@univention.de>
 Date: Tue, 9 Apr 2024 16:38:59 +0200
-Subject: [PATCH 5/8] provide domainname to email templates
+Subject: [PATCH 4/7] provide domainname to email templates
 
 The default email templates from the self-service package are not used
 by the openDesk project, instead openDesk brings its own template:
@@ -15,10 +15,10 @@ which contain the domain from which the passwordreset originated.
  .../umc/python/passwordreset/sending/send_email.py              | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git management/univention-self-service/umc/python/passwordreset/sending/send_email.py management/univention-self-service/umc/python/passwordreset/sending/send_email.py
-index 19b4078c1ed..936cafbdcea 100644
---- management/univention-self-service/umc/python/passwordreset/sending/send_email.py
-+++ management/univention-self-service/umc/python/passwordreset/sending/send_email.py
+diff --git a/management/univention-self-service/umc/python/passwordreset/sending/send_email.py b/management/univention-self-service/umc/python/passwordreset/sending/send_email.py
+index 0fa2963e0f6..6baad31734d 100644
+--- a/management/univention-self-service/umc/python/passwordreset/sending/send_email.py
++++ b/management/univention-self-service/umc/python/passwordreset/sending/send_email.py
 @@ -107,6 +107,8 @@ class SendEmail(UniventionSelfServiceTokenEmitter):
          fqdn = ".".join([self.ucr["hostname"], self.ucr["domainname"]])
          frontend_server = self.ucr.get("umc/self-service/passwordreset/email/webserver_address", fqdn)
@@ -29,5 +29,5 @@ index 19b4078c1ed..936cafbdcea 100644
              'tokenlink': "https://{fqdn}/univention/selfservice/#/selfservice/newpassword/?token={token}&username={username}".format(fqdn=frontend_server, username=quote(self.data["username"]), token=quote(self.data["token"])),
          }
 -- 
-2.39.5
+2.44.0
 

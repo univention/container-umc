@@ -7,10 +7,10 @@ They can be exported from git in the following way if you have a clone of the
 `ucs` repository:
 
 ```
-git format-patch 5.2-0
+git format-patch 5.2-1
 ```
 
-The value `5.2-0` is the base branch on which the patches are based.
+The value `5.2-1` is the base branch on which the patches are based.
 
 The output should be a bunch of patch files:
 

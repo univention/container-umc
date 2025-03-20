@@ -123,14 +123,13 @@ RUN \
 COPY patches/*.patch /
 
 RUN \
-  patch -p 3 -d /usr/lib/python3/dist-packages/ -i /0001-set-password-without-kerberos.patch && \
-  patch -p 3 -d /usr/lib/python3/dist-packages/ -i /0002-disable-license-check.patch && \
-  patch -p 3 -d /usr/lib/python3/dist-packages/ -i /0003-disable-suffixed_cookie_name.patch && \
-  patch -p 4 -d /usr/lib/python3/dist-packages/univention/management/console/modules -i /0004-support-un-authenticated-memcached.patch && \
-  patch -p 4 -d /usr/lib/python3/dist-packages/univention/management/console/modules -i /0005-provide-domainname-to-email-templates.patch && \
-  patch -p 4 -d /usr/lib/python3/dist-packages/univention/management/console/modules -i /0006-smtp-authentication-for-self-service-emails.patch && \
-  patch -p 3 -d /usr/lib/python3/dist-packages/ -i /0007-remove-UDM-import.patch && \
-  patch -p 3 -d /usr/lib/python3/dist-packages/ -i /0008-replace-PAM-login-with-UDM-login-for-password-change.patch && \
+  patch -p 4 -d /usr/lib/python3/dist-packages/ -i /0001-set-password-without-kerberos.patch && \
+  patch -p 4 -d /usr/lib/python3/dist-packages/ -i /0002-disable-suffixed_cookie_name.patch && \
+  patch -p 5 -d /usr/lib/python3/dist-packages/univention/management/console/modules -i /0003-support-un-authenticated-memcached.patch && \
+  patch -p 5 -d /usr/lib/python3/dist-packages/univention/management/console/modules -i /0004-provide-domainname-to-email-templates.patch && \
+  patch -p 5 -d /usr/lib/python3/dist-packages/univention/management/console/modules -i /0005-smtp-authentication-for-self-service-emails.patch && \
+  patch -p 4 -d /usr/lib/python3/dist-packages/ -i /0006-remove-UDM-import.patch && \
+  patch -p 4 -d /usr/lib/python3/dist-packages/ -i /0007-replace-PAM-login-with-UDM-login-for-password-change.patch && \
   rm -v /*.patch
 
 ############################################################
