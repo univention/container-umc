@@ -1,7 +1,7 @@
-From d8eef6165f24c9d2a0b694357d40bf05ef4b36b8 Mon Sep 17 00:00:00 2001
+From 656fc7813a55fe9631e181ca50c6b9ba52436780 Mon Sep 17 00:00:00 2001
 From: Thomas Kintscher <thomas.kintscher.extern@univention.de>
 Date: Wed, 10 Apr 2024 13:41:34 +0200
-Subject: [PATCH 6/8] smtp authentication for self service emails
+Subject: [PATCH 5/7] smtp authentication for self service emails
 
 The password-reset functionality of the self-service sends a password-reset link
 to the user's recovery email address.
@@ -19,10 +19,10 @@ This patch adds configuration options regarding
  .../passwordreset/sending/send_email.py       | 29 ++++++++++++++++++-
  1 file changed, 28 insertions(+), 1 deletion(-)
 
-diff --git management/univention-self-service/umc/python/passwordreset/sending/send_email.py management/univention-self-service/umc/python/passwordreset/sending/send_email.py
-index 936cafbdcea..6e29a0d8737 100644
---- management/univention-self-service/umc/python/passwordreset/sending/send_email.py
-+++ management/univention-self-service/umc/python/passwordreset/sending/send_email.py
+diff --git a/management/univention-self-service/umc/python/passwordreset/sending/send_email.py b/management/univention-self-service/umc/python/passwordreset/sending/send_email.py
+index 6baad31734d..30afea6c297 100644
+--- a/management/univention-self-service/umc/python/passwordreset/sending/send_email.py
++++ b/management/univention-self-service/umc/python/passwordreset/sending/send_email.py
 @@ -48,6 +48,7 @@
  #
  
@@ -58,8 +58,8 @@ index 936cafbdcea..6e29a0d8737 100644
  
      @staticmethod
      def send_method():
-@@ -128,7 +149,13 @@ class SendEmail(UniventionSelfServiceTokenEmitter):
-         msg["To"] = self.data["address"]
+@@ -129,7 +150,13 @@ class SendEmail(UniventionSelfServiceTokenEmitter):
+         msg["Message-ID"] = make_msgid()
          msg.set_payload(txt, charset=cs)
  
 -        smtp = smtplib.SMTP(self.server)
@@ -74,5 +74,5 @@ index 936cafbdcea..6e29a0d8737 100644
          smtp.quit()
          self.log("Sent mail with token to address {}.".format(self.data["address"]))
 -- 
-2.39.5
+2.44.0
 

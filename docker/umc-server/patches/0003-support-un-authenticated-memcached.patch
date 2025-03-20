@@ -1,7 +1,7 @@
-From 29dea4eeb7339f9546aef870f6adfbbcb2bece7f Mon Sep 17 00:00:00 2001
+From 481ddc80f247ab48f2b5f9fa15c1ce8017d4de77 Mon Sep 17 00:00:00 2001
 From: Thomas Kintscher <thomas.kintscher.extern@univention.de>
 Date: Wed, 3 Apr 2024 18:23:55 +0200
-Subject: [PATCH 4/8] support un/authenticated memcached
+Subject: [PATCH 3/7] support un/authenticated memcached
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -48,10 +48,10 @@ The entire module just fails without providing any details.
  .../umc/python/passwordreset/__init__.py               | 10 +++++++++-
  1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git management/univention-self-service/umc/python/passwordreset/__init__.py management/univention-self-service/umc/python/passwordreset/__init__.py
+diff --git a/management/univention-self-service/umc/python/passwordreset/__init__.py b/management/univention-self-service/umc/python/passwordreset/__init__.py
 index 0f360e1c2a1..002a697f0ed 100644
---- management/univention-self-service/umc/python/passwordreset/__init__.py
-+++ management/univention-self-service/umc/python/passwordreset/__init__.py
+--- a/management/univention-self-service/umc/python/passwordreset/__init__.py
++++ b/management/univention-self-service/umc/python/passwordreset/__init__.py
 @@ -259,6 +259,7 @@ class Instance(Base):
              atexit.register(self.db.close_db)
              if not self.db.table_exists():
@@ -77,5 +77,5 @@ index 0f360e1c2a1..002a697f0ed 100644
          self.send_plugins = get_sending_plugins(MODULE.process)
          self.password_reset_plugins = {k: v for k, v in self.send_plugins.items() if v.message_application() == 'password_reset'}
 -- 
-2.39.5
+2.44.0
 

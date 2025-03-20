@@ -1,8 +1,8 @@
-From 7ce2357dd896ad17b3af9b6e089cae481e5ec2bc Mon Sep 17 00:00:00 2001
+From f35b9818207baea8aeba237ac21245b9cab5bbdd Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Carlos=20Garc=C3=ADa-Mauri=C3=B1o?=
  <garcia-maurino@univention.de>
 Date: Wed, 11 Sep 2024 13:21:14 +0200
-Subject: [PATCH 7/8] remove UDM import
+Subject: [PATCH 6/7] remove UDM import
 
 It's used for configuring the shared SQL connection feature. Look for
 `SQL_CONNECTION_ENV_VAR`.`
@@ -10,10 +10,10 @@ It's used for configuring the shared SQL connection feature. Look for
  .../src/univention/management/console/server.py | 17 -----------------
  1 file changed, 17 deletions(-)
 
-diff --git management/univention-management-console/src/univention/management/console/server.py management/univention-management-console/src/univention/management/console/server.py
+diff --git a/management/univention-management-console/src/univention/management/console/server.py b/management/univention-management-console/src/univention/management/console/server.py
 index 369a42a0afe..04d6f64dcbf 100755
---- management/univention-management-console/src/univention/management/console/server.py
-+++ management/univention-management-console/src/univention/management/console/server.py
+--- a/management/univention-management-console/src/univention/management/console/server.py
++++ b/management/univention-management-console/src/univention/management/console/server.py
 @@ -63,7 +63,6 @@ from univention.management.console.resources import (
  from univention.management.console.saml import SamlACS, SamlIframeACS, SamlLogout, SamlMetadata, SamlSingleLogout
  from univention.management.console.session import categoryManager, moduleManager
@@ -46,5 +46,5 @@ index 369a42a0afe..04d6f64dcbf 100755
          if self.options.processes != 1:
              # start sharing memory (before fork, before first usage, after import)
 -- 
-2.39.5
+2.44.0
 
