@@ -4,8 +4,12 @@
 ############################################################
 # Global variables
 
-ARG UCS_BASE_IMAGE_TAG=0.16.1-build-2025-02-20
-ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-base-520
+# ARG UCS_BASE_IMAGE_TAG=0.16.1-build-2025-02-20
+# ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-base-520
+
+# TODO: Using custom packages of univention-license
+ARG UCS_BASE_IMAGE_TAG=0.16.2
+ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-base-dev-521
 
 ############################################################
 # Start first stage
@@ -15,6 +19,11 @@ FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} AS build
 SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 
 WORKDIR /apt
+
+# TODO: Either clean up apt packages or use a base with bundled packages again
+# hadolint ignore=DL3008,DL3009
+RUN ucs-dev-add-branch.sh jbornhold-license-password-length \
+    && apt-get update
 
 ############################################################
 # Install scripts and configs for dpkg
@@ -136,6 +145,11 @@ RUN \
 # Start second stage
 
 FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} AS final
+
+# TODO: Either clean up apt packages or use a base with bundled packages again
+# hadolint ignore=DL3008,DL3009
+RUN ucs-dev-add-branch.sh jbornhold-license-password-length \
+    && apt-get update
 
 ARG SRC_PY_LIBS="/usr/lib/python3/dist-packages"
 ARG DST_PY_LIBS="/usr/lib/python3/dist-packages"
