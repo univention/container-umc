@@ -143,6 +143,9 @@ ARG DST_PY_LIBS="/usr/lib/python3/dist-packages"
 
 SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 
+RUN groupadd -g 999 -r sssd \
+    && useradd -r -g sssd -u 999 -d / -s /sbin/nologin -c "User for sssd" sssd
+
 WORKDIR /
 
 RUN \
@@ -242,7 +245,7 @@ RUN wget https://github.com/SSSD/sssd/releases/download/2.10.2/sssd-2.10.2.tar.g
     && tar -xvf sssd-2.10.2.tar.gz \
     && cd sssd-2.10.2 \
     && ./configure \
-    # --with-sssd-user=sssd \
+    --with-sssd-user=sssd \
     # Other stuff we may not need
     # --disable-krb5-locator-plugin \
     # --disable-pac-responder \
@@ -596,7 +599,7 @@ COPY scripts/50-entrypoint.sh \
 ############################################################
 # Set permissions
 
-RUN chown -R 1000:1000 \
+RUN chown -R sssd:sssd \
     /usr/sbin/univention-management-console-server \
     /usr/sbin/univention-management-console-module \
     /usr/share/univention-management-console \
@@ -619,6 +622,8 @@ RUN chown -R 1000:1000 \
     /usr/share/locale/de/LC_MESSAGES \
     /var/lib/univention-appcenter \
     /var/cache/univention-config
+
+USER sssd
 
 ############################################################
 # Interim code modifications and patches

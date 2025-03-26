@@ -18,8 +18,8 @@ RUN apt-get --assume-yes --verbose-versions --no-install-recommends install ca-c
 
 # RUN apt install -y --allow-unauthenticated strace lsof pamtester sssd=2.8.* 
 
-# RUN getent group sssd >/dev/null || groupadd -r sssd \
-#     && getent passwd sssd >/dev/null || useradd -r -g sssd -d / -s /sbin/nologin -c "User for sssd" sssd
+RUN groupadd -g 999 -r sssd \
+    && useradd -r -g sssd -u 999 -d / -s /sbin/nologin -c "User for sssd" sssd
 
 # NOTE: Dependencies needed for getting the source code and building (not included in the build-dep below)
 RUN apt-get install --assume-yes --verbose-versions --allow-unauthenticated --no-install-recommends \
@@ -35,7 +35,7 @@ RUN wget https://github.com/SSSD/sssd/releases/download/2.10.2/sssd-2.10.2.tar.g
     && tar -xvf sssd-2.10.2.tar.gz \
     && cd sssd-2.10.2 \
     && ./configure \
-    #     --with-sssd-user=sssd \
+    --with-sssd-user=sssd \
     #     # Other stuff we may not need
     #     --disable-krb5-locator-plugin \
     #     --disable-pac-responder \
@@ -61,7 +61,7 @@ RUN apt-get --assume-yes --verbose-versions --no-install-recommends install \
     libsss-nss-idmap0 \
     sssd-ldap
 
-# USER sssd
+USER sssd
 
 # sssd -i --logger stderr --debug-level 2
 CMD ["sssd", "-i", "--logger", "stderr", "--debug-level", "2"]
