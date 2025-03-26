@@ -77,7 +77,6 @@ spec:
             - -c
             - |
               /entrypoint.d/50-entrypoint.sh
-              cp -a /var/lib/sss/* /target/var/lib/sss/
               if [[ ! -d /target/var/lib/sss/pipes/private ]]; then
                 mkdir -p /target/var/lib/sss/pipes/private
               fi
