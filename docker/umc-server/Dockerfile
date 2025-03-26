@@ -131,6 +131,7 @@ RUN \
   patch -p 4 -d /usr/lib/python3/dist-packages/univention/management/console/modules -i /0006-smtp-authentication-for-self-service-emails.patch && \
   patch -p 3 -d /usr/lib/python3/dist-packages/ -i /0007-remove-UDM-import.patch && \
   patch -p 3 -d /usr/lib/python3/dist-packages/ -i /0008-replace-PAM-login-with-UDM-login-for-password-change.patch && \
+  patch -p 4 -d /usr/sbin -i /0009-remove-umc-root-checks.patch && \
   rm -v /*.patch
 
 ############################################################
@@ -220,6 +221,7 @@ RUN \
     # for $PY_LIBS/univention/admin/__init__.py
     python3-unidecode=1.3.* \
     # for $PY_LIBS/univention/management/console/modules/passwordreset/tokendb.py
+    # NOTE: This is will attempt to write to /var/run/postgresql/.s.PGSQL.5432 and fail
     python3-psycopg2=2.* \
     # for $PY_LIBS/univention/management/console/modules/passwordreset/__init__.py
     python3-pylibmc=1.* \
@@ -260,7 +262,7 @@ RUN wget https://github.com/SSSD/sssd/releases/download/2.10.2/sssd-2.10.2.tar.g
     # --disable-rpath \
 && make \
 && make install \
-&& rm -rf /sssd \
+&& rm -rf /sssd-2.10.2 \
 && cp /usr/local/lib/security/pam_sss.so /usr/lib/x86_64-linux-gnu/security/pam_sss.so
 
 

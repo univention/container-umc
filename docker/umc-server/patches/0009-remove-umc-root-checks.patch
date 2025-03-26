@@ -1,0 +1,28 @@
+From 5f0c052e314237b92e24234b3eca855b6b2c8a0e Mon Sep 17 00:00:00 2001
+From: Jaime Conde <conde-segovia@univention.de>
+Date: Wed, 26 Mar 2025 14:27:50 +0100
+Subject: [PATCH] jconde/umc-server-non-root
+
+In Nubus4K8s we are able to run this with no need for root permissions,
+with version 2.10 of sssd
+---
+ .../scripts/univention-management-console-module               | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/management/univention-management-console/scripts/univention-management-console-module b/management/univention-management-console/scripts/univention-management-console-module
+index 12bc96ea28..dc4fb2b8a1 100755
+--- a/management/univention-management-console/scripts/univention-management-console-module
++++ b/management/univention-management-console/scripts/univention-management-console-module
+@@ -48,9 +48,6 @@ from univention.management.console.log import MODULE, log_init
+ 
+ 
+ if __name__ == '__main__':
+-    if os.getuid() != 0:
+-        sys.stderr.write('%s must be started as root\n' % os.path.basename(sys.argv[0]))
+-        sys.exit(1)
+ 
+     parser = ArgumentParser()
+     parser.add_argument('-s', '--socket', help='defines the socket to bind to')
+-- 
+2.48.1
+

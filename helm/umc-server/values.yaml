@@ -162,7 +162,7 @@ podSecurityContext:
   # -- Enable security context.
   enabled: true
   # -- If specified, all processes of the container are also part of the supplementary group.
-  fsGroup: 0
+  fsGroup: 999
   # -- Change ownership and permission of the volume before being exposed inside a Pod.
   fsGroupChangePolicy: "Always"
 

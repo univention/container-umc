@@ -50,7 +50,7 @@ RUN wget https://github.com/SSSD/sssd/releases/download/2.10.2/sssd-2.10.2.tar.g
     #     --disable-rpath \
     && make \
     && make install \
-    && rm -rf /sssd
+    && rm -rf /sssd-2.10.2
 
 # NOTE: Needed for `sssctl config-check`
 RUN apt-get --assume-yes --verbose-versions --no-install-recommends install \
