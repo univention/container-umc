@@ -257,6 +257,7 @@ RUN wget https://github.com/SSSD/sssd/releases/download/2.10.2/sssd-2.10.2.tar.g
     # --disable-rpath \
 && make \
 && make install \
+&& rm -rf /sssd \
 && cp /usr/local/lib/security/pam_sss.so /usr/lib/x86_64-linux-gnu/security/pam_sss.so
 
 

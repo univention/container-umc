@@ -412,7 +412,7 @@ spec:
             - sh
             - -c
             - |
-              sssd -i --logger stderr --debug-level 10
+              sssd -i --logger stderr --debug-level 10 -c /etc/sssd/sssd.conf
           envFrom:
             - configMapRef:
                 name: {{ include "common.names.fullname" . }}
@@ -435,13 +435,15 @@ spec:
               readOnly: true
             - name: "run"
               mountPath: "/run"
+            - name: "sssd-run"
+              mountPath: "/usr/local/var/run/sssd"
             - name: "usr-share-umc-saml-idp"
               readOnly: true
               mountPath: "/usr/share/univention-management-console/saml/idp"
             - name: "var-lib-sss"
-              mountPath: "/var/lib/sss"
+              mountPath: "/usr/local/var/lib/sss"
             - name: "sssd-db"
-              mountPath: "/var/lib/sss/db/"
+              mountPath: "/usr/local/var/lib/sss/db/"
             {{- if .Values.extraVolumeMounts }}
             {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumeMounts "context" $) | nindent 12 }}
             {{- end }}
@@ -490,6 +492,9 @@ spec:
           emptyDir:
             medium: "Memory"
         - name: "run"
+          emptyDir:
+            medium: "Memory"
+        - name: "sssd-run"
           emptyDir:
             medium: "Memory"
         - name: "tmp"
