@@ -227,8 +227,37 @@ RUN \
     # for the entrypoint.sh script
     wget=1.* \
     # TODO: Remove once sssd dependency is dropped
-    sssd=2.8.* \
-    pamtester
+    # sssd=2.8.* \
+    # Debugging
+    pamtester \
+    socat strace lsof
+
+RUN apt-get install --assume-yes --verbose-versions --allow-unauthenticated --no-install-recommends \
+    winbind \
+    libcap-dev \
+    && cp /usr/lib/x86_64-linux-gnu/samba/libidmap-private-samba.so.0 /usr/lib/x86_64-linux-gnu/samba/libidmap-private-samba.so
+
+RUN wget https://github.com/SSSD/sssd/releases/download/2.10.2/sssd-2.10.2.tar.gz \
+    && apt-get build-dep --assume-yes --allow-unauthenticated sssd \
+    && tar -xvf sssd-2.10.2.tar.gz \
+    && cd sssd-2.10.2 \
+    && ./configure \
+    # --with-sssd-user=sssd \
+    # Other stuff we may not need
+    # --disable-krb5-locator-plugin \
+    # --disable-pac-responder \
+    # --disable-cifs-idmap-plugin \
+    # --without-python2-bindings \
+    # --without-autofs \
+    # --without-samba \
+    # --without-nfsv4-idmapd-plugin \
+    # --without-libwbclient \
+    # --without-libnl \
+    # --disable-nls \
+    # --disable-rpath \
+&& make \
+&& make install \
+&& cp /usr/local/lib/security/pam_sss.so /usr/lib/x86_64-linux-gnu/security/pam_sss.so
 
 
 

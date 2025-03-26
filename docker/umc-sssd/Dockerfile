@@ -13,7 +13,10 @@ RUN printf \
     > /etc/apt/sources.list.d/testing.list \
     && apt-get --allow-unauthenticated update \
     && apt-get --assume-yes --verbose-versions --allow-unauthenticated --no-install-recommends install \
-    sssd=2.10.*
+    sssd=2.10.* libpam-sss sssd-ldap sssd-common \
+    strace lsof pamtester
+
+# RUN apt install -y --allow-unauthenticated strace lsof pamtester sssd=2.8.* 
 
 # RUN getent group sssd >/dev/null || groupadd -r sssd \
 #     && getent passwd sssd >/dev/null || useradd -r -g sssd -d / -s /sbin/nologin -c "User for sssd" sssd
@@ -45,8 +48,8 @@ RUN printf \
 #     --without-libnl \
 #     --disable-nls \
 #     --disable-rpath \
-#     && make \
-#     && make install
+# && make \
+# && make install
 
 # NOTE: Needed for `sssctl config-check`
 # RUN apt-get --assume-yes --verbose-versions --no-install-recommends install \

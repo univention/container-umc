@@ -283,7 +283,7 @@ spec:
             - name: "univention-logs"
               mountPath: "/var/log/univention"
             - name: "var-lib-sss"
-              mountPath: "/var/lib/sss"
+              mountPath: "/usr/local/var/lib/sss"
             - name: "var-www-univention"
               mountPath: "/var/www/univention"
               readOnly: true
@@ -392,11 +392,11 @@ spec:
           {{- if .Values.probes.liveness }}
           livenessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.probes.liveness "context" $) | nindent 12 }}
           {{- end }}
-          {{- if .Values.probes.startup }}
-          startupProbe: {{- include "common.tplvalues.render" (dict "value" .Values.probes.startup "context" $) | nindent 12 }}
-          {{- end }}
           {{- if .Values.probes.readiness }}
           readinessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.probes.readiness "context" $) | nindent 12 }}
+          {{- end }}
+          {{- if .Values.probes.startup }}
+          startupProbe: {{- include "common.tplvalues.render" (dict "value" .Values.probes.startup "context" $) | nindent 12 }}
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
@@ -405,14 +405,14 @@ spec:
           securityContext: {{- omit .Values.containerSecurityContextSssd "enabled" | toYaml | nindent 12 }}
           {{- end }}
           image: "{{ coalesce .Values.sssd.image.registry .Values.global.imageRegistry }}/{{ .Values.sssd.image.repository }}:{{ .Values.sssd.image.tag }}"
-          {{- with .Values.sssd.image }}
+          {{- with .Values.image }}
           imagePullPolicy: {{ .pullPolicy }}
           {{- end }}
           command:
             - sh
             - -c
             - |
-              sssd -i --logger stderr --debug-level 2
+              sssd -i --logger stderr --debug-level 10
           envFrom:
             - configMapRef:
                 name: {{ include "common.names.fullname" . }}
@@ -482,9 +482,6 @@ spec:
           emptyDir:
             medium: "Memory"
         - name: "univention-logs"
-          emptyDir:
-            medium: "Memory"
-        - name: "sssd-socket"
           emptyDir:
             medium: "Memory"
         - name: "var-lib-sss"
