@@ -1,7 +1,7 @@
 # Patches
 
 The patches are tracked in the `ucs` repository in the branch
-`nubus/umc-patches`.
+`nubus/patches/umc-server`.
 
 They can be exported from git in the following way if you have a clone of the
 `ucs` repository:
