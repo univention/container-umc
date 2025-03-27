@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.38.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.37.0...v0.38.0) (2025-03-27)
+
+
+### Features
+
+* enable i18n as per extension ([f31e6c4](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/f31e6c4bb506ac2902eb5d30a647eefaa22d4fb8)), closes [univention/dev/internal/team-nubus#1048](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1048)
+
 ## [0.37.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.36.2...v0.37.0) (2025-02-26)
 
 
