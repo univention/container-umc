@@ -130,6 +130,7 @@ RUN \
   patch -p 5 -d /usr/lib/python3/dist-packages/univention/management/console/modules -i /0005-smtp-authentication-for-self-service-emails.patch && \
   patch -p 4 -d /usr/lib/python3/dist-packages/ -i /0006-remove-UDM-import.patch && \
   patch -p 4 -d /usr/lib/python3/dist-packages/ -i /0007-replace-PAM-login-with-UDM-login-for-password-change.patch && \
+  patch -p 5 -d /usr/lib/python3/dist-packages/univention/management/console/modules -i /0008-allow-to-set-individual-attributes-to-readonly-in-pa.patch && \
   rm -v /*.patch
 
 ############################################################
@@ -588,18 +589,7 @@ RUN chown -R 1000:1000 \
     /var/lib/univention-appcenter \
     /var/cache/univention-config
 
-############################################################
-# Interim code modifications and patches
-
-# Apply patch to support setting individual attributes to read-only in self-service
-# hadolint ignore=DL3059
-RUN sed --in-place \
---expression="s@'editable': bool(prop.may_change),@'editable': bool(prop.may_change and not ucr.is_true(f'self-service/udm_attributes/{propname}/readonly')),@" \
-/usr/lib/python3/dist-packages/univention/management/console/modules/passwordreset/__init__.py
-
 CMD ["/usr/sbin/univention-management-console-server", \
      "--no-daemonize-module-processes", \
      "--log-file", "stdout" \
     ]
-
-# [EOF]
