@@ -51,7 +51,7 @@ services:
   pre-commit:
     profiles:
       - test
-    image: gitregistry.knut.univention.de/univention/customers/dataport/upx/container-pre-commit/upx-pre-commit:latest
+    image: gitregistry.knut.univention.de/univention/customers/dataport/upx/container-pre-commit/upx-pre-commit:latest@sha256:c928a775fdbbb6291311b307952e750f06b1931c65f516e999464fbf0e9a1970
     volumes:
       - type: bind
         source: .
