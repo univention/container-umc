@@ -72,6 +72,7 @@ spec:
             - bash
             - -c
             - |
+              mkdir -p /target/etc/univention /target/etc/apache2 /target/var/www/univention
               cp -a /etc/univention/* /target/etc/univention/
               cp -a /etc/apache2/* /target/etc/apache2/
               cp -a /var/www/univention/* /target/var/www/univention/
@@ -126,6 +127,7 @@ spec:
             - sh
             - -c
             - |
+              mkdir -p /target/umc-icons
               cp -av /usr/share/univention-management-console-frontend/js/dijit/themes/umc/icons /target/umc-icons
           volumeMounts:
             - name: plugin-targets
