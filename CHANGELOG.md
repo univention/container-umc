@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.38.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.38.0...v0.38.1) (2025-04-10)
+
+
+### Bug Fixes
+
+* make copy calls in container init more robust ([cc0fd7b](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/cc0fd7ba0f1b26aa71de74914a7ac91b26c0f81f)), closes [univention/dev/internal/team-nubus#1079](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1079)
+
 ## [0.38.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.37.0...v0.38.0) (2025-03-27)
 
 
