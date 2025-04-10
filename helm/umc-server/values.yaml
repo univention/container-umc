@@ -342,7 +342,7 @@ image:
 sssd:
   image:
     registry: "artifacts.software-univention.de"
-    repository: "nubus-dev/images/umc-sssd"
+    repository: "nubus-dev/images/umc-server"
     tag: "latest"
     pullPolicy: "IfNotPresent"
 
