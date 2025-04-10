@@ -38,9 +38,9 @@ RUN \
   mkdir -p /usr/share/locale/de/LC_MESSAGES/ && \
   # install Univention bash helper functions dependency
   DEBIAN_FRONTEND=noninteractive \
-    apt-get --assume-yes --verbose-versions --no-install-recommends install \
-      shell-univention-lib=11.* \
-      && \
+  apt-get --assume-yes --verbose-versions --no-install-recommends install \
+  shell-univention-lib=11.* \
+  && \
   # we do not need the many bash helper-functions here
   cp /usr/local/bin/fake-uv-lib.sh /usr/share/univention-lib/all.sh && \
   cp /usr/local/bin/fake-uv-lib.sh /usr/share/univention-lib/base.sh && \
@@ -48,75 +48,75 @@ RUN \
   cp /usr/local/bin/fake-uv-lib.sh /usr/share/univention-lib/umc.sh && \
   # install Python dependencies
   DEBIAN_FRONTEND=noninteractive \
-    apt-get --assume-yes --verbose-versions --no-install-recommends install \
-            --option Dpkg::Options::="--force-confold" \
-      python3=3.11.* \
-      python3-distutils=3.11.* \
-      patch=2.* \
-      # for /usr/sbin/univention-config-registry
-      python3-lazy-object-proxy=1.9.* \
-      # the python3-univention-debug postinst uses py3compile
-      python3-minimal=3.11.* \
-      # for /usr/sbin/univention-config-registry
-      python3-six=1.16.* \
-      && \
+  apt-get --assume-yes --verbose-versions --no-install-recommends install \
+  --option Dpkg::Options::="--force-confold" \
+  python3=3.11.* \
+  python3-distutils=3.11.* \
+  patch=2.* \
+  # for /usr/sbin/univention-config-registry
+  python3-lazy-object-proxy=1.9.* \
+  # the python3-univention-debug postinst uses py3compile
+  python3-minimal=3.11.* \
+  # for /usr/sbin/univention-config-registry
+  python3-six=1.16.* \
+  && \
   apt-get download \
-    # UV package
-    libunivention-config0=17.* \
-    libunivention-debug1=14.* \
-    libunivention-license0=13.* \
-    libunivention-policy0=13.* \
-    # for /usr/share/locale/de/LC_MESSAGES/univention-admin*.mo
-    python3-univention-directory-manager=17.* \
-    python3-notifier=0.9.* \
-    # use UCS-repo because it is not yet in Debian/stable (just bullseye)
-    python3-m2crypto=0.38.* \
-    python3-pam=0.4.2-* \
-    python3-trml2pdf=1.2-* \
-    python3-univention=15.* \
-    # for $PY_LIBS/univention/admindiary/__init__.py
-    python3-univention-admin-diary=4.* \
-    python3-univention-config-registry=17.* \
-    # for univention.logging
-    python3-univention-debug=14.* \
-    python3-univention-directory-manager=17.* \
-    python3-univention-directory-manager-rest-client=12.* \
-    python3-univention-directory-reports=14.* \
-    python3-univention-heimdal=12.* \
-    python3-univention-lib=11.* \
-    python3-univention-license=13.* \
-    python3-univention-management-console=14.* \
-    python3-univention-debhelper=4.* \
-    # for $PY_LIBS/univention/admindiary/client.py and
-    # $PY_LIBS/univention/admindiary/events.py
-    univention-admin-diary-client=4.* \
-    # for /usr/sbin/univention-config-registry
-    univention-config=17.* \
-    univention-directory-reports=14.* \
-    univention-management-console-module-udm=12.* \
-    univention-management-console-server=14.* \
-    univention-pam=15.* \
-    # for the self-service
-    univention-self-service-passwordreset-umc=7.* \
-    && \
+  # UV package
+  libunivention-config0=17.* \
+  libunivention-debug1=14.* \
+  libunivention-license0=13.* \
+  libunivention-policy0=13.* \
+  # for /usr/share/locale/de/LC_MESSAGES/univention-admin*.mo
+  python3-univention-directory-manager=17.* \
+  python3-notifier=0.9.* \
+  # use UCS-repo because it is not yet in Debian/stable (just bullseye)
+  python3-m2crypto=0.38.* \
+  python3-pam=0.4.2-* \
+  python3-trml2pdf=1.2-* \
+  python3-univention=15.* \
+  # for $PY_LIBS/univention/admindiary/__init__.py
+  python3-univention-admin-diary=4.* \
+  python3-univention-config-registry=17.* \
+  # for univention.logging
+  python3-univention-debug=14.* \
+  python3-univention-directory-manager=17.* \
+  python3-univention-directory-manager-rest-client=12.* \
+  python3-univention-directory-reports=14.* \
+  python3-univention-heimdal=12.* \
+  python3-univention-lib=11.* \
+  python3-univention-license=13.* \
+  python3-univention-management-console=14.* \
+  python3-univention-debhelper=4.* \
+  # for $PY_LIBS/univention/admindiary/client.py and
+  # $PY_LIBS/univention/admindiary/events.py
+  univention-admin-diary-client=4.* \
+  # for /usr/sbin/univention-config-registry
+  univention-config=17.* \
+  univention-directory-reports=14.* \
+  univention-management-console-module-udm=12.* \
+  univention-management-console-server=14.* \
+  univention-pam=15.* \
+  # for the self-service
+  univention-self-service-passwordreset-umc=7.* \
+  && \
   echo 'path-exclude /usr/sbin/univention-management-console-acls' >> /etc/dpkg/dpkg.cfg.d/univention && \
   echo 'path-include /usr/share/doc/univention-management-console-server/changelog.gz' >> /etc/dpkg/dpkg.cfg.d/univention && \
   echo 'path-include /usr/share/locale/de/LC_MESSAGES/univention-*.mo' >> /etc/dpkg/dpkg.cfg.d/univention && \
   DEBIAN_FRONTEND=noninteractive \
-    dpkg --install --force-depends /apt/* && \
+  dpkg --install --force-depends /apt/* && \
   rm -rf /apt/ && \
   awk \
-    '/^Package: univention-management-console-server$/{ while(!/^Version: /){getline} print $2 }' \
-    /var/lib/dpkg/status > /version
+  '/^Package: univention-management-console-server$/{ while(!/^Version: /){getline} print $2 }' \
+  /var/lib/dpkg/status > /version
 
 WORKDIR /apt
 RUN \
   # For apt-get download sandbox
   chown _apt /apt && \
   apt-get download \
-    univention-management-console-web-server=14.* \
-    univention-management-console-frontend=14.* \
-    && \
+  univention-management-console-web-server=14.* \
+  univention-management-console-frontend=14.* \
+  && \
   for i in /apt/*.deb; do dpkg --extract "$i" /; done && \
   rm -rf /apt/
 
@@ -145,125 +145,122 @@ ARG DST_PY_LIBS="/usr/lib/python3/dist-packages"
 SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 
 RUN groupadd -g 999 -r sssd \
-    && useradd -r -g sssd -u 999 -d / -s /sbin/nologin -c "User for sssd" sssd
+  && useradd -r -g sssd -u 999 -d / -s /sbin/nologin -c "User for sssd" sssd
 
 WORKDIR /
 
 RUN \
   apt-get --assume-yes --verbose-versions --no-install-recommends install \
-    libc-bin=2.36-* \
-    locales=2.36-* \
-    # for $PY_LIBS/univention/admin/password.py
-    libhdb9-heimdal=7.8.* \
-    # for $PY_LIBS/univention/admin/password.py
-    libkrb5-26-heimdal=7.8.* \
-    libpam0g=1.5.* \
-    libpam-sss=2.8.* \
-    pam-saml=3.0.* \
-    # for $PY_LIBS/univention/management/console/pam.py
-    libpam-pwquality=1.4.* \
-    # for $PY_LIBS/univention/management/console/protocol/session.py
-    # the debian-buster version would cause a segfault.
-    python3-ldap=3.4.* \
-    # for $PY_LIBS/univention/management/console/message.py
-    # calling $PY_LIBS/univention/uldap.py
-    cy2-saml=3.0.* \
-    # for pylibmc (SASL authentication with memcached)
-    libsasl2-modules=2.1.* \
-    # for $PY_LIBS/univention/admin/password.py
-    python3-bcrypt=3.2.* \
-    # for /usr/sbin/univention-management-console-server
-    python3-daemon=2.3.* \
-    # for $PY_LIBS/univention/admin/syntax.py
-    python3-dateutil=2.8.* \
-    # for /usr/sbin/univention-management-console-web-server
-    python3-defusedxml=0.7.* \
-    # for $PY_LIBS/univention/lib/umc_module.py
-    python3-magic=2:* \
-    # for $PY_LIBS/univention/management/console/protocol/server.py
-    python3-openssl=23.* \
-    # for $PY_LIBS/univention/admin/syntax.py
-    python3-pil=9.4.* \
-    # for $PY_LIBS/univention/management/console/locales.py
-    python3-polib=1.1.* \
-    # for $PY_LIBS/univention/management/console/protocol/server.py
-    python3-tornado=6.2.* \
-    # for $PY_LIBS/univention/config_registry/
-    python3-lazy-object-proxy=1.9.* \
-    python3-six=1.16.* \
-    # for $PY_LIBS/univention/password.py
-    python3-cracklib=2.* \
-    # for $PY_LIBS/univention/admin/syntax.py
-    python3-email-validator=1.3.* \
-    # for ...
-    python3-cryptography=38.* \
-    # for $PY_LIBS/univention/admin/handlers/settings/
-    python3-apt=2.6.* \
-    # for python3-trml2pdf
-    python3-reportlab=3.6.* \
-    # for $PY_LIBS/univention/admin/password.py
-    python3-passlib=1.7.* \
-    # for ...
-    python3-pycurl=7.* \
-    # for /usr/sbin/univention-management-console-server
-    python3-sqlalchemy=1.4.* \
-    # for /usr/sbin/univention-management-console-web-server
-    python3-cherrypy3=18.* \
-    python3-pysaml2=7.0.* \
-    # for $PY_LIBS/univention/management/console/server.py
-    python3-sdnotify=0.* \
-    # for ...
-    python3-setproctitle=1.* \
-    # for ...
-    python3-tornado=6.* \
-    # for $PY_LIBS/univention/management/console/protocol/modserver.py
-    python3-tzlocal=4.* \
-    # for $PY_LIBS/univention/admin/__init__.py
-    python3-unidecode=1.3.* \
-    # for $PY_LIBS/univention/management/console/modules/passwordreset/tokendb.py
-    # NOTE: This is will attempt to write to /var/run/postgresql/.s.PGSQL.5432 and fail
-    python3-psycopg2=2.* \
-    # for $PY_LIBS/univention/management/console/modules/passwordreset/__init__.py
-    python3-pylibmc=1.* \
-    # for $PY_LIBS/univention/admin/rest/client/__init__.py
-    python3-uritemplate=4.1.* \
-    # for $PY_LIBS/univention/management/console/oidc.py
-    python3-jwt=2.6.* \
-    # for the entrypoint.sh script
-    wget=1.* \
-    # TODO: Remove once sssd dependency is dropped
-    # sssd=2.8.* \
-    # Debugging
-    pamtester \
-    socat strace lsof
+  libc-bin=2.36-* \
+  locales=2.36-* \
+  # for $PY_LIBS/univention/admin/password.py
+  libhdb9-heimdal=7.8.* \
+  # for $PY_LIBS/univention/admin/password.py
+  libkrb5-26-heimdal=7.8.* \
+  libpam0g=1.5.* \
+  libpam-sss=2.8.* \
+  pam-saml=3.0.* \
+  # for $PY_LIBS/univention/management/console/pam.py
+  libpam-pwquality=1.4.* \
+  # for $PY_LIBS/univention/management/console/protocol/session.py
+  # the debian-buster version would cause a segfault.
+  python3-ldap=3.4.* \
+  # for $PY_LIBS/univention/management/console/message.py
+  # calling $PY_LIBS/univention/uldap.py
+  cy2-saml=3.0.* \
+  # for pylibmc (SASL authentication with memcached)
+  libsasl2-modules=2.1.* \
+  # for $PY_LIBS/univention/admin/password.py
+  python3-bcrypt=3.2.* \
+  # for /usr/sbin/univention-management-console-server
+  python3-daemon=2.3.* \
+  # for $PY_LIBS/univention/admin/syntax.py
+  python3-dateutil=2.8.* \
+  # for /usr/sbin/univention-management-console-web-server
+  python3-defusedxml=0.7.* \
+  # for $PY_LIBS/univention/lib/umc_module.py
+  python3-magic=2:* \
+  # for $PY_LIBS/univention/management/console/protocol/server.py
+  python3-openssl=23.* \
+  # for $PY_LIBS/univention/admin/syntax.py
+  python3-pil=9.4.* \
+  # for $PY_LIBS/univention/management/console/locales.py
+  python3-polib=1.1.* \
+  # for $PY_LIBS/univention/management/console/protocol/server.py
+  python3-tornado=6.2.* \
+  # for $PY_LIBS/univention/config_registry/
+  python3-lazy-object-proxy=1.9.* \
+  python3-six=1.16.* \
+  # for $PY_LIBS/univention/password.py
+  python3-cracklib=2.* \
+  # for $PY_LIBS/univention/admin/syntax.py
+  python3-email-validator=1.3.* \
+  # for ...
+  python3-cryptography=38.* \
+  # for $PY_LIBS/univention/admin/handlers/settings/
+  python3-apt=2.6.* \
+  # for python3-trml2pdf
+  python3-reportlab=3.6.* \
+  # for $PY_LIBS/univention/admin/password.py
+  python3-passlib=1.7.* \
+  # for ...
+  python3-pycurl=7.* \
+  # for /usr/sbin/univention-management-console-server
+  python3-sqlalchemy=1.4.* \
+  # for /usr/sbin/univention-management-console-web-server
+  python3-cherrypy3=18.* \
+  python3-pysaml2=7.0.* \
+  # for $PY_LIBS/univention/management/console/server.py
+  python3-sdnotify=0.* \
+  # for ...
+  python3-setproctitle=1.* \
+  # for ...
+  python3-tornado=6.* \
+  # for $PY_LIBS/univention/management/console/protocol/modserver.py
+  python3-tzlocal=4.* \
+  # for $PY_LIBS/univention/admin/__init__.py
+  python3-unidecode=1.3.* \
+  # for $PY_LIBS/univention/management/console/modules/passwordreset/tokendb.py
+  # NOTE: This is will attempt to write to /var/run/postgresql/.s.PGSQL.5432 and fail
+  python3-psycopg2=2.* \
+  # for $PY_LIBS/univention/management/console/modules/passwordreset/__init__.py
+  python3-pylibmc=1.* \
+  # for $PY_LIBS/univention/admin/rest/client/__init__.py
+  python3-uritemplate=4.1.* \
+  # for $PY_LIBS/univention/management/console/oidc.py
+  python3-jwt=2.6.* \
+  # for the entrypoint.sh script
+  wget=1.*
+# TODO: Remove once sssd dependency is dropped
+# sssd=2.8.*
 
 RUN apt-get install --assume-yes --verbose-versions --allow-unauthenticated --no-install-recommends \
-    winbind \
-    libcap-dev \
-    && cp /usr/lib/x86_64-linux-gnu/samba/libidmap-private-samba.so.0 /usr/lib/x86_64-linux-gnu/samba/libidmap-private-samba.so
+  winbind \
+  libcap-dev \
+  && cp /usr/lib/x86_64-linux-gnu/samba/libidmap-private-samba.so.0 /usr/lib/x86_64-linux-gnu/samba/libidmap-private-samba.so
 
-RUN wget https://github.com/SSSD/sssd/releases/download/2.10.2/sssd-2.10.2.tar.gz \
-    && apt-get build-dep --assume-yes --allow-unauthenticated sssd \
-    && tar -xvf sssd-2.10.2.tar.gz \
-    && cd sssd-2.10.2 \
-    && ./configure \
-    --with-sssd-user=sssd \
-    # Other stuff we may not need
-    # --disable-krb5-locator-plugin \
-    # --disable-pac-responder \
-    # --disable-cifs-idmap-plugin \
-    # --without-python2-bindings \
-    # --without-autofs \
-    # --without-samba \
-    # --without-nfsv4-idmapd-plugin \
-    # --without-libwbclient \
-    # --without-libnl \
-    # --disable-nls \
-    # --disable-rpath \
-&& make \
-&& make install \
-&& rm -rf /sssd-2.10.2 \
-&& cp /usr/local/lib/security/pam_sss.so /usr/lib/x86_64-linux-gnu/security/pam_sss.so
+RUN wget --progress=dot:giga https://github.com/SSSD/sssd/releases/download/2.10.2/sssd-2.10.2.tar.gz \
+  && apt-get build-dep --assume-yes --allow-unauthenticated sssd \
+  && tar -xvf sssd-2.10.2.tar.gz \
+  && cd sssd-2.10.2 \
+  && ./configure \
+  --with-sssd-user=sssd \
+  # Other stuff we may not need
+  # --disable-krb5-locator-plugin \
+  # --disable-pac-responder \
+  # --disable-cifs-idmap-plugin \
+  # --without-python2-bindings \
+  # --without-autofs \
+  # --without-samba \
+  # --without-nfsv4-idmapd-plugin \
+  # --without-libwbclient \
+  # --without-libnl \
+  # --disable-nls \
+  # --disable-rpath \
+  && make \
+  && make install \
+  && rm -rf /sssd-2.10.2 \
+  && cp /usr/local/lib/security/pam_sss.so /usr/lib/x86_64-linux-gnu/security/pam_sss.so
 
 
 
@@ -498,15 +495,15 @@ RUN \
 # stub files referenced by pam*
 RUN \
   mkdir \
-    /etc/univention/templates/files/etc/pam.d/common-auth.d \
-    /etc/univention/templates/files/etc/pam.d/common-session.d \
-    && \
+  /etc/univention/templates/files/etc/pam.d/common-auth.d \
+  /etc/univention/templates/files/etc/pam.d/common-session.d \
+  && \
   touch \
-    /etc/univention/templates/files/etc/pam.d/common-session.d/10univention-pam_common \
-    /etc/univention/templates/files/etc/pam.d/common-auth.d/10univention-pam_header \
-    /etc/univention/templates/files/etc/pam.d/common-auth.d/30univention-pam_local \
-    /etc/univention/templates/files/etc/pam.d/common-auth.d/50univention-pam_general \
-    /etc/univention/templates/files/etc/pam.d/common-auth.d/70univention-pam_env
+  /etc/univention/templates/files/etc/pam.d/common-session.d/10univention-pam_common \
+  /etc/univention/templates/files/etc/pam.d/common-auth.d/10univention-pam_header \
+  /etc/univention/templates/files/etc/pam.d/common-auth.d/30univention-pam_local \
+  /etc/univention/templates/files/etc/pam.d/common-auth.d/50univention-pam_general \
+  /etc/univention/templates/files/etc/pam.d/common-auth.d/70univention-pam_env
 
 COPY --from=build \
   /etc/univention/templates/files/var/www/univention/meta.json \
@@ -581,49 +578,59 @@ RUN mkdir /var/cache/univention-management-console/
 # Copy Docker-specific files
 
 COPY scripts/50-entrypoint.sh \
-     scripts/60-self-service.sh \
-     /entrypoint.d/
+  scripts/60-self-service.sh \
+  /entrypoint.d/
 
 
-     ############################################################
-     # Define runtime
+############################################################
+# Define runtime
 
-     # build all locales
-     RUN echo -en 'en_US.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8\n' >> /etc/locale.gen && \
-     localedef -i de_DE -c -f UTF-8 -A /usr/share/locale/locale.alias de_DE.UTF-8 && \
-     localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8 && \
-     # Create directory for SAML IDP xml
-     mkdir -p /usr/share/univention-management-console/saml/idp && \
-     # Read by udm_ldap.py UMC module
-     mkdir -p /var/lib/univention-appcenter/attributes && \
-     echo '{"en_US": {}, "de_DE": {}}' > /var/lib/univention-appcenter/attributes/mapping.json
+# build all locales
+RUN echo -en 'en_US.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8\n' >> /etc/locale.gen && \
+  localedef -i de_DE -c -f UTF-8 -A /usr/share/locale/locale.alias de_DE.UTF-8 && \
+  localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8 && \
+  # Create directory for SAML IDP xml
+  mkdir -p /usr/share/univention-management-console/saml/idp && \
+  # Read by udm_ldap.py UMC module
+  mkdir -p /var/lib/univention-appcenter/attributes && \
+  echo '{"en_US": {}, "de_DE": {}}' > /var/lib/univention-appcenter/attributes/mapping.json
 
 ############################################################
 # Set permissions
 
-RUN chown -R sssd:sssd \
-    /usr/sbin/univention-management-console-server \
-    /usr/sbin/univention-management-console-module \
-    /usr/share/univention-management-console \
-    /var/cache/univention-management-console \
-    /var/log/univention \
-    /etc/univention \
-    /usr/lib/python3/dist-packages/univention \
-    /usr/share/locale/de/LC_MESSAGES \
-    /var/lib/univention-appcenter \
-    /var/cache/univention-config \
-    && chmod -R 755 \
-    /entrypoint.d \
-    /usr/sbin/univention-management-console-server \
-    /usr/sbin/univention-management-console-module \
-    /usr/share/univention-management-console \
-    /var/cache/univention-management-console \
-    /var/log/univention \
-    /etc/univention \
-    /usr/lib/python3/dist-packages/univention \
-    /usr/share/locale/de/LC_MESSAGES \
-    /var/lib/univention-appcenter \
-    /var/cache/univention-config
+RUN mkdir -p \
+  /etc/sssd \
+  /etc/ldap \
+  /etc/univention/ssl \
+  /var/www/univention \
+  && chown -R sssd:sssd \
+  /usr/sbin/univention-management-console-server \
+  /usr/sbin/univention-management-console-module \
+  /usr/share/univention-management-console \
+  /var/cache/univention-management-console \
+  /var/log/univention \
+  /etc/univention \
+  /usr/lib/python3/dist-packages/univention \
+  /usr/share/locale/de/LC_MESSAGES \
+  /var/lib/univention-appcenter \
+  /var/cache/univention-config \
+  && chmod -R 755 \
+  /entrypoint.d \
+  /usr/sbin/univention-management-console-server \
+  /usr/sbin/univention-management-console-module \
+  /usr/share/univention-management-console \
+  /var/cache/univention-management-console \
+  /var/log/univention \
+  /usr/lib/python3/dist-packages/univention \
+  /usr/share/locale/de/LC_MESSAGES \
+  /var/lib/univention-appcenter \
+  /var/cache/univention-config \
+  && chmod 777 \
+  /etc/sssd \
+  /etc/ldap \
+  /etc/pam.d \
+  /etc/univention/ssl \
+  /var/www/univention
 
 USER sssd
 
@@ -633,12 +640,12 @@ USER sssd
 # Apply patch to support setting individual attributes to read-only in self-service
 # hadolint ignore=DL3059
 RUN sed --in-place \
---expression="s@'editable': bool(prop.may_change),@'editable': bool(prop.may_change and not ucr.is_true(f'self-service/udm_attributes/{propname}/readonly')),@" \
-/usr/lib/python3/dist-packages/univention/management/console/modules/passwordreset/__init__.py
+  --expression="s@'editable': bool(prop.may_change),@'editable': bool(prop.may_change and not ucr.is_true(f'self-service/udm_attributes/{propname}/readonly')),@" \
+  /usr/lib/python3/dist-packages/univention/management/console/modules/passwordreset/__init__.py
 
 CMD ["/usr/sbin/univention-management-console-server", \
-     "--no-daemonize-module-processes", \
-     "--log-file", "stdout" \
-    ]
+  "--no-daemonize-module-processes", \
+  "--log-file", "stdout" \
+  ]
 
 # [EOF]

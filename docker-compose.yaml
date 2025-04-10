@@ -1,6 +1,5 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # SPDX-FileCopyrightText: 2023 Univention GmbH
-
 ---
 
 name: "dev-local"
@@ -32,6 +31,9 @@ services:
     secrets:
       - ldap_secret
       - machine_secret
+    # entrypoint: /bin/bash
+    # stdin_open: true
+    # tty: true
 
   test:
     profiles:
