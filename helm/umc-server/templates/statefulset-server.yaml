@@ -401,7 +401,7 @@ spec:
           {{- if .Values.containerSecurityContextSssd.enabled }}
           securityContext: {{- omit .Values.containerSecurityContextSssd "enabled" | toYaml | nindent 12 }}
           {{- end }}
-          image: "{{ coalesce .Values.sssd.image.registry .Values.global.imageRegistry }}/{{ .Values.sssd.image.repository }}:{{ .Values.sssd.image.tag }}"
+          image: "{{ coalesce .Values.image.registry .Values.global.imageRegistry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           {{- with .Values.image }}
           imagePullPolicy: {{ .pullPolicy }}
           {{- end }}

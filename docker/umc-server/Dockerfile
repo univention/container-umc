@@ -87,6 +87,7 @@ RUN \
   python3-univention-license=13.* \
   python3-univention-management-console=14.* \
   python3-univention-debhelper=4.* \
+  sssd-ldap=2.* \
   # for $PY_LIBS/univention/admindiary/client.py and
   # $PY_LIBS/univention/admindiary/events.py
   univention-admin-diary-client=4.* \
@@ -239,8 +240,20 @@ RUN apt-get install --assume-yes --verbose-versions --allow-unauthenticated --no
   libcap-dev \
   && cp /usr/lib/x86_64-linux-gnu/samba/libidmap-private-samba.so.0 /usr/lib/x86_64-linux-gnu/samba/libidmap-private-samba.so
 
-RUN wget --progress=dot:giga https://github.com/SSSD/sssd/releases/download/2.10.2/sssd-2.10.2.tar.gz \
+RUN wget --progress=dot:giga --recursive --level=1 --no-parent --directory-prefix=/tmp/sssd https://tretkowski.de/debian/sssd \
+  && wget --progress=dot:giga --directory-prefix=/tmp/sssd https://github.com/SSSD/sssd/releases/download/2.10.2/sssd-2.10.2.tar.gz \
+  && cd /tmp/sssd/tretkowski.de/debian/sssd \
+  && apt --fix-broken install --assume-yes --verbose-versions --allow-unauthenticated --no-install-recommends \
+  ./sssd-ldap_2.10.1-2~uv.1_amd64.deb \
+  ./libsss-idmap0_2.10.1-2~uv.1_amd64.deb \
+  ./sssd-common_2.10.1-2~uv.1_amd64.deb \
+  ./sssd-krb5-common_2.10.1-2~uv.1_amd64.deb \
+  ./libnss-sss_2.10.1-2~uv.1_amd64.deb \
+  ./libpam-sss_2.10.1-2~uv.1_amd64.deb \
+  ./libsss-certmap0_2.10.1-2~uv.1_amd64.deb \
+  ./libsss-nss-idmap0_2.10.1-2~uv.1_amd64.deb \
   && apt-get build-dep --assume-yes --allow-unauthenticated sssd \
+  && cd /tmp/sssd \
   && tar -xvf sssd-2.10.2.tar.gz \
   && cd sssd-2.10.2 \
   && ./configure \
@@ -257,9 +270,9 @@ RUN wget --progress=dot:giga https://github.com/SSSD/sssd/releases/download/2.10
   # --without-libnl \
   # --disable-nls \
   # --disable-rpath \
-  && make \
+  && make -j$(nproc)\
   && make install \
-  && rm -rf /sssd-2.10.2 \
+  && rm -rf /tmp/sssd \
   && cp /usr/local/lib/security/pam_sss.so /usr/lib/x86_64-linux-gnu/security/pam_sss.so
 
 
