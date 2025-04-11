@@ -14,6 +14,7 @@ FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} AS sssd
 
 SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 
+# hadolint ignore=DL3008
 RUN apt-get --assume-yes --verbose-versions --no-install-recommends install ca-certificates
 
 RUN groupadd -g 999 -r sssd \
@@ -21,12 +22,13 @@ RUN groupadd -g 999 -r sssd \
 
 # NOTE: Dependencies needed for getting the source code and building (not included in the build-dep below)
 RUN apt-get install --assume-yes --verbose-versions --allow-unauthenticated --no-install-recommends \
-  wget \
-  winbind \
-  libcap-dev \
+  wget=1.* \
+  winbind=2:4.21.* \
+  libcap-dev=1:2.66* \
   && cp /usr/lib/x86_64-linux-gnu/samba/libidmap-private-samba.so.0 /usr/lib/x86_64-linux-gnu/samba/libidmap-private-samba.so
 
-RUN wget https://github.com/SSSD/sssd/releases/download/2.10.2/sssd-2.10.2.tar.gz \
+# hadolint ignore=DL3003
+RUN wget --progress=dot:giga https://github.com/SSSD/sssd/releases/download/2.10.2/sssd-2.10.2.tar.gz \
   && apt-get build-dep --assume-yes --allow-unauthenticated sssd \
   && tar -xvf sssd-2.10.2.tar.gz \
   && cd sssd-2.10.2 \
@@ -44,9 +46,9 @@ RUN wget https://github.com/SSSD/sssd/releases/download/2.10.2/sssd-2.10.2.tar.g
   --without-libnl \
   --disable-nls \
   --disable-rpath \
-  && make -j$(nproc) \
+  && make -j"$(nproc)" \
   && mkdir -p /target/usr \
-  && make install DESTDIR=${PWD}/target \
+  && make install DESTDIR="${PWD}"/target \
   && tar --transform='s|^\./|/|' -cvzf sssd.tgz -C target . \
   && mv sssd.tgz / \
   && rm -rf /sssd-2.10.2
@@ -277,11 +279,11 @@ RUN \
   # for the entrypoint.sh script
   wget=1.* \
   # for sssd
-  libsss-certmap0 \
-  libsss-sudo \
-  libsss-idmap0 \
-  libsss-nss-idmap0 \
-  sssd-ldap
+  libsss-certmap0=2.8.* \
+  libsss-sudo=2.8.* \
+  libsss-idmap0=2.8.* \
+  libsss-nss-idmap0=2.8.* \
+  sssd-ldap=2.8.*
 
 ############################################################
 # Copy files from other stages

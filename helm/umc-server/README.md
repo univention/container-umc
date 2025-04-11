@@ -1343,7 +1343,7 @@ true
 			<td>sssd.image.repository</td>
 			<td>string</td>
 			<td><pre lang="json">
-"nubus-dev/images/umc-sssd"
+"nubus-dev/images/umc-server"
 </pre>
 </td>
 			<td></td>
