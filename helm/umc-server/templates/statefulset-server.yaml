@@ -280,7 +280,7 @@ spec:
             - name: "univention-logs"
               mountPath: "/var/log/univention"
             - name: "var-lib-sss"
-              mountPath: "/usr/local/var/lib/sss"
+              mountPath: "/usr/var/lib/sss"
             - name: "var-www-univention"
               mountPath: "/var/www/univention"
               readOnly: true
@@ -433,14 +433,14 @@ spec:
             - name: "run"
               mountPath: "/run"
             - name: "sssd-run"
-              mountPath: "/usr/local/var/run/sssd"
+              mountPath: "/usr/var/run/sssd"
             - name: "usr-share-umc-saml-idp"
               readOnly: true
               mountPath: "/usr/share/univention-management-console/saml/idp"
             - name: "var-lib-sss"
-              mountPath: "/usr/local/var/lib/sss"
+              mountPath: "/usr/var/lib/sss"
             - name: "sssd-db"
-              mountPath: "/usr/local/var/lib/sss/db/"
+              mountPath: "/usr/var/lib/sss/db"
             {{- if .Values.extraVolumeMounts }}
             {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumeMounts "context" $) | nindent 12 }}
             {{- end }}

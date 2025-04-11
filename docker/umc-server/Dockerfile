@@ -8,7 +8,51 @@ ARG UCS_BASE_IMAGE_TAG=0.16.1-build-2025-02-20
 ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-base-520
 
 ############################################################
-# Start first stage
+# Stage 0
+
+FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} AS sssd
+
+SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
+
+RUN apt-get --assume-yes --verbose-versions --no-install-recommends install ca-certificates
+
+RUN groupadd -g 999 -r sssd \
+  && useradd -r -g sssd -u 999 -d / -s /sbin/nologin -c "User for sssd" sssd
+
+# NOTE: Dependencies needed for getting the source code and building (not included in the build-dep below)
+RUN apt-get install --assume-yes --verbose-versions --allow-unauthenticated --no-install-recommends \
+  wget \
+  winbind \
+  libcap-dev \
+  && cp /usr/lib/x86_64-linux-gnu/samba/libidmap-private-samba.so.0 /usr/lib/x86_64-linux-gnu/samba/libidmap-private-samba.so
+
+RUN wget https://github.com/SSSD/sssd/releases/download/2.10.2/sssd-2.10.2.tar.gz \
+  && apt-get build-dep --assume-yes --allow-unauthenticated sssd \
+  && tar -xvf sssd-2.10.2.tar.gz \
+  && cd sssd-2.10.2 \
+  && ./configure \
+  --with-sssd-user=sssd \
+  --prefix=/usr \
+  --disable-krb5-locator-plugin \
+  --disable-pac-responder \
+  --disable-cifs-idmap-plugin \
+  --without-python2-bindings \
+  --without-autofs \
+  --without-samba \
+  --without-nfsv4-idmapd-plugin \
+  --without-libwbclient \
+  --without-libnl \
+  --disable-nls \
+  --disable-rpath \
+  && make -j$(nproc) \
+  && mkdir -p /target/usr \
+  && make install DESTDIR=${PWD}/target \
+  && tar --transform='s|^\./|/|' -cvzf sssd.tgz -C target . \
+  && mv sssd.tgz / \
+  && rm -rf /sssd-2.10.2
+
+############################################################
+# Stage 1
 
 FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} AS build
 
@@ -136,7 +180,7 @@ RUN \
   rm -v /*.patch
 
 ############################################################
-# Start second stage
+# Start final stage
 
 FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} AS final
 
@@ -231,54 +275,16 @@ RUN \
   # for $PY_LIBS/univention/management/console/oidc.py
   python3-jwt=2.6.* \
   # for the entrypoint.sh script
-  wget=1.*
-# TODO: Remove once sssd dependency is dropped
-# sssd=2.8.*
-
-RUN apt-get install --assume-yes --verbose-versions --allow-unauthenticated --no-install-recommends \
-  winbind \
-  libcap-dev \
-  && cp /usr/lib/x86_64-linux-gnu/samba/libidmap-private-samba.so.0 /usr/lib/x86_64-linux-gnu/samba/libidmap-private-samba.so
-
-RUN wget --progress=dot:giga --recursive --level=1 --no-parent --directory-prefix=/tmp/sssd https://tretkowski.de/debian/sssd \
-  && wget --progress=dot:giga --directory-prefix=/tmp/sssd https://github.com/SSSD/sssd/releases/download/2.10.2/sssd-2.10.2.tar.gz \
-  && cd /tmp/sssd/tretkowski.de/debian/sssd \
-  && apt --fix-broken install --assume-yes --verbose-versions --allow-unauthenticated --no-install-recommends \
-  ./sssd-ldap_2.10.1-2~uv.1_amd64.deb \
-  ./libsss-idmap0_2.10.1-2~uv.1_amd64.deb \
-  ./sssd-common_2.10.1-2~uv.1_amd64.deb \
-  ./sssd-krb5-common_2.10.1-2~uv.1_amd64.deb \
-  ./libnss-sss_2.10.1-2~uv.1_amd64.deb \
-  ./libpam-sss_2.10.1-2~uv.1_amd64.deb \
-  ./libsss-certmap0_2.10.1-2~uv.1_amd64.deb \
-  ./libsss-nss-idmap0_2.10.1-2~uv.1_amd64.deb \
-  && apt-get build-dep --assume-yes --allow-unauthenticated sssd \
-  && cd /tmp/sssd \
-  && tar -xvf sssd-2.10.2.tar.gz \
-  && cd sssd-2.10.2 \
-  && ./configure \
-  --with-sssd-user=sssd \
-  # Other stuff we may not need
-  # --disable-krb5-locator-plugin \
-  # --disable-pac-responder \
-  # --disable-cifs-idmap-plugin \
-  # --without-python2-bindings \
-  # --without-autofs \
-  # --without-samba \
-  # --without-nfsv4-idmapd-plugin \
-  # --without-libwbclient \
-  # --without-libnl \
-  # --disable-nls \
-  # --disable-rpath \
-  && make -j$(nproc)\
-  && make install \
-  && rm -rf /tmp/sssd \
-  && cp /usr/local/lib/security/pam_sss.so /usr/lib/x86_64-linux-gnu/security/pam_sss.so
-
-
+  wget=1.* \
+  # for sssd
+  libsss-certmap0 \
+  libsss-sudo \
+  libsss-idmap0 \
+  libsss-nss-idmap0 \
+  sssd-ldap
 
 ############################################################
-# Copy files from first stage
+# Copy files from other stages
 
 # from univention-management-console-server
 COPY --from=build \
@@ -594,6 +600,15 @@ COPY scripts/50-entrypoint.sh \
   scripts/60-self-service.sh \
   /entrypoint.d/
 
+############################################################
+# Install sssd
+
+COPY --from=sssd /sssd.tgz /
+
+RUN tar -xvzf /sssd.tgz -C / \
+  && echo /usr/lib/sssd > /etc/ld.so.conf.d/sssd.conf \
+  && ldconfig \
+  && rm /sssd.tgz
 
 ############################################################
 # Define runtime
@@ -611,29 +626,31 @@ RUN echo -en 'en_US.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8\n' >> /etc/locale.gen && \
 ############################################################
 # Set permissions
 
-RUN chown -R 1000:1000 \
-    /usr/sbin/univention-management-console-server \
-    /usr/sbin/univention-management-console-module \
-    /usr/share/univention-management-console \
-    /var/cache/univention-management-console \
-    /var/log/univention \
-    /etc/univention \
-    /usr/lib/python3/dist-packages/univention \
-    /usr/share/locale/de/LC_MESSAGES \
-    /var/lib/univention-appcenter \
-    /var/cache/univention-config \
-    && chmod -R 755 \
-    /entrypoint.d \
-    /usr/sbin/univention-management-console-server \
-    /usr/sbin/univention-management-console-module \
-    /usr/share/univention-management-console \
-    /var/cache/univention-management-console \
-    /var/log/univention \
-    /etc/univention \
-    /usr/lib/python3/dist-packages/univention \
-    /usr/share/locale/de/LC_MESSAGES \
-    /var/lib/univention-appcenter \
-    /var/cache/univention-config
+RUN chown -R sssd:sssd \
+  /usr/sbin/univention-management-console-server \
+  /usr/sbin/univention-management-console-module \
+  /usr/share/univention-management-console \
+  /var/cache/univention-management-console \
+  /var/log/univention \
+  /etc/univention \
+  /usr/lib/python3/dist-packages/univention \
+  /usr/share/locale/de/LC_MESSAGES \
+  /var/lib/univention-appcenter \
+  /var/cache/univention-config \
+  && chmod -R 755 \
+  /entrypoint.d \
+  /usr/sbin/univention-management-console-server \
+  /usr/sbin/univention-management-console-module \
+  /usr/share/univention-management-console \
+  /var/cache/univention-management-console \
+  /var/log/univention \
+  /etc/univention \
+  /usr/lib/python3/dist-packages/univention \
+  /usr/share/locale/de/LC_MESSAGES \
+  /var/lib/univention-appcenter \
+  /var/cache/univention-config
+
+USER sssd
 
 ############################################################
 # Interim code modifications and patches
