@@ -1,12 +1,12 @@
 dependencies:
-- name: common
-  repository: oci://registry-1.docker.io/bitnamicharts
-  version: 2.27.0
+- name: nubus-common
+  repository: oci://artifacts.software-univention.de/nubus/charts
+  version: 0.12.2
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
   version: 12.12.10
 - name: memcached
   repository: https://charts.bitnami.com/bitnami
-  version: 7.5.2
-digest: sha256:2f5816f299d928a5bec3685ea3aa0a59d9cc972a020a6aa45aee56cb8873d18a
-generated: "2024-11-14T10:25:15.77699601+01:00"
+  version: 7.8.0
+digest: sha256:c680c1583d1ce082d1e70cbabbad9db9fecae81c23be17fc045466b41e1c360c
+generated: "2025-04-16T00:58:41.365383938+02:00"

@@ -29,6 +29,11 @@ global:
   # -- ConfigMap name to read UCR values from.
   configMapUcr: null
 
+  # -- Allow specifying custom images.
+  # Ref: https://github.com/bitnami/charts/issues/30850
+  security:
+    allowInsecureImages: true
+
   # -- Allows to configure extensions globally.
   extensions: []
   # -- Allows to configure system extensions globally.
