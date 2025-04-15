@@ -45,7 +45,7 @@ helm uninstall umc-server
 |------------|------|---------|
 | https://charts.bitnami.com/bitnami | memcached | ^7.x.x |
 | https://charts.bitnami.com/bitnami | postgresql | ^12.x.x |
-| oci://registry-1.docker.io/bitnamicharts | common | ^2.x.x |
+| oci://artifacts.software-univention.de/nubus/charts | nubus-common | ^0.12.x |
 
 ## Values
 
