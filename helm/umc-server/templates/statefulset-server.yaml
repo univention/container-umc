@@ -82,9 +82,12 @@ spec:
               if [[ ! -d /target/var/lib/sss/pipes/private ]]; then
                 mkdir -p /target/var/lib/sss/pipes/private
               fi
-              chmod 750 /target/var/lib/sss/pipes/private/
-              chown root:root -R /target/var/lib/sss/pipes /target/var/lib/sss/db /etc/sssd/sssd.conf
+              cp -a /etc/nsswitch.conf /target/etc/nsswitch.conf
+              chmod 755 -R /target/var/lib/sss/pipes/private/
+              chown sssd:sssd -R /target/var/lib/sss/pipes /target/var/lib/sss/db /etc/sssd
               chmod 0600 /etc/sssd/sssd.conf
+              chown sssd:sssd /etc/pam.d/univention-management-console
+              chmod 0644 /etc/pam.d/univention-management-console
           volumeMounts:
             - name: "etc-ldap"
               mountPath: "/etc/ldap"
@@ -92,6 +95,8 @@ spec:
               mountPath: "/etc/pam.d"
             - name: "etc-sssd"
               mountPath: "/etc/sssd"
+            - name: "nsswitch-conf"
+              mountPath: "/target/etc"
             - name: "etc-univention-ssl"
               mountPath: "/etc/univention/ssl"
             - name: "etc-univention-reports"
@@ -278,7 +283,7 @@ spec:
             - name: "univention-logs"
               mountPath: "/var/log/univention"
             - name: "var-lib-sss"
-              mountPath: "/var/lib/sss"
+              mountPath: "/usr/local/var/lib/sss"
             - name: "var-www-univention"
               mountPath: "/var/www/univention"
               readOnly: true
@@ -391,11 +396,11 @@ spec:
           {{- if .Values.probes.liveness }}
           livenessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.probes.liveness "context" $) | nindent 12 }}
           {{- end }}
-          {{- if .Values.probes.startup }}
-          startupProbe: {{- include "common.tplvalues.render" (dict "value" .Values.probes.startup "context" $) | nindent 12 }}
-          {{- end }}
           {{- if .Values.probes.readiness }}
           readinessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.probes.readiness "context" $) | nindent 12 }}
+          {{- end }}
+          {{- if .Values.probes.startup }}
+          startupProbe: {{- include "common.tplvalues.render" (dict "value" .Values.probes.startup "context" $) | nindent 12 }}
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
@@ -411,13 +416,17 @@ spec:
             - sh
             - -c
             - |
-              sssd -i --logger stderr --debug-level 2
+              sssd -i --logger stderr --debug-level 10 -c /etc/sssd/sssd.conf
           envFrom:
             - configMapRef:
                 name: {{ include "common.names.fullname" . }}
           volumeMounts:
             - name: "etc-ldap"
               mountPath: "/etc/ldap"
+              readOnly: true
+            - name: "nsswitch-conf"
+              mountPath: "/etc/nsswitch.conf"
+              subPath: "nsswitch.conf"
               readOnly: true
             - name: "etc-pam"
               mountPath: "/etc/pam.d"
@@ -430,13 +439,15 @@ spec:
               readOnly: true
             - name: "run"
               mountPath: "/run"
+            - name: "sssd-run"
+              mountPath: "/usr/local/var/run/sssd"
             - name: "usr-share-umc-saml-idp"
               readOnly: true
               mountPath: "/usr/share/univention-management-console/saml/idp"
             - name: "var-lib-sss"
-              mountPath: "/var/lib/sss"
+              mountPath: "/usr/local/var/lib/sss"
             - name: "sssd-db"
-              mountPath: "/var/lib/sss/db/"
+              mountPath: "/usr/local/var/lib/sss/db/"
             {{- if .Values.extraVolumeMounts }}
             {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumeMounts "context" $) | nindent 12 }}
             {{- end }}
@@ -452,6 +463,9 @@ spec:
         {{- if .Values.extraVolumes }}
         {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumes "context" $) | nindent 8 }}
         {{- end }}
+        - name: "nsswitch-conf"
+          emptyDir:
+            medium: "Memory"
         - name: "etc-ldap"
           emptyDir:
             medium: "Memory"
@@ -476,15 +490,15 @@ spec:
         - name: "univention-logs"
           emptyDir:
             medium: "Memory"
-        - name: "sssd-socket"
-          emptyDir:
-            medium: "Memory"
         - name: "var-lib-sss"
           emptyDir: {}
         - name: "var-www-univention"
           emptyDir:
             medium: "Memory"
         - name: "run"
+          emptyDir:
+            medium: "Memory"
+        - name: "sssd-run"
           emptyDir:
             medium: "Memory"
         - name: "tmp"

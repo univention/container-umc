@@ -137,7 +137,7 @@ true
 			<td>containerSecurityContext.runAsGroup</td>
 			<td>int</td>
 			<td><pre lang="json">
-0
+999
 </pre>
 </td>
 			<td>Process group id.</td>
@@ -146,7 +146,7 @@ true
 			<td>containerSecurityContext.runAsNonRoot</td>
 			<td>bool</td>
 			<td><pre lang="json">
-false
+true
 </pre>
 </td>
 			<td>Run container as a user.</td>
@@ -155,7 +155,7 @@ false
 			<td>containerSecurityContext.runAsUser</td>
 			<td>int</td>
 			<td><pre lang="json">
-0
+999
 </pre>
 </td>
 			<td>Process user id.</td>
@@ -268,7 +268,7 @@ false
 			<td>containerSecurityContextSssd.allowPrivilegeEscalation</td>
 			<td>bool</td>
 			<td><pre lang="json">
-true
+false
 </pre>
 </td>
 			<td>Enable container privileged escalation.</td>
@@ -332,7 +332,7 @@ true
 			<td>containerSecurityContextSssd.runAsGroup</td>
 			<td>int</td>
 			<td><pre lang="json">
-0
+999
 </pre>
 </td>
 			<td>Process group id.</td>
@@ -341,7 +341,7 @@ true
 			<td>containerSecurityContextSssd.runAsNonRoot</td>
 			<td>bool</td>
 			<td><pre lang="json">
-false
+true
 </pre>
 </td>
 			<td>Run container as a user.</td>
@@ -350,7 +350,7 @@ false
 			<td>containerSecurityContextSssd.runAsUser</td>
 			<td>int</td>
 			<td><pre lang="json">
-0
+999
 </pre>
 </td>
 			<td>Process user id.</td>
@@ -363,6 +363,15 @@ false
 </pre>
 </td>
 			<td>Disallow custom Seccomp profile by setting it to RuntimeDefault.</td>
+		</tr>
+		<tr>
+			<td>containerSecurityContextSssd.supplementalGroups[0]</td>
+			<td>int</td>
+			<td><pre lang="json">
+999
+</pre>
+</td>
+			<td></td>
 		</tr>
 		<tr>
 			<td>environment</td>
@@ -886,7 +895,7 @@ true
 			<td>podSecurityContext.fsGroup</td>
 			<td>int</td>
 			<td><pre lang="json">
-0
+999
 </pre>
 </td>
 			<td>If specified, all processes of the container are also part of the supplementary group.</td>
