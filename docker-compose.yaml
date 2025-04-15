@@ -16,6 +16,7 @@ services:
   umc-server:
     image: gitregistry.knut.univention.de/univention/customers/dataport/upx/container-umc/umc-server:${IMAGE_TAG:-latest}
     platform: linux/amd64
+    user: root
     ports:
       - 8090:8090
     volumes:

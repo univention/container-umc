@@ -88,6 +88,8 @@ if [[ ! -d /etc/sssd/conf.d ]]; then
 fi
 
 univention-config-registry commit /etc/sssd/sssd.conf
+chown sssd:sssd /etc/sssd/sssd.conf
+chmod 0700 /etc/sssd/sssd.conf
 
 # Set LDAP machine authentication
 MACHINE_SECRET_FILE=${MACHINE_SECRET_FILE:-/etc/machine.secret}

@@ -8,7 +8,60 @@ ARG UCS_BASE_IMAGE_TAG=0.16.2-build-2025-04-09
 ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-base-521
 
 ############################################################
-# Start first stage
+# Stage 0 - build sssd installer
+
+FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} AS sssd
+
+SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
+
+# hadolint ignore=DL3008
+RUN apt-get --assume-yes --verbose-versions --no-install-recommends install ca-certificates
+
+RUN groupadd -g 999 -r sssd \
+  && useradd -r -g sssd -u 999 -d / -s /sbin/nologin -c "User for sssd" sssd
+
+# NOTE: Dependencies needed for getting the source code and building (not included in the build-dep below)
+RUN apt-get install --assume-yes --verbose-versions --allow-unauthenticated --no-install-recommends \
+  wget=1.* \
+  winbind=2:4.21.* \
+  libcap-dev=1:2.66* \
+  && cp /usr/lib/x86_64-linux-gnu/samba/libidmap-private-samba.so.0 /usr/lib/x86_64-linux-gnu/samba/libidmap-private-samba.so
+
+# hadolint ignore=DL3003
+RUN wget --progress=dot:giga https://github.com/SSSD/sssd/releases/download/2.10.2/sssd-2.10.2.tar.gz \
+  && apt-get build-dep --assume-yes --allow-unauthenticated sssd \
+  && tar -xvf sssd-2.10.2.tar.gz \
+  && cd sssd-2.10.2 \
+  && ./configure \
+  --with-sssd-user=sssd \
+  --disable-krb5-locator-plugin \
+  --disable-pac-responder \
+  --disable-cifs-idmap-plugin \
+  --without-python2-bindings \
+  --without-autofs \
+  --without-samba \
+  --without-nfsv4-idmapd-plugin \
+  --without-libwbclient \
+  --without-libnl \
+  --disable-nls \
+  --disable-rpath \
+  && make -j"$(nproc)" \
+  && mkdir -p /target/usr \
+  && make install DESTDIR="${PWD}"/target
+
+COPY sssd-setup.sh /sssd-setup.sh
+
+# hadolint ignore=DL3003
+RUN \
+  cd sssd-2.10.2 \
+  && tar --transform='s|^\./|/|' -cvzf sssd.tgz -C target . \
+  && cat /sssd-setup.sh sssd.tgz > sssd-installer.sh \
+  && chmod +x sssd-installer.sh \
+  && mv sssd-installer.sh / \
+  && rm -rf /sssd-2.10.2
+
+############################################################
+# Stage 1
 
 FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} AS build
 
@@ -131,10 +184,11 @@ RUN \
   patch -p 4 -d /usr/lib/python3/dist-packages/ -i /0006-remove-UDM-import.patch && \
   patch -p 4 -d /usr/lib/python3/dist-packages/ -i /0007-replace-PAM-login-with-UDM-login-for-password-change.patch && \
   patch -p 5 -d /usr/lib/python3/dist-packages/univention/management/console/modules -i /0008-allow-to-set-individual-attributes-to-readonly-in-pa.patch && \
+  patch -p 4 -d /usr/sbin -i /0009-remove-umc-root-checks.patch && \
   rm -v /*.patch
 
 ############################################################
-# Start second stage
+# Start final stage
 
 FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} AS final
 
@@ -232,7 +286,7 @@ RUN \
 
 
 ############################################################
-# Copy files from first stage
+# Copy files from other stages
 
 # from univention-management-console-server
 COPY --from=build \
@@ -548,24 +602,28 @@ COPY scripts/50-entrypoint.sh \
      scripts/60-self-service.sh \
      /entrypoint.d/
 
+COPY --from=sssd /sssd-installer.sh /
 
-     ############################################################
-     # Define runtime
+RUN /sssd-installer.sh \
+    && rm -f /sssd-installer.sh
 
-     # build all locales
-     RUN echo -en 'en_US.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8\n' >> /etc/locale.gen && \
-     localedef -i de_DE -c -f UTF-8 -A /usr/share/locale/locale.alias de_DE.UTF-8 && \
-     localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8 && \
-     # Create directory for SAML IDP xml
-     mkdir -p /usr/share/univention-management-console/saml/idp && \
-     # Read by udm_ldap.py UMC module
-     mkdir -p /var/lib/univention-appcenter/attributes && \
-     echo '{"en_US": {}, "de_DE": {}}' > /var/lib/univention-appcenter/attributes/mapping.json
+############################################################
+# Define runtime
+
+# build all locales
+RUN echo -en 'en_US.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8\n' >> /etc/locale.gen && \
+localedef -i de_DE -c -f UTF-8 -A /usr/share/locale/locale.alias de_DE.UTF-8 && \
+localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8 && \
+# Create directory for SAML IDP xml
+mkdir -p /usr/share/univention-management-console/saml/idp && \
+# Read by udm_ldap.py UMC module
+mkdir -p /var/lib/univention-appcenter/attributes && \
+echo '{"en_US": {}, "de_DE": {}}' > /var/lib/univention-appcenter/attributes/mapping.json
 
 ############################################################
 # Set permissions
 
-RUN chown -R 1000:1000 \
+RUN chown -R sssd:sssd \
     /usr/sbin/univention-management-console-server \
     /usr/sbin/univention-management-console-module \
     /usr/share/univention-management-console \
@@ -588,6 +646,8 @@ RUN chown -R 1000:1000 \
     /usr/share/locale/de/LC_MESSAGES \
     /var/lib/univention-appcenter \
     /var/cache/univention-config
+
+USER sssd
 
 CMD ["/usr/sbin/univention-management-console-server", \
      "--no-daemonize-module-processes", \
