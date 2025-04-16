@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.39.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.38.1...v0.39.0) (2025-04-16)
+
+
+### Features
+
+* **umc-server:** Remove patch related to license checks ([bc6d9ce](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/bc6d9ce182145a7ee75068aa7ed9eb9f403b8590))
+
+
+### Bug Fixes
+
+* **umc-server:** Allow larger LDAP secrets ([10ea763](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/10ea763ff04035766c3c90ce3e9d7403076e6ce8)), closes [univention/dev/internal/team-nubus#833](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/833)
+* **umc-server:** Move sed based patching into patch based approach ([93e8b95](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/93e8b956cbeae1fef4f506bbd2495e49f7bd88fc))
+
 ## [0.38.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.38.0...v0.38.1) (2025-04-10)
 
 
