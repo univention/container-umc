@@ -484,6 +484,9 @@ COPY --from=build \
 COPY --from=build \
   /usr/share/univention-management-console/oidc/oidc.json \
   /usr/share/univention-management-console/oidc/oidc.json
+COPY --from=build \
+  /etc/univention/templates/files/usr/share/univention-management-console/oidc/oidc.json \
+  /etc/univention/templates/files/usr/share/univention-management-console/oidc/oidc.json
 
 RUN mkdir /usr/share/doc/univention-management-console-web-server/
 

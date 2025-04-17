@@ -81,6 +81,77 @@ else
 fi
 
 ############################################################
+# Set up OIDC configuration
+
+setup_oidc() {
+  OIDC_URL=$(univention-config-registry get 'umc/oidc/issuer' || true)
+  OIDC_URL_INTERNAL=$(univention-config-registry get 'umc/oidc/issuer-internal' || true)
+
+  if [[ -n "${OIDC_URL:-}" ]]; then
+    DOWNLOAD_URL="${OIDC_URL_INTERNAL:-${OIDC_URL}}/.well-known/openid-configuration"
+    DOWNLOAD_URL_JWKS="${OIDC_URL_INTERNAL:-${OIDC_URL}}/protocol/openid-connect/certs"
+    OIDC_HOST=$(echo "${OIDC_URL}" | awk -F/ '{print $3}')
+
+    OIDC_BASE="/usr/share/univention-management-console/oidc/"
+    OIDC_PATH="${OIDC_BASE}/nubus.json"
+    OIDC_JWKS_PATH="${OIDC_BASE}/nubus.jwks"
+
+    echo "Trying to fetch OIDC configuration from ${DOWNLOAD_URL}"
+    result=1
+    counter=3
+    # 'Connection refused' is not retried by `wget --tries=X` hence the loop
+    while [[ ${result} -gt 0 && ${counter} -gt 0 ]]; do
+      {
+          wget \
+            --quiet \
+            --timeout=3 \
+            --tries=2 \
+            --header="Host: ${OIDC_HOST}" \
+            --output-document="${OIDC_PATH}" \
+            "${DOWNLOAD_URL}" \
+          && result=0
+      } || true
+
+      counter=$((counter-1))
+      sleep 3
+    done
+
+    if [[ ${result} -gt 0 ]]; then
+      echo "Error: Failed to fetch OIDC configuration from ${DOWNLOAD_URL}" >&2
+      exit 255
+    fi
+
+    echo "Trying to fetch OIDC JWKS from ${DOWNLOAD_URL_JWKS}"
+    result=1
+    counter=3
+    # 'Connection refused' is not retried by `wget --tries=X` hence the loop
+    while [[ ${result} -gt 0 && ${counter} -gt 0 ]]; do
+      {
+          wget \
+            --quiet \
+            --timeout=3 \
+            --tries=2 \
+            --header="Host: ${OIDC_HOST}" \
+            --output-document="${OIDC_JWKS_PATH}" \
+            "${DOWNLOAD_URL_JWKS}" \
+          && result=0
+      } || true
+
+      counter=$((counter-1))
+      sleep 3
+    done
+
+    if [[ ${result} -gt 0 ]]; then
+      echo "Error: Failed to fetch OIDC JWKS from ${DOWNLOAD_URL_JWKS}" >&2
+      exit 255
+    fi
+
+    echo "Successfully set OIDC configuration in ${OIDC_PATH}"
+  fi
+}
+setup_oidc
+
+############################################################
 # Store SSSD configuration
 
 if [[ ! -d /etc/sssd/conf.d ]]; then
@@ -111,6 +182,13 @@ if [[ -f "${LDAP_SECRET_FILE}" ]]; then
   echo "Using LDAP admin secret"
 else
   echo "No LDAP admin secret provided!"
+fi
+
+OIDC_SECRET_FILE=${OIDC_SECRET_FILE:-/etc/oidc-rp-umc-server.secret}
+if [[ -f "${OIDC_SECRET_FILE}" ]]; then
+  echo "Using OIDC RP secret"
+else
+  echo "No OIDC RP secret provided!"
 fi
 
 ############################################################
@@ -210,6 +288,9 @@ fi
 # Generate config files from UCR
 univention-config-registry commit \
   /var/www/univention/meta.json
+
+univention-config-registry commit \
+  /usr/share/univention-management-console/oidc/oidc.json
 
 univention-config-registry commit \
   /etc/univention/directory/reports/config.ini \

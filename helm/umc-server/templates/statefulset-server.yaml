@@ -114,6 +114,8 @@ spec:
               mountPath: "/run"
             - name: "tmp"
               mountPath: "/tmp"
+            - name: "usr-share-umc-oidc"
+              mountPath: "/usr/share/univention-management-console/oidc"
             - name: "usr-share-umc-saml-idp"
               mountPath: "/usr/share/univention-management-console/saml/idp"
             {{- if .Values.extraVolumeMounts }}
@@ -294,6 +296,8 @@ spec:
               mountPath: "/run"
             - name: "tmp"
               mountPath: "/tmp"
+            - name: "usr-share-umc-oidc"
+              mountPath: "/usr/share/univention-management-console/oidc"
             - name: "usr-share-umc-saml-idp"
               mountPath: "/usr/share/univention-management-console/saml/idp"
               readOnly: true
@@ -513,6 +517,9 @@ spec:
           emptyDir:
             medium: "Memory"
         - name: "tmp"
+          emptyDir:
+            medium: "Memory"
+        - name: "usr-share-umc-oidc"
           emptyDir:
             medium: "Memory"
         - name: "usr-share-umc-saml-idp"
