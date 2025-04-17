@@ -154,6 +154,8 @@ RUN \
   univention-pam \
   # for the self-service
   univention-self-service-passwordreset-umc \
+  # for OAUTHBEARER
+  libsasl2-modules-oauthbearer \
   && \
   echo 'path-exclude /usr/sbin/univention-management-console-acls' >> /etc/dpkg/dpkg.cfg.d/univention && \
   echo 'path-include /usr/share/doc/univention-management-console-server/changelog.gz' >> /etc/dpkg/dpkg.cfg.d/univention && \
@@ -282,6 +284,8 @@ RUN \
   python3-uritemplate \
   # for $PY_LIBS/univention/management/console/oidc.py
   python3-jwt \
+  libjansson4 \
+  librhonabwy1.1 \
   # for the entrypoint.sh script
   wget
 
@@ -592,6 +596,18 @@ COPY --from=build \
 COPY --from=build \
   /version \
   /version
+
+# OAUTHBEARER
+COPY --from=build \
+  /usr/lib/x86_64-linux-gnu/sasl2/liboauthbearer.so.0.2.0 \
+  /usr/lib/x86_64-linux-gnu/sasl2/
+
+RUN ln -s /usr/lib/x86_64-linux-gnu/sasl2/liboauthbearer.so.0.2.0 \
+    /usr/lib/x86_64-linux-gnu/sasl2/liboauthbearer.so.0 \
+  && ln -s /usr/lib/x86_64-linux-gnu/sasl2/liboauthbearer.so.0.2.0 \
+    /usr/lib/x86_64-linux-gnu/sasl2/liboauthbearer.so \
+  && ln -s /usr/lib/x86_64-linux-gnu/sasl2/libsaml.so.0.2.0
+
 
 RUN mkdir /var/cache/univention-management-console/
 
