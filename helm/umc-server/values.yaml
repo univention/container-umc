@@ -247,6 +247,27 @@ sssd:
   # -- SSSD log level, from 0 to 10.
   debugLevel: 2
 
+# -- Configuration for Open ID Connect
+oidc:
+  rp:
+    umcserver:
+      existingSecret:
+        name: '{{ printf "%s-oidc-rp-umc-server-credentials" .Release.Name }}'
+        keyMapping:
+          password: 'password'
+    # client-id: "TODO"
+    # # Either this value or an existing Secret has to be specified.
+    # password: null
+    # existingSecret:
+    #   # -- The name of an existing Secret to use for retrieving the password
+    #   #
+    #   # "oidc.auth.password" will be ignored if this value is set.
+    #   name: null
+    #   keyMapping:
+    #     # -- The key to retrieve the password from. Setting this value allows to use
+    #     # a key with a different name.
+    #     password: null
+
 # -- Configuration for the loadBalancer with session stickiness.
 proxy:
   replicaCount: 1

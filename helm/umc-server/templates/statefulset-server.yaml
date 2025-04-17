@@ -133,6 +133,16 @@ spec:
             - name: "secrets"
               mountPath: "{{ .Values.umcServer.secretMountPath }}"
             {{- else }}
+            #{{- if .Values.oidc.rp.umcserver.existingSecret.name  }}
+            #- name: {{ printf "%s-volume" (tpl .Values.oidc.rp.umcserver.existingSecret.name . ) | quote }}
+            #  mountPath: "/etc/oidc-rp-umc-server.secret"
+            #  subPath: {{ include "common.secrets.key" (dict "existingSecret" .Values.oidc.rp.umcserver.existingSecret "key" "password") }}
+            #  readOnly: true
+            #{{- end }}
+            - name: secret-oidc
+              mountPath: "/etc/oidc-rp-umc-server.secret"
+              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.oidc.rp.umcserver.existingSecret "key" "password") | quote }}
+              readOnly: true
             {{- if .Values.ldap.existingSecret.name  }}
             - name: {{ printf "%s-volume" (tpl .Values.ldap.existingSecret.name . ) | quote }}
               mountPath: "/etc/ldap.secret"
@@ -538,6 +548,14 @@ spec:
           secret:
             secretName: {{ include "common.names.fullname" . | quote }}
         {{- else }}
+        #{{- if .Values.oidc.rp.umcserver.existingSecret.name  }}
+        #- name: {{ printf "%s-volume" (tpl .Values.oidc.rp.umcserver.existingSecret.name . ) | quote }}
+        #  secret:
+        #    secretName: {{ tpl .Values.oidc.rp.umcserver.existingSecret.name . }}
+        #{{- end }}
+        - name: secret-oidc
+          secret:
+            secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.oidc.rp.umcserver.existingSecret "defaultNameSuffix" "oidc-rp-umc-server" "context" .) | quote }}
         {{- if .Values.ldap.existingSecret.name  }}
         - name: {{ printf "%s-volume" (tpl .Values.ldap.existingSecret.name . ) | quote }}
           secret:
