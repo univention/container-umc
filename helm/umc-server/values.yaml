@@ -243,7 +243,7 @@ proxy:
   image:
     registry: "artifacts.software-univention.de"
     repository: "library/traefik"
-    tag: "3.0@sha256:a208c74fd80a566d4ea376053bff73d31616d7af3f1465a7747b8b89ee34d97e"
+    tag: "3.3@sha256:83f3c843133530e4aa45e6ddc415488583a8a01c88adc5022d415c6e97ceeaae"
     pullPolicy: "IfNotPresent"
 
   logLevel: "INFO"
