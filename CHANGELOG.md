@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.40.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.39.0...v0.40.0) (2025-04-23)
+
+
+### Features
+
+* **umc-server:** Run sssd sidecar non-root ([a21195c](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/a21195c90d870da0f49079a9c403c2ebfa90dcc3)), closes [univention/dev/internal/team-nubus#1123](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1123)
+
 ## [0.39.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.38.1...v0.39.0) (2025-04-16)
 
 
