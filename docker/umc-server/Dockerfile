@@ -29,6 +29,9 @@ RUN apt-get install --assume-yes --verbose-versions --allow-unauthenticated --no
 
 # hadolint ignore=DL3003
 RUN wget --progress=dot:giga https://github.com/SSSD/sssd/releases/download/2.10.2/sssd-2.10.2.tar.gz \
+  # NOTE: Check for known checksum
+  && echo "e8aa5e6b48ae465bea7064048715ce7e9c53b50ec6a9c69304f59e0d35be40ff  sssd-2.10.2.tar.gz" > sssd-2.10.2.tar.gz.sha256 \
+  && sha256sum -c sssd-2.10.2.tar.gz.sha256 \
   && apt-get build-dep --assume-yes --allow-unauthenticated sssd \
   && tar -xvf sssd-2.10.2.tar.gz \
   && cd sssd-2.10.2 \
