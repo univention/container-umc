@@ -284,6 +284,10 @@ spec:
               mountPath: "/var/log/univention"
             - name: "var-lib-sss"
               mountPath: "/usr/local/var/lib/sss"
+            - name: "var-lib-sss-mc"
+              mountPath: "/usr/local/var/lib/sss/mc"
+            - name: "var-lib-sss-pubconf"
+              mountPath: "/usr/local/var/lib/sss/pubconf"
             - name: "var-www-univention"
               mountPath: "/var/www/univention"
               readOnly: true
@@ -446,6 +450,10 @@ spec:
               mountPath: "/usr/share/univention-management-console/saml/idp"
             - name: "var-lib-sss"
               mountPath: "/usr/local/var/lib/sss"
+            - name: "var-lib-sss-mc"
+              mountPath: "/usr/local/var/lib/sss/mc"
+            - name: "var-lib-sss-pubconf"
+              mountPath: "/usr/local/var/lib/sss/pubconf"
             - name: "sssd-db"
               mountPath: "/usr/local/var/lib/sss/db/"
             {{- if .Values.extraVolumeMounts }}
@@ -491,6 +499,10 @@ spec:
           emptyDir:
             medium: "Memory"
         - name: "var-lib-sss"
+          emptyDir: {}
+        - name: "var-lib-sss-mc"
+          emptyDir: {}
+        - name: "var-lib-sss-pubconf"
           emptyDir: {}
         - name: "var-www-univention"
           emptyDir:
