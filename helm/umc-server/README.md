@@ -1322,6 +1322,26 @@ true
 			<td></td>
 		</tr>
 		<tr>
+			<td>sssd</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "debugLevel": 2
+}
+</pre>
+</td>
+			<td>Configuration for SSSD.</td>
+		</tr>
+		<tr>
+			<td>sssd.debugLevel</td>
+			<td>int</td>
+			<td><pre lang="json">
+2
+</pre>
+</td>
+			<td>SSSD log level, from 0 to 10.</td>
+		</tr>
+		<tr>
 			<td>sssdProbes.liveness.exec.command[0]</td>
 			<td>string</td>
 			<td><pre lang="json">

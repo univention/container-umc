@@ -416,7 +416,7 @@ spec:
             - sh
             - -c
             - |
-              sssd -i --logger stderr --debug-level 10 -c /etc/sssd/sssd.conf
+              sssd -i --logger stderr --debug-level {{ .Values.sssd.debugLevel }} -c /etc/sssd/sssd.conf
           envFrom:
             - configMapRef:
                 name: {{ include "common.names.fullname" . }}

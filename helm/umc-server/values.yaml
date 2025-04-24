@@ -239,6 +239,11 @@ selfService:
 
     Greetings from your password self service system.
 
+# -- Configuration for SSSD.
+sssd:
+  # -- SSSD log level, from 0 to 10.
+  debugLevel: 2
+
 # -- Configuration for the loadBalancer with session stickiness.
 proxy:
   replicaCount: 1
