@@ -605,7 +605,10 @@ COPY scripts/50-entrypoint.sh \
 COPY --from=sssd /sssd-installer.sh /
 
 RUN /sssd-installer.sh \
-    && rm -f /sssd-installer.sh
+    && rm -f /sssd-installer.sh \
+    # NOTE: If this file is not removed, sssd will error because of a different
+    # version of the library (2.8 but it wants 2.10)
+    && rm /usr/lib/x86_64-linux-gnu/samba/ldb/memberof.la
 
 ############################################################
 # Define runtime
