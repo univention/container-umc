@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.41.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.40.0...v0.41.0) (2025-04-28)
+
+
+### Features
+
+* **umc-server:** Run sssd sidecar non-root ([f083e8f](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/f083e8f042b386b7093e15e8e85dac30e554753c)), closes [univention/dev/internal/team-nubus#1123](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1123)
+
+
+### Bug Fixes
+
+* **umc-gateway:** Update ucs-base-image ([b0bc548](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/b0bc54865727ba8c814de40096180eb70ad1aab2))
+* **umc-server:** Allow configuration of SSSD log level ([57b1635](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/57b163568ee0c62f1e434df7dfc98564665fdb4e))
+* **umc-server:** Check checksum for external packages ([a0eb855](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/a0eb8558a9c1aa6f4f516472d42c0a4c7d9d3379)), closes [univention/dev/internal/team-nubus#1123](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1123)
+* **umc-server:** Permission denied on sssd subfolders ([3585da0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/3585da00787ef44d0082605dcb942b182e52dbc4)), closes [univention/dev/internal/team-nubus#1123](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1123)
+* **umc-server:** Remove file to avoid mismatch version error ([7bd13a8](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/7bd13a8ab6ab528d831847b3aea15f7bbdb22cb9)), closes [univention/dev/internal/team-nubus#1123](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1123)
+
 ## [0.40.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.39.0...v0.40.0) (2025-04-23)
 
 
