@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.42.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.41.0...v0.42.0) (2025-04-29)
+
+
+### Features
+
+* Remove docker.io dependencies ([f25bd2b](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/f25bd2b3730ecf4805f4aa0d74fa95117609883c)), closes [univention/dev/internal/team-nubus#1131](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1131)
+
 ## [0.41.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.40.0...v0.41.0) (2025-04-28)
 
 
