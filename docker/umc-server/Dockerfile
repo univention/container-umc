@@ -4,8 +4,8 @@
 ############################################################
 # Global variables
 
-ARG UCS_BASE_IMAGE_TAG=0.16.2-build-2025-04-24
-ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-base-521
+ARG UCS_BASE_IMAGE_TAG=0.16.2
+ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-base-dev-521
 
 ############################################################
 # Stage 0 - build sssd installer
@@ -15,7 +15,9 @@ FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} AS sssd
 SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 
 # hadolint ignore=DL3008
-RUN apt-get --assume-yes --verbose-versions --no-install-recommends install ca-certificates
+RUN ucs-dev-add-branch.sh jconde/provisioning-umc-ratelimit \
+  && apt-get update \
+  && apt-get --assume-yes --verbose-versions --no-install-recommends install ca-certificates
 
 RUN groupadd -g 999 -r sssd \
   && useradd -r -g sssd -u 999 -d / -s /sbin/nologin -c "User for sssd" sssd
@@ -88,6 +90,8 @@ COPY scripts/fake-uv-lib.sh /usr/local/bin/fake-uv-lib.sh
 # Install univention-management-console-server and required dependencies
 
 RUN \
+  ucs-dev-add-branch.sh jconde/provisioning-umc-ratelimit \
+  && apt-get update && \
   # For apt-get download sandbox
   chown _apt /apt && \
   mkdir /var/log/univention/ && \
@@ -203,6 +207,8 @@ SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 WORKDIR /
 
 RUN \
+  ucs-dev-add-branch.sh jconde/provisioning-umc-ratelimit \
+  && apt-get update && \
   apt-get --assume-yes --verbose-versions --no-install-recommends install \
   libc-bin=2.36-* \
   locales=2.36-* \
