@@ -605,10 +605,7 @@ COPY scripts/50-entrypoint.sh \
 COPY --from=sssd /sssd-installer.sh /
 
 RUN /sssd-installer.sh \
-    && rm -f /sssd-installer.sh \
-    # NOTE: If this file is not removed, sssd will error because of a different
-    # version of the library (2.8 but it wants 2.10)
-    && rm /usr/lib/x86_64-linux-gnu/samba/ldb/memberof.la
+  && rm -f /sssd-installer.sh
 
 ############################################################
 # Define runtime
@@ -627,28 +624,30 @@ RUN echo -en 'en_US.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8\n' >> /etc/locale.gen && \
 # Set permissions
 
 RUN chown -R sssd:sssd \
-    /usr/sbin/univention-management-console-server \
-    /usr/sbin/univention-management-console-module \
-    /usr/share/univention-management-console \
-    /var/cache/univention-management-console \
-    /var/log/univention \
-    /etc/univention \
-    /usr/lib/python3/dist-packages/univention \
-    /usr/share/locale/de/LC_MESSAGES \
-    /var/lib/univention-appcenter \
-    /var/cache/univention-config \
-    && chmod -R 755 \
-    /entrypoint.d \
-    /usr/sbin/univention-management-console-server \
-    /usr/sbin/univention-management-console-module \
-    /usr/share/univention-management-console \
-    /var/cache/univention-management-console \
-    /var/log/univention \
-    /etc/univention \
-    /usr/lib/python3/dist-packages/univention \
-    /usr/share/locale/de/LC_MESSAGES \
-    /var/lib/univention-appcenter \
-    /var/cache/univention-config
+  /usr/sbin/univention-management-console-server \
+  /usr/sbin/univention-management-console-module \
+  /usr/share/univention-management-console \
+  /var/cache/univention-management-console \
+  /var/log/univention \
+  /etc/univention \
+  /etc/sssd \
+  /usr/lib/python3/dist-packages/univention \
+  /usr/share/locale/de/LC_MESSAGES \
+  /var/lib/univention-appcenter \
+  /var/cache/univention-config \
+  && chmod -R 755 \
+  /entrypoint.d \
+  /usr/sbin/univention-management-console-server \
+  /usr/sbin/univention-management-console-module \
+  /usr/share/univention-management-console \
+  /var/cache/univention-management-console \
+  /var/log/univention \
+  /etc/univention \
+  /etc/sssd \
+  /usr/lib/python3/dist-packages/univention \
+  /usr/share/locale/de/LC_MESSAGES \
+  /var/lib/univention-appcenter \
+  /var/cache/univention-config
 
 USER sssd
 

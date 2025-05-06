@@ -232,7 +232,7 @@ true
 			<td>containerSecurityContextInit.runAsGroup</td>
 			<td>int</td>
 			<td><pre lang="json">
-0
+999
 </pre>
 </td>
 			<td>Process group id.</td>
@@ -241,7 +241,7 @@ true
 			<td>containerSecurityContextInit.runAsNonRoot</td>
 			<td>bool</td>
 			<td><pre lang="json">
-false
+true
 </pre>
 </td>
 			<td>Run container as a user.</td>
@@ -250,7 +250,7 @@ false
 			<td>containerSecurityContextInit.runAsUser</td>
 			<td>int</td>
 			<td><pre lang="json">
-0
+999
 </pre>
 </td>
 			<td>Process user id.</td>

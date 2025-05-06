@@ -108,9 +108,9 @@ containerSecurityContextInit:
       - "CHOWN"
       - "FOWNER"
   # -- Process user id.
-  runAsUser: 0
+  runAsUser: 999
   # -- Process group id.
-  runAsGroup: 0
+  runAsGroup: 999
   # Set Seccomp profile.
   seccompProfile:
     # -- Disallow custom Seccomp profile by setting it to RuntimeDefault.
@@ -118,7 +118,7 @@ containerSecurityContextInit:
   # -- Mounts the container's root filesystem as read-only.
   readOnlyRootFilesystem: true
   # -- Run container as a user.
-  runAsNonRoot: false
+  runAsNonRoot: true
 
 # Security Context.
 # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/

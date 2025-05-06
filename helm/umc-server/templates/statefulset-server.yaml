@@ -78,14 +78,13 @@ spec:
             - |
               /entrypoint.d/50-entrypoint.sh
               mkdir -p /target/var/lib/sss
-              cp -a /var/lib/sss/* /target/var/lib/sss/
+              cp -a /usr/local/var/lib/sss/* /target/var/lib/sss/
               if [[ ! -d /target/var/lib/sss/pipes/private ]]; then
                 mkdir -p /target/var/lib/sss/pipes/private
               fi
               cp -a /etc/nsswitch.conf /target/etc/nsswitch.conf
               chmod 755 -R /target/var/lib/sss/pipes/private/
-              chown sssd:sssd -R /target/var/lib/sss/pipes /target/var/lib/sss/db /etc/sssd
-              chmod 0600 /etc/sssd/sssd.conf
+              chown sssd:sssd -R /target/var/lib/sss/pipes /target/var/lib/sss/db
               chown sssd:sssd /etc/pam.d/univention-management-console
               chmod 0644 /etc/pam.d/univention-management-console
           volumeMounts:

@@ -14,12 +14,17 @@ tail -n +"$ARCHIVE_LINE" "$0" | tar xvz -C "$TARGET_DIR"
 
 cp -v /usr/local/lib/security/pam_sss.so /usr/lib/x86_64-linux-gnu/security/pam_sss.so
 
+# NOTE: If this file is not removed, sssd will error because of a different
+# version of the library (2.8 but it wants 2.10)
+rm /usr/lib/x86_64-linux-gnu/samba/ldb/memberof.la
+
 apt-get --assume-yes --verbose-versions --no-install-recommends install \
   libsss-certmap0=2.8.* \
   libsss-sudo=2.8.* \
   libsss-idmap0=2.8.* \
   libsss-nss-idmap0=2.8.* \
   sssd-ldap=2.8.*
+
 
 rm -rf /var/lib/apt/lists/*
 
