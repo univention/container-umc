@@ -150,8 +150,6 @@ containerSecurityContextSssd:
   runAsUser: 999
   # -- Process group id.
   runAsGroup: 999
-  supplementalGroups:
-    - 999
   # Set Seccomp profile.
   seccompProfile:
     # -- Disallow custom Seccomp profile by setting it to RuntimeDefault.

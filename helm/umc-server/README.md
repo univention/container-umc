@@ -365,15 +365,6 @@ true
 			<td>Disallow custom Seccomp profile by setting it to RuntimeDefault.</td>
 		</tr>
 		<tr>
-			<td>containerSecurityContextSssd.supplementalGroups[0]</td>
-			<td>int</td>
-			<td><pre lang="json">
-999
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
 			<td>environment</td>
 			<td>object</td>
 			<td><pre lang="json">
