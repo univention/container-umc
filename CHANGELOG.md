@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.43.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.43.0...v0.43.1) (2025-05-07)
+
+
+### Bug Fixes
+
+* **umc-server:** security context warning at deployment time ([c9df441](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/c9df44155c10c3bcf39558cf4f0b7b83ea5d788d)), closes [univention/dev/internal/team-nubus#1168](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1168)
+
 ## [0.43.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.42.0...v0.43.0) (2025-04-29)
 
 
