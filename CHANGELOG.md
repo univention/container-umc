@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.44.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.43.1...v0.44.0) (2025-05-08)
+
+
+### Features
+
+* **umc-server:** init containers run as non-root user ([ea39694](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/ea39694a0236ce9e0f4733b05ea563b8fb87a71e)), closes [univention/dev/internal/team-nubus#1138](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1138)
+
 ## [0.43.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.43.0...v0.43.1) (2025-05-07)
 
 
