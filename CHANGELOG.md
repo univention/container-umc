@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.44.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.44.0...v0.44.1) (2025-05-10)
+
+
+### Bug Fixes
+
+* common-ci reference ([19ecaf9](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/19ecaf97d9e53848b1bed88843469b2452b28729))
+* move addlicense pre-commit hook ([d939b08](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/d939b08e513711ed63fd08ece2678ffc6256eb83))
+* move docker-services ([06f30a6](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/06f30a65edb0e6efbef13bf09a11a8313d69a9f5))
+* update common-ci to main ([91a6ef0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/91a6ef0a5b2e5d25226ca03b21afe2c1b7c30cf2))
+
 ## [0.44.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.43.1...v0.44.0) (2025-05-08)
 
 
