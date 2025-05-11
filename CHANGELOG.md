@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.45.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.44.1...v0.45.0) (2025-05-11)
+
+
+### Features
+
+* move and upgrade ucs-base-image to 0.17.3-build-2025-05-11 ([4f9eafd](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/4f9eafd4e9acbb649c098eb5ede72cc506712e8d))
+
 ## [0.44.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.44.0...v0.44.1) (2025-05-10)
 
 
