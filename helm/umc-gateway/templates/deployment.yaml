@@ -128,7 +128,7 @@ spec:
             - -c
             - |
               mkdir -p /target/umc-icons
-              cp -av /usr/share/univention-management-console-frontend/js/dijit/themes/umc/icons /target/umc-icons
+              cp -av /usr/share/univention-management-console-frontend/js/dijit/themes/umc/icons/* /target/umc-icons
           volumeMounts:
             - name: plugin-targets
               mountPath: /target
