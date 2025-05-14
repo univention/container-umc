@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.45.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.45.0...v0.45.1) (2025-05-14)
+
+
+### Bug Fixes
+
+* **umc-gateway:** icons were copied onto the wrong path ([6d3a1ba](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/6d3a1ba7feac33352e7ff328b55a9f3190601717)), closes [univention/dev/internal/team-nubus#1079](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1079)
+
 ## [0.45.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.44.1...v0.45.0) (2025-05-11)
 
 
