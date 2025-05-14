@@ -124,6 +124,7 @@ ingress:
   # -- Define ingress annotations.
   annotations:
     nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/affinity: "none"
     nginx.ingress.kubernetes.io/rewrite-target: "/$2$3"
 
   # -- Define the Ingress paths.
