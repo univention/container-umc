@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.45.2](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.45.1...v0.45.2) (2025-05-15)
+
+
+### Bug Fixes
+
+* disable ingress affinity ([8837e45](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/8837e45d9dee7cca458bdfb2deb9826fd1139533)), closes [univention/dev/internal/team-nubus#1121](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1121)
+
 ## [0.45.1](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.45.0...v0.45.1) (2025-05-14)
 
 
