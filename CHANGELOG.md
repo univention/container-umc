@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.45.3](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.45.2...v0.45.3) (2025-05-16)
+
+
+### Bug Fixes
+
+* Remove outdated and unnecessary apt version pins ([d0ff179](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/d0ff1790dcfc6135761fbc7df40e6dc0daa4e0d2)), closes [univention/dev/internal/team-nubus#1143](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1143)
+* Update base image to include univentionObjectIdentifier changes from upstream ([0cdd376](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/0cdd376e7b99dbfe5d3145ce26f2b82902d17ab7)), closes [univention/dev/internal/team-nubus#1143](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1143)
+
 ## [0.45.2](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.45.1...v0.45.2) (2025-05-15)
 
 
