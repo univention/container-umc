@@ -4,7 +4,7 @@
 ############################################################
 # Global variables
 
-ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-base-521
+ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-base-python-521
 ARG UCS_BASE_IMAGE_TAG=0.18.1-build-2025-05-15
 
 ############################################################
@@ -95,7 +95,7 @@ RUN \
   # install Univention bash helper functions dependency
   DEBIAN_FRONTEND=noninteractive \
   apt-get --assume-yes --verbose-versions --no-install-recommends install \
-  shell-univention-lib=11.* \
+  shell-univention-lib \
   && \
   # we do not need the many bash helper-functions here
   cp /usr/local/bin/fake-uv-lib.sh /usr/share/univention-lib/all.sh && \
@@ -106,54 +106,54 @@ RUN \
   DEBIAN_FRONTEND=noninteractive \
   apt-get --assume-yes --verbose-versions --no-install-recommends install \
   --option Dpkg::Options::="--force-confold" \
-  python3=3.11.* \
-  python3-distutils=3.11.* \
-  patch=2.* \
+  python3 \
+  python3-distutils \
+  patch \
   # for /usr/sbin/univention-config-registry
-  python3-lazy-object-proxy=1.9.* \
+  python3-lazy-object-proxy \
   # the python3-univention-debug postinst uses py3compile
-  python3-minimal=3.11.* \
+  python3-minimal \
   # for /usr/sbin/univention-config-registry
-  python3-six=1.16.* \
+  python3-six \
   && \
   apt-get download \
   # UV package
-  libunivention-config0=17.* \
-  libunivention-debug1=14.* \
-  libunivention-license0=13.* \
-  libunivention-policy0=13.* \
+  libunivention-config0 \
+  libunivention-debug1 \
+  libunivention-license0 \
+  libunivention-policy0 \
   # for /usr/share/locale/de/LC_MESSAGES/univention-admin*.mo
-  python3-univention-directory-manager=17.* \
-  python3-notifier=0.9.* \
+  python3-univention-directory-manager \
+  python3-notifier \
   # use UCS-repo because it is not yet in Debian/stable (just bullseye)
-  python3-m2crypto=0.38.* \
-  python3-pam=0.4.2-* \
-  python3-trml2pdf=1.2-* \
-  python3-univention=15.* \
+  python3-m2crypto \
+  python3-pam \
+  python3-trml2pdf \
+  python3-univention \
   # for $PY_LIBS/univention/admindiary/__init__.py
-  python3-univention-admin-diary=4.* \
-  python3-univention-config-registry=17.* \
+  python3-univention-admin-diary \
+  python3-univention-config-registry \
   # for univention.logging
-  python3-univention-debug=14.* \
-  python3-univention-directory-manager=17.* \
-  python3-univention-directory-manager-rest-client=12.* \
-  python3-univention-directory-reports=14.* \
-  python3-univention-heimdal=12.* \
-  python3-univention-lib=11.* \
-  python3-univention-license=13.* \
-  python3-univention-management-console=14.* \
-  python3-univention-debhelper=4.* \
+  python3-univention-debug \
+  python3-univention-directory-manager \
+  python3-univention-directory-manager-rest-client \
+  python3-univention-directory-reports \
+  python3-univention-heimdal \
+  python3-univention-lib \
+  python3-univention-license \
+  python3-univention-management-console \
+  python3-univention-debhelper \
   # for $PY_LIBS/univention/admindiary/client.py and
   # $PY_LIBS/univention/admindiary/events.py
-  univention-admin-diary-client=4.* \
+  univention-admin-diary-client \
   # for /usr/sbin/univention-config-registry
-  univention-config=17.* \
-  univention-directory-reports=14.* \
-  univention-management-console-module-udm=12.* \
-  univention-management-console-server=14.* \
-  univention-pam=15.* \
+  univention-config \
+  univention-directory-reports \
+  univention-management-console-module-udm \
+  univention-management-console-server \
+  univention-pam \
   # for the self-service
-  univention-self-service-passwordreset-umc=7.* \
+  univention-self-service-passwordreset-umc \
   && \
   echo 'path-exclude /usr/sbin/univention-management-console-acls' >> /etc/dpkg/dpkg.cfg.d/univention && \
   echo 'path-include /usr/share/doc/univention-management-console-server/changelog.gz' >> /etc/dpkg/dpkg.cfg.d/univention && \
@@ -170,8 +170,8 @@ RUN \
   # For apt-get download sandbox
   chown _apt /apt && \
   apt-get download \
-  univention-management-console-web-server=14.* \
-  univention-management-console-frontend=14.* \
+  univention-management-console-web-server \
+  univention-management-console-frontend \
   && \
   for i in /apt/*.deb; do dpkg --extract "$i" /; done && \
   rm -rf /apt/
@@ -204,86 +204,86 @@ WORKDIR /
 
 RUN \
   apt-get --assume-yes --verbose-versions --no-install-recommends install \
-  libc-bin=2.36-* \
-  locales=2.36-* \
+  libc-bin \
+  locales \
   # for $PY_LIBS/univention/admin/password.py
-  libhdb9-heimdal=7.8.* \
+  libhdb9-heimdal \
   # for $PY_LIBS/univention/admin/password.py
-  libkrb5-26-heimdal=7.8.* \
-  libpam0g=1.5.* \
-  libpam-sss=2.8.* \
-  pam-saml=3.0.* \
+  libkrb5-26-heimdal \
+  libpam0g \
+  libpam-sss \
+  pam-saml \
   # for $PY_LIBS/univention/management/console/pam.py
-  libpam-pwquality=1.4.* \
+  libpam-pwquality \
   # for $PY_LIBS/univention/management/console/protocol/session.py
   # the debian-buster version would cause a segfault.
-  python3-ldap=3.4.* \
+  python3-ldap \
   # for $PY_LIBS/univention/management/console/message.py
   # calling $PY_LIBS/univention/uldap.py
-  cy2-saml=3.0.* \
+  cy2-saml \
   # for pylibmc (SASL authentication with memcached)
-  libsasl2-modules=2.1.* \
+  libsasl2-modules \
   # for $PY_LIBS/univention/admin/password.py
-  python3-bcrypt=3.2.* \
+  python3-bcrypt \
   # for /usr/sbin/univention-management-console-server
-  python3-daemon=2.3.* \
+  python3-daemon \
   # for $PY_LIBS/univention/admin/syntax.py
-  python3-dateutil=2.8.* \
+  python3-dateutil \
   # for /usr/sbin/univention-management-console-web-server
-  python3-defusedxml=0.7.* \
+  python3-defusedxml \
   # for $PY_LIBS/univention/lib/umc_module.py
-  python3-magic=2:* \
+  python3-magic \
   # for $PY_LIBS/univention/management/console/protocol/server.py
-  python3-openssl=23.* \
+  python3-openssl \
   # for $PY_LIBS/univention/admin/syntax.py
-  python3-pil=9.4.* \
+  python3-pil \
   # for $PY_LIBS/univention/management/console/locales.py
-  python3-polib=1.1.* \
+  python3-polib \
   # for $PY_LIBS/univention/management/console/protocol/server.py
-  python3-tornado=6.2.* \
+  python3-tornado \
   # for $PY_LIBS/univention/config_registry/
-  python3-lazy-object-proxy=1.9.* \
-  python3-six=1.16.* \
+  python3-lazy-object-proxy \
+  python3-six \
   # for $PY_LIBS/univention/password.py
-  python3-cracklib=2.* \
+  python3-cracklib \
   # for $PY_LIBS/univention/admin/syntax.py
-  python3-email-validator=1.3.* \
+  python3-email-validator \
   # for ...
-  python3-cryptography=38.* \
+  python3-cryptography \
   # for $PY_LIBS/univention/admin/handlers/settings/
-  python3-apt=2.6.* \
+  python3-apt \
   # for python3-trml2pdf
-  python3-reportlab=3.6.* \
+  python3-reportlab \
   # for $PY_LIBS/univention/admin/password.py
-  python3-passlib=1.7.* \
+  python3-passlib \
   # for ...
-  python3-pycurl=7.* \
+  python3-pycurl \
   # for /usr/sbin/univention-management-console-server
-  python3-sqlalchemy=1.4.* \
+  python3-sqlalchemy \
   # for /usr/sbin/univention-management-console-web-server
-  python3-cherrypy3=18.* \
-  python3-pysaml2=7.0.* \
+  python3-cherrypy3 \
+  python3-pysaml2 \
   # for $PY_LIBS/univention/management/console/server.py
-  python3-sdnotify=0.* \
+  python3-sdnotify \
   # for ...
-  python3-setproctitle=1.* \
+  python3-setproctitle \
   # for ...
-  python3-tornado=6.* \
+  python3-tornado \
   # for $PY_LIBS/univention/management/console/protocol/modserver.py
-  python3-tzlocal=4.* \
+  python3-tzlocal \
   # for $PY_LIBS/univention/admin/__init__.py
-  python3-unidecode=1.3.* \
+  python3-unidecode \
   # for $PY_LIBS/univention/management/console/modules/passwordreset/tokendb.py
   # NOTE: This is will attempt to write to /var/run/postgresql/.s.PGSQL.5432 and fail
-  python3-psycopg2=2.* \
+  python3-psycopg2 \
   # for $PY_LIBS/univention/management/console/modules/passwordreset/__init__.py
-  python3-pylibmc=1.* \
+  python3-pylibmc \
   # for $PY_LIBS/univention/admin/rest/client/__init__.py
-  python3-uritemplate=4.1.* \
+  python3-uritemplate \
   # for $PY_LIBS/univention/management/console/oidc.py
-  python3-jwt=2.6.* \
+  python3-jwt \
   # for the entrypoint.sh script
-  wget=1.*
+  wget
 
 ############################################################
 # Copy files from other stages
