@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.46.0](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.45.3...v0.46.0) (2025-06-09)
+
+
+### Features
+
+* update ucs-base-image to 0.18.1-build-2025-05-29 ([774cf67](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/commit/774cf67c19f890927f13e8f46fbbfcc1876c77b8)), closes [univention/dev/internal/team-nubus#1220](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1220)
+
 ## [0.45.3](https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/compare/v0.45.2...v0.45.3) (2025-05-16)
 
 
