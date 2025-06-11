@@ -48,6 +48,24 @@ services:
         source: .
         target: /app/
 
+  test-chart-umc-gateway:
+    image: gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/common-helm/testrunner:0.20.0-pre-jbornhold-secrets-refactoring-tweaks-5
+    command: pytest tests/chart/umc-gateway
+    profiles:
+      - test
+    volumes:
+      - "./helm/umc-gateway/:/app/helm/umc-gateway"
+      - "./tests/chart:/app/tests/chart"
+
+  test-chart-umc-server:
+    image: gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/common-helm/testrunner:0.20.0-pre-jbornhold-secrets-refactoring-tweaks-5
+    command: pytest tests/chart/umc-server
+    profiles:
+      - test
+    volumes:
+      - "./helm/umc-server/:/app/helm/umc-server"
+      - "./tests/chart:/app/tests/chart"
+
   # Environment of the pre-commit linter.
   pre-commit:
     profiles:
