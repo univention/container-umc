@@ -150,7 +150,7 @@ spec:
         {{- end }}
 
       containers:
-        - name: "umc-gateway"
+        - name: main
           {{- if .Values.containerSecurityContext.enabled }}
           securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
           {{- end }}
