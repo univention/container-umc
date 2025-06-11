@@ -5,4 +5,20 @@ from univention.testing.helm.best_practice.image_configuration import ImageConfi
 
 
 class TestImageConfiguration(ImageConfiguration):
-    pass
+
+    def adjust_values(self, values: dict):
+        image_configuration = values.get("image", {})
+
+        # NOTE: Extensions are dynamic in nature, configure one stub extension
+        # so that the generated init container will be checked as well.
+        stub_extension = {
+            "name": "stub-extension",
+            "image": {
+                "repository": "stub-path/stub-image",
+                "tag": "stub-tag",
+            } | image_configuration,
+        }
+        global_ = values.setdefault("global", {})
+        global_["systemExtensions"] = [stub_extension]
+
+        return values
