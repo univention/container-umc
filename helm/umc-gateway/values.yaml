@@ -2,11 +2,6 @@
 # SPDX-FileCopyrightText: 2023-2025 Univention GmbH
 
 ---
-# Default values for univention-management-console-gateway
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
-## Global values
 affinity: {}
 environment: {}
 fullnameOverride: ""
