@@ -37,8 +37,6 @@ repos:
       # "fix end of files"
       - id: "end-of-file-fixer"
         exclude: ^helm/.+/README.md|.*\.patch
-      # "fix python encoding pragma"
-      - id: "fix-encoding-pragma"
       # "trim trailing whitespace"
       - id: "trailing-whitespace"
         exclude: .*\.patch
