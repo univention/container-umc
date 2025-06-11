@@ -3,32 +3,19 @@
 
 ---
 
-# Dummy values for running the Helm linter on the umc-gateway.
+# Stub values for running the Helm linter on the umc-gateway.
 # Run it like this: helm lint -f values.yaml -f linter_values.yaml .
 
 global:
-  nubusDeployment: false
   systemExtensions:
     - name: "portal"
       image:
         repository: "nubus/images/portal-extension"
         tag: "0.44.3@sha256:734efc0adda680526dde09387db964612f9e0ab020382580984488cc993c68f0"
 
-## Kubernetes ingress
 ingress:
   enabled: false
   host: "umc-gateway.example.develop.souvap-univention.de"
   ingressClassName: "nginx"
   tls:
     enabled: false
-
-## Istio based
-istio:
-  enabled: true
-  host: "umc-gateway.example.develop.souvap-univention.de"
-
-## Docker image
-image:
-  tag: "branch-feature-example"
-
-...
