@@ -1,6 +1,6 @@
 dependencies:
 - name: nubus-common
-  repository: oci://artifacts.software-univention.de/nubus/charts
-  version: 0.12.2
-digest: sha256:23cfbb2c28006d31d3a92fbdbbbb85c6d55ff83391dd6a5638f10a9500230cca
-generated: "2025-04-16T00:58:22.868084478+02:00"
+  repository: oci://artifacts.software-univention.de/nubus-dev/charts
+  version: 0.20.0-pre-jbornhold-secrets-refactoring-tweaks-5
+digest: sha256:3d02550c64d36d2860be4ba822b0d12b1311bae7b10170535203e655962b476c
+generated: "2025-06-11T22:14:58.908946+02:00"

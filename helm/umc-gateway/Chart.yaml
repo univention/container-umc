@@ -8,9 +8,6 @@ type: "application"
 name: "umc-gateway"
 description: "A Helm chart for the Univention Management Console Gateway"
 home: "https://www.univention.de/"
-
-# Chart version
-# Apply Semantic Versioning (https://semver.org/)
 version: "0.1.0"
 
 # UMC Version
@@ -18,7 +15,6 @@ appVersion: "12.0.29"
 
 dependencies:
   - name: "nubus-common"
-    version: "^0.12.x"
-    repository: "oci://artifacts.software-univention.de/nubus/charts"
-
-...
+    # TODO: Replace with released version
+    version: "0.20.0-pre-jbornhold-secrets-refactoring-tweaks-5"
+    repository: "oci://artifacts.software-univention.de/nubus-dev/charts"

@@ -42,7 +42,7 @@ helm uninstall umc-gateway
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://artifacts.software-univention.de/nubus/charts | nubus-common | ^0.12.x |
+| oci://artifacts.software-univention.de/nubus-dev/charts | nubus-common | 0.20.0-pre-jbornhold-secrets-refactoring-tweaks-5 |
 
 ## Values
 
@@ -260,7 +260,7 @@ false
 			<td>image.imagePullPolicy</td>
 			<td>string</td>
 			<td><pre lang="json">
-"IfNotPresent"
+null
 </pre>
 </td>
 			<td></td>
