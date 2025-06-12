@@ -14,13 +14,13 @@ metadata:
     {{- $uiLabels := dict "app.kubernetes.io/name" (printf "%s-proxy" (include "common.names.fullname" .)) }}
     {{- $mergedLabels := merge $uiLabels $commonLabels}}
     {{- toYaml $mergedLabels | nindent 4 }}
-  annotations:
-    {{- if .Values.proxy.service.annotations }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.proxy.service.annotations "context" . ) | nindent 4 }}
+    {{- if .Values.additionalLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.additionalLabels "context" . ) | nindent 4 }}
     {{- end }}
-    {{- if .Values.additionalAnnotations }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.additionalAnnotations "context" . ) | nindent 4 }}
-    {{- end }}
+  {{- include "nubus-common.annotations.render" ( dict
+    "values" ( list .Values.proxy.service.annotations .Values.additionalAnnotations )
+    "context" . )
+    | nindent 2 }}
 spec:
   type: "{{ .Values.proxy.service.type }}"
   ports:
