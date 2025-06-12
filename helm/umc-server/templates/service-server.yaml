@@ -13,10 +13,7 @@ metadata:
   name: "{{ include "common.names.fullname" $root }}-{{ $i }}"
   namespace: {{ include "common.names.namespace" $root | quote }}
   labels:
-    {{- include "common.labels.standard" $root | nindent 4 }}
-    {{- if $root.Values.additionalLabels }}
-    {{- include "common.tplvalues.render" ( dict "value" $root.Values.additionalLabels "context" $root ) | nindent 4 }}
-    {{- end }}
+    {{- include "common.labels.standard" ( dict "customLabels" $root.Values.additionalLabels "context" $root ) | nindent 4 }}
   annotations:
     {{- if $root.Values.service.annotations }}
     {{- include "common.tplvalues.render" ( dict "value" $root.Values.service.annotations "context" $root ) | nindent 4 }}
