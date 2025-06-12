@@ -3,10 +3,10 @@
 
 import pytest
 
-from univention.testing.helm.client.postgresql import PostgresqlAuth, PostgresqlAuthSecretUsageViaVolume
+from univention.testing.helm.client.postgresql import Auth, SecretUsageViaEnv, SecretUsageViaVolume
 
 
-class PostgresqlAuthSkipUsernameAndDatabase(PostgresqlAuth):
+class AuthSkipUsernameAndDatabase(Auth):
 
     @pytest.mark.skip(reason="UMC uses the postgresql username from UCR")
     def test_auth_plain_values_provide_username():
@@ -37,22 +37,23 @@ class PostgresqlAuthSkipUsernameAndDatabase(PostgresqlAuth):
         pass
 
 
-class TestPostgresqlAuth(PostgresqlAuthSecretUsageViaVolume, PostgresqlAuthSkipUsernameAndDatabase):
+class TestAuth(SecretUsageViaVolume, AuthSkipUsernameAndDatabase):
 
     secret_name = "release-name-umc-server-postgresql"
     workload_kind = "StatefulSet"
 
 
-class TestPostgresqlAuthContainerPrepareConfig(PostgresqlAuthSecretUsageViaVolume, PostgresqlAuthSkipUsernameAndDatabase):
-
-    secret_name = "release-name-umc-server-postgresql"
-    workload_kind = "StatefulSet"
-    path_main_container = "spec.template.spec.initContainers[?@.name=='prepare-config']"
-
-
-class TestPostgresqlAuthEnv(PostgresqlAuthSkipUsernameAndDatabase):
+class TestAuthViaEnv(SecretUsageViaEnv, AuthSkipUsernameAndDatabase):
 
     secret_name = "release-name-umc-server-postgresql"
     workload_kind = "StatefulSet"
 
     sub_path_env_db_password = "env[?@name=='SELF_SERVICE_DB_SECRET']"
+
+
+class TestAuthContainerPrepareConfig(SecretUsageViaVolume, AuthSkipUsernameAndDatabase):
+
+    secret_name = "release-name-umc-server-postgresql"
+    workload_kind = "StatefulSet"
+
+    path_main_container = "spec.template.spec.initContainers[?@.name=='prepare-config']"
