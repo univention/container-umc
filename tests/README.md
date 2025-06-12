@@ -20,15 +20,14 @@ pipenv shell
 ```
 
 
-## Target structure
-
-The target structure for testing shall eventually follow this pattern:
+## Test structure
 
 ```
-└── tests  # top-level tests folder
-    ├── README.md  # explains test organization inside this folder
-    ├── unit  # name this unit_and_integration if keeping both here
-    ├── integration  # optional: omit if kept together with unit tests
+└── tests
+    ├── README.md
+    ├── chart
+    ├── unit
+    ├── integration
     └── e2e
 ```
 
