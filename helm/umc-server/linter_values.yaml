@@ -22,22 +22,17 @@ umcServer:
   certPem: ""
   privateKey: ""
 
-postgresql:
-  auth:
-    password: "password"
-    postgresPassword: "password"
-    existingSecret:
-      name: "custom-postgres-credentials"
-      keyMapping:
-        password: "custom-password"
-
-memcached:
-  containerSecurityContext:
-    readOnlyRootFilesystem: false
-
 ingress:
   enabled: true
   host: "localhost"
   ingressClassName: "nginx"
   tls:
     enabled: false
+
+# We don't want to check bundled charts in testing and linting.
+postgresql:
+  bundled: false
+
+# We don't want to check bundled charts in testing and linting.
+memcached:
+  bundled: false
