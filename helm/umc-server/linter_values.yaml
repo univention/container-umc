@@ -3,8 +3,9 @@
 
 ---
 
-# Dummy values for running the Helm linter on the umc-server.
+# Stub values for running the Helm linter on the umc-server.
 # Run it like this: helm lint -f values.yaml -f linter_values.yaml .
+
 mountSecrets: true
 
 global:
@@ -40,9 +41,3 @@ ingress:
   ingressClassName: "nginx"
   tls:
     enabled: false
-
-istio:
-  enabled: false
-  host: "localhost"
-
-...
