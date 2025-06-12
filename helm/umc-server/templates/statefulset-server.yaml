@@ -124,20 +124,14 @@ spec:
               mountPath: "/etc/univention/base-defaults.conf"
               subPath: "base-defaults.conf"
             {{- end }}
-            {{- if and .Values.mountSecrets (not .Values.global.nubusDeployment) }}
-            - name: "secrets"
-              mountPath: "{{ .Values.umcServer.secretMountPath }}"
-            {{- else }}
-            {{- if .Values.ldap.existingSecret.name  }}
-            - name: {{ printf "%s-volume" (tpl .Values.ldap.existingSecret.name . ) | quote }}
+            - name: secret-ldap
               mountPath: "/etc/ldap.secret"
-              subPath: {{ include "common.secrets.key" (dict "existingSecret" .Values.ldap.existingSecret "key" "ldapPasswordKey") }}
+              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.ldap.auth.existingSecret "key" "password") | quote }}
               readOnly: true
-            - name: {{ printf "%s-volume" (tpl .Values.ldap.existingSecret.name . ) | quote }}
+            - name: secret-ldap
               mountPath: "/etc/machine.secret"
-              subPath: {{ include "common.secrets.key" (dict "existingSecret" .Values.ldap.existingSecret "key" "machinePasswordKey") }}
+              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.ldap.auth.existingSecret "key" "password") | quote }}
               readOnly: true
-            {{- end }}
             {{- if .Values.smtp.existingSecret.name }}
             - name: {{ printf "%s-volume" (tpl .Values.smtp.existingSecret.name . ) | quote }}
               mountPath: "{{ .Values.umcServer.secretMountPath }}/smtp_secret"
@@ -173,7 +167,6 @@ spec:
               mountPath: "{{ .Values.umcServer.secretMountPath }}/private_key"
               subPath: {{ .Values.ldap.tlsSecret.privateKeyKey | quote }}
               readOnly: true
-            {{- end }}
             {{- end }}
         - name: "load-internal-plugins"
           {{- if .Values.containerSecurityContext.enabled }}
@@ -212,7 +205,7 @@ spec:
         {{- end }}
 
       containers:
-        - name: "umc-server"
+        - name: "main"
           {{- if .Values.containerSecurityContext.enabled }}
           securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
           {{- end }}
@@ -303,20 +296,14 @@ spec:
               mountPath: "/etc/univention/base-defaults.conf"
               subPath: "base-defaults.conf"
             {{- end }}
-            {{- if and .Values.mountSecrets (not .Values.global.nubusDeployment) }}
-            - name: "secrets"
-              mountPath: "{{ .Values.umcServer.secretMountPath }}"
-            {{- else }}
-            {{- if .Values.ldap.existingSecret.name  }}
-            - name: {{ printf "%s-volume" (tpl .Values.ldap.existingSecret.name . ) | quote }}
+            - name: secret-ldap
               mountPath: "/etc/ldap.secret"
-              subPath: {{ include "common.secrets.key" (dict "existingSecret" .Values.ldap.existingSecret "key" "ldapPasswordKey") }}
+              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.ldap.auth.existingSecret "key" "password") | quote }}
               readOnly: true
-            - name: {{ printf "%s-volume" (tpl .Values.ldap.existingSecret.name . ) | quote }}
+            - name: secret-ldap
               mountPath: "/etc/machine.secret"
-              subPath: {{ include "common.secrets.key" (dict "existingSecret" .Values.ldap.existingSecret "key" "machinePasswordKey") }}
+              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.ldap.auth.existingSecret "key" "password") | quote }}
               readOnly: true
-            {{- end }}
             {{- if .Values.smtp.existingSecret.name }}
             - name: {{ printf "%s-volume" (tpl .Values.smtp.existingSecret.name . ) | quote }}
               mountPath: "{{ .Values.umcServer.secretMountPath }}/smtp_secret"
@@ -352,7 +339,6 @@ spec:
               mountPath: "{{ .Values.umcServer.secretMountPath }}/private_key"
               subPath: {{ .Values.ldap.tlsSecret.privateKeyKey | quote }}
               readOnly: true
-            {{- end }}
             {{- end }}
             - name: plugin-targets
               mountPath: /usr/lib/python3/dist-packages/univention/udm/modules
@@ -519,16 +505,10 @@ spec:
           configMap:
             name: {{ include "umc-server.configMapUcr" . | quote }}
         {{- end }}
-        {{- if and .Values.mountSecrets (not .Values.global.nubusDeployment) }}
-        - name: "secrets"
+        - name: secret-ldap
           secret:
-            secretName: {{ include "common.names.fullname" . | quote }}
-        {{- else }}
-        {{- if .Values.ldap.existingSecret.name  }}
-        - name: {{ printf "%s-volume" (tpl .Values.ldap.existingSecret.name . ) | quote }}
-          secret:
-            secretName: {{ tpl .Values.ldap.existingSecret.name . }}
-        {{- end }}
+            defaultMode: 0400
+            secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.ldap.auth.existingSecret "defaultNameSuffix" "ldap" "context" .) | quote }}
         {{- if .Values.smtp.existingSecret.name }}
         - name: {{ printf "%s-volume" (tpl .Values.smtp.existingSecret.name . ) | quote }}
           secret:
@@ -548,7 +528,6 @@ spec:
         - name: {{ printf "%s-volume" (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
           secret:
             secretName: {{ (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
-        {{- end }}
         {{- end }}
         - name: passwordreset-email-body
           configMap:
