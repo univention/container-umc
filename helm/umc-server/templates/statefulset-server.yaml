@@ -134,37 +134,37 @@ spec:
               readOnly: true
             {{- if .Values.smtp.existingSecret.name }}
             - name: {{ printf "%s-volume" (tpl .Values.smtp.existingSecret.name . ) | quote }}
-              mountPath: "{{ .Values.umcServer.secretMountPath }}/smtp_secret"
+              mountPath: "/var/secrets/smtp_secret"
               subPath: {{ include "common.secrets.key" (dict "existingSecret" .Values.smtp.existingSecret "key" "password") }}
               readOnly: true
             {{- end }}
             {{- if .Values.postgresql.auth.existingSecret.name }}
             - name: {{ printf "%s-volume" (tpl .Values.postgresql.auth.existingSecret.name . ) | quote }}
-              mountPath: "{{ .Values.umcServer.secretMountPath }}/db_password"
               subPath: {{ include "common.secrets.key" (dict "existingSecret" .Values.postgresql.auth.existingSecret "key" "password") }}
+              mountPath: "/var/secrets/db_password"
               readOnly: true
             {{- end }}
             {{- if .Values.memcached.auth.existingSecret.name }}
             - name: {{ printf "%s-volume" (tpl .Values.memcached.auth.existingSecret.name . ) | quote }}
-              mountPath: "{{ .Values.umcServer.secretMountPath }}/memcached_password"
+              mountPath: "/var/secrets/memcached_password"
               subPath: {{ include "common.secrets.key" (dict "existingSecret" .Values.memcached.auth.existingSecret "key" "memcached-password") }}
               readOnly: true
             {{- end }}
             {{- if (include "umc-server.ldap.tlsSecret.name" . ) }}
             - name: {{ printf "%s-volume" (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
-              mountPath: "{{ .Values.umcServer.secretMountPath }}/ca_cert"
+              mountPath: "/var/secrets/ca_cert"
               subPath: {{ .Values.ldap.tlsSecret.caCertKey | quote }}
               readOnly: true
             {{- end }}
             {{- if (include "umc-server.ldap.tlsSecret.name" . ) }}
             - name: {{ printf "%s-volume" (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
-              mountPath: "{{ .Values.umcServer.secretMountPath }}/cert_pem"
+              mountPath: "/var/secrets/cert_pem"
               subPath: {{ .Values.ldap.tlsSecret.certificateKey | quote }}
               readOnly: true
             {{- end }}
             {{- if (include "umc-server.ldap.tlsSecret.name" . ) }}
             - name: {{ printf "%s-volume" (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
-              mountPath: "{{ .Values.umcServer.secretMountPath }}/private_key"
+              mountPath: "/var/secrets/private_key"
               subPath: {{ .Values.ldap.tlsSecret.privateKeyKey | quote }}
               readOnly: true
             {{- end }}
@@ -306,37 +306,37 @@ spec:
               readOnly: true
             {{- if .Values.smtp.existingSecret.name }}
             - name: {{ printf "%s-volume" (tpl .Values.smtp.existingSecret.name . ) | quote }}
-              mountPath: "{{ .Values.umcServer.secretMountPath }}/smtp_secret"
+              mountPath: "/var/secrets/smtp_secret"
               subPath: {{ include "common.secrets.key" (dict "existingSecret" .Values.smtp.existingSecret "key" "password") }}
               readOnly: true
             {{- end }}
             {{- if .Values.postgresql.auth.existingSecret.name }}
             - name: {{ printf "%s-volume" (tpl .Values.postgresql.auth.existingSecret.name . ) | quote }}
-              mountPath: "{{ .Values.umcServer.secretMountPath }}/db_password"
               subPath: {{ include "common.secrets.key" (dict "existingSecret" .Values.postgresql.auth.existingSecret "key" "password") }}
+              mountPath: "/var/secrets/db_password"
               readOnly: true
             {{- end }}
             {{- if .Values.memcached.auth.existingSecret.name }}
             - name: {{ printf "%s-volume" (tpl .Values.memcached.auth.existingSecret.name . ) | quote }}
-              mountPath: "{{ .Values.umcServer.secretMountPath }}/memcached_password"
+              mountPath: "/var/secrets/memcached_password"
               subPath: {{ include "common.secrets.key" (dict "existingSecret" .Values.memcached.auth.existingSecret "key" "memcached-password") }}
               readOnly: true
             {{- end }}
             {{- if (include "umc-server.ldap.tlsSecret.name" . ) }}
             - name: {{ printf "%s-volume" (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
-              mountPath: "{{ .Values.umcServer.secretMountPath }}/ca_cert"
+              mountPath: "/var/secrets/ca_cert"
               subPath: {{ .Values.ldap.tlsSecret.caCertKey | quote }}
               readOnly: true
             {{- end }}
             {{- if (include "umc-server.ldap.tlsSecret.name" . ) }}
             - name: {{ printf "%s-volume" (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
-              mountPath: "{{ .Values.umcServer.secretMountPath }}/cert_pem"
+              mountPath: "/var/secrets/cert_pem"
               subPath: {{ .Values.ldap.tlsSecret.certificateKey | quote }}
               readOnly: true
             {{- end }}
             {{- if (include "umc-server.ldap.tlsSecret.name" . ) }}
             - name: {{ printf "%s-volume" (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
-              mountPath: "{{ .Values.umcServer.secretMountPath }}/private_key"
+              mountPath: "/var/secrets/private_key"
               subPath: {{ .Values.ldap.tlsSecret.privateKeyKey | quote }}
               readOnly: true
             {{- end }}
