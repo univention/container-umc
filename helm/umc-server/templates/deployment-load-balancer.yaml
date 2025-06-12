@@ -75,9 +75,7 @@ spec:
           securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
           {{- end }}
           image: "{{ coalesce .Values.proxy.image.registry .Values.global.imageRegistry }}/{{ .Values.proxy.image.repository }}:{{ .Values.proxy.image.tag }}"
-          {{- with .Values.proxy.image }}
-          imagePullPolicy: {{ .pullPolicy }}
-          {{- end }}
+          imagePullPolicy: {{ coalesce .Values.proxy.image.pullPolicy .Values.global.imagePullPolicy | quote }}
           volumeMounts:
             {{- if .Values.extraVolumeMounts }}
             {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumeMounts "context" $) | nindent 12 }}

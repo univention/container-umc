@@ -68,7 +68,7 @@ spec:
           {{- end }}
           resources: {{- include "common.tplvalues.render" (dict "value" .Values.resources "context" .) | nindent 12 }}
           image: "{{ coalesce .Values.image.registry .Values.global.imageRegistry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ coalesce .Values.image.imagePullPolicy .Values.global.imagePullPolicy | quote }}
+          imagePullPolicy: {{ coalesce .Values.image.pullPolicy .Values.global.imagePullPolicy | quote }}
           envFrom:
             - configMapRef:
                 name: {{ include "common.names.fullname" . }}
@@ -183,7 +183,7 @@ spec:
           securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
           {{- end }}
           image: "{{ coalesce .Values.image.registry .Values.global.imageRegistry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ coalesce .Values.image.imagePullPolicy .Values.global.imagePullPolicy | quote }}
+          imagePullPolicy: {{ coalesce .Values.image.pullPolicy .Values.global.imagePullPolicy | quote }}
           command:
             - sh
             - -c
@@ -207,7 +207,7 @@ spec:
           securityContext: {{- omit $.Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
           {{- end }}
           image: "{{ coalesce .image.registry $.Values.global.imageRegistry }}/{{ .image.repository }}:{{ .image.tag }}"
-          imagePullPolicy: {{ coalesce .image.imagePullPolicy $.Values.global.imagePullPolicy | quote }}
+          imagePullPolicy: {{ coalesce .image.pullPolicy $.Values.global.imagePullPolicy | quote }}
           volumeMounts:
             - name: plugin-targets
               mountPath: /target
@@ -220,9 +220,7 @@ spec:
           securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
           {{- end }}
           image: "{{ coalesce .Values.image.registry .Values.global.imageRegistry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          {{- with .Values.image }}
-          imagePullPolicy: {{ .pullPolicy }}
-          {{- end }}
+          imagePullPolicy: {{ coalesce .Values.image.pullPolicy .Values.global.imagePullPolicy | quote }}
           command:
             - /bin/bash
             - -c
@@ -412,9 +410,7 @@ spec:
           securityContext: {{- omit .Values.containerSecurityContextSssd "enabled" | toYaml | nindent 12 }}
           {{- end }}
           image: "{{ coalesce .Values.image.registry .Values.global.imageRegistry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          {{- with .Values.image }}
-          imagePullPolicy: {{ .pullPolicy }}
-          {{- end }}
+          imagePullPolicy: {{ coalesce .Values.image.pullPolicy .Values.global.imagePullPolicy | quote }}
           command:
             - sh
             - -c

@@ -498,10 +498,10 @@ false
 			<td>Allows to configure system extensions globally.</td>
 		</tr>
 		<tr>
-			<td>image.imagePullPolicy</td>
+			<td>image.pullPolicy</td>
 			<td>string</td>
 			<td><pre lang="json">
-"IfNotPresent"
+null
 </pre>
 </td>
 			<td></td>
@@ -1136,8 +1136,8 @@ false
 			<td><pre lang="json">
 {
   "image": {
-    "pullPolicy": "IfNotPresent",
-    "registry": "artifacts.software-univention.de",
+    "pullPolicy": null,
+    "registry": null,
     "repository": "library/traefik",
     "tag": "3.0@sha256:a208c74fd80a566d4ea376053bff73d31616d7af3f1465a7747b8b89ee34d97e"
   },
