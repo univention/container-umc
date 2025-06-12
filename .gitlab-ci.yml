@@ -95,7 +95,7 @@ test-image-umc-server:
 test-chart-umc-gateway:
   stage: test
   needs: []
-  image: "gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/common-helm/testrunner:0.20.0-pre-jbornhold-secrets-refactoring-tweaks-5"
+  image: "gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/common-helm/testrunner:0.21.0-pre-jbornhold-secrets-refactoring-tweaks-5"
   script:
     - helm dep build helm/umc-gateway
     - pytest -W error tests/chart/umc-gateway
@@ -103,7 +103,7 @@ test-chart-umc-gateway:
 test-chart-umc-server:
   stage: test
   needs: []
-  image: "gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/common-helm/testrunner:0.20.0-pre-jbornhold-secrets-refactoring-tweaks-5"
+  image: "gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/common-helm/testrunner:0.21.0-pre-jbornhold-secrets-refactoring-tweaks-5"
   script:
     - helm dep build helm/umc-server
     - pytest -W error tests/chart/umc-server
