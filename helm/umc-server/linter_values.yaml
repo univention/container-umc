@@ -6,10 +6,7 @@
 # Stub values for running the Helm linter on the umc-server.
 # Run it like this: helm lint -f values.yaml -f linter_values.yaml .
 
-mountSecrets: true
-
 global:
-  nubusDeployment: false
   systemExtensions:
     - name: "portal"
       image:
@@ -19,8 +16,6 @@ global:
 umcServer:
   ldapSecret: "password"
   machineSecret: "password"
-  certPem: ""
-  privateKey: ""
 
 ingress:
   enabled: true
