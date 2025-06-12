@@ -24,9 +24,16 @@ ingress:
   tls:
     enabled: false
 
+ldap:
+  auth:
+    password: "ldapPassword"
+    existingSecret: null
+
 # We don't want to check bundled charts in testing and linting.
 postgresql:
   bundled: false
+  auth:
+    password: "stub-password"
 
 # We don't want to check bundled charts in testing and linting.
 memcached:

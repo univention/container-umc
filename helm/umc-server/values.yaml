@@ -490,6 +490,8 @@ postgresql:
     # -- PostgreSQL password secret reference.
     existingSecret:
       name: ""
+      keyMapping:
+        password: null
 
 # -- LDAP client configuration.
 #
