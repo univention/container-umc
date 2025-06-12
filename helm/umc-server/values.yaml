@@ -208,8 +208,6 @@ umcServer:
   privateKeyFile: "/var/secrets/private_key"
   # -- Path to file with SMTP password.
   smtpSecretFile: "/var/secrets/smtp_secret"
-  # -- Path to mount the secrets to.
-  secretMountPath: "/var/secrets"
   # -- smtpSecret the password for the SMTP server.
   smtpSecret: ""
 
