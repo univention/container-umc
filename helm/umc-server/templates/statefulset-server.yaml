@@ -138,12 +138,10 @@ spec:
               subPath: {{ include "common.secrets.key" (dict "existingSecret" .Values.smtp.existingSecret "key" "password") }}
               readOnly: true
             {{- end }}
-            {{- if .Values.postgresql.auth.existingSecret.name }}
-            - name: {{ printf "%s-volume" (tpl .Values.postgresql.auth.existingSecret.name . ) | quote }}
-              subPath: {{ include "common.secrets.key" (dict "existingSecret" .Values.postgresql.auth.existingSecret "key" "password") }}
+            - name: secret-postgresql
               mountPath: "/var/secrets/db_password"
+              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.postgresql.auth.existingSecret "key" "password") | quote }}
               readOnly: true
-            {{- end }}
             {{- if .Values.memcached.auth.existingSecret.name }}
             - name: {{ printf "%s-volume" (tpl .Values.memcached.auth.existingSecret.name . ) | quote }}
               mountPath: "/var/secrets/memcached_password"
@@ -222,15 +220,8 @@ spec:
             - name: "SELF_SERVICE_DB_SECRET"
               valueFrom:
                 secretKeyRef:
-                  {{/* Special case handling so that it is possible to use the bundled postgresql for development purposes
-                       by setting .Values.postgresql.auth.existingSecret to null. */}}
-                  {{- if and .Values.postgresql.auth.existingSecret .Values.postgresql.auth.existingSecret.name }}
-                  name: {{ tpl .Values.postgresql.auth.existingSecret.name . }}
-                  key: {{ include "common.secrets.key" (dict "existingSecret" .Values.postgresql.auth.existingSecret "key" "password") }}
-                  {{- else }}
-                  name: {{ include "common.names.fullname" . }}
-                  key: "db_password"
-                  {{- end }}
+                  name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.postgresql.auth.existingSecret "defaultNameSuffix" "postgresql" "context" .) | quote }}
+                  key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.postgresql.auth.existingSecret "key" "password") }}
             - name: "SELF_SERVICE_MEMCACHED_SECRET"
               valueFrom:
                 secretKeyRef:
@@ -310,12 +301,10 @@ spec:
               subPath: {{ include "common.secrets.key" (dict "existingSecret" .Values.smtp.existingSecret "key" "password") }}
               readOnly: true
             {{- end }}
-            {{- if .Values.postgresql.auth.existingSecret.name }}
-            - name: {{ printf "%s-volume" (tpl .Values.postgresql.auth.existingSecret.name . ) | quote }}
-              subPath: {{ include "common.secrets.key" (dict "existingSecret" .Values.postgresql.auth.existingSecret "key" "password") }}
+            - name: secret-postgresql
               mountPath: "/var/secrets/db_password"
+              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.postgresql.auth.existingSecret "key" "password") | quote }}
               readOnly: true
-            {{- end }}
             {{- if .Values.memcached.auth.existingSecret.name }}
             - name: {{ printf "%s-volume" (tpl .Values.memcached.auth.existingSecret.name . ) | quote }}
               mountPath: "/var/secrets/memcached_password"
@@ -514,11 +503,9 @@ spec:
           secret:
             secretName: {{ tpl .Values.smtp.existingSecret.name . }}
         {{- end }}
-        {{- if .Values.postgresql.auth.existingSecret.name }}
-        - name: {{ printf "%s-volume" (tpl .Values.postgresql.auth.existingSecret.name . ) | quote }}
+        - name: secret-postgresql
           secret:
-            secretName: {{ tpl .Values.postgresql.auth.existingSecret.name . }}
-        {{- end }}
+            secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.postgresql.auth.existingSecret "defaultNameSuffix" "postgresql" "context" .) | quote }}
         {{- if .Values.memcached.auth.existingSecret.name }}
         - name: {{ printf "%s-volume" (tpl .Values.memcached.auth.existingSecret.name . ) | quote }}
           secret:
