@@ -43,6 +43,13 @@ class TestPostgresqlAuth(PostgresqlAuthSecretUsageViaVolume, PostgresqlAuthSkipU
     workload_kind = "StatefulSet"
 
 
+class TestPostgresqlAuthContainerPrepareConfig(PostgresqlAuthSecretUsageViaVolume, PostgresqlAuthSkipUsernameAndDatabase):
+
+    secret_name = "release-name-umc-server-postgresql"
+    workload_kind = "StatefulSet"
+    path_main_container = "spec.template.spec.initContainers[?@.name=='prepare-config']"
+
+
 class TestPostgresqlAuthEnv(PostgresqlAuthSkipUsernameAndDatabase):
 
     secret_name = "release-name-umc-server-postgresql"
