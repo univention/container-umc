@@ -153,7 +153,7 @@ ingress:
 image:
   registry: ""
   repository: "nubus-dev/images/umc-gateway"
-  imagePullPolicy: null
+  pullPolicy: null
   tag: "latest"
   ## Define image sha256 as an alternative to `tag`
   # sha256:
