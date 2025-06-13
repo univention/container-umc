@@ -3,11 +3,14 @@
 
 import pytest
 
-from univention.testing.helm.client.memcached import Auth, SecretUsageViaVolume
+from univention.testing.helm.client.memcached import (
+    Auth,
+    SecretUsageViaEnv,
+    SecretUsageViaVolume,
+)
 
 
-class AuthSkipUsernameAndDatabase(Auth):
-
+class AuthSkipUsername(Auth):
     @pytest.mark.skip(reason="UMC uses the memcached username from UCR")
     def test_auth_plain_values_provide_username():
         pass
@@ -25,13 +28,21 @@ class AuthSkipUsernameAndDatabase(Auth):
         pass
 
 
-class TestAuth(SecretUsageViaVolume, AuthSkipUsernameAndDatabase):
+class TestAuth(SecretUsageViaVolume, AuthSkipUsername):
 
     secret_name = "release-name-umc-server-memcached"
     workload_kind = "StatefulSet"
 
 
-class TestAuthContainerPrepareConfig(SecretUsageViaVolume, AuthSkipUsernameAndDatabase):
+class TestAuthViaEnv(SecretUsageViaEnv, AuthSkipUsername):
+
+    secret_name = "release-name-umc-server-memcached"
+    workload_kind = "StatefulSet"
+
+    sub_path_env_password = "env[?@name=='SELF_SERVICE_MEMCACHED_SECRET']"
+
+
+class TestAuthContainerPrepareConfig(SecretUsageViaVolume, AuthSkipUsername):
 
     secret_name = "release-name-umc-server-memcached"
     workload_kind = "StatefulSet"

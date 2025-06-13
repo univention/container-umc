@@ -140,12 +140,10 @@ spec:
               mountPath: "/var/secrets/db_password"
               subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.postgresql.auth.existingSecret "key" "password") | quote }}
               readOnly: true
-            {{- if .Values.memcached.auth.existingSecret.name }}
-            - name: {{ printf "%s-volume" (tpl .Values.memcached.auth.existingSecret.name . ) | quote }}
+            - name: secret-memcached
               mountPath: "/var/secrets/memcached_password"
-              subPath: {{ include "common.secrets.key" (dict "existingSecret" .Values.memcached.auth.existingSecret "key" "memcached-password") }}
+              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.memcached.auth.existingSecret "key" "password") | quote }}
               readOnly: true
-            {{- end }}
             {{- if (include "umc-server.ldap.tlsSecret.name" . ) }}
             - name: {{ printf "%s-volume" (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
               mountPath: "/var/secrets/ca_cert"
@@ -223,13 +221,8 @@ spec:
             - name: "SELF_SERVICE_MEMCACHED_SECRET"
               valueFrom:
                 secretKeyRef:
-                  {{- if .Values.memcached.auth.existingSecret.name }}
-                  name: {{ tpl .Values.memcached.auth.existingSecret.name . }}
-                  key: {{ include "common.secrets.key" (dict "existingSecret" .Values.memcached.auth.existingSecret "key" "memcached-password") }}
-                  {{- else }}
-                  name: {{ include "common.names.fullname" . }}
-                  key: "memcached_password"
-                  {{- end }}
+                  name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.memcached.auth.existingSecret "defaultNameSuffix" "memcached" "context" .) | quote }}
+                  key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.memcached.auth.existingSecret "key" "password") }}
             - name: "PYTHONDONTWRITEBYTECODE"
               value: "1"
           envFrom:
@@ -301,12 +294,10 @@ spec:
               mountPath: "/var/secrets/db_password"
               subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.postgresql.auth.existingSecret "key" "password") | quote }}
               readOnly: true
-            {{- if .Values.memcached.auth.existingSecret.name }}
-            - name: {{ printf "%s-volume" (tpl .Values.memcached.auth.existingSecret.name . ) | quote }}
+            - name: secret-memcached
               mountPath: "/var/secrets/memcached_password"
-              subPath: {{ include "common.secrets.key" (dict "existingSecret" .Values.memcached.auth.existingSecret "key" "memcached-password") }}
+              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.memcached.auth.existingSecret "key" "password") | quote }}
               readOnly: true
-            {{- end }}
             {{- if (include "umc-server.ldap.tlsSecret.name" . ) }}
             - name: {{ printf "%s-volume" (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
               mountPath: "/var/secrets/ca_cert"
@@ -501,11 +492,9 @@ spec:
         - name: secret-postgresql
           secret:
             secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.postgresql.auth.existingSecret "defaultNameSuffix" "postgresql" "context" .) | quote }}
-        {{- if .Values.memcached.auth.existingSecret.name }}
-        - name: {{ printf "%s-volume" (tpl .Values.memcached.auth.existingSecret.name . ) | quote }}
+        - name: secret-memcached
           secret:
-            secretName: {{ tpl .Values.memcached.auth.existingSecret.name . }}
-        {{- end }}
+            secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.memcached.auth.existingSecret "defaultNameSuffix" "memcached" "context" .) | quote }}
         {{- if (include "umc-server.ldap.tlsSecret.name" . ) }}
         - name: {{ printf "%s-volume" (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
           secret:
