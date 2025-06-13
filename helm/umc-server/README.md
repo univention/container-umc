@@ -45,7 +45,7 @@ helm uninstall umc-server
 |------------|------|---------|
 | https://charts.bitnami.com/bitnami | memcached | ^7.x.x |
 | https://charts.bitnami.com/bitnami | postgresql | ^12.x.x |
-| oci://artifacts.software-univention.de/nubus-dev/charts | nubus-common | 0.20.0-pre-jbornhold-secrets-refactoring-tweaks-4 |
+| oci://artifacts.software-univention.de/nubus-dev/charts | nubus-common | 0.21.0-pre-jbornhold-secrets-refactoring-tweaks-5 |
 
 ## Values
 
@@ -655,49 +655,29 @@ true
 			<td>The name of the kubernetes secret which contains a TLS private key and certificate. Hint: This secret is not created by this chart and must be provided.</td>
 		</tr>
 		<tr>
-			<td>ldap.existingSecret.name</td>
-			<td>string</td>
+			<td>ldap</td>
+			<td>object</td>
 			<td><pre lang="json">
-""
+{
+  "auth": {
+    "existingSecret": {
+      "keyMapping": {
+        "password": null
+      },
+      "name": null
+    },
+    "password": null
+  },
+  "tlsSecret": {
+    "caCertKey": "ca.crt",
+    "certificateKey": "tls.crt",
+    "name": "",
+    "privateKeyKey": "tls.key"
+  }
+}
 </pre>
 </td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>ldap.tlsSecret.caCertKey</td>
-			<td>string</td>
-			<td><pre lang="json">
-"ca.crt"
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>ldap.tlsSecret.certificateKey</td>
-			<td>string</td>
-			<td><pre lang="json">
-"tls.crt"
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>ldap.tlsSecret.name</td>
-			<td>string</td>
-			<td><pre lang="json">
-""
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>ldap.tlsSecret.privateKeyKey</td>
-			<td>string</td>
-			<td><pre lang="json">
-"tls.key"
-</pre>
-</td>
-			<td></td>
+			<td>LDAP client configuration.  The UMC Server only supports configuring the password via this structure. Other parameters are discovery via UCR values.</td>
 		</tr>
 		<tr>
 			<td>memcached</td>
@@ -841,15 +821,6 @@ true
 			<td>Defaults from /ucs/management/univention-self-service/conffiles/etc/memcached_univention-self-service.conf  These parameters are only used by the bundled memcached.</td>
 		</tr>
 		<tr>
-			<td>mountSecrets</td>
-			<td>bool</td>
-			<td><pre lang="json">
-true
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
 			<td>mountUcr</td>
 			<td>bool</td>
 			<td><pre lang="json">
@@ -920,6 +891,9 @@ true
   "auth": {
     "database": "selfservice",
     "existingSecret": {
+      "keyMapping": {
+        "password": null
+      },
       "name": ""
     },
     "password": "",
@@ -950,6 +924,9 @@ true
 			<td>object</td>
 			<td><pre lang="json">
 {
+  "keyMapping": {
+    "password": null
+  },
   "name": ""
 }
 </pre>
@@ -1316,13 +1293,23 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>smtp.existingSecret.name</td>
-			<td>string</td>
+			<td>smtp</td>
+			<td>object</td>
 			<td><pre lang="json">
-""
+{
+  "auth": {
+    "existingSecret": {
+      "keyMapping": {
+        "password": null
+      },
+      "name": null
+    },
+    "password": null
+  }
+}
 </pre>
 </td>
-			<td></td>
+			<td>SMTP client configuration  The UMC Server only supports configuring the password via this structure. Other parameters are discovery via UCR values.</td>
 		</tr>
 		<tr>
 			<td>sssd</td>
@@ -1525,10 +1512,7 @@ true
   "certPem": null,
   "certPemFile": "/var/secrets/cert_pem",
   "privateKey": null,
-  "privateKeyFile": "/var/secrets/private_key",
-  "secretMountPath": "/var/secrets",
-  "smtpSecret": "",
-  "smtpSecretFile": "/var/secrets/smtp_secret"
+  "privateKeyFile": "/var/secrets/private_key"
 }
 </pre>
 </td>
@@ -1587,33 +1571,6 @@ null
 </pre>
 </td>
 			<td>Path to file with the certificate's private key (.key).</td>
-		</tr>
-		<tr>
-			<td>umcServer.secretMountPath</td>
-			<td>string</td>
-			<td><pre lang="json">
-"/var/secrets"
-</pre>
-</td>
-			<td>Path to mount the secrets to.</td>
-		</tr>
-		<tr>
-			<td>umcServer.smtpSecret</td>
-			<td>string</td>
-			<td><pre lang="json">
-""
-</pre>
-</td>
-			<td>smtpSecret the password for the SMTP server.</td>
-		</tr>
-		<tr>
-			<td>umcServer.smtpSecretFile</td>
-			<td>string</td>
-			<td><pre lang="json">
-"/var/secrets/smtp_secret"
-</pre>
-</td>
-			<td>Path to file with SMTP password.</td>
 		</tr>
 		<tr>
 			<td>updateStrategy.type</td>

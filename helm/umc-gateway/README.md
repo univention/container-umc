@@ -42,7 +42,7 @@ helm uninstall umc-gateway
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://artifacts.software-univention.de/nubus-dev/charts | nubus-common | 0.20.0-pre-jbornhold-secrets-refactoring-tweaks-5 |
+| oci://artifacts.software-univention.de/nubus-dev/charts | nubus-common | 0.21.0-pre-jbornhold-secrets-refactoring-tweaks-5 |
 
 ## Values
 
@@ -257,7 +257,7 @@ false
 			<td>Allows to configure system extensions globally.</td>
 		</tr>
 		<tr>
-			<td>image.imagePullPolicy</td>
+			<td>image.pullPolicy</td>
 			<td>string</td>
 			<td><pre lang="json">
 null
