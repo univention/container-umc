@@ -38,3 +38,5 @@ postgresql:
 # We don't want to check bundled charts in testing and linting.
 memcached:
   bundled: false
+  auth:
+    password: "linter-memcached-password"
