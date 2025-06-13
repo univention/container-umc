@@ -105,5 +105,7 @@ test-chart-umc-server:
   needs: []
   image: "gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/common-helm/testrunner:0.21.0-pre-jbornhold-secrets-refactoring-tweaks-5"
   script:
+    # Required for the bundled charts
+    - helm repo add bitnami https://charts.bitnami.com/bitnami
     - helm dep build helm/umc-server
     - pytest -W error tests/chart/umc-server
