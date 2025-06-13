@@ -13,10 +13,6 @@ global:
         repository: "nubus/images/portal-extension"
         tag: "0.44.3@sha256:734efc0adda680526dde09387db964612f9e0ab020382580984488cc993c68f0"
 
-umcServer:
-  ldapSecret: "password"
-  machineSecret: "password"
-
 ingress:
   enabled: true
   host: "localhost"
@@ -26,14 +22,18 @@ ingress:
 
 ldap:
   auth:
-    password: "ldapPassword"
-    existingSecret: null
+    password: "linter-ldap-password"
+
+smtp:
+  auth:
+    password: "linter-smtp-password"
+
 
 # We don't want to check bundled charts in testing and linting.
 postgresql:
   bundled: false
   auth:
-    password: "stub-password"
+    password: "linter-postgresql-password"
 
 # We don't want to check bundled charts in testing and linting.
 memcached:
