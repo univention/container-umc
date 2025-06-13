@@ -132,12 +132,10 @@ spec:
               mountPath: "/etc/machine.secret"
               subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.ldap.auth.existingSecret "key" "password") | quote }}
               readOnly: true
-            {{- if .Values.smtp.existingSecret.name }}
-            - name: {{ printf "%s-volume" (tpl .Values.smtp.existingSecret.name . ) | quote }}
+            - name: secret-smtp
               mountPath: "/var/secrets/smtp_secret"
-              subPath: {{ include "common.secrets.key" (dict "existingSecret" .Values.smtp.existingSecret "key" "password") }}
+              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.smtp.auth.existingSecret "key" "password") | quote }}
               readOnly: true
-            {{- end }}
             - name: secret-postgresql
               mountPath: "/var/secrets/db_password"
               subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.postgresql.auth.existingSecret "key" "password") | quote }}
@@ -295,12 +293,10 @@ spec:
               mountPath: "/etc/machine.secret"
               subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.ldap.auth.existingSecret "key" "password") | quote }}
               readOnly: true
-            {{- if .Values.smtp.existingSecret.name }}
-            - name: {{ printf "%s-volume" (tpl .Values.smtp.existingSecret.name . ) | quote }}
+            - name: secret-smtp
               mountPath: "/var/secrets/smtp_secret"
-              subPath: {{ include "common.secrets.key" (dict "existingSecret" .Values.smtp.existingSecret "key" "password") }}
+              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.smtp.auth.existingSecret "key" "password") | quote }}
               readOnly: true
-            {{- end }}
             - name: secret-postgresql
               mountPath: "/var/secrets/db_password"
               subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.postgresql.auth.existingSecret "key" "password") | quote }}
@@ -498,11 +494,10 @@ spec:
           secret:
             defaultMode: 0400
             secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.ldap.auth.existingSecret "defaultNameSuffix" "ldap" "context" .) | quote }}
-        {{- if .Values.smtp.existingSecret.name }}
-        - name: {{ printf "%s-volume" (tpl .Values.smtp.existingSecret.name . ) | quote }}
+        - name: secret-smtp
           secret:
-            secretName: {{ tpl .Values.smtp.existingSecret.name . }}
-        {{- end }}
+            defaultMode: 0400
+            secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.smtp.auth.existingSecret "defaultNameSuffix" "smtp" "context" .) | quote }}
         - name: secret-postgresql
           secret:
             secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.postgresql.auth.existingSecret "defaultNameSuffix" "postgresql" "context" .) | quote }}

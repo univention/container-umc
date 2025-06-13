@@ -206,10 +206,6 @@ umcServer:
   certPemFile: "/var/secrets/cert_pem"
   # -- Path to file with the certificate's private key (.key).
   privateKeyFile: "/var/secrets/private_key"
-  # -- Path to file with SMTP password.
-  smtpSecretFile: "/var/secrets/smtp_secret"
-  # -- smtpSecret the password for the SMTP server.
-  smtpSecret: ""
 
 ## -- Self-service configuration
 selfService:
@@ -495,8 +491,8 @@ postgresql:
 
 # -- LDAP client configuration.
 #
-# The UMC Server only supports configuring the ldap password via this structure.
-# Other parameters are discovery via the UCR values.
+# The UMC Server only supports configuring the password via this structure.
+# Other parameters are discovery via UCR values.
 ldap:
   auth:
     password: null
@@ -510,9 +506,17 @@ ldap:
     privateKeyKey: "tls.key"
     certificateKey: "tls.crt"
 
+# -- SMTP client configuration
+#
+# The UMC Server only supports configuring the password via this structure.
+# Other parameters are discovery via UCR values.
 smtp:
-  existingSecret:
-    name: ""
+  auth:
+    password: null
+    existingSecret:
+      name: null
+      keyMapping:
+        password: null
 
 terminationGracePeriodSeconds: ""
 extraVolumeMounts: []
