@@ -144,24 +144,18 @@ spec:
               mountPath: "/var/secrets/memcached_password"
               subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.memcached.auth.existingSecret "key" "password") | quote }}
               readOnly: true
-            {{- if (include "umc-server.ldap.tlsSecret.name" . ) }}
-            - name: {{ printf "%s-volume" (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
+            - name: secret-ldap-tls
               mountPath: "/var/secrets/ca_cert"
               subPath: {{ .Values.ldap.tlsSecret.caCertKey | quote }}
               readOnly: true
-            {{- end }}
-            {{- if (include "umc-server.ldap.tlsSecret.name" . ) }}
-            - name: {{ printf "%s-volume" (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
+            - name: secret-ldap-tls
               mountPath: "/var/secrets/cert_pem"
               subPath: {{ .Values.ldap.tlsSecret.certificateKey | quote }}
               readOnly: true
-            {{- end }}
-            {{- if (include "umc-server.ldap.tlsSecret.name" . ) }}
-            - name: {{ printf "%s-volume" (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
+            - name: secret-ldap-tls
               mountPath: "/var/secrets/private_key"
               subPath: {{ .Values.ldap.tlsSecret.privateKeyKey | quote }}
               readOnly: true
-            {{- end }}
         - name: "load-internal-plugins"
           {{- if .Values.containerSecurityContext.enabled }}
           securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
@@ -298,24 +292,18 @@ spec:
               mountPath: "/var/secrets/memcached_password"
               subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.memcached.auth.existingSecret "key" "password") | quote }}
               readOnly: true
-            {{- if (include "umc-server.ldap.tlsSecret.name" . ) }}
-            - name: {{ printf "%s-volume" (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
+            - name: secret-ldap-tls
               mountPath: "/var/secrets/ca_cert"
               subPath: {{ .Values.ldap.tlsSecret.caCertKey | quote }}
               readOnly: true
-            {{- end }}
-            {{- if (include "umc-server.ldap.tlsSecret.name" . ) }}
-            - name: {{ printf "%s-volume" (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
+            - name: secret-ldap-tls
               mountPath: "/var/secrets/cert_pem"
               subPath: {{ .Values.ldap.tlsSecret.certificateKey | quote }}
               readOnly: true
-            {{- end }}
-            {{- if (include "umc-server.ldap.tlsSecret.name" . ) }}
-            - name: {{ printf "%s-volume" (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
+            - name: secret-ldap-tls
               mountPath: "/var/secrets/private_key"
               subPath: {{ .Values.ldap.tlsSecret.privateKeyKey | quote }}
               readOnly: true
-            {{- end }}
             - name: plugin-targets
               mountPath: /usr/lib/python3/dist-packages/univention/udm/modules
               subPath: udm-modules
@@ -495,11 +483,9 @@ spec:
         - name: secret-memcached
           secret:
             secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.memcached.auth.existingSecret "defaultNameSuffix" "memcached" "context" .) | quote }}
-        {{- if (include "umc-server.ldap.tlsSecret.name" . ) }}
-        - name: {{ printf "%s-volume" (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
+        - name: secret-ldap-tls
           secret:
-            secretName: {{ (include "umc-server.ldap.tlsSecret.name" . ) | quote }}
-        {{- end }}
+            secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.ldap.tlsSecret "context" .) | quote }}
         - name: passwordreset-email-body
           configMap:
             name: {{ include "common.names.fullname" . }}-pw-reset-email-body
