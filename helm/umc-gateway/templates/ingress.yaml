@@ -20,7 +20,9 @@ metadata:
     nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/cors-allow-origin: {{ printf "https://%s.%s, https://%s.%s" .Values.global.subDomains.portal .Values.global.domain .Values.global.subDomains.keycloak .Values.global.domain | quote }}
 spec:
-  ingressClassName: {{ coalesce .Values.ingress.ingressClassName .Values.global.ingressClass }}
+  {{- if or .Values.ingress.ingressClassName .Values.global.ingressClass }}
+  ingressClassName: {{ coalesce .Values.ingress.ingressClassName .Values.global.ingressClass | quote }}
+  {{- end }}
   {{- if .Values.ingress.tls.enabled }}
   tls:
     - hosts:
