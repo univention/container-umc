@@ -3,10 +3,10 @@
 
 import pytest
 
-from univention.testing.helm.client.ldap import LdapAuth
+from univention.testing.helm.client.ldap import Auth
 
 
-class TestLdapClient(LdapAuth):
+class TestAuth(Auth):
 
     secret_name = "release-name-umc-server-ldap"
     workload_kind = "StatefulSet"
