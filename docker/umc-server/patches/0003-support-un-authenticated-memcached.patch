@@ -8,7 +8,7 @@ Content-Transfer-Encoding: 8bit
 
 In Nubus we need to make the memcached host configurable and support both authenticated and unauthenticated connections.
 
-Our old implementation: https://git.knut.univention.de/univention/customers/dataport/upx/container-umc/-/blob/3bbdb7493710bcfce10ff3e41daf88f4252267bc/docker/umc-server/self_service_credentials.patch
+Our old implementation: https://git.knut.univention.de/univention/dev/nubus-for-k8s/container-umc/-/blob/3bbdb7493710bcfce10ff3e41daf88f4252267bc/docker/umc-server/self_service_credentials.patch
 Upstream fix in UCS: https://git.knut.univention.de/univention/ucs/-/commit/bdecb09fe28141e6f62f77347c118d41305a463d
 
 The upstream fix is fine for authenticated connections.
