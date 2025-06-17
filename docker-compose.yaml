@@ -7,14 +7,14 @@ name: "dev-local"
 
 services:
   umc-gateway:
-    image: gitregistry.knut.univention.de/univention/customers/dataport/upx/container-umc/umc-gateway:${IMAGE_TAG:-latest}
+    image: gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/umc/umc-gateway:${IMAGE_TAG:-latest}
     platform: linux/amd64
     ports:
       - 8091:80
     env_file: .env.umc-gateway
 
   umc-server:
-    image: gitregistry.knut.univention.de/univention/customers/dataport/upx/container-umc/umc-server:${IMAGE_TAG:-latest}
+    image: gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/umc/umc-server:${IMAGE_TAG:-latest}
     platform: linux/amd64
     user: root
     ports:
@@ -38,7 +38,7 @@ services:
     profiles:
       - test
     platform: linux/amd64
-    image: gitregistry.knut.univention.de/univention/customers/dataport/upx/container-umc/testrunner:${IMAGE_TAG:-latest}
+    image: gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/umc/testrunner:${IMAGE_TAG:-latest}
     build:
       context: docker/testrunner
     environment:
@@ -52,7 +52,7 @@ services:
   pre-commit:
     profiles:
       - test
-    image: gitregistry.knut.univention.de/univention/customers/dataport/upx/container-pre-commit/upx-pre-commit:latest
+    image: gitregistry.knut.univention.de/univention/dev/tooling/pre-commit/upx-pre-commit:latest
     volumes:
       - type: bind
         source: .
