@@ -334,9 +334,9 @@ true
 		</tr>
 		<tr>
 			<td>ingress.enableLoginPath</td>
-			<td>string</td>
+			<td>bool</td>
 			<td><pre lang="json">
-""
+false
 </pre>
 </td>
 			<td>Enable plain UMC login path (non IdP). Defaults to false.</td>

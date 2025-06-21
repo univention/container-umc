@@ -132,7 +132,7 @@ ingress:
       pathType: ImplementationSpecific
 
   # -- Enable plain UMC login path (non IdP). Defaults to false.
-  enableLoginPath: ""
+  enableLoginPath: false
   loginPath:
     - path: /()(univention/)(login/.*)$
       pathType: ImplementationSpecific
