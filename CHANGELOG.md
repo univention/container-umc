@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.46.2](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.46.1...v0.46.2) (2025-06-23)
+
+
+### Bug Fixes
+
+* use default cluster ingress class if not defined ([925b415](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/925b4156a014eb7e50205f34af77e0daa147e0ff)), closes [univention/dev/internal/team-nubus#1134](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1134)
+
 ## [0.46.1](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.46.0...v0.46.1) (2025-06-18)
 
 
