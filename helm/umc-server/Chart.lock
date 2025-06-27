@@ -1,12 +1,12 @@
 dependencies:
 - name: nubus-common
   repository: oci://artifacts.software-univention.de/nubus/charts
-  version: 0.12.2
+  version: 0.22.0
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
   version: 12.12.10
 - name: memcached
   repository: https://charts.bitnami.com/bitnami
-  version: 7.8.0
-digest: sha256:c680c1583d1ce082d1e70cbabbad9db9fecae81c23be17fc045466b41e1c360c
-generated: "2025-04-16T00:58:41.365383938+02:00"
+  version: 7.8.6
+digest: sha256:156ee120f8dbf123b63566aac8de749011de2074535aa373078b34e3f4218ef0
+generated: "2025-06-27T16:14:12.81958+02:00"

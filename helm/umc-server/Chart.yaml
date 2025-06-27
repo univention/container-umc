@@ -18,7 +18,7 @@ appVersion: "12.0.29"
 
 dependencies:
   - name: "nubus-common"
-    version: "^0.12.x"
+    version: "0.22.0"
     repository: "oci://artifacts.software-univention.de/nubus/charts"
   - name: "postgresql"
     repository: "https://charts.bitnami.com/bitnami"
