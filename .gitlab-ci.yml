@@ -28,9 +28,8 @@ lint-pre-commit:
 .build-matrix: &build-matrix
   - IMAGE_NAME:
       - "umc-gateway"
+      - "umc-server"
       - "testrunner"
-  - IMAGE_NAME: "umc-server"
-    KANIKO_ARGS: "--cache=false"
 
 container-build:
   parallel:
