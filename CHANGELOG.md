@@ -1,5 +1,34 @@
 # Changelog
 
+## [0.47.0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.46.2...v0.47.0) (2025-06-27)
+
+
+### Features
+
+* **umc-gateway:** Update nubus-common version 0.21.0 ([e10767c](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/e10767c4e8b963c46455e65ff96093bf1dde6954)), closes [univention/dev/internal/team-nubus#892](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/892)
+* **umc-server:** Cleanup linter values ([984ff47](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/984ff47be411f563135b9dd3fffaf4c2d70d0547)), closes [univention/dev/internal/team-nubus#892](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/892)
+* **umc-server:** Correctly mount the memcached secret ([1bcf869](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/1bcf8692529aac48373357ec73d5167804491ad1)), closes [univention/dev/internal/team-nubus#892](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/892)
+* **umc-server:** Generate the memcached secret ([e26f9a6](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/e26f9a630e59ed215c71b201b87b37cbfe726a56)), closes [univention/dev/internal/team-nubus#892](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/892)
+* **umc-server:** Handle ldap password accoding to new secrets management ([cd0b502](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/cd0b502ce6dee4ba3d25798c7af61d5936d117b6)), closes [univention/dev/internal/team-nubus#892](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/892)
+* **umc-server:** Refactor handling of postgresql secret ([25bcd51](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/25bcd51c4b1f1f1358cae75606b5de768fd064e0)), closes [univention/dev/internal/team-nubus#892](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/892)
+* **umc-server:** Remove value "secretMountPath" from Helm chart ([fe3c51d](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/fe3c51d4b1824c5a49966620fc1d64e669fbd568)), closes [univention/dev/internal/team-nubus#892](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/892)
+* **umc-server:** SMTP secret handling according to common secret structure ([e0e09e5](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/e0e09e528c93333b4018f6b69c9893c8359a49db)), closes [univention/dev/internal/team-nubus#892](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/892)
+* **umc-server:** Update nubus-common to version 0.22.0 ([bdda318](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/bdda3187a925aac6e2fc853775b096a7af0663ac)), closes [univention/dev/internal/team-nubus#892](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/892)
+* Update generated files ([6791534](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/6791534af0e746481cf8f7f104360f8c0c6fe53d)), closes [univention/dev/internal/team-nubus#892](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/892)
+
+
+### Bug Fixes
+
+* **umc-gateway:** Correct default of ingress.enabledLoginPath ([cc8a1dc](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/cc8a1dc3c85fa8c389fa870c1771388cdf180485)), closes [univention/dev/internal/team-nubus#892](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/892)
+* **umc-gateway:** Correct label rendering, avoid duplicate keys ([0db5640](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/0db564043dcbb8c3445e5159ee5f73f191732b55)), closes [univention/dev/internal/team-nubus#892](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/892)
+* **umc-gateway:** Correctly handle image pull policy in deployment ([3d2981e](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/3d2981ebb1c8c538aade944187aedb9cabaf0e57)), closes [univention/dev/internal/team-nubus#892](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/892)
+* **umc-gateway:** Remove left over values from chart configuration ([c4c9235](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/c4c9235ed40d00ea8b10745e57cc72a7eb23d9ee)), closes [univention/dev/internal/team-nubus#892](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/892)
+* **umc-gateway:** Remove value for "image.imagePullPolicy" from values.yaml ([53cbd1a](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/53cbd1a1852a23940749f7eaeade6b343f5be59c)), closes [univention/dev/internal/team-nubus#892](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/892)
+* **umc-server:** Adjust image related configuration values ([c205355](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/c20535519bece328f5f6cd21559a8d72841fb112)), closes [univention/dev/internal/team-nubus#892](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/892)
+* **umc-server:** Always mount ldap tls related volumes ([ebab388](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/ebab3889e2cd7cf01cccd15963d6535b6b0526ab)), closes [univention/dev/internal/team-nubus#892](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/892)
+* **umc-server:** Correct most of the label handling ([b9c7099](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/b9c7099e6d8e0fe65a44c469bb17a49eb557dc45)), closes [univention/dev/internal/team-nubus#892](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/892)
+* **umc-server:** SMTP password is optional ([5055ff1](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/5055ff16a239e3f70c54dad2c3e0c0994b175ba8)), closes [univention/dev/internal/team-nubus#892](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/892)
+
 ## [0.46.2](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.46.1...v0.46.2) (2025-06-23)
 
 
