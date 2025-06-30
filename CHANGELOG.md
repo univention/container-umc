@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.47.1](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.47.0...v0.47.1) (2025-06-30)
+
+
+### Bug Fixes
+
+* **umc-server:** Correct an extraSecret related regression ([ea6c2bc](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/ea6c2bc07de416d7db79936f37924f1b832ed33b)), closes [univention/dev/internal/team-nubus#892](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/892)
+
 ## [0.47.0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.46.2...v0.47.0) (2025-06-27)
 
 
