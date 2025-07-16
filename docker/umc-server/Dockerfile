@@ -132,6 +132,7 @@ RUN \
   python3-univention \
   # for $PY_LIBS/univention/admindiary/__init__.py
   python3-univention-admin-diary \
+  python3-univention-authorization \
   python3-univention-config-registry \
   # for univention.logging
   python3-univention-debug \
@@ -453,8 +454,7 @@ COPY --from=build \
 # from python3-univention
 # for $PY_LIBS/univention/admin/uldap.py
 COPY --from=build \
-  ${SRC_PY_LIBS}/univention/password.py \
-  ${SRC_PY_LIBS}/univention/uldap.py \
+  ${SRC_PY_LIBS}/univention/*.py \
   ${DST_PY_LIBS}/univention/
 
 # from univention-management-console-server
