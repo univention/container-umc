@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.48.0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.47.1...v0.48.0) (2025-07-17)
+
+
+### Features
+
+* update ucs-base to 5.2.2-build.20250714 ([5fc0cef](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/5fc0cefc4b28bc9054db05e10bf5f434b589941b)), closes [univention/dev/internal/team-nubus#1320](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1320)
+
 ## [0.47.1](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.47.0...v0.47.1) (2025-06-30)
 
 
