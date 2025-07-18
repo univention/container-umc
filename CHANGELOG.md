@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.48.1](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.48.0...v0.48.1) (2025-07-18)
+
+
+### Bug Fixes
+
+* missing univention.admin.authorization ([a7194da](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/a7194daab470e143d379d2d5c223f3e101c1db1a)), closes [univention/dev/internal/team-nubus#1320](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1320)
+
 ## [0.48.0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.47.1...v0.48.0) (2025-07-17)
 
 
