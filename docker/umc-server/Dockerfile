@@ -387,6 +387,11 @@ COPY --from=build \
   ${SRC_PY_LIBS}/univention/admin/authorization/ \
   ${DST_PY_LIBS}/univention/admin/authorization/
 
+# from python3-univention-authorization
+COPY --from=build \
+  ${SRC_PY_LIBS}/univention/authorization/ \
+  ${DST_PY_LIBS}/univention/authorization/
+
 # from python3-univention-directory-manager
 # used files: __init__.py
 # unused files: base.py, binary_props.py, connections.py, encoders.py, exceptions.py, helpers.py, plugins.py, udm.py, utils.py
