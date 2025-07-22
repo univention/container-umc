@@ -548,7 +548,6 @@ null
 			<td><pre lang="json">
 {
   "nginx.ingress.kubernetes.io/affinity": "none",
-  "nginx.ingress.kubernetes.io/configuration-snippet": "proxy_set_header X-UMC-HTTPS 'on';\n",
   "nginx.ingress.kubernetes.io/rewrite-target": "/$2$3",
   "nginx.ingress.kubernetes.io/use-regex": "true"
 }

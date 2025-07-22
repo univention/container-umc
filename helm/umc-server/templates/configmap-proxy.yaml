@@ -39,6 +39,13 @@ data:
         umc-server:
           service: umc-server
           rule: PathPrefix(`/`)
+          middlewares:
+            - customHeader
+      middlewares:
+        customHeader:
+          headers:
+            customRequestHeaders:
+              X-UMC-HTTPS: 'on'
       services:
         umc-server:
           loadBalancer:
