@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.49.0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.48.2...v0.49.0) (2025-07-25)
+
+
+### Features
+
+* drop configuration-snippet for custom headers ([c952f6d](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/c952f6d9f42ed59bb82d6d8f63da45c4472b90f3)), closes [univention/dev/internal/team-nubus#1328](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1328)
+
 ## [0.48.2](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.48.1...v0.48.2) (2025-07-18)
 
 
