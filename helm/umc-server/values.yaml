@@ -519,6 +519,9 @@ smtp:
 terminationGracePeriodSeconds: ""
 extraVolumeMounts: []
 
+# -- Configure the podManagementPolicy. Possible values are `OrderedReady` and `Parallel`
+# For large deployments, set this to `Parallel` to enable quicker deployment and scaleup
+podManagementPolicy: "OrderedReady"
 # Set up update strategy.
 #
 # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy

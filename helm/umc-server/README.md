@@ -856,6 +856,15 @@ true
 			<td></td>
 		</tr>
 		<tr>
+			<td>podManagementPolicy</td>
+			<td>string</td>
+			<td><pre lang="json">
+"OrderedReady"
+</pre>
+</td>
+			<td>Configure the podManagementPolicy. Possible values are `OrderedReady` and `Parallel` For large deployments, set this to `Parallel` to enable quicker deployment and scaleup</td>
+		</tr>
+		<tr>
 			<td>podSecurityContext.enabled</td>
 			<td>bool</td>
 			<td><pre lang="json">
