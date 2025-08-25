@@ -21,11 +21,11 @@ dependencies:
     version: "0.22.0"
     repository: "oci://artifacts.software-univention.de/nubus/charts"
   - name: "postgresql"
-    repository: "https://charts.bitnami.com/bitnami"
+    repository: "oci://docker.io/bitnamicharts"
     version: "^12.x.x"
     condition: "postgresql.bundled"
   - name: "memcached"
-    repository: "https://charts.bitnami.com/bitnami"
+    repository: "oci://docker.io/bitnamicharts"
     version: "^7.x.x"
     condition: "memcached.bundled"
 

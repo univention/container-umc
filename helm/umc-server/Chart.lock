@@ -3,10 +3,10 @@ dependencies:
   repository: oci://artifacts.software-univention.de/nubus/charts
   version: 0.22.0
 - name: postgresql
-  repository: https://charts.bitnami.com/bitnami
+  repository: oci://docker.io/bitnamicharts
   version: 12.12.10
 - name: memcached
-  repository: https://charts.bitnami.com/bitnami
-  version: 7.8.6
-digest: sha256:156ee120f8dbf123b63566aac8de749011de2074535aa373078b34e3f4218ef0
-generated: "2025-06-27T16:14:12.81958+02:00"
+  repository: oci://docker.io/bitnamicharts
+  version: 7.9.7
+digest: sha256:9a98389ff0b8a631771eba42cf8c395ae00d3c81a5d9a9e3994f86f904dddda6
+generated: "2025-08-25T14:51:09.957854576+02:00"
