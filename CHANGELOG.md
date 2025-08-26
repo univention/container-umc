@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.50.0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.49.1...v0.50.0) (2025-08-26)
+
+
+### Features
+
+* upgrade bitnami charts ([1be6237](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/1be6237f91e4241f0c63d887266876a6702176eb)), closes [univention/dev/internal/team-nubus#1406](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1406)
+
 ## [0.49.1](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.49.0...v0.49.1) (2025-08-19)
 
 
