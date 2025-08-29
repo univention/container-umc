@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.50.3](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.50.2...v0.50.3) (2025-08-29)
+
+
+### Bug Fixes
+
+* **deps:** Update gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-base-python Docker tag to v5.2.2-build.20250828 ([24a4313](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/24a4313b1ec7800ccd43a36d7dd7a7f59ab8b32c)), closes [#0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/issues/0)
+
 ## [0.50.2](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.50.1...v0.50.2) (2025-08-28)
 
 
