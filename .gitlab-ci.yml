@@ -98,7 +98,7 @@ sonarqube:
 test-chart-umc-gateway:
   stage: test
   needs: []
-  image: "gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/common-helm/testrunner:0.22.0"
+  image: "gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/common-helm/testrunner:0.24.3@sha256:2597661437c31ded486c2583bec278feb02e91d12cbb09dbbc70b7749f4bafdf"
   script:
     - helm dep build helm/umc-gateway
     - pytest -W error tests/chart/umc-gateway
@@ -106,7 +106,7 @@ test-chart-umc-gateway:
 test-chart-umc-server:
   stage: test
   needs: []
-  image: "gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/common-helm/testrunner:0.22.0"
+  image: "gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/common-helm/testrunner:0.24.3@sha256:2597661437c31ded486c2583bec278feb02e91d12cbb09dbbc70b7749f4bafdf"
   script:
     # Required for the bundled charts
     - helm repo add bitnami https://charts.bitnami.com/bitnami
