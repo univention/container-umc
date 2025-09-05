@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.50.5](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.50.4...v0.50.5) (2025-09-05)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency univention/dev/nubus-for-k8s/common-ci to v1.44.2 ([e8953c8](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/e8953c8858defd8b81ffd76fc8e5721c3572dc8a)), closes [#0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/issues/0)
+* **deps:** Update gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/common-helm/testrunner Docker tag to v0.24.3 ([32caf83](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/32caf83a9edfc60171c4395a14095aa0910549da)), closes [#0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/issues/0)
+
 ## [0.50.4](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.50.3...v0.50.4) (2025-09-02)
 
 
