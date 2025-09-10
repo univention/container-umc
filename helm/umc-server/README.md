@@ -1150,6 +1150,15 @@ true
 			<td>PostgreSQL port.</td>
 		</tr>
 		<tr>
+			<td>probes.liveness.enabled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
 			<td>probes.liveness.failureThreshold</td>
 			<td>int</td>
 			<td><pre lang="json">
@@ -1199,6 +1208,15 @@ true
 			<td>int</td>
 			<td><pre lang="json">
 3
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>probes.readiness.enabled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
 </pre>
 </td>
 			<td></td>
