@@ -615,7 +615,7 @@ true
 			<td><pre lang="json">
 [
   {
-    "path": "/(univention)/(auth|logout|saml|get|set|command|upload)(.*)$",
+    "path": "/(univention)/(auth|logout|saml|oidc|get|set|command|upload)(.*)$",
     "pathType": "ImplementationSpecific"
   }
 ]
@@ -1519,6 +1519,16 @@ true
   "caCertFile": "/var/secrets/ca_cert",
   "certPem": null,
   "certPemFile": "/var/secrets/cert_pem",
+  "oidc": {
+    "clientSecret": {
+      "existingSecret": {
+        "keyMapping": {
+          "password": null
+        },
+        "name": null
+      }
+    }
+  },
   "privateKey": null,
   "privateKeyFile": "/var/secrets/private_key"
 }

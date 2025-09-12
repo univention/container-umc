@@ -86,6 +86,10 @@ spec:
               chown sssd:sssd /etc/pam.d/univention-management-console
               chmod 0644 /etc/pam.d/univention-management-console
           volumeMounts:
+            - name: "usr-share-umc-oidc"
+              mountPath: "/usr/share/univention-management-console/oidc"
+            - name: "usr-share-oidc"
+              mountPath: "/usr/share/oidc"
             - name: "etc-ldap"
               mountPath: "/etc/ldap"
             - name: "etc-pam"
@@ -112,6 +116,10 @@ spec:
               mountPath: "/run"
             - name: "tmp"
               mountPath: "/tmp"
+            - name: oidc-client-secret
+              mountPath: "/etc/oidc-rp-umc-server.secret"
+              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.umcServer.oidc.clientSecret.existingSecret "key" "password") | quote }}
+              readOnly: true
             - name: "usr-share-umc-saml-idp"
               mountPath: "/usr/share/univention-management-console/saml/idp"
             {{- if .Values.extraVolumeMounts }}
@@ -259,6 +267,12 @@ spec:
               mountPath: "/run"
             - name: "tmp"
               mountPath: "/tmp"
+            - name: "usr-share-umc-oidc"
+              mountPath: "/usr/share/univention-management-console/oidc"
+              readOnly: true
+            - name: "usr-share-oidc"
+              mountPath: "/usr/share/oidc"
+              readOnly: true
             - name: "usr-share-umc-saml-idp"
               mountPath: "/usr/share/univention-management-console/saml/idp"
               readOnly: true
@@ -292,6 +306,10 @@ spec:
             - name: secret-memcached
               mountPath: "/var/secrets/memcached_password"
               subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.memcached.auth.existingSecret "key" "password") | quote }}
+              readOnly: true
+            - name: oidc-client-secret
+              mountPath: "/etc/oidc-rp-umc-server.secret"
+              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.umcServer.oidc.clientSecret.existingSecret "key" "password") | quote }}
               readOnly: true
             - name: secret-ldap-tls
               mountPath: "/var/secrets/ca_cert"
@@ -388,6 +406,12 @@ spec:
               mountPath: "/run"
             - name: "sssd-run"
               mountPath: "/usr/local/var/run/sssd"
+            - name: "usr-share-umc-oidc"
+              mountPath: "/usr/share/univention-management-console/oidc"
+              readOnly: true
+            - name: "usr-share-oidc"
+              mountPath: "/usr/share/oidc"
+              readOnly: true
             - name: "usr-share-umc-saml-idp"
               readOnly: true
               mountPath: "/usr/share/univention-management-console/saml/idp"
@@ -465,6 +489,12 @@ spec:
         - name: "sssd-db"
           emptyDir:
             medium: "Memory"
+        - name: "usr-share-umc-oidc"
+          emptyDir:
+            medium: "Memory"
+        - name: "usr-share-oidc"
+          emptyDir:
+            medium: "Memory"
         {{- if (include "umc-server.configMapUcr" .) }}
         - name: "config-map-ucr"
           configMap:
@@ -484,6 +514,9 @@ spec:
         - name: secret-memcached
           secret:
             secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.memcached.auth.existingSecret "defaultNameSuffix" "memcached" "context" .) | quote }}
+        - name: oidc-client-secret
+          secret:
+            secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.umcServer.oidc.clientSecret.existingSecret "defaultNameSuffix" "oidc-client-secret" "context" .) | quote }}
         - name: secret-ldap-tls
           secret:
             secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.ldap.tlsSecret "context" .) | quote }}
