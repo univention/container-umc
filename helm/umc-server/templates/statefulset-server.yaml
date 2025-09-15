@@ -216,6 +216,15 @@ spec:
               --no-daemonize-module-processes \
               --log-file stdout
           env:
+            {{- if .Values.session.connection.host }}
+            - name: "UMC_SQL_CONNECTION_PASSWORD"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.session.auth.existingSecret "defaultNameSuffix" "session-db" "context" .) | quote }}
+                  key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.session.auth.existingSecret "key" "password") | quote }}
+            - name: "UMC_SQL_CONNECTION_URI"
+              value: {{ printf "postgresql+psycopg2://%s:$(UMC_SQL_CONNECTION_PASSWORD)@%s:%s/%s" .Values.session.auth.username (tpl .Values.session.connection.host .) (tpl .Values.session.connection.port .) .Values.session.auth.database | quote }}
+            {{- end}}
             - name: "SELF_SERVICE_DB_SECRET"
               valueFrom:
                 secretKeyRef:

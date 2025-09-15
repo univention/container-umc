@@ -20,6 +20,10 @@ data:
   CA_CERT_FILE: {{ .Values.umcServer.caCertFile | quote }}
   CERT_PEM_FILE: {{ .Values.umcServer.certPemFile | quote }}
   SMTP_SECRET_FILE: /var/secrets/smtp_secret
+  UMC_SQL_POOL_SIZE: {{ .Values.postgresql.authSession.config.pool_size | quote }}
+  UMC_SQL_MAX_OVERFLOW: {{ .Values.postgresql.authSession.config.max_overflow | quote }}
+  UMC_SQL_POOL_TIMEOUT: {{ .Values.postgresql.authSession.config.pool_timeout | quote }}
+  UMC_SQL_POOL_RECYCLE: {{ .Values.postgresql.authSession.config.pool_recycle | quote }}
 
 ---
 
