@@ -36,6 +36,11 @@ postgresql:
     auth:
       password: "linter-selfservice-postgresql-password"
 
+umcServer:
+  oidcClient:
+    auth:
+      password: "linter-oidc-client-password"
+
 # We don't want to check bundled charts in testing and linting.
 memcached:
   bundled: false

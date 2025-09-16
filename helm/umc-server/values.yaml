@@ -206,8 +206,11 @@ umcServer:
   certPemFile: "/var/secrets/cert_pem"
   # -- Path to file with the certificate's private key (.key).
   privateKeyFile: "/var/secrets/private_key"
-  oidc:
-    clientSecret:
+  # -- OIDC client for the UMC OAuth 2.0 client
+  oidcClient:
+    # -- OIDC client secret for the UMC OAuth 2.0 client
+    auth:
+      password: null
       existingSecret:
         name: null
         keyMapping:

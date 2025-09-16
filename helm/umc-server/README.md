@@ -1661,14 +1661,15 @@ true
   "caCertFile": "/var/secrets/ca_cert",
   "certPem": null,
   "certPemFile": "/var/secrets/cert_pem",
-  "oidc": {
-    "clientSecret": {
+  "oidcClient": {
+    "auth": {
       "existingSecret": {
         "keyMapping": {
           "password": null
         },
         "name": null
-      }
+      },
+      "password": null
     }
   },
   "privateKey": null,
@@ -1713,6 +1714,42 @@ null
 </pre>
 </td>
 			<td>Path to file with the certificate (.pem).</td>
+		</tr>
+		<tr>
+			<td>umcServer.oidcClient</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "auth": {
+    "existingSecret": {
+      "keyMapping": {
+        "password": null
+      },
+      "name": null
+    },
+    "password": null
+  }
+}
+</pre>
+</td>
+			<td>OIDC client for the UMC OAuth 2.0 client</td>
+		</tr>
+		<tr>
+			<td>umcServer.oidcClient.auth</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "existingSecret": {
+    "keyMapping": {
+      "password": null
+    },
+    "name": null
+  },
+  "password": null
+}
+</pre>
+</td>
+			<td>OIDC client secret for the UMC OAuth 2.0 client</td>
 		</tr>
 		<tr>
 			<td>umcServer.privateKey</td>

@@ -118,7 +118,7 @@ spec:
               mountPath: "/tmp"
             - name: oidc-client-secret
               mountPath: "/etc/oidc-rp-umc-server.secret"
-              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.umcServer.oidc.clientSecret.existingSecret "key" "password") | quote }}
+              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.umcServer.oidcClient.auth.existingSecret "key" "password") | quote }}
               readOnly: true
             - name: "usr-share-umc-saml-idp"
               mountPath: "/usr/share/univention-management-console/saml/idp"
@@ -316,7 +316,7 @@ spec:
               readOnly: true
             - name: oidc-client-secret
               mountPath: "/etc/oidc-rp-umc-server.secret"
-              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.umcServer.oidc.clientSecret.existingSecret "key" "password") | quote }}
+              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.umcServer.oidcClient.auth.existingSecret "key" "password") | quote }}
               readOnly: true
             - name: secret-ldap-tls
               mountPath: "/var/secrets/ca_cert"
@@ -523,7 +523,7 @@ spec:
             secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.memcached.auth.existingSecret "defaultNameSuffix" "memcached" "context" .) | quote }}
         - name: oidc-client-secret
           secret:
-            secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.umcServer.oidc.clientSecret.existingSecret "defaultNameSuffix" "oidc-client-secret" "context" .) | quote }}
+            secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.umcServer.oidcClient.auth.existingSecret "defaultNameSuffix" "oidc-client-secret" "context" .) | quote }}
         - name: secret-ldap-tls
           secret:
             secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.ldap.tlsSecret "context" .) | quote }}
