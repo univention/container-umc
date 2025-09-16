@@ -29,9 +29,7 @@ smtp:
     password: "linter-smtp-password"
 
 
-# We don't want to check bundled charts in testing and linting.
 postgresql:
-  bundled: false
   auth:
     password: "linter-postgresql-password"
 

@@ -466,27 +466,20 @@ memcached:
       value: "--disable-evictions"
 
 # -- PostgreSQL settings.
-#
-# The bitnami helm chart does contain all details of what can be configured:
-# https://github.com/bitnami/charts/tree/main/bitnami/postgresql
 postgresql:
-  # -- Set to `true` if you want PostgreSQL to be installed as well.
-  bundled: false
-  # -- Connection parameters. These are required if an external service should be used (bundled is set to `false`).
+  # -- Connection parameters.
   connection:
     # -- PostgreSQL host.
     host: ""
     # -- PostgreSQL port.
     port: ""
   auth:
-    # -- PostgreSQL user. If bundled is set to `true` this user will be created.
+    # -- PostgreSQL user.
     username: "selfservice"
-    # -- PostgreSQL database. If bundled is set to `true` this database will be created.
+    # -- PostgreSQL database.
     database: "selfservice"
-    # -- PostgreSQL user password if bundled is set to `true`.
+    # -- PostgreSQL user password.
     password: ""
-    # -- PostgreSQL admin password if bundled is set to `true`.
-    postgresPassword: ""
     # -- PostgreSQL password secret reference.
     existingSecret:
       name: ""

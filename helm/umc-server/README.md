@@ -45,7 +45,6 @@ helm uninstall umc-server
 |------------|------|---------|
 | oci://artifacts.software-univention.de/nubus/charts | nubus-common | 0.22.0 |
 | oci://docker.io/bitnamicharts | memcached | ^7.x.x |
-| oci://docker.io/bitnamicharts | postgresql | ^12.x.x |
 
 ## Values
 
@@ -905,10 +904,8 @@ true
       "name": ""
     },
     "password": "",
-    "postgresPassword": "",
     "username": "selfservice"
   },
-  "bundled": false,
   "connection": {
     "host": "",
     "port": ""
@@ -916,7 +913,7 @@ true
 }
 </pre>
 </td>
-			<td>PostgreSQL settings.  The bitnami helm chart does contain all details of what can be configured: https://github.com/bitnami/charts/tree/main/bitnami/postgresql</td>
+			<td>PostgreSQL settings.</td>
 		</tr>
 		<tr>
 			<td>postgresql.auth.database</td>
@@ -925,7 +922,7 @@ true
 "selfservice"
 </pre>
 </td>
-			<td>PostgreSQL database. If bundled is set to `true` this database will be created.</td>
+			<td>PostgreSQL database.</td>
 		</tr>
 		<tr>
 			<td>postgresql.auth.existingSecret</td>
@@ -948,16 +945,7 @@ true
 ""
 </pre>
 </td>
-			<td>PostgreSQL user password if bundled is set to `true`.</td>
-		</tr>
-		<tr>
-			<td>postgresql.auth.postgresPassword</td>
-			<td>string</td>
-			<td><pre lang="json">
-""
-</pre>
-</td>
-			<td>PostgreSQL admin password if bundled is set to `true`.</td>
+			<td>PostgreSQL user password.</td>
 		</tr>
 		<tr>
 			<td>postgresql.auth.username</td>
@@ -966,16 +954,7 @@ true
 "selfservice"
 </pre>
 </td>
-			<td>PostgreSQL user. If bundled is set to `true` this user will be created.</td>
-		</tr>
-		<tr>
-			<td>postgresql.bundled</td>
-			<td>bool</td>
-			<td><pre lang="json">
-false
-</pre>
-</td>
-			<td>Set to `true` if you want PostgreSQL to be installed as well.</td>
+			<td>PostgreSQL user.</td>
 		</tr>
 		<tr>
 			<td>postgresql.connection</td>
@@ -987,7 +966,7 @@ false
 }
 </pre>
 </td>
-			<td>Connection parameters. These are required if an external service should be used (bundled is set to `false`).</td>
+			<td>Connection parameters.</td>
 		</tr>
 		<tr>
 			<td>postgresql.connection.host</td>
