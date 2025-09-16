@@ -145,14 +145,6 @@ spec:
               mountPath: "/var/secrets/smtp_secret"
               subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.smtp.auth.existingSecret "key" "password") | quote }}
               readOnly: true
-            - name: secret-postgresql-selfservice
-              mountPath: "/var/secrets/db_password"
-              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.postgresql.selfservice.auth.existingSecret "key" "password") | quote }}
-              readOnly: true
-            - name: secret-memcached
-              mountPath: "/var/secrets/memcached_password"
-              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.memcached.auth.existingSecret "key" "password") | quote }}
-              readOnly: true
             - name: secret-ldap-tls
               mountPath: "/var/secrets/ca_cert"
               subPath: {{ .Values.ldap.tlsSecret.caCertKey | quote }}

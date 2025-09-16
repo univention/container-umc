@@ -40,11 +40,3 @@ class TestAuthViaEnv(SecretUsageViaEnv, AuthSkipUsername):
     workload_kind = "StatefulSet"
 
     sub_path_env_password = "env[?@name=='SELF_SERVICE_MEMCACHED_SECRET']"
-
-
-class TestAuthContainerPrepareConfig(SecretUsageViaVolume, AuthSkipUsername):
-
-    secret_name = "release-name-umc-server-memcached"
-    workload_kind = "StatefulSet"
-
-    path_main_container = "spec.template.spec.initContainers[?@.name=='prepare-config']"
