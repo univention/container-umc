@@ -28,10 +28,13 @@ smtp:
   auth:
     password: "linter-smtp-password"
 
-
 postgresql:
-  auth:
-    password: "linter-postgresql-password"
+  authSession:
+    auth:
+      password: "linter-auth-session-postgresql-password"
+  selfservice:
+    auth:
+      password: "linter-selfservice-postgresql-password"
 
 # We don't want to check bundled charts in testing and linting.
 memcached:

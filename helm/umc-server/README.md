@@ -895,8 +895,58 @@ true
 			<td>object</td>
 			<td><pre lang="json">
 {
+  "authSession": {
+    "auth": {
+      "database": "umcsession",
+      "existingSecret": {
+        "keyMapping": {
+          "password": null
+        },
+        "name": ""
+      },
+      "password": "",
+      "username": "umcsession"
+    },
+    "config": {
+      "maxOverflow": 10,
+      "poolRecycle": -1,
+      "poolSize": 5,
+      "poolTimeout": 30
+    },
+    "connection": {
+      "host": "",
+      "port": ""
+    }
+  },
+  "selfservice": {
+    "auth": {
+      "database": "selfservice",
+      "existingSecret": {
+        "keyMapping": {
+          "password": null
+        },
+        "name": ""
+      },
+      "password": "",
+      "username": "selfservice"
+    },
+    "connection": {
+      "host": "",
+      "port": ""
+    }
+  }
+}
+</pre>
+</td>
+			<td>PostgreSQL settings.</td>
+		</tr>
+		<tr>
+			<td>postgresql.authSession</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
   "auth": {
-    "database": "selfservice",
+    "database": "umcsession",
     "existingSecret": {
       "keyMapping": {
         "password": null
@@ -904,7 +954,13 @@ true
       "name": ""
     },
     "password": "",
-    "username": "selfservice"
+    "username": "umcsession"
+  },
+  "config": {
+    "maxOverflow": 10,
+    "poolRecycle": -1,
+    "poolSize": 5,
+    "poolTimeout": 30
   },
   "connection": {
     "host": "",
@@ -913,19 +969,19 @@ true
 }
 </pre>
 </td>
-			<td>PostgreSQL settings.</td>
+			<td>PostgreSQL database for the authentication session store.</td>
 		</tr>
 		<tr>
-			<td>postgresql.auth.database</td>
+			<td>postgresql.authSession.auth.database</td>
 			<td>string</td>
 			<td><pre lang="json">
-"selfservice"
+"umcsession"
 </pre>
 </td>
 			<td>PostgreSQL database.</td>
 		</tr>
 		<tr>
-			<td>postgresql.auth.existingSecret</td>
+			<td>postgresql.authSession.auth.existingSecret</td>
 			<td>object</td>
 			<td><pre lang="json">
 {
@@ -939,7 +995,7 @@ true
 			<td>PostgreSQL password secret reference.</td>
 		</tr>
 		<tr>
-			<td>postgresql.auth.password</td>
+			<td>postgresql.authSession.auth.password</td>
 			<td>string</td>
 			<td><pre lang="json">
 ""
@@ -948,16 +1004,52 @@ true
 			<td>PostgreSQL user password.</td>
 		</tr>
 		<tr>
-			<td>postgresql.auth.username</td>
+			<td>postgresql.authSession.auth.username</td>
 			<td>string</td>
 			<td><pre lang="json">
-"selfservice"
+"umcsession"
 </pre>
 </td>
 			<td>PostgreSQL user.</td>
 		</tr>
 		<tr>
-			<td>postgresql.connection</td>
+			<td>postgresql.authSession.config.maxOverflow</td>
+			<td>int</td>
+			<td><pre lang="json">
+10
+</pre>
+</td>
+			<td>The number of connections to allow in connection pool "overflow", that is connections that can be opened above and beyond the poolSize setting.</td>
+		</tr>
+		<tr>
+			<td>postgresql.authSession.config.poolRecycle</td>
+			<td>int</td>
+			<td><pre lang="json">
+-1
+</pre>
+</td>
+			<td>This setting causes the pool to recycle connections after the given number of seconds has passed. It defaults to -1, or no timeout. For example, setting to 3600 means connections will be recycled after one hour.</td>
+		</tr>
+		<tr>
+			<td>postgresql.authSession.config.poolSize</td>
+			<td>int</td>
+			<td><pre lang="json">
+5
+</pre>
+</td>
+			<td>The number of connections to keep open inside the connection pool.</td>
+		</tr>
+		<tr>
+			<td>postgresql.authSession.config.poolTimeout</td>
+			<td>int</td>
+			<td><pre lang="json">
+30
+</pre>
+</td>
+			<td>Number of seconds to wait before giving up on getting a connection from the pool.</td>
+		</tr>
+		<tr>
+			<td>postgresql.authSession.connection</td>
 			<td>object</td>
 			<td><pre lang="json">
 {
@@ -969,7 +1061,7 @@ true
 			<td>Connection parameters.</td>
 		</tr>
 		<tr>
-			<td>postgresql.connection.host</td>
+			<td>postgresql.authSession.connection.host</td>
 			<td>string</td>
 			<td><pre lang="json">
 ""
@@ -978,7 +1070,78 @@ true
 			<td>PostgreSQL host.</td>
 		</tr>
 		<tr>
-			<td>postgresql.connection.port</td>
+			<td>postgresql.authSession.connection.port</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>PostgreSQL port.</td>
+		</tr>
+		<tr>
+			<td>postgresql.selfservice.auth.database</td>
+			<td>string</td>
+			<td><pre lang="json">
+"selfservice"
+</pre>
+</td>
+			<td>PostgreSQL database.</td>
+		</tr>
+		<tr>
+			<td>postgresql.selfservice.auth.existingSecret</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "keyMapping": {
+    "password": null
+  },
+  "name": ""
+}
+</pre>
+</td>
+			<td>PostgreSQL password secret reference.</td>
+		</tr>
+		<tr>
+			<td>postgresql.selfservice.auth.password</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>PostgreSQL user password.</td>
+		</tr>
+		<tr>
+			<td>postgresql.selfservice.auth.username</td>
+			<td>string</td>
+			<td><pre lang="json">
+"selfservice"
+</pre>
+</td>
+			<td>PostgreSQL user.</td>
+		</tr>
+		<tr>
+			<td>postgresql.selfservice.connection</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "host": "",
+  "port": ""
+}
+</pre>
+</td>
+			<td>Connection parameters.</td>
+		</tr>
+		<tr>
+			<td>postgresql.selfservice.connection.host</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>PostgreSQL host.</td>
+		</tr>
+		<tr>
+			<td>postgresql.selfservice.connection.port</td>
 			<td>string</td>
 			<td><pre lang="json">
 ""

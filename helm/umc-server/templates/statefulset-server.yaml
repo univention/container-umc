@@ -145,9 +145,9 @@ spec:
               mountPath: "/var/secrets/smtp_secret"
               subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.smtp.auth.existingSecret "key" "password") | quote }}
               readOnly: true
-            - name: secret-postgresql
+            - name: secret-postgresql-selfservice
               mountPath: "/var/secrets/db_password"
-              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.postgresql.auth.existingSecret "key" "password") | quote }}
+              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.postgresql.selfservice.auth.existingSecret "key" "password") | quote }}
               readOnly: true
             - name: secret-memcached
               mountPath: "/var/secrets/memcached_password"
@@ -216,20 +216,18 @@ spec:
               --no-daemonize-module-processes \
               --log-file stdout
           env:
-            {{- if .Values.session.connection.host }}
             - name: "UMC_SQL_CONNECTION_PASSWORD"
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.session.auth.existingSecret "defaultNameSuffix" "session-db" "context" .) | quote }}
-                  key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.session.auth.existingSecret "key" "password") | quote }}
+                  name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.postgresql.authSession.auth.existingSecret "defaultNameSuffix" "postgresql-auth-session" "context" .) | quote }}
+                  key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.postgresql.authSession.auth.existingSecret "key" "password") | quote }}
             - name: "UMC_SQL_CONNECTION_URI"
-              value: {{ printf "postgresql+psycopg2://%s:$(UMC_SQL_CONNECTION_PASSWORD)@%s:%s/%s" .Values.session.auth.username (tpl .Values.session.connection.host .) (tpl .Values.session.connection.port .) .Values.session.auth.database | quote }}
-            {{- end}}
+              value: {{ printf "postgresql+psycopg2://%s:$(UMC_SQL_CONNECTION_PASSWORD)@%s:%s/%s" .Values.postgresql.authSession.auth.username (tpl .Values.postgresql.authSession.connection.host .) (tpl .Values.postgresql.authSession.connection.port .) .Values.postgresql.authSession.auth.database | quote }}
             - name: "SELF_SERVICE_DB_SECRET"
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.postgresql.auth.existingSecret "defaultNameSuffix" "postgresql" "context" .) | quote }}
-                  key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.postgresql.auth.existingSecret "key" "password") }}
+                  name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.postgresql.selfservice.auth.existingSecret "defaultNameSuffix" "postgresql-selfservice" "context" .) | quote }}
+                  key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.postgresql.selfservice.auth.existingSecret "key" "password") }}
             - name: "SELF_SERVICE_MEMCACHED_SECRET"
               valueFrom:
                 secretKeyRef:
@@ -308,9 +306,9 @@ spec:
               mountPath: "/var/secrets/smtp_secret"
               subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.smtp.auth.existingSecret "key" "password") | quote }}
               readOnly: true
-            - name: secret-postgresql
+            - name: secret-postgresql-selfservice
               mountPath: "/var/secrets/db_password"
-              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.postgresql.auth.existingSecret "key" "password") | quote }}
+              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.postgresql.selfservice.auth.existingSecret "key" "password") | quote }}
               readOnly: true
             - name: secret-memcached
               mountPath: "/var/secrets/memcached_password"
@@ -517,9 +515,9 @@ spec:
           secret:
             defaultMode: 0400
             secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.smtp.auth.existingSecret "defaultNameSuffix" "smtp" "context" .) | quote }}
-        - name: secret-postgresql
+        - name: secret-postgresql-selfservice
           secret:
-            secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.postgresql.auth.existingSecret "defaultNameSuffix" "postgresql" "context" .) | quote }}
+            secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.postgresql.selfservice.auth.existingSecret "defaultNameSuffix" "postgresql-selfservice" "context" .) | quote }}
         - name: secret-memcached
           secret:
             secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.memcached.auth.existingSecret "defaultNameSuffix" "memcached" "context" .) | quote }}

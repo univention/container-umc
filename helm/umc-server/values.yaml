@@ -467,24 +467,54 @@ memcached:
 
 # -- PostgreSQL settings.
 postgresql:
-  # -- Connection parameters.
-  connection:
-    # -- PostgreSQL host.
-    host: ""
-    # -- PostgreSQL port.
-    port: ""
-  auth:
-    # -- PostgreSQL user.
-    username: "selfservice"
-    # -- PostgreSQL database.
-    database: "selfservice"
-    # -- PostgreSQL user password.
-    password: ""
-    # -- PostgreSQL password secret reference.
-    existingSecret:
-      name: ""
-      keyMapping:
-        password: null
+  # -- PostgreSQL database for the authentication session store.
+  authSession:
+    config:
+      # -- The number of connections to keep open inside the connection pool.
+      poolSize: 5
+      # -- The number of connections to allow in connection pool "overflow", that is connections that can be opened above and beyond the poolSize setting.
+      maxOverflow: 10
+      # -- Number of seconds to wait before giving up on getting a connection from the pool.
+      poolTimeout: 30
+      # -- This setting causes the pool to recycle connections after the given number of seconds has passed. It defaults to -1, or no timeout. For example, setting to 3600 means connections will be recycled after one hour.
+      poolRecycle: -1
+    # -- Connection parameters.
+    connection:
+      # -- PostgreSQL host.
+      host: ""
+      # -- PostgreSQL port.
+      port: ""
+    auth:
+      # -- PostgreSQL user.
+      username: "umcsession"
+      # -- PostgreSQL database.
+      database: "umcsession"
+      # -- PostgreSQL user password.
+      password: ""
+      # -- PostgreSQL password secret reference.
+      existingSecret:
+        name: ""
+        keyMapping:
+          password: null
+  selfservice:
+    # -- Connection parameters.
+    connection:
+      # -- PostgreSQL host.
+      host: ""
+      # -- PostgreSQL port.
+      port: ""
+    auth:
+      # -- PostgreSQL user.
+      username: "selfservice"
+      # -- PostgreSQL database.
+      database: "selfservice"
+      # -- PostgreSQL user password.
+      password: ""
+      # -- PostgreSQL password secret reference.
+      existingSecret:
+        name: ""
+        keyMapping:
+          password: null
 
 # -- LDAP client configuration.
 #
