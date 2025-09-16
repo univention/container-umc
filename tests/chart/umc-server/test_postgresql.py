@@ -37,23 +37,29 @@ class AuthSkipUsernameAndDatabase(Auth):
         pass
 
 
-class TestAuth(SecretUsageViaVolume, AuthSkipUsernameAndDatabase):
+class TestSelfserviceAuth(SecretUsageViaVolume, AuthSkipUsernameAndDatabase):
 
-    secret_name = "release-name-umc-server-postgresql"
+    prefix_mapping = {"postgresql.selfservice": "postgresql"}
+    path_volume = "..spec.template.spec.volumes[?@.name=='secret-postgresql-selfservice']"
+    sub_path_volume_mount = "volumeMounts[?@.name=='secret-postgresql-selfservice']"
+
+    secret_name = "release-name-umc-server-postgresql-selfservice"
     workload_kind = "StatefulSet"
 
 
-class TestAuthViaEnv(SecretUsageViaEnv, AuthSkipUsernameAndDatabase):
+class TestSelfserviceAuthViaEnv(SecretUsageViaEnv, AuthSkipUsernameAndDatabase):
 
-    secret_name = "release-name-umc-server-postgresql"
+    prefix_mapping = {"postgresql.selfservice": "postgresql"}
+    secret_name = "release-name-umc-server-postgresql-selfservice"
     workload_kind = "StatefulSet"
 
     sub_path_env_db_password = "env[?@name=='SELF_SERVICE_DB_SECRET']"
 
 
-class TestAuthContainerPrepareConfig(SecretUsageViaVolume, AuthSkipUsernameAndDatabase):
+class TestAuthSessionAuthViaEnv(SecretUsageViaEnv, AuthSkipUsernameAndDatabase):
 
-    secret_name = "release-name-umc-server-postgresql"
+    prefix_mapping = {"postgresql.authSession": "postgresql"}
+    secret_name = "release-name-umc-server-postgresql-auth-session"
     workload_kind = "StatefulSet"
 
-    path_main_container = "spec.template.spec.initContainers[?@.name=='prepare-config']"
+    sub_path_env_db_password = "env[?@name=='UMC_SQL_CONNECTION_PASSWORD']"
