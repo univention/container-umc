@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.51.2](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.51.1...v0.51.2) (2025-09-17)
+
+
+### Bug Fixes
+
+* **helm:** authSession variable names ([3e9dafc](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/3e9dafc6e56903798038510bc0cea08889fd95a9)), closes [univention/dev/internal/team-nubus#1435](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1435)
+
 ## [0.51.1](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.51.0...v0.51.1) (2025-09-17)
 
 
