@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.51.0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.50.10...v0.51.0) (2025-09-17)
+
+
+### Features
+
+* Add OIDC support to the UMC ([b50ff38](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/b50ff38c0b4ccf6119fb9bcf51604cb75b5241f1)), closes [univention/dev/internal/team-nubus#1435](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1435)
+* Bump ucs-base-image version ([4ed4cdd](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/4ed4cdd6b3ed1cc41d390ab1fbbf082d07433bcd)), closes [univention/dev/internal/team-nubus#1435](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1435)
+* oidc db session storage ([276f160](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/276f1608cc832336015e50f15dbe37a32dc8884c)), closes [univention/dev/internal/team-nubus#1435](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1435)
+
+
+### Bug Fixes
+
+* Add second postgres configuration for the authentication session store ([c46a799](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/c46a7996dabd5ffd474ce9556acf38b23d96da9c)), closes [univention/dev/internal/team-nubus#1435](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1435)
+* **helm:** change from oidc.clientSecret to oidcClient.auth ([3b6d78f](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/3b6d78fb9bda6575875dc743686e02403abb22df)), closes [univention/dev/internal/team-nubus#1435](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1435)
+* Remove bundled postgresql from the chart ([ff04c08](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/ff04c08e27c1a7eb403147364e1602cfacdec862)), closes [univention/dev/internal/team-nubus#1435](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1435)
+* remove unused database secrets from init container ([3350a64](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/3350a6401c77a7f9141ba1201ac8830780a47749)), closes [univention/dev/internal/team-nubus#1435](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1435)
+
 ## [0.50.10](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.50.9...v0.50.10) (2025-09-16)
 
 
