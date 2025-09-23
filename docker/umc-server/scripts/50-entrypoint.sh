@@ -85,11 +85,17 @@ fi
 
 setup_oidc() {
   OIDC_URL=$(univention-config-registry get 'umc/oidc/issuer' || true)
+  OIDC_URL_INTERNAL=$(univention-config-registry get 'umc/oidc/issuer-internal')
 
-  if [[ -n "${OIDC_URL:-}" ]]; then
-    DOWNLOAD_URL="${OIDC_URL}/.well-known/openid-configuration"
-    DOWNLOAD_URL_JWKS="${OIDC_URL}/protocol/openid-connect/certs"
-    OIDC_HOST=$(echo "${OIDC_URL}" | awk -F/ '{print $3}')
+  if [[ -z "${OIDC_URL_INTERNAL:-}" ]]; then
+    echo "'umc/oidc/issuer-internal' is not set! Assuming it equal to 'umc/oidc/issuer'."
+    OIDC_URL_INTERNAL="${OIDC_URL}"
+  fi
+
+  if [[ -n "${OIDC_URL_INTERNAL:-}" ]]; then
+    DOWNLOAD_URL="${OIDC_URL_INTERNAL}/.well-known/openid-configuration"
+    DOWNLOAD_URL_JWKS="${OIDC_URL_INTERNAL}/protocol/openid-connect/certs"
+    OIDC_HOST=$(echo "${OIDC_URL_INTERNAL}" | awk -F/ '{print $3}')
 
     OIDC_BASE="/usr/share/univention-management-console/oidc/"
     OIDC_PATH="${OIDC_BASE}/nubus.json"
