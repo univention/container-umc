@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.51.3](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.51.2...v0.51.3) (2025-09-23)
+
+
+### Bug Fixes
+
+* use internal oidc issuer if available ([8386247](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/83862479f99f7957e792492398654cc44d4835d8)), closes [univention/dev/internal/team-nubus#1446](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1446)
+
 ## [0.51.2](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.51.1...v0.51.2) (2025-09-17)
 
 
