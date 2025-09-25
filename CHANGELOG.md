@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.51.5](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.51.4...v0.51.5) (2025-09-25)
+
+
+### Bug Fixes
+
+* Automated kyverno tests ([8e0571b](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/8e0571b5ccd52a70f5d25bfa2a29f59e6433ee12)), closes [univention/dev/internal/team-nubus#1426](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1426)
+
 ## [0.51.4](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.51.3...v0.51.4) (2025-09-24)
 
 
