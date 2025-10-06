@@ -307,7 +307,7 @@ ingress:
     # - pathType: Prefix
     #   path: /univention/auth
     # - pathType: Prefix
-    #   path: /univention/saml
+    #   path: /univention/oidc
     # - pathType: Prefix
     #   path: /univention/get
     # - pathType: Prefix
@@ -318,7 +318,7 @@ ingress:
     #   path: /univention/upload
     # - pathType: Prefix
     #   path: /univention/logout
-      - path: /(univention)/(auth|logout|saml|oidc|get|set|command|upload)(.*)$
+      - path: /(univention)/(auth|logout|oidc|get|set|command|upload)(.*)$
         pathType: ImplementationSpecific
 
   # -- Secure an Ingress by specifying a Secret that contains a TLS private key and certificate.

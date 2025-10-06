@@ -614,7 +614,7 @@ true
 			<td><pre lang="json">
 [
   {
-    "path": "/(univention)/(auth|logout|saml|oidc|get|set|command|upload)(.*)$",
+    "path": "/(univention)/(auth|logout|oidc|get|set|command|upload)(.*)$",
     "pathType": "ImplementationSpecific"
   }
 ]
