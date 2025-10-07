@@ -359,11 +359,11 @@ spec:
               containerPort: {{ $value.containerPort }}
               protocol: {{ $value.protocol }}
             {{- end }}
-          {{- if .Values.probes.liveness }}
-          livenessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.probes.liveness "context" $) | nindent 12 }}
+          {{- if .Values.probes.liveness.enabled }}
+          livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.probes.liveness "enabled") "context" $) | nindent 12 }}
           {{- end }}
-          {{- if .Values.probes.readiness }}
-          readinessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.probes.readiness "context" $) | nindent 12 }}
+          {{- if .Values.probes.readiness.enabled }}
+          readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.probes.readiness "enabled") "context" $) | nindent 12 }}
           {{- end }}
           {{- if .Values.probes.startup }}
           startupProbe: {{- include "common.tplvalues.render" (dict "value" .Values.probes.startup "context" $) | nindent 12 }}
