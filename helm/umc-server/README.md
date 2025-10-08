@@ -43,7 +43,7 @@ helm uninstall umc-server
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://artifacts.software-univention.de/nubus/charts | nubus-common | 0.22.0 |
+| oci://artifacts.software-univention.de/nubus-dev/charts | nubus-common | 0.28.0-pre-dpapoutsis-nubus-common-templated-keymapping |
 | oci://docker.io/bitnamicharts | memcached | ^7.x.x |
 
 ## Values

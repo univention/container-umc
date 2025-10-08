@@ -118,7 +118,7 @@ spec:
               mountPath: "/tmp"
             - name: oidc-client-secret
               mountPath: "/etc/oidc-rp-umc-server.secret"
-              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.umcServer.oidcClient.auth.existingSecret "key" "password") | quote }}
+              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.umcServer.oidcClient.auth.existingSecret "key" "password" "context" .) }}
               readOnly: true
             - name: "usr-share-umc-saml-idp"
               mountPath: "/usr/share/univention-management-console/saml/idp"
@@ -135,15 +135,15 @@ spec:
             {{- end }}
             - name: secret-ldap
               mountPath: "/etc/ldap.secret"
-              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.ldap.auth.existingSecret "key" "password") | quote }}
+              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.ldap.auth.existingSecret "key" "password" "context" .) }}
               readOnly: true
             - name: secret-ldap
               mountPath: "/etc/machine.secret"
-              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.ldap.auth.existingSecret "key" "password") | quote }}
+              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.ldap.auth.existingSecret "key" "password" "context" .) }}
               readOnly: true
             - name: secret-smtp
               mountPath: "/var/secrets/smtp_secret"
-              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.smtp.auth.existingSecret "key" "password") | quote }}
+              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.smtp.auth.existingSecret "key" "password" "context" .) }}
               readOnly: true
             - name: secret-ldap-tls
               mountPath: "/var/secrets/ca_cert"
@@ -212,19 +212,19 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.postgresql.authSession.auth.existingSecret "defaultNameSuffix" "postgresql-auth-session" "context" .) }}
-                  key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.postgresql.authSession.auth.existingSecret "key" "password") | quote }}
+                  key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.postgresql.authSession.auth.existingSecret "key" "password" "context" .) }}
             - name: "UMC_SQL_CONNECTION_URI"
               value: {{ printf "postgresql+psycopg2://%s:$(UMC_SQL_CONNECTION_PASSWORD)@%s:%s/%s" .Values.postgresql.authSession.auth.username (tpl .Values.postgresql.authSession.connection.host .) (tpl .Values.postgresql.authSession.connection.port .) .Values.postgresql.authSession.auth.database | quote }}
             - name: "SELF_SERVICE_DB_SECRET"
               valueFrom:
                 secretKeyRef:
                   name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.postgresql.selfservice.auth.existingSecret "defaultNameSuffix" "postgresql-selfservice" "context" .) }}
-                  key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.postgresql.selfservice.auth.existingSecret "key" "password") }}
+                  key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.postgresql.selfservice.auth.existingSecret "key" "password" "context" .) }}
             - name: "SELF_SERVICE_MEMCACHED_SECRET"
               valueFrom:
                 secretKeyRef:
                   name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.memcached.auth.existingSecret "defaultNameSuffix" "memcached" "context" .) }}
-                  key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.memcached.auth.existingSecret "key" "password") }}
+                  key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.memcached.auth.existingSecret "key" "password" "context" .) }}
             - name: "PYTHONDONTWRITEBYTECODE"
               value: "1"
           envFrom:
@@ -288,27 +288,27 @@ spec:
             {{- end }}
             - name: secret-ldap
               mountPath: "/etc/ldap.secret"
-              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.ldap.auth.existingSecret "key" "password") | quote }}
+              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.ldap.auth.existingSecret "key" "password" "context" .) }}
               readOnly: true
             - name: secret-ldap
               mountPath: "/etc/machine.secret"
-              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.ldap.auth.existingSecret "key" "password") | quote }}
+              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.ldap.auth.existingSecret "key" "password" "context" .) }}
               readOnly: true
             - name: secret-smtp
               mountPath: "/var/secrets/smtp_secret"
-              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.smtp.auth.existingSecret "key" "password") | quote }}
+              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.smtp.auth.existingSecret "key" "password" "context" .) }}
               readOnly: true
             - name: secret-postgresql-selfservice
               mountPath: "/var/secrets/db_password"
-              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.postgresql.selfservice.auth.existingSecret "key" "password") | quote }}
+              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.postgresql.selfservice.auth.existingSecret "key" "password" "context" .) }}
               readOnly: true
             - name: secret-memcached
               mountPath: "/var/secrets/memcached_password"
-              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.memcached.auth.existingSecret "key" "password") | quote }}
+              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.memcached.auth.existingSecret "key" "password" "context" .) }}
               readOnly: true
             - name: oidc-client-secret
               mountPath: "/etc/oidc-rp-umc-server.secret"
-              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.umcServer.oidcClient.auth.existingSecret "key" "password") | quote }}
+              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.umcServer.oidcClient.auth.existingSecret "key" "password" "context" .) }}
               readOnly: true
             - name: secret-ldap-tls
               mountPath: "/var/secrets/ca_cert"
@@ -518,7 +518,7 @@ spec:
             secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.umcServer.oidcClient.auth.existingSecret "defaultNameSuffix" "oidc" "context" .) }}
         - name: secret-ldap-tls
           secret:
-            secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.ldap.tlsSecret "context" .) | quote }}
+            secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.ldap.tlsSecret "context" .) }}
         - name: passwordreset-email-body
           configMap:
             name: {{ include "common.names.fullname" . }}-pw-reset-email-body

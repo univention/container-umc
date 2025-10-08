@@ -18,8 +18,8 @@ appVersion: "12.0.29"
 
 dependencies:
   - name: "nubus-common"
-    version: "0.22.0"
-    repository: "oci://artifacts.software-univention.de/nubus/charts"
+    version: "0.28.0-pre-dpapoutsis-nubus-common-templated-keymapping"
+    repository: "oci://artifacts.software-univention.de/nubus-dev/charts"
   - name: "memcached"
     repository: "oci://docker.io/bitnamicharts"
     version: "^7.x.x"
