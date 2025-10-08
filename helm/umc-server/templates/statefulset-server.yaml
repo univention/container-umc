@@ -223,7 +223,7 @@ spec:
             - name: "SELF_SERVICE_MEMCACHED_SECRET"
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.memcached.auth.existingSecret "defaultNameSuffix" "memcached" "context" .) | quote }}
+                  name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.memcached.auth.existingSecret "defaultNameSuffix" "memcached" "context" .) }}
                   key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.memcached.auth.existingSecret "key" "password") }}
             - name: "PYTHONDONTWRITEBYTECODE"
               value: "1"
@@ -512,7 +512,7 @@ spec:
             secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.postgresql.selfservice.auth.existingSecret "defaultNameSuffix" "postgresql-selfservice" "context" .) | quote }}
         - name: secret-memcached
           secret:
-            secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.memcached.auth.existingSecret "defaultNameSuffix" "memcached" "context" .) | quote }}
+            secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.memcached.auth.existingSecret "defaultNameSuffix" "memcached" "context" .) }}
         - name: oidc-client-secret
           secret:
             secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.umcServer.oidcClient.auth.existingSecret "defaultNameSuffix" "oidc" "context" .) }}
