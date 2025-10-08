@@ -11,3 +11,5 @@ helm/**/.kyverno/kyverno-test.yaml
 helm/**/.kyverno/manifest.yaml
 
 tests/integration/__pycache__/
+
+__pycache__/
