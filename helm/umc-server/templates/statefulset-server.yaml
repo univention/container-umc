@@ -502,7 +502,7 @@ spec:
         - name: secret-ldap
           secret:
             defaultMode: 0400
-            secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.ldap.auth.existingSecret "defaultNameSuffix" "ldap" "context" .) | quote }}
+            secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.ldap.auth.existingSecret "defaultNameSuffix" "ldap" "context" .) }}
         - name: secret-smtp
           secret:
             defaultMode: 0400
