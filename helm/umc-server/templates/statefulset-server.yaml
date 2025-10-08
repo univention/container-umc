@@ -515,7 +515,7 @@ spec:
             secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.memcached.auth.existingSecret "defaultNameSuffix" "memcached" "context" .) | quote }}
         - name: oidc-client-secret
           secret:
-            secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.umcServer.oidcClient.auth.existingSecret "defaultNameSuffix" "oidc-client-secret" "context" .) | quote }}
+            secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.umcServer.oidcClient.auth.existingSecret "defaultNameSuffix" "oidc" "context" .) }}
         - name: secret-ldap-tls
           secret:
             secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.ldap.tlsSecret "context" .) | quote }}
