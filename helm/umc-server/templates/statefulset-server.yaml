@@ -211,14 +211,14 @@ spec:
             - name: "UMC_SQL_CONNECTION_PASSWORD"
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.postgresql.authSession.auth.existingSecret "defaultNameSuffix" "postgresql-auth-session" "context" .) | quote }}
+                  name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.postgresql.authSession.auth.existingSecret "defaultNameSuffix" "postgresql-auth-session" "context" .) }}
                   key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.postgresql.authSession.auth.existingSecret "key" "password") | quote }}
             - name: "UMC_SQL_CONNECTION_URI"
               value: {{ printf "postgresql+psycopg2://%s:$(UMC_SQL_CONNECTION_PASSWORD)@%s:%s/%s" .Values.postgresql.authSession.auth.username (tpl .Values.postgresql.authSession.connection.host .) (tpl .Values.postgresql.authSession.connection.port .) .Values.postgresql.authSession.auth.database | quote }}
             - name: "SELF_SERVICE_DB_SECRET"
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.postgresql.selfservice.auth.existingSecret "defaultNameSuffix" "postgresql-selfservice" "context" .) | quote }}
+                  name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.postgresql.selfservice.auth.existingSecret "defaultNameSuffix" "postgresql-selfservice" "context" .) }}
                   key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.postgresql.selfservice.auth.existingSecret "key" "password") }}
             - name: "SELF_SERVICE_MEMCACHED_SECRET"
               valueFrom:
@@ -509,7 +509,7 @@ spec:
             secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.smtp.auth.existingSecret "defaultNameSuffix" "smtp" "context" .) }}
         - name: secret-postgresql-selfservice
           secret:
-            secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.postgresql.selfservice.auth.existingSecret "defaultNameSuffix" "postgresql-selfservice" "context" .) | quote }}
+            secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.postgresql.selfservice.auth.existingSecret "defaultNameSuffix" "postgresql-selfservice" "context" .) }}
         - name: secret-memcached
           secret:
             secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.memcached.auth.existingSecret "defaultNameSuffix" "memcached" "context" .) }}
