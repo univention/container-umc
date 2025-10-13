@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.52.0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.51.5...v0.52.0) (2025-10-13)
+
+
+### Features
+
+* limit saml endpoint in ingress ([fbacdbe](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/fbacdbe22a41ff06284e165154812a6f8c8c07a4)), closes [univention/dev/internal/team-nubus#1442](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1442)
+
+
+### Bug Fixes
+
+* **deps:** Update gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-base Docker tag to v5.2.3-build.20250925 ([dd16528](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/dd16528fb6c2e33c287dca3ac1c3d2341216a918)), closes [#0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/issues/0)
+* Fix liveness and readiness probes in umc-server StatefulSet ([2d908f5](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/2d908f5ccc9db69b6b7330200452f1995ae1dc66)), closes [univention/dev/internal/team-nubus#1442](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1442)
+
 ## [0.51.5](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.51.4...v0.51.5) (2025-09-25)
 
 
