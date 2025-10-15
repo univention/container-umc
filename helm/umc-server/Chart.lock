@@ -1,9 +1,9 @@
 dependencies:
 - name: nubus-common
-  repository: oci://artifacts.software-univention.de/nubus-dev/charts
-  version: 0.28.0-pre-dpapoutsis-nubus-common-templated-keymapping
+  repository: oci://artifacts.software-univention.de/nubus/charts
+  version: 0.28.0
 - name: memcached
   repository: oci://docker.io/bitnamicharts
   version: 7.9.7
-digest: sha256:89692a8c52ed97a9aa76a54a578fad2b31d05883776890251df24a4600d794a5
-generated: "2025-10-08T09:08:33.714985593+02:00"
+digest: sha256:cc5897652332d06440f6c50f5a160e07f033c233aad8f0ef2280c679bdbb3eb6
+generated: "2025-10-15T10:19:06.899453476+02:00"
