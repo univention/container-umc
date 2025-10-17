@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.53.0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.52.1...v0.53.0) (2025-10-17)
+
+
+### Features
+
+* **secrets:** allow templated keymappings ([b43fd5e](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/b43fd5e0b54ae5f432d1964763a28f70a93dccd9)), closes [univention/dev/internal/team-nubus#1441](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1441)
+
 ## [0.52.1](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.52.0...v0.52.1) (2025-10-14)
 
 
