@@ -13,3 +13,4 @@ helm/**/.kyverno/manifest.yaml
 tests/integration/__pycache__/
 
 __pycache__/
+docker-compose.override.yaml

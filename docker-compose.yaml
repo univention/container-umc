@@ -8,6 +8,11 @@ services:
   umc-gateway:
     image: gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/umc/umc-gateway:${IMAGE_TAG:-latest}
     platform: linux/amd64
+    build:
+      context: ./docker/umc-gateway
+      platforms:
+        - "linux/amd64"
+      target: final
     ports:
       - 8091:80
     env_file: .env.umc-gateway
@@ -15,6 +20,11 @@ services:
   umc-server:
     image: gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/umc/umc-server:${IMAGE_TAG:-latest}
     platform: linux/amd64
+    build:
+      context: ./docker/umc-server
+      platforms:
+        - "linux/amd64"
+      target: final
     user: root
     ports:
       - 8090:8090
