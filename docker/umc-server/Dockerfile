@@ -287,6 +287,23 @@ RUN \
   # for the entrypoint.sh script
   wget
 
+
+############################################################
+# Install regular dependencies
+#
+# NOTE: Ongoing simplification. The current build approach is difficult to
+# maintain, because dependency changes are only reflected in the Debian packages
+# and would have to be replicated here.
+#
+# We aim to switch to use regular base packages and where needed adjust the base
+# package dependencies.
+#
+# hadolint ignore=DL3008,DL3059
+RUN apt-get --assume-yes --verbose-versions --no-install-recommends install \
+  univention-config \
+  python3-univention-debug
+
+
 ############################################################
 # Copy files from other stages
 
@@ -317,20 +334,6 @@ COPY --from=build \
 COPY --from=build \
   /usr/lib/x86_64-linux-gnu/libuniventionconfig.so.0.0.1 \
   /usr/lib/x86_64-linux-gnu/libuniventionconfig.so.0
-
-# from libunivention-debug1
-COPY --from=build \
-  /usr/lib/x86_64-linux-gnu/libuniventiondebug.so.1.0.0 \
-  /usr/lib/x86_64-linux-gnu/libuniventiondebug.so.1
-
-# from python3-univention-debug
-# for ${PY_LIBS}/univention/management/console/log.py
-COPY --from=build \
-  ${SRC_PY_LIBS}/univention/_debug.cpython-311-x86_64-linux-gnu.so \
-  ${SRC_PY_LIBS}/univention/debug.py \
-  ${SRC_PY_LIBS}/univention/debug2.py \
-  ${SRC_PY_LIBS}/univention/logging.py \
-  ${DST_PY_LIBS}/univention/
 
 # from python3-notifier (univention package)
 # used files: __init__.py dispatch.py log.py nf_generic.py popen.py signals.py
@@ -400,17 +403,6 @@ COPY --from=build \
   ${SRC_PY_LIBS}/univention/udm/*.py \
   ${DST_PY_LIBS}/univention/udm/
 RUN rm ${DST_PY_LIBS}/univention/udm/{base.py,binary_props.py,connections.py,encoders.py,exceptions.py,helpers.py,plugins.py,udm.py,utils.py}
-
-# from python3-univention-config-registry
-COPY --from=build \
-  ${SRC_PY_LIBS}/univention/config_registry/ \
-  ${DST_PY_LIBS}/univention/config_registry/
-COPY --from=build \
-  ${SRC_PY_LIBS}/univention/config_registry_info.py \
-  ${DST_PY_LIBS}/univention/config_registry_info.py
-COPY --from=build \
-  ${SRC_PY_LIBS}/univention/info_tools.py \
-  ${DST_PY_LIBS}/univention/info_tools.py
 
 # from python3-univention-admin-diary and univention-admin-diary-client
 # used files: __init__.py client.py events.py
@@ -548,14 +540,7 @@ COPY --from=build \
   /usr/lib/python3/dist-packages/univention/debhelper.py \
   /usr/lib/python3/dist-packages/univention/debhelper.py
 
-COPY --from=build \
-  /usr/sbin/univention-config-registry \
-  /usr/sbin/univention-config-registry
-
 RUN \
-  ln --symbolic --force /usr/sbin/univention-config-registry /usr/sbin/ucr && \
-  mkdir --parents /var/cache/univention-config/ && \
-  touch /var/cache/univention-config/cache && \
   mkdir /var/log/univention/
 
 # available reports
