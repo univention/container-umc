@@ -5,7 +5,7 @@
 # Global variables
 
 ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-base-python
-ARG UCS_BASE_IMAGE_TAG=5.2.3-build.20250923@sha256:d5ded62ee9236bd1472ddbeec8c27f4e412c0c8966002ef38d5bbf1a0bf83dcd
+ARG UCS_BASE_IMAGE_TAG=5.2.3-build.20251023@sha256:e62e054d55d74f7a00c54e37e415d473cfe0136c9fda2798e03d4ad45c1984b4
 ############################################################
 # Stage 0 - build sssd installer
 
