@@ -285,23 +285,20 @@ RUN \
   # for $PY_LIBS/univention/management/console/oidc.py
   python3-jwt \
   # for the entrypoint.sh script
-  wget
-
-
-############################################################
-# Install regular dependencies
-#
-# NOTE: Ongoing simplification. The current build approach is difficult to
-# maintain, because dependency changes are only reflected in the Debian packages
-# and would have to be replicated here.
-#
-# We aim to switch to use regular base packages and where needed adjust the base
-# package dependencies.
-#
-# hadolint ignore=DL3008,DL3059
-RUN apt-get --assume-yes --verbose-versions --no-install-recommends install \
-  univention-config \
-  python3-univention-debug
+  wget && \
+  #
+  # Install regular dependencies
+  #
+  # NOTE: Ongoing simplification. The current build approach is difficult to
+  # maintain, because dependency changes are only reflected in the Debian packages
+  # and would have to be replicated here.
+  #
+  # We aim to switch to use regular base packages and where needed adjust the base
+  # package dependencies.
+  #
+  apt-get --assume-yes --verbose-versions --no-install-recommends install \
+    univention-config \
+    python3-univention-debug
 
 
 ############################################################
