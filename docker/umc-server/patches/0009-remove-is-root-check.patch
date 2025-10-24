@@ -1,7 +1,7 @@
-From 5f0c052e314237b92e24234b3eca855b6b2c8a0e Mon Sep 17 00:00:00 2001
+From 4d565782049a85632ef05145caab1109b550c818 Mon Sep 17 00:00:00 2001
 From: Jaime Conde <conde-segovia@univention.de>
 Date: Wed, 26 Mar 2025 14:27:50 +0100
-Subject: [PATCH] jconde/umc-server-non-root
+Subject: [PATCH 9/9] remove is root check
 
 In Nubus4K8s we are able to run this with no need for root permissions,
 with version 2.10 of sssd
@@ -10,10 +10,10 @@ with version 2.10 of sssd
  1 file changed, 3 deletions(-)
 
 diff --git a/management/univention-management-console/scripts/univention-management-console-module b/management/univention-management-console/scripts/univention-management-console-module
-index 12bc96ea28..dc4fb2b8a1 100755
+index 5e59ee30ba9..31473167303 100755
 --- a/management/univention-management-console/scripts/univention-management-console-module
 +++ b/management/univention-management-console/scripts/univention-management-console-module
-@@ -48,9 +48,6 @@ from univention.management.console.log import MODULE, log_init
+@@ -21,9 +21,6 @@ from univention.management.console.log import MODULE, RequestFilter, add_filter,
  
  
  if __name__ == '__main__':
@@ -24,5 +24,5 @@ index 12bc96ea28..dc4fb2b8a1 100755
      parser = ArgumentParser()
      parser.add_argument('-s', '--socket', help='defines the socket to bind to')
 -- 
-2.48.1
+2.51.0
 
