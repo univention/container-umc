@@ -25,7 +25,6 @@ services:
       platforms:
         - "linux/amd64"
       target: final
-    user: root
     ports:
       - 8090:8090
     volumes:
