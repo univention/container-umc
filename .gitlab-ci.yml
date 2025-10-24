@@ -85,7 +85,7 @@ test-image-umc-server:
     - sleep 10
     - docker logs dev-local-umc-server-1
   script:
-    - >
+    - >-
       docker compose --progress plain run --pull always --rm test
       pytest tests/integration --umc-server-url=http://umc-server:8090
   after_script:
