@@ -25,9 +25,6 @@ apt-get --assume-yes --verbose-versions --no-install-recommends install \
   libsss-nss-idmap0=2.8.* \
   sssd-ldap=2.8.*
 
-
-rm -rf /var/lib/apt/lists/*
-
 exit 0
 # shellcheck disable=SC2317
 __ARCHIVE_BELOW__
