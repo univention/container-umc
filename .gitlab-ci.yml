@@ -85,6 +85,11 @@ test-image-umc-server:
     - sleep 10
     - docker logs dev-local-umc-server-1
   script:
+    - echo "Running tests inside of the image:"
+    - docker compose exec umc-server univention-management-console-module --help
+    - docker compose exec umc-server univention-management-console-server --help
+
+    - echo "Running tests from outside the image:"
     - >-
       docker compose --progress plain run --pull always --rm test
       pytest tests/integration --umc-server-url=http://umc-server:8090

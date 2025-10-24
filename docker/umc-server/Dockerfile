@@ -622,19 +622,26 @@ RUN echo -en 'en_US.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8\n' >> /etc/locale.gen && \
 ############################################################
 # Set permissions
 
-RUN mkdir -p /etc/univention/ssl && \
+RUN \
+  mkdir -p \
+    /etc/ldap \
+    /etc/univention/ssl \
+    /var/www/univention && \
   chown -R sssd:sssd \
   /usr/sbin/univention-management-console-server \
   /usr/sbin/univention-management-console-module \
   /usr/share/univention-management-console \
   /var/cache/univention-management-console \
   /var/log/univention \
+  /etc/ldap \
+  /etc/pam.d \
   /etc/univention \
   /etc/sssd \
   /usr/lib/python3/dist-packages/univention \
   /usr/share/locale/de/LC_MESSAGES \
   /var/lib/univention-appcenter \
   /var/cache/univention-config \
+  /var/www/univention \
   && chmod -R 755 \
   /entrypoint.d \
   /usr/sbin/univention-management-console-server \
