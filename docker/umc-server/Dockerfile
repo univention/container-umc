@@ -622,7 +622,8 @@ RUN echo -en 'en_US.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8\n' >> /etc/locale.gen && \
 ############################################################
 # Set permissions
 
-RUN chown -R sssd:sssd \
+RUN mkdir -p /etc/univention/ssl && \
+  chown -R sssd:sssd \
   /usr/sbin/univention-management-console-server \
   /usr/sbin/univention-management-console-module \
   /usr/share/univention-management-console \
