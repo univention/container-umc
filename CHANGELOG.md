@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.53.2](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.53.1...v0.53.2) (2025-10-24)
+
+
+### Bug Fixes
+
+* **deps:** Update Base Image Update to v5.2.3-build.20251023 ([e746d2d](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/e746d2dd4e3ade15716dee1dad7aa80b51389755)), closes [univention/dev/internal/team-nubus#1486](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1486)
+* **umc-server:** Adjust patches to new base image version ([4bfeff0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/4bfeff0ea03d3e17d6d6a80ed93d4412136ebc74)), closes [univention/dev/internal/team-nubus#1486](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1486)
+* **umc-server:** Ensure that /etc/univention/ssl has correct ownership ([a111b03](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/a111b03eeb7da57589c5bdd7281098f10b3d40e7)), closes [univention/dev/internal/team-nubus#1486](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1486)
+* **umc-server:** Ensure that both main commands can be started ([f83f81a](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/f83f81a2d5c55dcbf2771e2549d01dc96d8e5184)), closes [univention/dev/internal/team-nubus#1486](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1486)
+* **umc-server:** Install UCR as regular package ([ac5595f](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/ac5595f5b1839ce7e717902bbddccb3583ee071b)), closes [univention/dev/internal/team-nubus#1486](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1486)
+* **umc-server:** Remove cleanup of apt packages from sssd install script ([a06bd35](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/a06bd359c41c4a09db7089344236407021ca5fb8)), closes [univention/dev/internal/team-nubus#1486](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1486)
+
 ## [0.53.1](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.53.0...v0.53.1) (2025-10-22)
 
 
