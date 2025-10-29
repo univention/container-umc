@@ -59,8 +59,8 @@ spec:
       {{- if .Values.memcached.tolerations }}
       tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.memcached.tolerations "context" .) | nindent 8 }}
       {{- end }}
-      {{- if .Values.memcached.podSecurityContext }}
-      securityContext: {{- include "common.tplvalues.render" (dict "value" .Values.memcached.podSecurityContext "context" $) | nindent 8 }}
+      {{- if .Values.memcached.podSecurityContext.enabled }}
+      securityContext: {{- omit .Values.memcached.podSecurityContext "enabled" | toYaml | nindent 8 }}
       {{- end }}
       {{- if .Values.serviceAccount.create }}
       serviceAccountName: {{ include "common.names.fullname" . }}
@@ -70,8 +70,8 @@ spec:
         - name: memcached
           image: {{ .Values.memcached.image.registry }}/{{ .Values.memcached.image.repository }}:{{ .Values.memcached.image.tag }}
           imagePullPolicy: {{ .Values.memcached.image.pullPolicy | quote }}
-          {{- if .Values.memcached.containerSecurityContext }}
-          securityContext: {{- include "common.tplvalues.render" (dict "value" .Values.memcached.containerSecurityContext "context" $) | nindent 12 }}
+          {{- if .Values.memcached.containerSecurityContext.enabled }}
+          securityContext: {{- omit .Values.memcached.containerSecurityContext "enabled" | toYaml | nindent 12 }}
           {{- end }}
           env:
             - name: MEMCACHED_PORT_NUMBER
@@ -92,22 +92,26 @@ spec:
             - name: memcache
               containerPort: {{ .Values.memcached.containerPort | default 11211 }}
               protocol: TCP
-          {{- if .Values.memcached.livenessProbe }}
-          livenessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.memcached.livenessProbe "context" $) | nindent 12 }}
+          {{- if .Values.memcached.livenessProbe.enabled }}
+          livenessProbe: {{- omit .Values.memcached.livenessProbe "enabled" | toYaml | nindent 12 }}
           {{- end }}
-          {{- if .Values.memcached.readinessProbe }}
-          readinessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.memcached.readinessProbe "context" $) | nindent 12 }}
+          {{- if .Values.memcached.readinessProbe.enabled }}
+          readinessProbe: {{- omit .Values.memcached.readinessProbe "enabled" | toYaml | nindent 12 }}
           {{- end }}
-          {{- if .Values.memcached.startupProbe }}
-          startupProbe: {{- include "common.tplvalues.render" (dict "value" .Values.memcached.startupProbe "context" $) | nindent 12 }}
+          {{- if .Values.memcached.startupProbe.enabled }}
+          startupProbe: {{- omit .Values.memcached.startupProbe "enabled" | toYaml | nindent 12 }}
           {{- end }}
           {{- if .Values.memcached.resources }}
           resources: {{- include "common.tplvalues.render" (dict "value" .Values.memcached.resources "context" $) | nindent 12 }}
           {{- end }}
           volumeMounts:
-            - name: tmp
+            - name: empty-dir
+              mountPath: /opt/bitnami/memcached/conf
+              subPath: app-conf-dir
+            - name: empty-dir
               mountPath: /tmp
+              subPath: tmp-dir
       volumes:
-        - name: tmp
+        - name: empty-dir
           emptyDir: {}
 {{- end }}
