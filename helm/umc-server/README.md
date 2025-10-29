@@ -707,9 +707,9 @@ true
     "enabled": true,
     "privileged": false,
     "readOnlyRootFilesystem": true,
-    "runAsGroup": 1001,
+    "runAsGroup": 11211,
     "runAsNonRoot": true,
-    "runAsUser": 1001,
+    "runAsUser": 11211,
     "seccompProfile": {
       "type": "RuntimeDefault"
     }
@@ -727,8 +727,8 @@ true
   "image": {
     "pullPolicy": "IfNotPresent",
     "registry": "docker.io",
-    "repository": "bitnami/memcached",
-    "tag": "1.6.39-debian-12-r0"
+    "repository": "memcached",
+    "tag": "1.6.39-alpine"
   },
   "livenessProbe": {
     "enabled": true,
@@ -749,7 +749,7 @@ true
   "podLabels": {},
   "podSecurityContext": {
     "enabled": true,
-    "fsGroup": 1001,
+    "fsGroup": 11211,
     "fsGroupChangePolicy": "Always"
   },
   "readinessProbe": {
@@ -904,9 +904,9 @@ true
   "enabled": true,
   "privileged": false,
   "readOnlyRootFilesystem": true,
-  "runAsGroup": 1001,
+  "runAsGroup": 11211,
   "runAsNonRoot": true,
-  "runAsUser": 1001,
+  "runAsUser": 11211,
   "seccompProfile": {
     "type": "RuntimeDefault"
   }
@@ -940,8 +940,8 @@ true
 {
   "pullPolicy": "IfNotPresent",
   "registry": "docker.io",
-  "repository": "bitnami/memcached",
-  "tag": "1.6.39-debian-12-r0"
+  "repository": "memcached",
+  "tag": "1.6.39-alpine"
 }
 </pre>
 </td>
@@ -969,7 +969,7 @@ true
 			<td>memcached.image.repository</td>
 			<td>string</td>
 			<td><pre lang="json">
-"bitnami/memcached"
+"memcached"
 </pre>
 </td>
 			<td>Memcached image repository.</td>
@@ -978,7 +978,7 @@ true
 			<td>memcached.image.tag</td>
 			<td>string</td>
 			<td><pre lang="json">
-"1.6.39-debian-12-r0"
+"1.6.39-alpine"
 </pre>
 </td>
 			<td>Memcached image tag.</td>
@@ -1038,7 +1038,7 @@ true
 			<td><pre lang="json">
 {
   "enabled": true,
-  "fsGroup": 1001,
+  "fsGroup": 11211,
   "fsGroupChangePolicy": "Always"
 }
 </pre>

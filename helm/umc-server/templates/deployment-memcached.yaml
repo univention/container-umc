@@ -66,17 +66,32 @@ spec:
       serviceAccountName: {{ include "common.names.fullname" . }}
       {{- end }}
       automountServiceAccountToken: false
-      containers:
-        - name: memcached
+      {{- if .Values.memcached.auth.enabled }}
+      initContainers:
+        - name: setup-sasl
           image: {{ .Values.memcached.image.registry }}/{{ .Values.memcached.image.repository }}:{{ .Values.memcached.image.tag }}
           imagePullPolicy: {{ .Values.memcached.image.pullPolicy | quote }}
-          {{- if .Values.memcached.containerSecurityContext.enabled }}
-          securityContext: {{- omit .Values.memcached.containerSecurityContext "enabled" | toYaml | nindent 12 }}
-          {{- end }}
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
+            runAsNonRoot: false
+            privileged: false
+            readOnlyRootFilesystem: false
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+              add: ["CHOWN", "DAC_OVERRIDE"]
+            seccompProfile:
+              type: "RuntimeDefault"
+          command:
+            - sh
+            - -c
+            - |
+              echo "mech_list: plain" > /sasl-config/memcached.conf
+              echo "$MEMCACHED_PASSWORD" | saslpasswd2 -p -c -f /sasl-config/memcached-sasldb2 "$MEMCACHED_USERNAME"
+              chown 11211:11211 /sasl-config/memcached-sasldb2
+              chmod 600 /sasl-config/memcached-sasldb2
           env:
-            - name: MEMCACHED_PORT_NUMBER
-              value: {{ .Values.memcached.containerPort | default 11211 | quote }}
-            {{- if .Values.memcached.auth.enabled }}
             - name: MEMCACHED_USERNAME
               value: {{ .Values.memcached.auth.username | quote }}
             - name: MEMCACHED_PASSWORD
@@ -84,10 +99,40 @@ spec:
                 secretKeyRef:
                   name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.memcached.auth.existingSecret "defaultNameSuffix" "memcached" "context" .) }}
                   key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.memcached.auth.existingSecret "key" "password" "context" .) }}
+          volumeMounts:
+            - name: sasl-config
+              mountPath: /sasl-config
+      {{- end }}
+      containers:
+        - name: memcached
+          image: {{ .Values.memcached.image.registry }}/{{ .Values.memcached.image.repository }}:{{ .Values.memcached.image.tag }}
+          imagePullPolicy: {{ .Values.memcached.image.pullPolicy | quote }}
+          {{- if .Values.memcached.containerSecurityContext.enabled }}
+          securityContext: {{- omit .Values.memcached.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+          {{- end }}
+          {{- if or .Values.memcached.auth.enabled .Values.memcached.extraEnvVars }}
+          command:
+            - memcached
+            - -p
+            - "11211"
+            - -u
+            - memcache
+            {{- if .Values.memcached.auth.enabled }}
+            - -S
             {{- end }}
-            {{- if .Values.memcached.extraEnvVars }}
-            {{- include "common.tplvalues.render" (dict "value" .Values.memcached.extraEnvVars "context" $) | nindent 12 }}
+            {{- range .Values.memcached.extraEnvVars }}
+            {{- if eq .name "MEMCACHED_CACHE_SIZE" }}
+            - -m
+            - {{ .value | quote }}
             {{- end }}
+            {{- if eq .name "MEMCACHED_EXTRA_FLAGS" }}
+            {{- $flags := splitList " " .value }}
+            {{- range $flags }}
+            - {{ . | quote }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
+          {{- end }}
           ports:
             - name: memcache
               containerPort: {{ .Values.memcached.containerPort | default 11211 }}
@@ -106,12 +151,17 @@ spec:
           {{- end }}
           volumeMounts:
             - name: empty-dir
-              mountPath: /opt/bitnami/memcached/conf
-              subPath: app-conf-dir
-            - name: empty-dir
               mountPath: /tmp
-              subPath: tmp-dir
+            {{- if .Values.memcached.auth.enabled }}
+            - name: sasl-config
+              mountPath: /etc/sasl2
+              readOnly: true
+            {{- end }}
       volumes:
         - name: empty-dir
           emptyDir: {}
+        {{- if .Values.memcached.auth.enabled }}
+        - name: sasl-config
+          emptyDir: {}
+        {{- end }}
 {{- end }}
