@@ -1,0 +1,36 @@
+{{- /*
+SPDX-FileCopyrightText: 2025 Univention GmbH
+SPDX-License-Identifier: AGPL-3.0-only
+*/}}
+
+{{- if .Values.memcached.bundled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "common.names.fullname" . }}-memcached
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels:
+    {{- include "common.labels.standard" ( dict "customLabels" .Values.additionalLabels "context" . ) | nindent 4 }}
+    app.kubernetes.io/component: memcached
+  {{- if .Values.memcached.service.annotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.memcached.service.annotations "context" $) | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.memcached.service.type | default "ClusterIP" }}
+  {{- if .Values.memcached.service.clusterIP }}
+  clusterIP: {{ .Values.memcached.service.clusterIP }}
+  {{- end }}
+  {{- if .Values.memcached.service.sessionAffinity }}
+  sessionAffinity: {{ .Values.memcached.service.sessionAffinity }}
+  {{- end }}
+  ports:
+    - name: memcache
+      port: {{ .Values.memcached.service.port | default 11211 }}
+      targetPort: memcache
+      protocol: TCP
+  publishNotReadyAddresses: true
+  selector:
+    {{- include "common.labels.matchLabels" . | nindent 4 }}
+    app.kubernetes.io/component: memcached
+{{- end }}

@@ -44,7 +44,6 @@ helm uninstall umc-server
 | Repository | Name | Version |
 |------------|------|---------|
 | oci://artifacts.software-univention.de/nubus/charts | nubus-common | 0.28.0 |
-| oci://docker.io/bitnamicharts | memcached | ^7.x.x |
 
 ## Values
 
@@ -682,6 +681,7 @@ true
 			<td>object</td>
 			<td><pre lang="json">
 {
+  "affinity": {},
   "auth": {
     "enabled": true,
     "existingPasswordSecret": "",
@@ -696,8 +696,23 @@ true
     "host": "",
     "port": ""
   },
+  "containerPort": 11211,
   "containerSecurityContext": {
-    "readOnlyRootFilesystem": false
+    "allowPrivilegeEscalation": false,
+    "capabilities": {
+      "drop": [
+        "ALL"
+      ]
+    },
+    "enabled": true,
+    "privileged": false,
+    "readOnlyRootFilesystem": false,
+    "runAsGroup": 1001,
+    "runAsNonRoot": true,
+    "runAsUser": 1001,
+    "seccompProfile": {
+      "type": "RuntimeDefault"
+    }
   },
   "extraEnvVars": [
     {
@@ -708,11 +723,77 @@ true
       "name": "MEMCACHED_EXTRA_FLAGS",
       "value": "--disable-evictions"
     }
-  ]
+  ],
+  "image": {
+    "pullPolicy": "IfNotPresent",
+    "registry": "docker.io",
+    "repository": "bitnami/memcached",
+    "tag": "1.6.39-debian-12-r0"
+  },
+  "livenessProbe": {
+    "enabled": true,
+    "exec": {
+      "command": [
+        "pgrep",
+        "memcached"
+      ]
+    },
+    "failureThreshold": 6,
+    "initialDelaySeconds": 30,
+    "periodSeconds": 10,
+    "successThreshold": 1,
+    "timeoutSeconds": 5
+  },
+  "nodeSelector": {},
+  "podAnnotations": {},
+  "podLabels": {},
+  "podSecurityContext": {
+    "enabled": true,
+    "fsGroup": 1001,
+    "fsGroupChangePolicy": "Always"
+  },
+  "readinessProbe": {
+    "enabled": true,
+    "failureThreshold": 6,
+    "initialDelaySeconds": 5,
+    "periodSeconds": 5,
+    "successThreshold": 1,
+    "tcpSocket": {
+      "port": "memcache"
+    },
+    "timeoutSeconds": 3
+  },
+  "replicaCount": 1,
+  "resources": {},
+  "service": {
+    "annotations": {},
+    "clusterIP": "",
+    "port": 11211,
+    "sessionAffinity": "",
+    "type": "ClusterIP"
+  },
+  "startupProbe": {},
+  "tolerations": [],
+  "updateStrategy": {
+    "rollingUpdate": {
+      "maxSurge": "25%",
+      "maxUnavailable": "25%"
+    },
+    "type": "RollingUpdate"
+  }
 }
 </pre>
 </td>
-			<td>Memcached settings.  The bitnami helm chart does contain all details of what can be configured: https://github.com/bitnami/charts/tree/main/bitnami/memcached</td>
+			<td>Memcached settings.</td>
+		</tr>
+		<tr>
+			<td>memcached.affinity</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td>Affinity for memcached pod assignment. This parameter is only used by the bundled memcached.</td>
 		</tr>
 		<tr>
 			<td>memcached.auth.enabled</td>
@@ -721,7 +802,7 @@ true
 true
 </pre>
 </td>
-			<td>This parameter is only used by the bundled memcached.</td>
+			<td>Enable authentication for memcached. This parameter is only used by the bundled memcached.</td>
 		</tr>
 		<tr>
 			<td>memcached.auth.existingPasswordSecret</td>
@@ -801,6 +882,40 @@ true
 			<td>Memcached port.</td>
 		</tr>
 		<tr>
+			<td>memcached.containerPort</td>
+			<td>int</td>
+			<td><pre lang="json">
+11211
+</pre>
+</td>
+			<td>Container port for memcached. This parameter is only used by the bundled memcached.</td>
+		</tr>
+		<tr>
+			<td>memcached.containerSecurityContext</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "allowPrivilegeEscalation": false,
+  "capabilities": {
+    "drop": [
+      "ALL"
+    ]
+  },
+  "enabled": true,
+  "privileged": false,
+  "readOnlyRootFilesystem": false,
+  "runAsGroup": 1001,
+  "runAsNonRoot": true,
+  "runAsUser": 1001,
+  "seccompProfile": {
+    "type": "RuntimeDefault"
+  }
+}
+</pre>
+</td>
+			<td>Container security context for memcached. This parameter is only used by the bundled memcached.</td>
+		</tr>
+		<tr>
 			<td>memcached.extraEnvVars</td>
 			<td>list</td>
 			<td><pre lang="json">
@@ -817,6 +932,248 @@ true
 </pre>
 </td>
 			<td>Defaults from /ucs/management/univention-self-service/conffiles/etc/memcached_univention-self-service.conf  These parameters are only used by the bundled memcached.</td>
+		</tr>
+		<tr>
+			<td>memcached.image</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "pullPolicy": "IfNotPresent",
+  "registry": "docker.io",
+  "repository": "bitnami/memcached",
+  "tag": "1.6.39-debian-12-r0"
+}
+</pre>
+</td>
+			<td>Docker image configuration for memcached. This parameter is only used by the bundled memcached.</td>
+		</tr>
+		<tr>
+			<td>memcached.image.pullPolicy</td>
+			<td>string</td>
+			<td><pre lang="json">
+"IfNotPresent"
+</pre>
+</td>
+			<td>Memcached image pull policy.</td>
+		</tr>
+		<tr>
+			<td>memcached.image.registry</td>
+			<td>string</td>
+			<td><pre lang="json">
+"docker.io"
+</pre>
+</td>
+			<td>Memcached image registry.</td>
+		</tr>
+		<tr>
+			<td>memcached.image.repository</td>
+			<td>string</td>
+			<td><pre lang="json">
+"bitnami/memcached"
+</pre>
+</td>
+			<td>Memcached image repository.</td>
+		</tr>
+		<tr>
+			<td>memcached.image.tag</td>
+			<td>string</td>
+			<td><pre lang="json">
+"1.6.39-debian-12-r0"
+</pre>
+</td>
+			<td>Memcached image tag.</td>
+		</tr>
+		<tr>
+			<td>memcached.livenessProbe</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "enabled": true,
+  "exec": {
+    "command": [
+      "pgrep",
+      "memcached"
+    ]
+  },
+  "failureThreshold": 6,
+  "initialDelaySeconds": 30,
+  "periodSeconds": 10,
+  "successThreshold": 1,
+  "timeoutSeconds": 5
+}
+</pre>
+</td>
+			<td>Liveness probe configuration for memcached. This parameter is only used by the bundled memcached.</td>
+		</tr>
+		<tr>
+			<td>memcached.nodeSelector</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td>Node selector for memcached pod assignment. This parameter is only used by the bundled memcached.</td>
+		</tr>
+		<tr>
+			<td>memcached.podAnnotations</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td>Pod annotations for memcached. This parameter is only used by the bundled memcached.</td>
+		</tr>
+		<tr>
+			<td>memcached.podLabels</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td>Pod labels for memcached. This parameter is only used by the bundled memcached.</td>
+		</tr>
+		<tr>
+			<td>memcached.podSecurityContext</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "enabled": true,
+  "fsGroup": 1001,
+  "fsGroupChangePolicy": "Always"
+}
+</pre>
+</td>
+			<td>Pod security context for memcached. This parameter is only used by the bundled memcached.</td>
+		</tr>
+		<tr>
+			<td>memcached.readinessProbe</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "enabled": true,
+  "failureThreshold": 6,
+  "initialDelaySeconds": 5,
+  "periodSeconds": 5,
+  "successThreshold": 1,
+  "tcpSocket": {
+    "port": "memcache"
+  },
+  "timeoutSeconds": 3
+}
+</pre>
+</td>
+			<td>Readiness probe configuration for memcached. This parameter is only used by the bundled memcached.</td>
+		</tr>
+		<tr>
+			<td>memcached.replicaCount</td>
+			<td>int</td>
+			<td><pre lang="json">
+1
+</pre>
+</td>
+			<td>Number of memcached replicas. This parameter is only used by the bundled memcached.</td>
+		</tr>
+		<tr>
+			<td>memcached.resources</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td>Resource requests and limits for memcached. This parameter is only used by the bundled memcached.</td>
+		</tr>
+		<tr>
+			<td>memcached.service</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "annotations": {},
+  "clusterIP": "",
+  "port": 11211,
+  "sessionAffinity": "",
+  "type": "ClusterIP"
+}
+</pre>
+</td>
+			<td>Service configuration for memcached. This parameter is only used by the bundled memcached.</td>
+		</tr>
+		<tr>
+			<td>memcached.service.annotations</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td>Service annotations for memcached.</td>
+		</tr>
+		<tr>
+			<td>memcached.service.clusterIP</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>Service cluster IP for memcached.</td>
+		</tr>
+		<tr>
+			<td>memcached.service.port</td>
+			<td>int</td>
+			<td><pre lang="json">
+11211
+</pre>
+</td>
+			<td>Service port for memcached.</td>
+		</tr>
+		<tr>
+			<td>memcached.service.sessionAffinity</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>Service session affinity for memcached.</td>
+		</tr>
+		<tr>
+			<td>memcached.service.type</td>
+			<td>string</td>
+			<td><pre lang="json">
+"ClusterIP"
+</pre>
+</td>
+			<td>Service type for memcached.</td>
+		</tr>
+		<tr>
+			<td>memcached.startupProbe</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td>Startup probe configuration for memcached. This parameter is only used by the bundled memcached.</td>
+		</tr>
+		<tr>
+			<td>memcached.tolerations</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td>Tolerations for memcached pod assignment. This parameter is only used by the bundled memcached.</td>
+		</tr>
+		<tr>
+			<td>memcached.updateStrategy</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "rollingUpdate": {
+    "maxSurge": "25%",
+    "maxUnavailable": "25%"
+  },
+  "type": "RollingUpdate"
+}
+</pre>
+</td>
+			<td>Update strategy for memcached deployment. This parameter is only used by the bundled memcached.</td>
 		</tr>
 		<tr>
 			<td>mountUcr</td>

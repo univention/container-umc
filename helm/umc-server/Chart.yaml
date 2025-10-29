@@ -20,9 +20,5 @@ dependencies:
   - name: "nubus-common"
     version: "0.28.0"
     repository: "oci://artifacts.software-univention.de/nubus/charts"
-  - name: "memcached"
-    repository: "oci://docker.io/bitnamicharts"
-    version: "^7.x.x"
-    condition: "memcached.bundled"
 
 ...

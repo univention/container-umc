@@ -430,9 +430,6 @@ autoscaling:
   enabled: false
 
 # -- Memcached settings.
-#
-# The bitnami helm chart does contain all details of what can be configured:
-# https://github.com/bitnami/charts/tree/main/bitnami/memcached
 memcached:
   # -- Set to `true` if you want Memcached to be installed as well.
   #
@@ -440,7 +437,8 @@ memcached:
   # and the connection settings in the stack-data chart:
   # `stackDataContext.umcMemcachedHostname` and `stackDataContext.umcMemcachedUsername`
   bundled: true
-  # nameOverride: "umc-server-memcached"
+  # -- Number of memcached replicas. This parameter is only used by the bundled memcached.
+  replicaCount: 1
   # -- Connection parameters. These are required if an external service should be used (bundled is set to `false`).
   connection:
     # -- Memcached host.
@@ -448,7 +446,7 @@ memcached:
     # -- Memcached port.
     port: ""
   auth:
-    # -- This parameter is only used by the bundled memcached.
+    # -- Enable authentication for memcached. This parameter is only used by the bundled memcached.
     enabled: true
     # -- Memcached username. This parameter is only used by the bundled memcached.
     username: "selfservice"
@@ -459,8 +457,18 @@ memcached:
     # -- Memcached password secret reference.
     existingSecret:
       name: ""
-  containerSecurityContext:
-    readOnlyRootFilesystem: false
+  # -- Docker image configuration for memcached. This parameter is only used by the bundled memcached.
+  image:
+    # -- Memcached image registry.
+    registry: "docker.io"
+    # -- Memcached image repository.
+    repository: "bitnami/memcached"
+    # -- Memcached image tag.
+    tag: "1.6.39-debian-12-r0"
+    # -- Memcached image pull policy.
+    pullPolicy: "IfNotPresent"
+  # -- Container port for memcached. This parameter is only used by the bundled memcached.
+  containerPort: 11211
   # -- Defaults from /ucs/management/univention-self-service/conffiles/etc/memcached_univention-self-service.conf
   #
   # These parameters are only used by the bundled memcached.
@@ -469,6 +477,78 @@ memcached:
       value: "64"
     - name: "MEMCACHED_EXTRA_FLAGS"
       value: "--disable-evictions"
+  # -- Container security context for memcached. This parameter is only used by the bundled memcached.
+  containerSecurityContext:
+    enabled: true
+    runAsUser: 1001
+    runAsGroup: 1001
+    runAsNonRoot: true
+    privileged: false
+    readOnlyRootFilesystem: false
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop: ["ALL"]
+    seccompProfile:
+      type: "RuntimeDefault"
+  # -- Pod security context for memcached. This parameter is only used by the bundled memcached.
+  podSecurityContext:
+    enabled: true
+    fsGroup: 1001
+    fsGroupChangePolicy: "Always"
+  # -- Resource requests and limits for memcached. This parameter is only used by the bundled memcached.
+  resources: {}
+  # -- Affinity for memcached pod assignment. This parameter is only used by the bundled memcached.
+  affinity: {}
+  # -- Node selector for memcached pod assignment. This parameter is only used by the bundled memcached.
+  nodeSelector: {}
+  # -- Tolerations for memcached pod assignment. This parameter is only used by the bundled memcached.
+  tolerations: []
+  # -- Pod annotations for memcached. This parameter is only used by the bundled memcached.
+  podAnnotations: {}
+  # -- Pod labels for memcached. This parameter is only used by the bundled memcached.
+  podLabels: {}
+  # -- Update strategy for memcached deployment. This parameter is only used by the bundled memcached.
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  # -- Liveness probe configuration for memcached. This parameter is only used by the bundled memcached.
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+    exec:
+      command:
+        - pgrep
+        - memcached
+  # -- Readiness probe configuration for memcached. This parameter is only used by the bundled memcached.
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 6
+    successThreshold: 1
+    tcpSocket:
+      port: memcache
+  # -- Startup probe configuration for memcached. This parameter is only used by the bundled memcached.
+  startupProbe: {}
+  # -- Service configuration for memcached. This parameter is only used by the bundled memcached.
+  service:
+    # -- Service type for memcached.
+    type: "ClusterIP"
+    # -- Service port for memcached.
+    port: 11211
+    # -- Service cluster IP for memcached.
+    clusterIP: ""
+    # -- Service session affinity for memcached.
+    sessionAffinity: ""
+    # -- Service annotations for memcached.
+    annotations: {}
 
 # -- PostgreSQL settings.
 postgresql:

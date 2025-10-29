@@ -47,3 +47,19 @@ These template definitions are only used in this chart and do not relate to temp
 {{- required ".Values.ingress.tls.secretName must be defined" .Values.ingress.tls.secretName -}}
 {{- end -}}
 {{- end -}}
+
+{{- define "umc-server.memcached.host" -}}
+{{- if .Values.memcached.bundled -}}
+{{- printf "%s-memcached" (include "common.names.fullname" .) -}}
+{{- else -}}
+{{- tpl .Values.memcached.connection.host . -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "umc-server.memcached.port" -}}
+{{- if .Values.memcached.bundled -}}
+{{- .Values.memcached.service.port | default 11211 -}}
+{{- else -}}
+{{- tpl .Values.memcached.connection.port . -}}
+{{- end -}}
+{{- end -}}
