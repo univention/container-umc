@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.53.4](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.53.3...v0.53.4) (2025-10-30)
+
+
+### Bug Fixes
+
+* bump base-image to get new session-info endpoint features ([acb806e](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/acb806eaff84bf36fc15330d6666f5d284180575)), closes [univention/dev/internal/team-nubus#1419](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1419)
+
 ## [0.53.3](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.53.2...v0.53.3) (2025-10-29)
 
 
