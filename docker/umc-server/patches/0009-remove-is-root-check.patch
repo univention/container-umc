@@ -6,23 +6,24 @@ Subject: [PATCH 9/9] remove is root check
 In Nubus4K8s we are able to run this with no need for root permissions,
 with version 2.10 of sssd
 ---
- .../scripts/univention-management-console-module               | 3 ---
- 1 file changed, 3 deletions(-)
+ .../scripts/univention-management-console-module              | 4 ----
+ 1 file changed, 4 deletions(-)
 
 diff --git a/management/univention-management-console/scripts/univention-management-console-module b/management/univention-management-console/scripts/univention-management-console-module
 index 5e59ee30ba9..31473167303 100755
 --- a/management/univention-management-console/scripts/univention-management-console-module
 +++ b/management/univention-management-console/scripts/univention-management-console-module
-@@ -21,9 +21,6 @@ from univention.management.console.log import MODULE, RequestFilter, add_filter,
+@@ -21,10 +21,6 @@ from univention.management.console.log import MODULE, RequestFilter, add_filter,
  
  
  if __name__ == '__main__':
 -    if os.getuid() != 0:
 -        sys.stderr.write('%s must be started as root\n' % os.path.basename(sys.argv[0]))
 -        sys.exit(1)
- 
+-
      parser = ArgumentParser()
      parser.add_argument('-s', '--socket', help='defines the socket to bind to')
+     parser.add_argument('-l', '--language', default='C', help='defines the language to use')
 -- 
-2.51.0
+2.34.1
 
