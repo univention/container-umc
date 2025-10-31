@@ -223,8 +223,8 @@ spec:
             - name: "SELF_SERVICE_MEMCACHED_SECRET"
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.memcached.auth.existingSecret "defaultNameSuffix" "memcached" "context" .) }}
-                  key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.memcached.auth.existingSecret "key" "password" "context" .) }}
+                  name: {{ include "nubus-common.secrets.name" (dict "existingSecret" (fromJson (include "umc-server.memcached.auth.existingSecret" .)) "defaultNameSuffix" "memcached" "context" .) }}
+                  key: {{ include "nubus-common.secrets.key" (dict "existingSecret" (fromJson (include "umc-server.memcached.auth.existingSecret" .)) "key" "password" "context" .) }}
             - name: "PYTHONDONTWRITEBYTECODE"
               value: "1"
           envFrom:
@@ -304,7 +304,7 @@ spec:
               readOnly: true
             - name: secret-memcached
               mountPath: "/var/secrets/memcached_password"
-              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.memcached.auth.existingSecret "key" "password" "context" .) }}
+              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" (fromJson (include "umc-server.memcached.auth.existingSecret" .)) "key" "password" "context" .) }}
               readOnly: true
             - name: oidc-client-secret
               mountPath: "/etc/oidc-rp-umc-server.secret"
@@ -512,7 +512,7 @@ spec:
             secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.postgresql.selfservice.auth.existingSecret "defaultNameSuffix" "postgresql-selfservice" "context" .) }}
         - name: secret-memcached
           secret:
-            secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.memcached.auth.existingSecret "defaultNameSuffix" "memcached" "context" .) }}
+            secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" (fromJson (include "umc-server.memcached.auth.existingSecret" .)) "defaultNameSuffix" "memcached" "context" .) }}
         - name: oidc-client-secret
           secret:
             secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.umcServer.oidcClient.auth.existingSecret "defaultNameSuffix" "oidc" "context" .) }}

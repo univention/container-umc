@@ -77,3 +77,18 @@ These template definitions are only used in this chart and do not relate to temp
   {{- 11211 -}}
 {{- end -}}
 {{- end -}}
+
+{{- define "umc-server.memcached.auth.existingSecret" -}}
+{{- $existingSecret := dict -}}
+{{- if and .Values.memcached .Values.memcached.auth -}}
+  {{- if (.Values.memcached.auth.existingSecret).name -}}
+    {{- /* New format: use existingSecret */ -}}
+    {{- $existingSecret = .Values.memcached.auth.existingSecret -}}
+  {{- else if .Values.memcached.auth.existingPasswordSecret -}}
+    {{- /* Backward compatibility: convert existingPasswordSecret to existingSecret format */ -}}
+    {{- $_ := set $existingSecret "name" .Values.memcached.auth.existingPasswordSecret -}}
+    {{- $_ := set $existingSecret "keyMapping" (dict "password" "memcached-password") -}}
+  {{- end -}}
+{{- end -}}
+{{- $existingSecret | toJson -}}
+{{- end -}}
