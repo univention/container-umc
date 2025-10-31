@@ -726,9 +726,9 @@ true
   ],
   "image": {
     "pullPolicy": "IfNotPresent",
-    "registry": "docker.io",
-    "repository": "memcached",
-    "tag": "1.6.39-alpine"
+    "registry": "artifacts.software-univention.de",
+    "repository": "nubus/images/memcached",
+    "tag": "0.0.1"
   },
   "livenessProbe": {
     "enabled": true,
@@ -939,9 +939,9 @@ true
 			<td><pre lang="json">
 {
   "pullPolicy": "IfNotPresent",
-  "registry": "docker.io",
-  "repository": "memcached",
-  "tag": "1.6.39-alpine"
+  "registry": "artifacts.software-univention.de",
+  "repository": "nubus/images/memcached",
+  "tag": "0.0.1"
 }
 </pre>
 </td>
@@ -960,7 +960,7 @@ true
 			<td>memcached.image.registry</td>
 			<td>string</td>
 			<td><pre lang="json">
-"docker.io"
+"artifacts.software-univention.de"
 </pre>
 </td>
 			<td>Memcached image registry.</td>
@@ -969,7 +969,7 @@ true
 			<td>memcached.image.repository</td>
 			<td>string</td>
 			<td><pre lang="json">
-"memcached"
+"nubus/images/memcached"
 </pre>
 </td>
 			<td>Memcached image repository.</td>
@@ -978,10 +978,10 @@ true
 			<td>memcached.image.tag</td>
 			<td>string</td>
 			<td><pre lang="json">
-"1.6.39-alpine"
+"0.0.1"
 </pre>
 </td>
-			<td>Memcached image tag.</td>
+			<td>Memcached image tag. Use Debian-based image (not alpine) as it includes SASL tools.</td>
 		</tr>
 		<tr>
 			<td>memcached.livenessProbe</td>

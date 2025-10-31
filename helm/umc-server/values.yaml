@@ -460,11 +460,11 @@ memcached:
   # -- Docker image configuration for memcached. This parameter is only used by the bundled memcached.
   image:
     # -- Memcached image registry.
-    registry: "docker.io"
+    registry: "artifacts.software-univention.de"
     # -- Memcached image repository.
-    repository: "memcached"
-    # -- Memcached image tag.
-    tag: "1.6.39-alpine"
+    repository: "nubus/images/memcached"
+    # -- Memcached image tag. Use Debian-based image (not alpine) as it includes SASL tools.
+    tag: "0.0.1"
     # -- Memcached image pull policy.
     pullPolicy: "IfNotPresent"
   # -- Container port for memcached. This parameter is only used by the bundled memcached.
