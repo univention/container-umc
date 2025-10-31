@@ -49,17 +49,31 @@ These template definitions are only used in this chart and do not relate to temp
 {{- end -}}
 
 {{- define "umc-server.memcached.host" -}}
-{{- if .Values.memcached.bundled -}}
-{{- printf "%s-memcached" (include "common.names.fullname" .) -}}
+{{- if and .Values.memcached (hasKey .Values.memcached "bundled") -}}
+  {{- if .Values.memcached.bundled -}}
+    {{- printf "%s-memcached" (include "common.names.fullname" .) -}}
+  {{- else -}}
+    {{- tpl .Values.memcached.connection.host . -}}
+  {{- end -}}
 {{- else -}}
-{{- tpl .Values.memcached.connection.host . -}}
+  {{- /* Backward compatibility: if bundled is not set, assume bundled=true for old Bitnami chart */ -}}
+  {{- if and .Values.memcached .Values.memcached.nameOverride -}}
+    {{- printf "%s-%s" .Release.Name .Values.memcached.nameOverride -}}
+  {{- else -}}
+    {{- printf "%s-memcached" (include "common.names.fullname" .) -}}
+  {{- end -}}
 {{- end -}}
 {{- end -}}
 
 {{- define "umc-server.memcached.port" -}}
-{{- if .Values.memcached.bundled -}}
-{{- .Values.memcached.service.port | default 11211 -}}
+{{- if and .Values.memcached (hasKey .Values.memcached "bundled") -}}
+  {{- if .Values.memcached.bundled -}}
+    {{- .Values.memcached.service.port | default 11211 -}}
+  {{- else -}}
+    {{- tpl .Values.memcached.connection.port . -}}
+  {{- end -}}
 {{- else -}}
-{{- tpl .Values.memcached.connection.port . -}}
+  {{- /* Backward compatibility: default to 11211 */ -}}
+  {{- 11211 -}}
 {{- end -}}
 {{- end -}}
