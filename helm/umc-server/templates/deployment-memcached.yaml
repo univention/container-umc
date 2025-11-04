@@ -1,9 +1,10 @@
-{{- /*
-SPDX-FileCopyrightText: 2025 Univention GmbH
-SPDX-License-Identifier: AGPL-3.0-only
-*/}}
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2025 Univention GmbH
 
 {{- if .Values.memcached.bundled }}
+{{- $livenessProbe := omit .Values.memcached.livenessProbe "enabled" }}
+{{- $readinessProbe := omit .Values.memcached.readinessProbe "enabled" }}
+{{- $startupProbe := omit .Values.memcached.startupProbe "enabled" }}
 ---
 apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
 kind: Deployment
@@ -11,35 +12,38 @@ metadata:
   name: {{ include "common.names.fullname" . }}-memcached
   namespace: {{ include "common.names.namespace" . | quote }}
   labels:
-    {{- include "common.labels.standard" ( dict "customLabels" .Values.additionalLabels "context" . ) | nindent 4 }}
-    app.kubernetes.io/component: memcached
-  {{- if .Values.additionalAnnotations }}
-  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.additionalAnnotations "context" . ) | nindent 4 }}
-  {{- end }}
+    {{- $commonLabels := include "common.labels.standard" . | fromYaml }}
+    {{- $uiLabels := dict "app.kubernetes.io/name" (printf "%s-memcached" (include "common.names.name" .)) }}
+    {{- $mergedLabels := merge $uiLabels $commonLabels}}
+    {{- toYaml $mergedLabels | nindent 4 }}
+    {{- if .Values.additionalLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.additionalLabels "context" . ) | nindent 4 }}
+    {{- end }}
+  {{- include "nubus-common.annotations.render" ( dict
+    "values" ( list .Values.additionalAnnotations )
+    "context" . )
+    | nindent 2 }}
 spec:
-  replicas: {{ .Values.memcached.replicaCount | default 1 }}
+  replicas: {{ .Values.memcached.replicaCount }}
   selector:
     matchLabels:
-      {{- include "common.labels.matchLabels" . | nindent 6 }}
-      app.kubernetes.io/component: memcached
+      {{- $commonLabels := include "common.labels.matchLabels" . | fromYaml }}
+      {{- $uiLabels := dict "app.kubernetes.io/name" (printf "%s-memcached" (include "common.names.name" .)) }}
+      {{- merge $uiLabels $commonLabels | toYaml | nindent 6 }}
   {{- if .Values.memcached.updateStrategy }}
   strategy: {{- toYaml .Values.memcached.updateStrategy | nindent 4 }}
   {{- end }}
   template:
     metadata:
       annotations:
-        {{- if .Values.memcached.auth.enabled }}
-        checksum/secret: {{ include (print $.Template.BasePath "/secret-memcached.yaml") . | sha256sum }}
-        {{- end }}
-        {{- if .Values.memcached.podAnnotations }}
-        {{- include "common.tplvalues.render" (dict "value" .Values.memcached.podAnnotations "context" $) | nindent 8 }}
+        {{- if .Values.podAnnotations }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.podAnnotations "context" .) | nindent 8 }}
         {{- end }}
       labels:
-        {{- include "common.labels.standard" ( dict "customLabels" .Values.additionalLabels "context" . ) | nindent 8 }}
-        app.kubernetes.io/component: memcached
-        {{- if .Values.memcached.podLabels }}
-        {{- include "common.tplvalues.render" (dict "value" .Values.memcached.podLabels "context" $) | nindent 8 }}
-        {{- end }}
+        {{- $commonLabels := include "common.labels.standard" . | fromYaml }}
+        {{- $uiLabels := dict "app.kubernetes.io/name" (printf "%s-memcached" (include "common.names.name" .)) }}
+        {{- $mergedLabels := merge $uiLabels $commonLabels }}
+        {{- toYaml $mergedLabels | nindent 8 }}
     spec:
       {{- if or .Values.imagePullSecrets .Values.global.imagePullSecrets }}
       imagePullSecrets:
@@ -51,13 +55,20 @@ spec:
         {{- end }}
       {{- end }}
       {{- if .Values.memcached.affinity }}
-      affinity: {{- include "common.tplvalues.render" (dict "value" .Values.memcached.affinity "context" $) | nindent 8 }}
+      affinity: {{- include "common.tplvalues.render" (dict "value" .Values.memcached.affinity "context" .) | nindent 8 }}
       {{- end }}
+
       {{- if .Values.memcached.nodeSelector }}
-      nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.memcached.nodeSelector "context" $) | nindent 8 }}
+      nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.memcached.nodeSelector "context" .) | nindent 8 }}
       {{- end }}
       {{- if .Values.memcached.tolerations }}
       tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.memcached.tolerations "context" .) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.topologySpreadConstraints }}
+      topologySpreadConstraints: {{- include "common.tplvalues.render" (dict "value" .Values.topologySpreadConstraints "context" .) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
       {{- end }}
       {{- if .Values.memcached.podSecurityContext.enabled }}
       securityContext: {{- omit .Values.memcached.podSecurityContext "enabled" | toYaml | nindent 8 }}
@@ -65,103 +76,59 @@ spec:
       {{- if .Values.serviceAccount.create }}
       serviceAccountName: {{ include "common.names.fullname" . }}
       {{- end }}
-      automountServiceAccountToken: false
-      {{- if .Values.memcached.auth.enabled }}
-      initContainers:
-        - name: setup-sasl
-          image: {{ .Values.memcached.image.registry }}/{{ .Values.memcached.image.repository }}:{{ .Values.memcached.image.tag }}
-          imagePullPolicy: {{ .Values.memcached.image.pullPolicy | quote }}
-          securityContext:
-            runAsUser: 0
-            runAsGroup: 0
-            runAsNonRoot: false
-            privileged: false
-            readOnlyRootFilesystem: false
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop: ["ALL"]
-              add: ["CHOWN", "DAC_OVERRIDE", "FOWNER"]
-            seccompProfile:
-              type: "RuntimeDefault"
-          command:
-            - sh
-            - -c
-            - |
-              echo "mech_list: plain" > /sasl-config/memcached.conf
-              echo "$MEMCACHED_PASSWORD" | saslpasswd2 -p -c -f /sasl-config/memcached-sasldb2 "$MEMCACHED_USERNAME"
-              chown 11211:11211 /sasl-config/memcached-sasldb2
-              chmod 600 /sasl-config/memcached-sasldb2
+      containers:
+        - name: main
+          image: "{{ coalesce .Values.memcached.image.registry .Values.global.imageRegistry }}/{{ .Values.memcached.image.repository }}:{{ .Values.memcached.image.tag }}"
+          imagePullPolicy: {{ coalesce .Values.memcached.image.pullPolicy .Values.global.imagePullPolicy | quote }}
+          {{- if .Values.memcached.containerSecurityContext.enabled }}
+          securityContext: {{- omit .Values.memcached.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: memcache
+              containerPort: {{ .Values.memcached.containerPort }}
+              protocol: TCP
           env:
+            {{- if .Values.memcached.auth.enabled }}
             - name: MEMCACHED_USERNAME
               value: {{ .Values.memcached.auth.username | quote }}
             - name: MEMCACHED_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.memcached.auth.existingSecret "defaultNameSuffix" "memcached" "context" .) }}
-                  key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.memcached.auth.existingSecret "key" "password" "context" .) }}
-          volumeMounts:
-            - name: sasl-config
-              mountPath: /sasl-config
-      {{- end }}
-      containers:
-        - name: memcached
-          image: {{ .Values.memcached.image.registry }}/{{ .Values.memcached.image.repository }}:{{ .Values.memcached.image.tag }}
-          imagePullPolicy: {{ .Values.memcached.image.pullPolicy | quote }}
-          {{- if .Values.memcached.containerSecurityContext.enabled }}
-          securityContext: {{- omit .Values.memcached.containerSecurityContext "enabled" | toYaml | nindent 12 }}
-          {{- end }}
-          {{- if or .Values.memcached.auth.enabled .Values.memcached.extraEnvVars }}
-          command:
-            - memcached
-            - -p
-            - "11211"
-            - -u
-            - memcache
-            {{- if .Values.memcached.auth.enabled }}
-            - -S
+                  key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.memcached.auth.existingSecret "key" "memcached-password" "context" .) }}
             {{- end }}
-            {{- range .Values.memcached.extraEnvVars }}
-            {{- if eq .name "MEMCACHED_CACHE_SIZE" }}
-            - -m
-            - {{ .value | quote }}
+            {{- if .Values.memcached.extraEnvVars }}
+            {{ include "common.tplvalues.render" (dict "value" .Values.memcached.extraEnvVars "context" .) | nindent 12 }}
             {{- end }}
-            {{- if eq .name "MEMCACHED_EXTRA_FLAGS" }}
-            {{- $flags := splitList " " .value }}
-            {{- range $flags }}
-            - {{ . | quote }}
-            {{- end }}
-            {{- end }}
-            {{- end }}
-          {{- end }}
-          ports:
-            - name: memcache
-              containerPort: {{ .Values.memcached.containerPort | default 11211 }}
-              protocol: TCP
           {{- if .Values.memcached.livenessProbe.enabled }}
-          livenessProbe: {{- omit .Values.memcached.livenessProbe "enabled" | toYaml | nindent 12 }}
+          livenessProbe: {{- include "common.tplvalues.render" (dict "value" $livenessProbe "context" .) | nindent 12 }}
           {{- end }}
           {{- if .Values.memcached.readinessProbe.enabled }}
-          readinessProbe: {{- omit .Values.memcached.readinessProbe "enabled" | toYaml | nindent 12 }}
+          readinessProbe: {{- include "common.tplvalues.render" (dict "value" $readinessProbe "context" .) | nindent 12 }}
           {{- end }}
           {{- if .Values.memcached.startupProbe.enabled }}
-          startupProbe: {{- omit .Values.memcached.startupProbe "enabled" | toYaml | nindent 12 }}
+          startupProbe: {{- include "common.tplvalues.render" (dict "value" $startupProbe "context" .) | nindent 12 }}
           {{- end }}
           {{- if .Values.memcached.resources }}
-          resources: {{- include "common.tplvalues.render" (dict "value" .Values.memcached.resources "context" $) | nindent 12 }}
+          resources: {{- include "common.tplvalues.render" (dict "value" .Values.memcached.resources "context" .) | nindent 12 }}
           {{- end }}
           volumeMounts:
             - name: empty-dir
               mountPath: /tmp
-            {{- if .Values.memcached.auth.enabled }}
-            - name: sasl-config
+              subPath: tmp
+            - name: empty-dir
               mountPath: /etc/sasl2
-              readOnly: true
+              subPath: etc-sasl2
+            - name: empty-dir
+              mountPath: /var/lib/sasl2
+              subPath: var-lib-sasl2
+            {{- if .Values.memcached.extraVolumeMounts }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.memcached.extraVolumeMounts "context" $) | nindent 12 }}
             {{- end }}
       volumes:
         - name: empty-dir
           emptyDir: {}
-        {{- if .Values.memcached.auth.enabled }}
-        - name: sasl-config
-          emptyDir: {}
+        {{- if .Values.memcached.extraVolumes }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.memcached.extraVolumes "context" $) | nindent 8 }}
         {{- end }}
 {{- end }}

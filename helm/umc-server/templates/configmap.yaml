@@ -24,15 +24,6 @@ data:
   UMC_SQL_MAX_OVERFLOW: {{ .Values.postgresql.authSession.config.maxOverflow | quote }}
   UMC_SQL_POOL_TIMEOUT: {{ .Values.postgresql.authSession.config.poolTimeout | quote }}
   UMC_SQL_POOL_RECYCLE: {{ .Values.postgresql.authSession.config.poolRecycle | quote }}
-  UMC_MEMCACHED_SOCKET: {{ printf "%s:%s" (include "umc-server.memcached.host" .) (include "umc-server.memcached.port" .) | quote }}
-  {{- if and .Values.memcached .Values.memcached.auth (hasKey .Values.memcached.auth "enabled") }}
-    {{- if .Values.memcached.auth.enabled }}
-  UMC_MEMCACHED_USERNAME: {{ .Values.memcached.auth.username | default "selfservice" | quote }}
-    {{- end }}
-  {{- else if and .Values.memcached .Values.memcached.auth .Values.memcached.auth.username }}
-    {{- /* Backward compatibility: if auth exists with username but no enabled field, assume enabled */}}
-  UMC_MEMCACHED_USERNAME: {{ .Values.memcached.auth.username | quote }}
-  {{- end }}
 
 ---
 

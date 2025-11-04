@@ -684,11 +684,13 @@ true
   "affinity": {},
   "auth": {
     "enabled": true,
-    "existingPasswordSecret": "",
     "existingSecret": {
-      "name": ""
+      "keyMapping": {
+        "password": null
+      },
+      "name": null
     },
-    "password": "",
+    "password": null,
     "username": "selfservice"
   },
   "bundled": true,
@@ -707,9 +709,9 @@ true
     "enabled": true,
     "privileged": false,
     "readOnlyRootFilesystem": true,
-    "runAsGroup": 11211,
+    "runAsGroup": 1001,
     "runAsNonRoot": true,
-    "runAsUser": 11211,
+    "runAsUser": 1001,
     "seccompProfile": {
       "type": "RuntimeDefault"
     }
@@ -725,23 +727,20 @@ true
     }
   ],
   "image": {
-    "pullPolicy": "IfNotPresent",
-    "registry": "artifacts.software-univention.de",
+    "pullPolicy": null,
+    "registry": null,
     "repository": "nubus/images/memcached",
-    "tag": "0.0.1"
+    "tag": "0.1.0@sha256:324f20828f22f4640d9adbd61c65c3d7e52d263164262b0af316282ddee74e7c"
   },
   "livenessProbe": {
     "enabled": true,
-    "exec": {
-      "command": [
-        "pgrep",
-        "memcached"
-      ]
-    },
     "failureThreshold": 6,
     "initialDelaySeconds": 30,
     "periodSeconds": 10,
     "successThreshold": 1,
+    "tcpSocket": {
+      "port": "memcache"
+    },
     "timeoutSeconds": 5
   },
   "nodeSelector": {},
@@ -749,7 +748,7 @@ true
   "podLabels": {},
   "podSecurityContext": {
     "enabled": true,
-    "fsGroup": 11211,
+    "fsGroup": 1001,
     "fsGroupChangePolicy": "Always"
   },
   "readinessProbe": {
@@ -764,7 +763,16 @@ true
     "timeoutSeconds": 3
   },
   "replicaCount": 1,
-  "resources": {},
+  "resources": {
+    "limits": {
+      "cpu": "200m",
+      "memory": "512Mi"
+    },
+    "requests": {
+      "cpu": "100m",
+      "memory": "128Mi"
+    }
+  },
   "service": {
     "annotations": {},
     "clusterIP": "",
@@ -775,10 +783,6 @@ true
   "startupProbe": {},
   "tolerations": [],
   "updateStrategy": {
-    "rollingUpdate": {
-      "maxSurge": "25%",
-      "maxUnavailable": "25%"
-    },
     "type": "RollingUpdate"
   }
 }
@@ -805,20 +809,14 @@ true
 			<td>Enable authentication for memcached. This parameter is only used by the bundled memcached.</td>
 		</tr>
 		<tr>
-			<td>memcached.auth.existingPasswordSecret</td>
-			<td>string</td>
-			<td><pre lang="json">
-""
-</pre>
-</td>
-			<td>Memcached existing password secret (Must contain the key `memcached-password`). This parameter is only used by the bundled memcached.</td>
-		</tr>
-		<tr>
 			<td>memcached.auth.existingSecret</td>
 			<td>object</td>
 			<td><pre lang="json">
 {
-  "name": ""
+  "keyMapping": {
+    "password": null
+  },
+  "name": null
 }
 </pre>
 </td>
@@ -828,7 +826,7 @@ true
 			<td>memcached.auth.password</td>
 			<td>string</td>
 			<td><pre lang="json">
-""
+null
 </pre>
 </td>
 			<td>Memcached password.</td>
@@ -904,9 +902,9 @@ true
   "enabled": true,
   "privileged": false,
   "readOnlyRootFilesystem": true,
-  "runAsGroup": 11211,
+  "runAsGroup": 1001,
   "runAsNonRoot": true,
-  "runAsUser": 11211,
+  "runAsUser": 1001,
   "seccompProfile": {
     "type": "RuntimeDefault"
   }
@@ -914,6 +912,82 @@ true
 </pre>
 </td>
 			<td>Container security context for memcached. This parameter is only used by the bundled memcached.</td>
+		</tr>
+		<tr>
+			<td>memcached.containerSecurityContext.allowPrivilegeEscalation</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td>Enable container privileged escalation.</td>
+		</tr>
+		<tr>
+			<td>memcached.containerSecurityContext.capabilities</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "drop": [
+    "ALL"
+  ]
+}
+</pre>
+</td>
+			<td>Security capabilities for container.</td>
+		</tr>
+		<tr>
+			<td>memcached.containerSecurityContext.enabled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td>Enable security context.</td>
+		</tr>
+		<tr>
+			<td>memcached.containerSecurityContext.readOnlyRootFilesystem</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td>Mounts the container's root filesystem as read-only.</td>
+		</tr>
+		<tr>
+			<td>memcached.containerSecurityContext.runAsGroup</td>
+			<td>int</td>
+			<td><pre lang="json">
+1001
+</pre>
+</td>
+			<td>Process group id.</td>
+		</tr>
+		<tr>
+			<td>memcached.containerSecurityContext.runAsNonRoot</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td>Run container as a user.</td>
+		</tr>
+		<tr>
+			<td>memcached.containerSecurityContext.runAsUser</td>
+			<td>int</td>
+			<td><pre lang="json">
+1001
+</pre>
+</td>
+			<td>Process user id.</td>
+		</tr>
+		<tr>
+			<td>memcached.containerSecurityContext.seccompProfile.type</td>
+			<td>string</td>
+			<td><pre lang="json">
+"RuntimeDefault"
+</pre>
+</td>
+			<td>Disallow custom Seccomp profile by setting it to RuntimeDefault.</td>
 		</tr>
 		<tr>
 			<td>memcached.extraEnvVars</td>
@@ -938,10 +1012,10 @@ true
 			<td>object</td>
 			<td><pre lang="json">
 {
-  "pullPolicy": "IfNotPresent",
-  "registry": "artifacts.software-univention.de",
+  "pullPolicy": null,
+  "registry": null,
   "repository": "nubus/images/memcached",
-  "tag": "0.0.1"
+  "tag": "0.1.0@sha256:324f20828f22f4640d9adbd61c65c3d7e52d263164262b0af316282ddee74e7c"
 }
 </pre>
 </td>
@@ -951,7 +1025,7 @@ true
 			<td>memcached.image.pullPolicy</td>
 			<td>string</td>
 			<td><pre lang="json">
-"IfNotPresent"
+null
 </pre>
 </td>
 			<td>Memcached image pull policy.</td>
@@ -960,7 +1034,7 @@ true
 			<td>memcached.image.registry</td>
 			<td>string</td>
 			<td><pre lang="json">
-"artifacts.software-univention.de"
+null
 </pre>
 </td>
 			<td>Memcached image registry.</td>
@@ -978,10 +1052,10 @@ true
 			<td>memcached.image.tag</td>
 			<td>string</td>
 			<td><pre lang="json">
-"0.0.1"
+"0.1.0@sha256:324f20828f22f4640d9adbd61c65c3d7e52d263164262b0af316282ddee74e7c"
 </pre>
 </td>
-			<td>Memcached image tag. Use Debian-based image (not alpine) as it includes SASL tools.</td>
+			<td>Memcached image tag.</td>
 		</tr>
 		<tr>
 			<td>memcached.livenessProbe</td>
@@ -989,16 +1063,13 @@ true
 			<td><pre lang="json">
 {
   "enabled": true,
-  "exec": {
-    "command": [
-      "pgrep",
-      "memcached"
-    ]
-  },
   "failureThreshold": 6,
   "initialDelaySeconds": 30,
   "periodSeconds": 10,
   "successThreshold": 1,
+  "tcpSocket": {
+    "port": "memcache"
+  },
   "timeoutSeconds": 5
 }
 </pre>
@@ -1038,12 +1109,39 @@ true
 			<td><pre lang="json">
 {
   "enabled": true,
-  "fsGroup": 11211,
+  "fsGroup": 1001,
   "fsGroupChangePolicy": "Always"
 }
 </pre>
 </td>
 			<td>Pod security context for memcached. This parameter is only used by the bundled memcached.</td>
+		</tr>
+		<tr>
+			<td>memcached.podSecurityContext.enabled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td>Enable security context.</td>
+		</tr>
+		<tr>
+			<td>memcached.podSecurityContext.fsGroup</td>
+			<td>int</td>
+			<td><pre lang="json">
+1001
+</pre>
+</td>
+			<td>If specified, all processes of the container are also part of the supplementary group.</td>
+		</tr>
+		<tr>
+			<td>memcached.podSecurityContext.fsGroupChangePolicy</td>
+			<td>string</td>
+			<td><pre lang="json">
+"Always"
+</pre>
+</td>
+			<td>Change ownership and permission of the volume before being exposed inside a Pod.</td>
 		</tr>
 		<tr>
 			<td>memcached.readinessProbe</td>
@@ -1065,19 +1163,19 @@ true
 			<td>Readiness probe configuration for memcached. This parameter is only used by the bundled memcached.</td>
 		</tr>
 		<tr>
-			<td>memcached.replicaCount</td>
-			<td>int</td>
-			<td><pre lang="json">
-1
-</pre>
-</td>
-			<td>Number of memcached replicas. This parameter is only used by the bundled memcached.</td>
-		</tr>
-		<tr>
 			<td>memcached.resources</td>
 			<td>object</td>
 			<td><pre lang="json">
-{}
+{
+  "limits": {
+    "cpu": "200m",
+    "memory": "512Mi"
+  },
+  "requests": {
+    "cpu": "100m",
+    "memory": "128Mi"
+  }
+}
 </pre>
 </td>
 			<td>Resource requests and limits for memcached. This parameter is only used by the bundled memcached.</td>
@@ -1143,15 +1241,6 @@ true
 			<td>Service type for memcached.</td>
 		</tr>
 		<tr>
-			<td>memcached.startupProbe</td>
-			<td>object</td>
-			<td><pre lang="json">
-{}
-</pre>
-</td>
-			<td>Startup probe configuration for memcached. This parameter is only used by the bundled memcached.</td>
-		</tr>
-		<tr>
 			<td>memcached.tolerations</td>
 			<td>list</td>
 			<td><pre lang="json">
@@ -1165,10 +1254,6 @@ true
 			<td>object</td>
 			<td><pre lang="json">
 {
-  "rollingUpdate": {
-    "maxSurge": "25%",
-    "maxUnavailable": "25%"
-  },
   "type": "RollingUpdate"
 }
 </pre>

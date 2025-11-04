@@ -11,13 +11,19 @@ metadata:
   name: {{ include "common.names.fullname" . }}-memcached
   namespace: {{ include "common.names.namespace" . | quote }}
   labels:
-    {{- include "common.labels.standard" ( dict "customLabels" .Values.additionalLabels "context" . ) | nindent 4 }}
-    app.kubernetes.io/component: memcached
-  {{- if .Values.memcached.service.annotations }}
-  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.memcached.service.annotations "context" $) | nindent 4 }}
-  {{- end }}
+    {{- $commonLabels := include "common.labels.standard" . | fromYaml }}
+    {{- $uiLabels := dict "app.kubernetes.io/name" (printf "%s-memcached" (include "common.names.name" .)) }}
+    {{- $mergedLabels := merge $uiLabels $commonLabels}}
+    {{- toYaml $mergedLabels | nindent 4 }}
+    {{- if .Values.additionalLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.additionalLabels "context" . ) | nindent 4 }}
+    {{- end }}
+  {{- include "nubus-common.annotations.render" ( dict
+    "values" ( list .Values.memcached.service.annotations .Values.additionalAnnotations )
+    "context" . )
+    | nindent 2 }}
 spec:
-  type: {{ .Values.memcached.service.type | default "ClusterIP" }}
+  type: {{ .Values.memcached.service.type | quote }}
   {{- if .Values.memcached.service.clusterIP }}
   clusterIP: {{ .Values.memcached.service.clusterIP }}
   {{- end }}
@@ -25,12 +31,12 @@ spec:
   sessionAffinity: {{ .Values.memcached.service.sessionAffinity }}
   {{- end }}
   ports:
-    - name: memcache
-      port: {{ .Values.memcached.service.port | default 11211 }}
-      targetPort: memcache
+    - name: "memcache"
+      port: {{ .Values.memcached.service.port }}
+      targetPort: "memcache"
       protocol: TCP
-  publishNotReadyAddresses: true
   selector:
-    {{- include "common.labels.matchLabels" . | nindent 4 }}
-    app.kubernetes.io/component: memcached
+    {{- $commonLabels := include "common.labels.matchLabels" . | fromYaml }}
+    {{- $uiLabels := dict "app.kubernetes.io/name" (printf "%s-memcached" (include "common.names.name" .)) }}
+    {{- merge $uiLabels $commonLabels | toYaml | nindent 4}}
 {{- end }}

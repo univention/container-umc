@@ -12,6 +12,8 @@ global:
       image:
         repository: "nubus/images/portal-extension"
         tag: "0.44.3@sha256:734efc0adda680526dde09387db964612f9e0ab020382580984488cc993c68f0"
+  secrets:
+    masterPassword: nubus
 
 ingress:
   enabled: true
@@ -40,9 +42,3 @@ umcServer:
   oidcClient:
     auth:
       password: "linter-oidc-client-password"
-
-# We don't want to check bundled charts in testing and linting.
-memcached:
-  bundled: false
-  auth:
-    password: "linter-memcached-password"

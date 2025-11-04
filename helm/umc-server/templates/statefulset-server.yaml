@@ -221,10 +221,14 @@ spec:
                   name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.postgresql.selfservice.auth.existingSecret "defaultNameSuffix" "postgresql-selfservice" "context" .) }}
                   key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.postgresql.selfservice.auth.existingSecret "key" "password" "context" .) }}
             - name: "SELF_SERVICE_MEMCACHED_SECRET"
+            {{- if .Values.memcached.auth.enabled }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "nubus-common.secrets.name" (dict "existingSecret" (fromJson (include "umc-server.memcached.auth.existingSecret" .)) "defaultNameSuffix" "memcached" "context" .) }}
-                  key: {{ include "nubus-common.secrets.key" (dict "existingSecret" (fromJson (include "umc-server.memcached.auth.existingSecret" .)) "key" "password" "context" .) }}
+                  name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.memcached.auth.existingSecret "defaultNameSuffix" "memcached" "context" .) }}
+                  key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.memcached.auth.existingSecret "key" "memcached-password" "context" .) }}
+            {{- else }}
+              value: "stub"
+            {{- end }}
             - name: "PYTHONDONTWRITEBYTECODE"
               value: "1"
           envFrom:
@@ -301,10 +305,6 @@ spec:
             - name: secret-postgresql-selfservice
               mountPath: "/var/secrets/db_password"
               subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.postgresql.selfservice.auth.existingSecret "key" "password" "context" .) }}
-              readOnly: true
-            - name: secret-memcached
-              mountPath: "/var/secrets/memcached_password"
-              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" (fromJson (include "umc-server.memcached.auth.existingSecret" .)) "key" "password" "context" .) }}
               readOnly: true
             - name: oidc-client-secret
               mountPath: "/etc/oidc-rp-umc-server.secret"
@@ -510,9 +510,6 @@ spec:
         - name: secret-postgresql-selfservice
           secret:
             secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.postgresql.selfservice.auth.existingSecret "defaultNameSuffix" "postgresql-selfservice" "context" .) }}
-        - name: secret-memcached
-          secret:
-            secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" (fromJson (include "umc-server.memcached.auth.existingSecret" .)) "defaultNameSuffix" "memcached" "context" .) }}
         - name: oidc-client-secret
           secret:
             secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.umcServer.oidcClient.auth.existingSecret "defaultNameSuffix" "oidc" "context" .) }}

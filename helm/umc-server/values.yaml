@@ -70,8 +70,7 @@ containerSecurityContext:
   allowPrivilegeEscalation: false
   # -- Security capabilities for container.
   capabilities:
-    drop:
-      - "ALL"
+    drop: ["ALL"]
   # -- Process user id.
   runAsUser: 999
   # -- Process group id.
@@ -437,7 +436,6 @@ memcached:
   # and the connection settings in the stack-data chart:
   # `stackDataContext.umcMemcachedHostname` and `stackDataContext.umcMemcachedUsername`
   bundled: true
-  # -- Number of memcached replicas. This parameter is only used by the bundled memcached.
   replicaCount: 1
   # -- Connection parameters. These are required if an external service should be used (bundled is set to `false`).
   connection:
@@ -451,22 +449,23 @@ memcached:
     # -- Memcached username. This parameter is only used by the bundled memcached.
     username: "selfservice"
     # -- Memcached password.
-    password: ""
-    # -- Memcached existing password secret (Must contain the key `memcached-password`). This parameter is only used by the bundled memcached.
-    existingPasswordSecret: ""
+    password: null
+    # -- Memcached existing password secret. This parameter is only used by the bundled memcached.
     # -- Memcached password secret reference.
     existingSecret:
-      name: ""
+      name: null
+      keyMapping:
+        password: null
   # -- Docker image configuration for memcached. This parameter is only used by the bundled memcached.
   image:
     # -- Memcached image registry.
-    registry: "artifacts.software-univention.de"
+    registry: null
     # -- Memcached image repository.
     repository: "nubus/images/memcached"
-    # -- Memcached image tag. Use Debian-based image (not alpine) as it includes SASL tools.
-    tag: "0.0.1"
+    # -- Memcached image tag.
+    tag: "0.1.0@sha256:324f20828f22f4640d9adbd61c65c3d7e52d263164262b0af316282ddee74e7c"
     # -- Memcached image pull policy.
-    pullPolicy: "IfNotPresent"
+    pullPolicy: null
   # -- Container port for memcached. This parameter is only used by the bundled memcached.
   containerPort: 11211
   # -- Defaults from /ucs/management/univention-self-service/conffiles/etc/memcached_univention-self-service.conf
@@ -479,24 +478,44 @@ memcached:
       value: "--disable-evictions"
   # -- Container security context for memcached. This parameter is only used by the bundled memcached.
   containerSecurityContext:
+    # -- Enable security context.
     enabled: true
-    runAsUser: 11211
-    runAsGroup: 11211
+    # -- Process user id.
+    runAsUser: 1001
+    # -- Process group id.
+    runAsGroup: 1001
+    # -- Run container as a user.
     runAsNonRoot: true
     privileged: false
+    # -- Mounts the container's root filesystem as read-only.
     readOnlyRootFilesystem: true
+    # -- Enable container privileged escalation.
     allowPrivilegeEscalation: false
+    # -- Security capabilities for container.
     capabilities:
       drop: ["ALL"]
+    # Set Seccomp profile.
     seccompProfile:
+      # -- Disallow custom Seccomp profile by setting it to RuntimeDefault.
       type: "RuntimeDefault"
   # -- Pod security context for memcached. This parameter is only used by the bundled memcached.
   podSecurityContext:
+    # -- Enable security context.
     enabled: true
-    fsGroup: 11211
+    # -- If specified, all processes of the container are also part of the supplementary group.
+    fsGroup: 1001
+    # -- Change ownership and permission of the volume before being exposed inside a Pod.
     fsGroupChangePolicy: "Always"
+
   # -- Resource requests and limits for memcached. This parameter is only used by the bundled memcached.
-  resources: {}
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "200m"
+
   # -- Affinity for memcached pod assignment. This parameter is only used by the bundled memcached.
   affinity: {}
   # -- Node selector for memcached pod assignment. This parameter is only used by the bundled memcached.
@@ -510,9 +529,6 @@ memcached:
   # -- Update strategy for memcached deployment. This parameter is only used by the bundled memcached.
   updateStrategy:
     type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
   # -- Liveness probe configuration for memcached. This parameter is only used by the bundled memcached.
   livenessProbe:
     enabled: true
@@ -521,10 +537,8 @@ memcached:
     timeoutSeconds: 5
     failureThreshold: 6
     successThreshold: 1
-    exec:
-      command:
-        - pgrep
-        - memcached
+    tcpSocket:
+      port: memcache
   # -- Readiness probe configuration for memcached. This parameter is only used by the bundled memcached.
   readinessProbe:
     enabled: true
@@ -535,7 +549,6 @@ memcached:
     successThreshold: 1
     tcpSocket:
       port: memcache
-  # -- Startup probe configuration for memcached. This parameter is only used by the bundled memcached.
   startupProbe: {}
   # -- Service configuration for memcached. This parameter is only used by the bundled memcached.
   service:

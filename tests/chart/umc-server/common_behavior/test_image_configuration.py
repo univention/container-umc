@@ -10,6 +10,7 @@ class TestImageConfiguration(ImageConfiguration):
     def adjust_values(self, values: dict):
         mapping = {
             "proxy.image": "image",
+            "memcached.image": "image"
         }
         apply_mapping(values, mapping, copy=True)
         image_configuration = values.get("image", {})
