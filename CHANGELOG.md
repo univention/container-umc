@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.54.0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.53.5...v0.54.0) (2025-11-14)
+
+
+### Features
+
+* provide default memcached username and auto-generate password ([4031749](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/4031749390c23a3ef3fffce7b8ad7e493ac1997a)), closes [univention/dev/internal/team-nubus#1501](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1501)
+* remove bitnami memcached dependency and add our own memcached ([387bcc8](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/387bcc8781d478997b0823bf102192c1f631f0a3)), closes [univention/dev/internal/team-nubus#1501](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1501)
+* use official memcached image ([9d13acf](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/9d13acf8c0c149ef5a2f9e2be87fe7f2ba78c986)), closes [univention/dev/internal/team-nubus#1501](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1501)
+* Use our memcached image in UMC Server Helm chart ([7cbeb7f](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/7cbeb7ffd7012e6f3d79720b14bdb90e0fcd66f8)), closes [univention/dev/internal/team-nubus#1501](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1501)
+
+
+### Bug Fixes
+
+* adapt for backward compatibility in memcached configuration ([b080566](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/b08056677a5f53778fba509522f913aebbccabf5)), closes [univention/dev/internal/team-nubus#1501](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1501)
+* add FOWNER capability to memcached container and adjust tests ([f9c50d7](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/f9c50d74d5fb698790562cc454e394ffff088903)), closes [univention/dev/internal/team-nubus#1501](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1501)
+* adjust memcache containers to helm chart standards ([50eea84](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/50eea84addf3de23065e7676d614b7c6be43f210)), closes [univention/dev/internal/team-nubus#1501](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1501)
+* memcached chart fixes ([4f732f5](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/4f732f5c7c7ec2d47755ba00f87f60cd40327169)), closes [univention/dev/internal/team-nubus#1501](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1501)
+* Support existingSecret format for memcached auth ([abaa235](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/abaa23570a082e2cd375ca048102c5335db83f47)), closes [univention/dev/internal/team-nubus#1501](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1501)
+
 ## [0.53.5](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.53.4...v0.53.5) (2025-11-04)
 
 
