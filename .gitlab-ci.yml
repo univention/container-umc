@@ -15,6 +15,9 @@ include:
       - "jobs/package-and-publish-helm-charts-external.yaml"
       - "jobs/check-debian-updates.yaml"
       - "templates/sonarqube.yaml"
+      - "scripts/bash-header.yaml"
+      - "scripts/check-required-variables.yaml"
+      - "scripts/release-attestation.yaml"
   - project: "univention/infrastructure/docker-services"
     ref: "master"
     file:
@@ -121,3 +124,92 @@ test-chart-umc-server:
     - helm repo add bitnami https://charts.bitnami.com/bitnami
     - helm dep build helm/umc-server
     - pytest -W error tests/chart/umc-server
+
+# ===================================================================================================
+# Since for traefik we're using an external image we will create a release attestation for it
+# while we're packaging the helm chart.
+# ===================================================================================================
+extract-image-info:
+  variables:
+    RUNNER_REGISTRY_IMAGE: "gitregistry.knut.univention.de/univention/infrastructure/ci-images/helm/helm"
+    RUNNER_IMAGE_TAG: "1.25.4@sha256:377c25e5acd3cc76d177d80a7b8be1b0df0dc35a712fafa352855b79aaf585c1"
+    ATTESTATION_IMAGE_LIST_FILE: "chart-image-list.txt"
+  stage: publish
+  needs: []
+  image:
+    name: "${RUNNER_REGISTRY_IMAGE}:${RUNNER_IMAGE_TAG}"
+    entrypoint: [""]
+  script:
+    - |
+      # Extract image info from Helm chart for release attestation
+      helm dependency build helm/umc-server --skip-refresh
+      helm template n helm/umc-server --values helm/umc-server/linter_values.yaml \
+        | grep image: | grep traefik | awk '{print $2}' | sort -u | tr -d '"' \
+        | tee "${ATTESTATION_IMAGE_LIST_FILE}"
+  artifacts:
+    paths:
+      - "${ATTESTATION_IMAGE_LIST_FILE}"
+    expire_in: 1 hour
+
+container-release-attestation-traefik:
+  variables:
+    RUNNER_REGISTRY_IMAGE: "gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/common-ci/cosign"
+    RUNNER_IMAGE_TAG: "latest"
+    ATTESTATION_IMAGE_LIST_FILE: "chart-image-list.txt"
+    COSIGN_PASSWORD: ""
+  stage: "publish"
+  image: "${RUNNER_REGISTRY_IMAGE}:${RUNNER_IMAGE_TAG}"
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: "never"
+    - when: "on_success"
+  needs:
+    - extract-image-info
+  script:
+    - !reference [".bash-header-script", "script"]
+    - !reference [".check-required-variables-bash-script", "script"]
+    - !reference [".release-json-bash-script", "script"]
+    - |
+      required_variables=(
+        COSIGN_PRIVATE_KEY
+        COSIGN_PUBLIC_KEY
+        EXTERNAL_REGISTRY_ROBOT_TOKEN
+        EXTERNAL_REGISTRY_ROBOT_ACCOUNT
+        EXTERNAL_PRIVATE_IMAGE_REGISTRY
+        EXTERNAL_PUBLIC_IMAGE_REGISTRY
+      )
+      check_required_variables 1 "${required_variables[@]}"
+      echo ${COSIGN_PRIVATE_KEY} | base64 -d > ${CI_PROJECT_DIR}/cosign.key
+      echo ${COSIGN_PUBLIC_KEY} | base64 -d > ${CI_PROJECT_DIR}/cosign.pub
+    - |
+      # Perform attestation for all images listed in the extracted image list file
+      while IFS= read -r image; do
+        # extract image components
+        image_name=${image//:*/}
+        image_digest=${image//*@}
+        image_version=${image/$image_name:/}
+        image_version=${image_version/@$image_digest/}
+
+        echo "Verifying existing attestation for image: ${image_name}@${image_digest}"
+        cosign verify-attestation --key ${CI_PROJECT_DIR}/cosign.pub \
+          --type https://in-toto.io/attestation/release/v0.1 \
+          ${image_name}@${image_digest} >& /dev/null \
+          && echo "Release attestation exists." && continue
+
+        echo "Attesting image: ${image_name}@${image_digest}, version: ${image_version}"
+        dump-release-json \
+          IMAGE_REGISTRY_URL="${image_name%/*}" \
+          IMAGE_NAME="${image_name/*\//}" \
+          IMAGE_DIGEST="${image//*@}" \
+          RELEASE_VERSION="${image_version}" \
+          | tee ${CI_PROJECT_DIR}/release-attestation.json
+
+        cosign attest --yes --replace --key ${CI_PROJECT_DIR}/cosign.key \
+          --registry-username "$EXTERNAL_REGISTRY_ROBOT_ACCOUNT" \
+          --registry-password "$EXTERNAL_REGISTRY_ROBOT_TOKEN" \
+          --type https://in-toto.io/attestation/release/v0.1 \
+          --predicate "${CI_PROJECT_DIR}/release-attestation.json" \
+          ${image_name}@${image_digest}
+
+      done < "${ATTESTATION_IMAGE_LIST_FILE}"
+...

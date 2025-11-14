@@ -33,7 +33,7 @@ repos:
       - id: "check-yaml"
         args:
           - "--allow-multiple-documents"
-        exclude: ^helm/.+/templates/
+        exclude: ^helm/.+/templates/|\.gitlab-ci\.yml
       # "fix end of files"
       - id: "end-of-file-fixer"
         exclude: ^helm/.+/README.md|.*\.patch
