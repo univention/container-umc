@@ -463,7 +463,7 @@ memcached:
     # -- Memcached image repository.
     repository: "nubus/images/memcached"
     # -- Memcached image tag.
-    tag: "0.1.0@sha256:324f20828f22f4640d9adbd61c65c3d7e52d263164262b0af316282ddee74e7c"
+    tag: "0.1.1@sha256:bac2e34342f07b24bb8f8bb3ed33b1885e18df1998dfff41059fb09ad8c0a96b"
     # -- Memcached image pull policy.
     pullPolicy: null
   # -- Container port for memcached. This parameter is only used by the bundled memcached.
