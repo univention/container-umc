@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.54.2](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.54.1...v0.54.2) (2025-12-03)
+
+
+### Bug Fixes
+
+* **proxy:** bump traefik image to v3.6.2 ([f984fd5](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/f984fd5ef104c69815eee31a57b66f26475d84c9)), closes [univention/dev/internal/team-nubus#1540](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1540)
+
 ## [0.54.1](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.54.0...v0.54.1) (2025-12-03)
 
 
