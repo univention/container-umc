@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.54.1](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.54.0...v0.54.1) (2025-12-03)
+
+
+### Bug Fixes
+
+* bump image to errata 298 ([eb1e417](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/eb1e4178d4aecaa53071a7a055303396fe8db9ca)), closes [univention/dev/internal/team-nubus#1543](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1543)
+
 ## [0.54.0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.53.5...v0.54.0) (2025-11-14)
 
 
