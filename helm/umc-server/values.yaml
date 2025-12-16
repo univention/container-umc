@@ -60,6 +60,13 @@ extensions: []
 # This value will override the configuration in `global.systemExtensions`.
 systemExtensions: []
 
+# -- Array with extra environment variables to add to containers.
+#
+# extraEnvVars:
+#   - name: FOO
+#     value: "bar"
+extraEnvVars: []
+
 # Security Context.
 # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
 containerSecurityContext:

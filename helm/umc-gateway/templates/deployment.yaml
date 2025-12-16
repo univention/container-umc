@@ -73,6 +73,10 @@ spec:
               cp -a /etc/univention/* /target/etc/univention/
               cp -a /etc/apache2/* /target/etc/apache2/
               cp -a /var/www/univention/* /target/var/www/univention/
+          {{- with .Values.extraEnvVars }}
+          env:
+            {{- . | toYaml | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - name: "etc-apache2"
               mountPath: "/target/etc/apache2"
@@ -95,6 +99,10 @@ spec:
               echo "Listen {{ .Values.service.ports.http.containerPort }}" > /etc/apache2/ports.conf
               sed -e 's,<VirtualHost \*:80>,<VirtualHost *:{{ .Values.service.ports.http.containerPort }}>,g' -i /etc/apache2/sites-available/000-default.conf
               cat /etc/apache2/sites-available/000-default.conf
+          {{- with .Values.extraEnvVars }}
+          env:
+            {{- . | toYaml | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - name: "etc-apache2"
               mountPath: "/etc/apache2"
@@ -126,6 +134,10 @@ spec:
             - |
               mkdir -p /target/umc-icons
               cp -av /usr/share/univention-management-console-frontend/js/dijit/themes/umc/icons/* /target/umc-icons
+          {{- with .Values.extraEnvVars }}
+          env:
+            {{- . | toYaml | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - name: plugin-targets
               mountPath: /target
@@ -140,6 +152,10 @@ spec:
           {{- end }}
           image: "{{ coalesce .image.registry $.Values.global.imageRegistry }}/{{ .image.repository }}:{{ .image.tag }}"
           imagePullPolicy: {{ coalesce .image.pullPolicy $.Values.global.imagePullPolicy | quote }}
+          {{- with $.Values.extraEnvVars }}
+          env:
+            {{- . | toYaml | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - name: plugin-targets
               mountPath: /target
@@ -160,6 +176,10 @@ spec:
               apache2 -D FOREGROUND \
               -d /etc/apache2/ \
               -f /etc/apache2/apache2.conf
+          {{- with .Values.extraEnvVars }}
+          env:
+            {{- . | toYaml | nindent 12 }}
+          {{- end }}
           volumeMounts:
             {{- if .Values.extraVolumeMounts }}
             {{ toYaml .Values.extraVolumeMounts | nindent 12 }}

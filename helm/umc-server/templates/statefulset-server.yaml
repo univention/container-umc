@@ -70,6 +70,10 @@ spec:
           envFrom:
             - configMapRef:
                 name: {{ include "common.names.fullname" . }}
+          {{- with .Values.extraEnvVars }}
+          env:
+            {{- . | toYaml | nindent 12 }}
+          {{- end }}
           command:
             - bash
             - -c
@@ -174,6 +178,10 @@ spec:
               cp -Rv /usr/lib/python3/dist-packages/univention/admin/hooks.d/* /target/udm-hooks.d
               cp -Rv /usr/lib/python3/dist-packages/univention/admin/syntax.d/* /target/udm-syntax.d
               cp -Rv /usr/lib/python3/dist-packages/univention/admin/handlers/* /target/udm-handlers
+          {{- with .Values.extraEnvVars }}
+          env:
+            {{- . | toYaml | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - name: plugin-targets
               mountPath: /target
@@ -187,6 +195,10 @@ spec:
           {{- end }}
           image: "{{ coalesce .image.registry $.Values.global.imageRegistry }}/{{ .image.repository }}:{{ .image.tag }}"
           imagePullPolicy: {{ coalesce .image.pullPolicy $.Values.global.imagePullPolicy | quote }}
+          {{- with $.Values.extraEnvVars }}
+          env:
+            {{- . | toYaml | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - name: plugin-targets
               mountPath: /target
@@ -231,6 +243,9 @@ spec:
             {{- end }}
             - name: "PYTHONDONTWRITEBYTECODE"
               value: "1"
+          {{- with .Values.extraEnvVars }}
+            {{- . | toYaml | nindent 12 }}
+          {{- end }}
           envFrom:
             - configMapRef:
                 name: {{ include "common.names.fullname" . }}

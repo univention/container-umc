@@ -381,6 +381,15 @@ true
 			<td>Extensions to load. This will override the configuration in `global.extensions`.</td>
 		</tr>
 		<tr>
+			<td>extraEnvVars</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td>Array with extra environment variables to add to containers.  extraEnvVars:   - name: FOO     value: "bar"</td>
+		</tr>
+		<tr>
 			<td>extraSecrets</td>
 			<td>list</td>
 			<td><pre lang="json">

@@ -77,6 +77,10 @@ spec:
           {{- end }}
           image: "{{ coalesce .Values.proxy.image.registry .Values.global.imageRegistry }}/{{ .Values.proxy.image.repository }}:{{ .Values.proxy.image.tag }}"
           imagePullPolicy: {{ coalesce .Values.proxy.image.pullPolicy .Values.global.imagePullPolicy | quote }}
+          {{- with .Values.extraEnvVars }}
+          env:
+            {{- . | toYaml | nindent 12 }}
+          {{- end }}
           volumeMounts:
             {{- if .Values.extraVolumeMounts }}
             {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumeMounts "context" $) | nindent 12 }}
