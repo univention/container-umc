@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.54.3](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.54.2...v0.54.3) (2025-12-17)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency univention/dev/nubus-for-k8s/common-ci to v1.54.0 ([5098b08](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/5098b0896eaa7dcc79f74d87febb9f93653dc820)), closes [#0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/issues/0)
+
 ## [0.54.2](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.54.1...v0.54.2) (2025-12-03)
 
 
