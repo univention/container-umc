@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.55.0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.54.3...v0.55.0) (2025-12-29)
+
+
+### Features
+
+* **helm:** Add component-specific extraEnvVars support ([26beb6d](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/26beb6d8f81cc736c3620f6ecf4a49ec5cbf1f9b)), closes [univention/dev/internal/team-nubus#977](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/977)
+
 ## [0.54.3](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.54.2...v0.54.3) (2025-12-17)
 
 
