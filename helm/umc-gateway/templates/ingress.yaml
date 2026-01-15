@@ -17,8 +17,6 @@ metadata:
     {{- if .Values.ingress.certManager.enabled }}
     cert-manager.io/{{ .Values.ingress.certManager.issuerRef.kind | kebabcase }}: "{{ coalesce .Values.global.certManagerIssuer .Values.ingress.certManager.issuerRef.name }}"
     {{- end }}
-    nginx.ingress.kubernetes.io/enable-cors: "true"
-    nginx.ingress.kubernetes.io/cors-allow-origin: {{ printf "https://%s.%s, https://%s.%s" .Values.global.subDomains.portal .Values.global.domain .Values.global.subDomains.keycloak .Values.global.domain | quote }}
 spec:
   {{- if or .Values.ingress.ingressClassName .Values.global.ingressClass }}
   ingressClassName: {{ coalesce .Values.ingress.ingressClassName .Values.global.ingressClass | quote }}
