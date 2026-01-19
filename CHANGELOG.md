@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.56.0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.55.1...v0.56.0) (2026-01-19)
+
+
+### Features
+
+* remove CORS annotations from ingress ([a543bf6](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/a543bf667c306c80d28cfe45e0014eac7295eb8e)), closes [univention/dev/internal/team-nubus#1555](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1555)
+
 ## [0.55.1](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.55.0...v0.55.1) (2026-01-14)
 
 
