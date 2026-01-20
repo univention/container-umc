@@ -188,6 +188,7 @@ RUN \
   patch -p 4 -d /usr/lib/python3/dist-packages/ -i /0007-replace-PAM-login-with-UDM-login-for-password-change.patch && \
   patch -p 5 -d /usr/lib/python3/dist-packages/univention/management/console/modules -i /0008-allow-to-set-individual-attributes-to-readonly-in-pa.patch && \
   patch -p 4 -d /usr/sbin -i /0009-remove-is-root-check.patch && \
+  patch -p 4 -d /usr/lib/python3/dist-packages/ -i /0010-fix-disabling-structured-logging-restores-original-f.patch && \
   rm -v /*.patch
 
 ############################################################

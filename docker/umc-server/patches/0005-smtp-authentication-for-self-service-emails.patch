@@ -1,7 +1,7 @@
-From 4d8f31496a323be37e4700b96b2a0a1d76fb4a69 Mon Sep 17 00:00:00 2001
+From 0b54edf152852319b67608f448af35d196bf884a Mon Sep 17 00:00:00 2001
 From: Thomas Kintscher <thomas.kintscher.extern@univention.de>
 Date: Wed, 10 Apr 2024 13:41:34 +0200
-Subject: [PATCH 5/9] smtp authentication for self service emails
+Subject: [PATCH 05/10] smtp authentication for self service emails
 
 The password-reset functionality of the self-service sends a password-reset link
 to the user's recovery email address.
@@ -20,7 +20,7 @@ This patch adds configuration options regarding
  1 file changed, 28 insertions(+), 1 deletion(-)
 
 diff --git a/management/univention-self-service/umc/python/passwordreset/sending/send_email.py b/management/univention-self-service/umc/python/passwordreset/sending/send_email.py
-index aa92420880e..0c73438d7bf 100644
+index 81efd7c6b1..f05bfcb4e3 100644
 --- a/management/univention-self-service/umc/python/passwordreset/sending/send_email.py
 +++ b/management/univention-self-service/umc/python/passwordreset/sending/send_email.py
 @@ -21,6 +21,7 @@
@@ -74,5 +74,5 @@ index aa92420880e..0c73438d7bf 100644
          smtp.quit()
          self.log("Sent mail with token to address %s.", self.data["address"])
 -- 
-2.51.0
+2.47.3
 

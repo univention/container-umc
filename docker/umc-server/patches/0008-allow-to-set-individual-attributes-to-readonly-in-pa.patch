@@ -1,7 +1,7 @@
-From c5c8091cebc3dbc12bbcfa9d091692ae119075bd Mon Sep 17 00:00:00 2001
+From 4bde4c3968767f4916c8bd3892c0511f6cfd1415 Mon Sep 17 00:00:00 2001
 From: Johannes Bornhold <johannes.bornhold.extern@univention.de>
 Date: Thu, 27 Mar 2025 13:24:52 +0100
-Subject: [PATCH 8/9] allow to set individual attributes to readonly in
+Subject: [PATCH 08/10] allow to set individual attributes to readonly in
  passwordreset
 
 Removed a "sed" based patch and replaced with this change instead.
@@ -10,7 +10,7 @@ Removed a "sed" based patch and replaced with this change instead.
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/management/univention-self-service/umc/python/passwordreset/__init__.py b/management/univention-self-service/umc/python/passwordreset/__init__.py
-index 52d4d1a776d..d6ceae078e2 100644
+index 241de8b0c3..6b25ca4e92 100644
 --- a/management/univention-self-service/umc/python/passwordreset/__init__.py
 +++ b/management/univention-self-service/umc/python/passwordreset/__init__.py
 @@ -441,7 +441,7 @@ class Instance(Base):
@@ -23,5 +23,5 @@ index 52d4d1a776d..d6ceae078e2 100644
                  'multivalue': bool(prop.multivalue),
              }
 -- 
-2.51.0
+2.47.3
 

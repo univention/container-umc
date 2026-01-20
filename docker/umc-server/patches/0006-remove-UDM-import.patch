@@ -1,8 +1,8 @@
-From 87f643859960e678965cb465613f69df0ffba83c Mon Sep 17 00:00:00 2001
+From 9b3da61e371856fcf6686d18d4749ef7a929a054 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Carlos=20Garc=C3=ADa-Mauri=C3=B1o?=
  <garcia-maurino@univention.de>
 Date: Wed, 11 Sep 2024 13:21:14 +0200
-Subject: [PATCH 6/9] remove UDM import
+Subject: [PATCH 06/10] remove UDM import
 
 It's used for configuring the shared SQL connection feature. Look for
 `SQL_CONNECTION_ENV_VAR`.`
@@ -11,7 +11,7 @@ It's used for configuring the shared SQL connection feature. Look for
  1 file changed, 17 deletions(-)
 
 diff --git a/management/univention-management-console/src/univention/management/console/server.py b/management/univention-management-console/src/univention/management/console/server.py
-index a0a002c3a80..08a433951b5 100755
+index 34722f938b..ea78501068 100755
 --- a/management/univention-management-console/src/univention/management/console/server.py
 +++ b/management/univention-management-console/src/univention/management/console/server.py
 @@ -38,7 +38,6 @@ from univention.management.console.resources import (
@@ -46,5 +46,5 @@ index a0a002c3a80..08a433951b5 100755
          if self.options.processes != 1:
              # start sharing memory (before fork, before first usage, after import)
 -- 
-2.51.0
+2.47.3
 
