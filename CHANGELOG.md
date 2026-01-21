@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.56.1](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.56.0...v0.56.1) (2026-01-21)
+
+
+### Bug Fixes
+
+* update patches to include fix for structured logging ([711a370](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/711a3701403e0fb2eb18a3514781a8cb4fde73c5)), closes [univention/dev/internal/team-nubus#1588](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1588)
+
 ## [0.56.0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.55.1...v0.56.0) (2026-01-19)
 
 
