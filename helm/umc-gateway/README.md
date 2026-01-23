@@ -305,11 +305,7 @@ null
 			<td>ingress.annotations</td>
 			<td>object</td>
 			<td><pre lang="json">
-{
-  "nginx.ingress.kubernetes.io/affinity": "none",
-  "nginx.ingress.kubernetes.io/rewrite-target": "/$2$3",
-  "nginx.ingress.kubernetes.io/use-regex": "true"
-}
+{}
 </pre>
 </td>
 			<td>Define ingress annotations.</td>
@@ -381,7 +377,7 @@ true
 			<td>ingress.loginPath[0].path</td>
 			<td>string</td>
 			<td><pre lang="json">
-"/()(univention/)(login/.*)$"
+"/univention/login"
 </pre>
 </td>
 			<td></td>
@@ -390,7 +386,7 @@ true
 			<td>ingress.loginPath[0].pathType</td>
 			<td>string</td>
 			<td><pre lang="json">
-"ImplementationSpecific"
+"Prefix"
 </pre>
 </td>
 			<td></td>
@@ -401,16 +397,44 @@ true
 			<td><pre lang="json">
 [
   {
-    "path": "/()(univention/)(languages.json|meta.json|theme.css)$",
-    "pathType": "ImplementationSpecific"
+    "path": "/univention/languages.json",
+    "pathType": "Exact"
   },
   {
-    "path": "/()(univention/)((js|management|themes)/.*)$",
-    "pathType": "ImplementationSpecific"
+    "path": "/univention/meta.json",
+    "pathType": "Exact"
   },
   {
-    "path": "/()(univention/login/)(dialog.js|main.js|LoginDialog.js|i18n/en/main.json)$",
-    "pathType": "ImplementationSpecific"
+    "path": "/univention/theme.css",
+    "pathType": "Exact"
+  },
+  {
+    "path": "/univention/js",
+    "pathType": "Prefix"
+  },
+  {
+    "path": "/univention/management",
+    "pathType": "Prefix"
+  },
+  {
+    "path": "/univention/themes",
+    "pathType": "Prefix"
+  },
+  {
+    "path": "/univention/login/dialog.js",
+    "pathType": "Exact"
+  },
+  {
+    "path": "/univention/login/main.js",
+    "pathType": "Exact"
+  },
+  {
+    "path": "/univention/login/LoginDialog.js",
+    "pathType": "Exact"
+  },
+  {
+    "path": "/univention/login/i18n/en/main.json",
+    "pathType": "Exact"
   }
 ]
 </pre>

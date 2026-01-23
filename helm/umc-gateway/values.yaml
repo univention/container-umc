@@ -124,25 +124,36 @@ ingress:
   ingressClassName: ""
 
   # -- Define ingress annotations.
-  annotations:
-    nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.ingress.kubernetes.io/affinity: "none"
-    nginx.ingress.kubernetes.io/rewrite-target: "/$2$3"
+  annotations: {}
 
   # -- Define the Ingress paths.
   paths:
-    - path: /()(univention/)(languages.json|meta.json|theme.css)$
-      pathType: ImplementationSpecific
-    - path: /()(univention/)((js|management|themes)/.*)$
-      pathType: ImplementationSpecific
-    - path: /()(univention/login/)(dialog.js|main.js|LoginDialog.js|i18n/en/main.json)$
-      pathType: ImplementationSpecific
+    - path: /univention/languages.json
+      pathType: Exact
+    - path: /univention/meta.json
+      pathType: Exact
+    - path: /univention/theme.css
+      pathType: Exact
+    - path: /univention/js
+      pathType: Prefix
+    - path: /univention/management
+      pathType: Prefix
+    - path: /univention/themes
+      pathType: Prefix
+    - path: /univention/login/dialog.js
+      pathType: Exact
+    - path: /univention/login/main.js
+      pathType: Exact
+    - path: /univention/login/LoginDialog.js
+      pathType: Exact
+    - path: /univention/login/i18n/en/main.json
+      pathType: Exact
 
   # -- Enable plain UMC login path (non IdP). Defaults to false.
   enableLoginPath: false
   loginPath:
-    - path: /()(univention/)(login/.*)$
-      pathType: ImplementationSpecific
+    - path: /univention/login
+      pathType: Prefix
 
   # -- Secure an Ingress by specifying a Secret that contains a TLS private key and certificate.
   #

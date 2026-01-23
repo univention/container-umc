@@ -189,6 +189,8 @@ RUN \
   patch -p 5 -d /usr/lib/python3/dist-packages/univention/management/console/modules -i /0008-allow-to-set-individual-attributes-to-readonly-in-pa.patch && \
   patch -p 4 -d /usr/sbin -i /0009-remove-is-root-check.patch && \
   patch -p 4 -d /usr/lib/python3/dist-packages/ -i /0010-fix-disabling-structured-logging-restores-original-f.patch && \
+  # TEMPORARY: Remove this patch when merged to UCS 5.2-4 (see patch header for details)
+  patch -p 4 -d /usr/lib/python3/dist-packages/ -i /0011-add-configurable-root_path-support.patch && \
   rm -v /*.patch
 
 ############################################################

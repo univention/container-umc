@@ -14,6 +14,10 @@ metadata:
   annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.additionalAnnotations "context" . ) | nindent 4 }}
   {{- end }}
 data:
+  # Root path for UMC to handle path prefixes like /univention
+  {{- if .Values.rootPath }}
+  UMC_ROOT_PATH: {{ .Values.rootPath | quote }}
+  {{- end }}
   LDAP_SECRET_FILE: "/etc/ldap.secret"
   MACHINE_SECRET_FILE: "/etc/machine.secret"
   PRIVATE_KEY_FILE: {{ .Values.umcServer.privateKeyFile | quote }}

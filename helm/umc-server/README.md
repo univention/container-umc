@@ -553,11 +553,7 @@ null
 			<td>ingress.annotations</td>
 			<td>object</td>
 			<td><pre lang="json">
-{
-  "nginx.ingress.kubernetes.io/affinity": "none",
-  "nginx.ingress.kubernetes.io/rewrite-target": "/$2$3",
-  "nginx.ingress.kubernetes.io/use-regex": "true"
-}
+{}
 </pre>
 </td>
 			<td>Define ingress annotations.</td>
@@ -622,8 +618,32 @@ true
 			<td><pre lang="json">
 [
   {
-    "path": "/(univention)/(auth|logout|oidc|get|set|command|upload)(.*)$",
-    "pathType": "ImplementationSpecific"
+    "path": "/univention/auth",
+    "pathType": "Prefix"
+  },
+  {
+    "path": "/univention/oidc",
+    "pathType": "Prefix"
+  },
+  {
+    "path": "/univention/get",
+    "pathType": "Prefix"
+  },
+  {
+    "path": "/univention/set",
+    "pathType": "Prefix"
+  },
+  {
+    "path": "/univention/command",
+    "pathType": "Prefix"
+  },
+  {
+    "path": "/univention/upload",
+    "pathType": "Prefix"
+  },
+  {
+    "path": "/univention/logout",
+    "pathType": "Prefix"
   }
 ]
 </pre>
@@ -1802,6 +1822,15 @@ true
 </pre>
 </td>
 			<td></td>
+		</tr>
+		<tr>
+			<td>rootPath</td>
+			<td>string</td>
+			<td><pre lang="json">
+"/univention"
+</pre>
+</td>
+			<td>Root path for UMC. This allows it to handle prefixes, (e.g., /univention) itself instead of relying on rewrites in the Ingress.</td>
 		</tr>
 		<tr>
 			<td>selfService.passwordresetEmailBody</td>

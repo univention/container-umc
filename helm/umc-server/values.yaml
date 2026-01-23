@@ -67,6 +67,10 @@ systemExtensions: []
 #     value: "bar"
 extraEnvVars: []
 
+# -- Root path for UMC. This allows it to handle prefixes, (e.g., /univention)
+# itself instead of relying on rewrites in the Ingress.
+rootPath: "/univention"
+
 # Security Context.
 # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
 containerSecurityContext:
@@ -303,29 +307,24 @@ ingress:
   ingressClassName: ""
 
   # -- Define ingress annotations.
-  annotations:
-    nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.ingress.kubernetes.io/affinity: "none"
-    nginx.ingress.kubernetes.io/rewrite-target: "/$2$3"
+  annotations: {}
 
   # -- Define the Ingress paths.
   paths:
-    # - pathType: Prefix
-    #   path: /univention/auth
-    # - pathType: Prefix
-    #   path: /univention/oidc
-    # - pathType: Prefix
-    #   path: /univention/get
-    # - pathType: Prefix
-    #   path: /univention/set
-    # - pathType: Prefix
-    #   path: /univention/command
-    # - pathType: Prefix
-    #   path: /univention/upload
-    # - pathType: Prefix
-    #   path: /univention/logout
-      - path: /(univention)/(auth|logout|oidc|get|set|command|upload)(.*)$
-        pathType: ImplementationSpecific
+    - pathType: Prefix
+      path: /univention/auth
+    - pathType: Prefix
+      path: /univention/oidc
+    - pathType: Prefix
+      path: /univention/get
+    - pathType: Prefix
+      path: /univention/set
+    - pathType: Prefix
+      path: /univention/command
+    - pathType: Prefix
+      path: /univention/upload
+    - pathType: Prefix
+      path: /univention/logout
 
   # -- Secure an Ingress by specifying a Secret that contains a TLS private key and certificate.
   #
