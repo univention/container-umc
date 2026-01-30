@@ -288,7 +288,9 @@ RUN \
   # for $PY_LIBS/univention/management/console/oidc.py
   python3-jwt \
   # for the entrypoint.sh script
-  wget && \
+  wget \
+  # for generating stub SAML certificates
+  openssl && \
   #
   # Install regular dependencies
   #
@@ -615,6 +617,13 @@ RUN echo -en 'en_US.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8\n' >> /etc/locale.gen && \
   localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8 && \
   # Create directory for SAML IDP xml
   mkdir -p /usr/share/univention-management-console/saml/idp && \
+  # Generate stub SAML certificates
+  mkdir -p /opt/univention/ssl-stub && \
+  openssl req -x509 -newkey rsa:2048 -keyout /opt/univention/ssl-stub/private.key \
+    -out /opt/univention/ssl-stub/cert.pem -days 3650 -nodes \
+    -subj "/CN=stub.example.com/O=Stub Certificate" && \
+  chown -R sssd:sssd /opt/univention/ssl-stub && \
+  chmod 640 /opt/univention/ssl-stub/private.key && \
   # Read by udm_ldap.py UMC module
   mkdir -p /var/lib/univention-appcenter/attributes && \
   echo '{"en_US": {}, "de_DE": {}}' > /var/lib/univention-appcenter/attributes/mapping.json

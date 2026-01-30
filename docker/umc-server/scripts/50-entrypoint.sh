@@ -7,80 +7,6 @@ umask 077
 # SPDX-FileCopyrightText: 2021-2025 Univention GmbH
 
 ############################################################
-# Load SAML metadata
-SAML_METADATA_BASE=/usr/share/univention-management-console/saml/idp
-SAML_METADATA_URL=$(ucr get umc/saml/idp-server)
-SAML_METADATA_URL_INTERNAL=$(ucr get umc/saml/idp-server-internal)
-SAML_SP_SERVER=$(ucr get umc/saml/sp-server)
-CERT_PEM_FILE=${CERT_PEM_FILE:-/run/secrets/cert_pem}
-PRIVATE_KEY_FILE=${PRIVATE_KEY_FILE:-/run/secrets/private_key}
-
-if [[ -n "${SAML_METADATA_URL:-}" ]]; then
-  echo "SAML Service Provider: enabled"
-
-  if [[ -z "${SAML_SP_SERVER:-}" ]]; then
-    echo "'umc/saml/sp-server' must be set for SAML support"
-    exit 255
-  fi
-  if [[ ! -f "${CERT_PEM_FILE}" ]]; then
-    echo "\$CERT_PEM_FILE is not pointing to a file at ${CERT_PEM_FILE}"
-    exit 255
-  fi
-  if [[ ! -f "${PRIVATE_KEY_FILE}" ]]; then
-    echo "\$PRIVATE_KEY_FILE is not pointing to a file at ${PRIVATE_KEY_FILE}"
-    exit 255
-  fi
-  if [[ -z "${SAML_METADATA_URL_INTERNAL:-}" ]]; then
-    echo "'umc/saml/idp-server-internal' is not set! Assuming it equal to 'umc/saml/idp-server'."
-    SAML_METADATA_URL_INTERNAL=${SAML_METADATA_URL}
-  fi
-
-  SAML_IDP_HOST=$(echo "${SAML_METADATA_URL}" | awk -F/ '{print $3}')
-  SAML_METADATA_PATH="${SAML_METADATA_BASE}/${SAML_IDP_HOST}.xml"
-
-  echo "Trying to fetch SAML metadata from ${SAML_METADATA_URL_INTERNAL}"
-  result=1
-  counter=3
-  # 'Connection refused' is not retried by `wget --tries=X` hence the loop
-  while [[ ${result} -gt 0 && ${counter} -gt 0 ]]; do
-    {
-        wget \
-          --quiet \
-          --timeout=3 \
-          --tries=2 \
-          --header="Host: ${SAML_IDP_HOST}" \
-          --output-document="${SAML_METADATA_PATH}" \
-          "${SAML_METADATA_URL_INTERNAL}" \
-        && result=0
-    } || true
-
-    counter=$((counter-1))
-    sleep 3
-  done
-
-  if [[ ${result} -gt 0 ]]; then
-    echo "Error: Failed to fetch saml_metadata from ${SAML_METADATA_URL_INTERNAL}" >&2
-    exit 255
-  fi
-
-  # remove advertised single logout service via SOAP
-  sed --in-place --regexp-extended --expression \
-    's#<md:SingleLogoutService[^>]+Binding="[^"]+bindings:SOAP"[^>]+>[^<]*</[^>]+>##' \
-    "${SAML_METADATA_PATH}"
-
-  chmod 0640 "${SAML_METADATA_PATH}"
-
-  echo "Successfully set SAML metadata in ${SAML_METADATA_PATH}"
-
-  mkdir --parents "/etc/univention/ssl/${SAML_SP_SERVER}"
-  chmod 755 "/etc/univention/ssl/${SAML_SP_SERVER}"
-  ln --symbolic --force "${CERT_PEM_FILE}" "/etc/univention/ssl/${SAML_SP_SERVER}/cert.pem"
-  ln --symbolic --force "${PRIVATE_KEY_FILE}" "/etc/univention/ssl/${SAML_SP_SERVER}/private.key"
-else
-  echo "SAML Service Provider: disabled"
-fi
-
-############################################################
 # Set up OIDC configuration
 
 setup_oidc() {
@@ -164,6 +90,15 @@ setup_oidc() {
   fi
 }
 setup_oidc
+
+############################################################
+# Set up stub SAML certificates
+SAML_SP_SERVER=$(ucr get umc/saml/sp-server)
+if [[ -n "${SAML_SP_SERVER:-}" ]]; then
+  mkdir --parents "/etc/univention/ssl/${SAML_SP_SERVER}"
+  ln --symbolic --force "/opt/univention/ssl-stub/cert.pem" "/etc/univention/ssl/${SAML_SP_SERVER}/cert.pem"
+  ln --symbolic --force "/opt/univention/ssl-stub/private.key" "/etc/univention/ssl/${SAML_SP_SERVER}/private.key"
+fi
 
 ############################################################
 # Store SSSD configuration
@@ -288,15 +223,6 @@ univention-config-registry commit /etc/pam.d/univention-management-console
 
 # Disable kerberos and unix pam modules
 sed -i '/pam_unix/d; /pam_krb5/d' /etc/pam.d/univention-management-console
-
-if [[ -n "${SAML_SP_SERVER:-}" ]]; then
-  # use the first given SAML scheme instead of the UCR template string
-  SAML_SCHEMES=$(ucr get umc/saml/schemes)
-  SCHEME=$(echo "${SAML_SCHEMES}" | cut -d, -f1)
-  sed --in-place \
-    --expression="s#trusted_sp=[[:alpha:]]*#${SCHEME}#" \
-    "/etc/pam.d/univention-management-console"
-fi
 
 ############################################################
 # Generate config files from UCR
