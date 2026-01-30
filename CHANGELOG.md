@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.57.0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.56.1...v0.57.0) (2026-01-30)
+
+
+### Features
+
+* Configure root_path ([7a9d970](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/7a9d9702ac4f6363dcc673ef8035dbba8c5225a2)), closes [univention/dev/internal/team-nubus#1551](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1551)
+
 ## [0.56.1](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.56.0...v0.56.1) (2026-01-21)
 
 
