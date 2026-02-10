@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.57.1](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.57.0...v0.57.1) (2026-02-10)
+
+
+### Bug Fixes
+
+* Remove SAML certificate handling from entrypoint script ([ad8860d](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/ad8860d6af7113e7e1aba33e0fb645c33432620f)), closes [univention/dev/internal/team-nubus#1563](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1563)
+
 ## [0.57.0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.56.1...v0.57.0) (2026-01-30)
 
 
