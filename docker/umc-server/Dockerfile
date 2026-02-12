@@ -1,11 +1,11 @@
 # SPDX-License-Identifier: AGPL-3.0-only
-# SPDX-FileCopyrightText: 2023-2025 Univention GmbH
+# SPDX-FileCopyrightText: 2023-2026 Univention GmbH
 
 ############################################################
 # Global variables
 
 ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-base-python
-ARG UCS_BASE_IMAGE_TAG=5.2.4-build.20260108@sha256:aa219aca5425e467afa8cf3a1eabb2023afa50149702da67402bf65f544cd784
+ARG UCS_BASE_IMAGE_TAG=5.2.4-build.20260212@sha256:21509fdc9a85c04cea47e82f1fd254fd3c675bdba836a5ffda2ad7231a41b2f4
 ############################################################
 # Stage 0 - build sssd installer
 
@@ -189,8 +189,6 @@ RUN \
   patch -p 5 -d /usr/lib/python3/dist-packages/univention/management/console/modules -i /0008-allow-to-set-individual-attributes-to-readonly-in-pa.patch && \
   patch -p 4 -d /usr/sbin -i /0009-remove-is-root-check.patch && \
   patch -p 4 -d /usr/lib/python3/dist-packages/ -i /0010-fix-disabling-structured-logging-restores-original-f.patch && \
-  # TEMPORARY: Remove this patch when merged to UCS 5.2-4 (see patch header for details)
-  patch -p 4 -d /usr/lib/python3/dist-packages/ -i /0011-add-configurable-root_path-support.patch && \
   rm -v /*.patch
 
 ############################################################
