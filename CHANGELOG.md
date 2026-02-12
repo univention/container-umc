@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.57.2](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.57.1...v0.57.2) (2026-02-12)
+
+
+### Bug Fixes
+
+* trigger release with removed patch ([2b8fd6e](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/2b8fd6e0d4be274ef566309e4ae29d5aeba3e715)), closes [univention/dev/internal/team-nubus#1551](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1551)
+
 ## [0.57.1](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.57.0...v0.57.1) (2026-02-10)
 
 
