@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.57.3](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.57.2...v0.57.3) (2026-02-18)
+
+
+### Bug Fixes
+
+* **umc-server:** Add an ingress path /logout-sse to fix failing logout e2e-tests ([88b759b](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/88b759bd76273e4c3776862fa40544f009c507f6)), closes [univention/dev/internal/team-nubus#1603](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1603)
+
 ## [0.57.2](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.57.1...v0.57.2) (2026-02-12)
 
 
