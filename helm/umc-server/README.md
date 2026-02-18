@@ -644,6 +644,10 @@ true
   {
     "path": "/univention/logout",
     "pathType": "Prefix"
+  },
+  {
+    "path": "/univention/logout-sse",
+    "pathType": "Prefix"
   }
 ]
 </pre>

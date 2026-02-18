@@ -325,6 +325,8 @@ ingress:
       path: /univention/upload
     - pathType: Prefix
       path: /univention/logout
+    - pathType: Prefix
+      path: /univention/logout-sse
 
   # -- Secure an Ingress by specifying a Secret that contains a TLS private key and certificate.
   #
