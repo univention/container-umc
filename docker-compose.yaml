@@ -57,7 +57,7 @@ services:
         target: /app/
 
   test-chart-umc-gateway:
-    image: gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/common-helm/testrunner:0.29.0
+    image: gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/common-helm/testrunner:0.29.10@sha256:5cba2a8fc4c6d5fa82bcec177ad433ab74695b4e02b2a2e9ed9b53c734b34dbf
     command: "pytest tests/helm/chart"
     profiles:
       - test
@@ -66,7 +66,7 @@ services:
       - "./tests/chart/umc-gateway/:/app/tests/helm/chart"
 
   test-chart-umc-server:
-    image: gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/common-helm/testrunner:0.29.0
+    image: gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/common-helm/testrunner:0.29.10@sha256:5cba2a8fc4c6d5fa82bcec177ad433ab74695b4e02b2a2e9ed9b53c734b34dbf
     command: "pytest tests/helm/chart"
     profiles:
       - test
