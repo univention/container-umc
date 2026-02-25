@@ -42,7 +42,7 @@ repos:
         exclude: .*\.patch
 
   - repo: "https://git.knut.univention.de/univention/dist/pre-commit-ucr"
-    rev: "0.0.10"
+    rev: "0.1.7"
     hooks:
       # "flake8 --select E1,E2 for UCR templates"
       - id: "ucr-flake8"
@@ -110,7 +110,7 @@ repos:
 
   # "Helm chart linter"
   - repo: https://github.com/gruntwork-io/pre-commit
-    rev: v0.1.23
+    rev: v0.1.30
     hooks:
       - id: helmlint
 
