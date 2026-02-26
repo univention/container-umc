@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.57.6](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.57.5...v0.57.6) (2026-02-26)
+
+
+### Bug Fixes
+
+* bump traefik to version 3.6.9 ([688d226](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/688d226290d8d47a0b1e39f3d4a696a1aeebb22f)), closes [univention/dev/internal/team-horizon#10](https://git.knut.univention.de/univention/dev/internal/team-horizon/issues/10)
+
 ## [0.57.5](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.57.4...v0.57.5) (2026-02-25)
 
 
