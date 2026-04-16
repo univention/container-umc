@@ -23,6 +23,9 @@ include:
     file:
       - "dind.yml"
 
+variables:
+  RENOVATE_USER_ID: "1393"
+
 lint-pre-commit:
   before_script:
     # Compose lint would fail without the referenced env files
@@ -67,9 +70,11 @@ package-helm-charts:
 test-image-umc-server:
   stage: "test"
   extends: .dind
-  rules:
+  rules: &rules_dind
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: "never"
+    - if: '$GITLAB_USER_ID == $RENOVATE_USER_ID && $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS !~ /Renovate run dind/'
+      when: "manual"
     - when: "on_success"
   image: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:28.1.1@sha256:f49e1c71b5d9f8ebe53715f78996ce42b8be4b1ec03875d187dfe3c03de1dc00"
   before_script:
