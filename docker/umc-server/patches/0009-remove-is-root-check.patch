@@ -1,4 +1,4 @@
-From 33a0e3470e30d03c871921cca0120e0dd8234b65 Mon Sep 17 00:00:00 2001
+From 9dc5b0e3244f8ab15b5b3f321c138789a5a59bd4 Mon Sep 17 00:00:00 2001
 From: Jaime Conde <conde-segovia@univention.de>
 Date: Wed, 26 Mar 2025 14:27:50 +0100
 Subject: [PATCH 09/10] remove is root check
@@ -10,7 +10,7 @@ with version 2.10 of sssd
  1 file changed, 4 deletions(-)
 
 diff --git a/management/univention-management-console/scripts/univention-management-console-module b/management/univention-management-console/scripts/univention-management-console-module
-index eeda3c24ee..8a4dec0141 100755
+index eeda3c24ee0..8a4dec01412 100755
 --- a/management/univention-management-console/scripts/univention-management-console-module
 +++ b/management/univention-management-console/scripts/univention-management-console-module
 @@ -21,10 +21,6 @@ from univention.management.console.log import MODULE, RequestFilter, add_filter,

@@ -1,4 +1,4 @@
-From ce31e10287fd3208f8f48c9099c2fb5203b7a7ef Mon Sep 17 00:00:00 2001
+From 32261bbed769e4077d27e86761cfec50f50d6394 Mon Sep 17 00:00:00 2001
 From: Johannes Bornhold <johannes.bornhold.extern@univention.de>
 Date: Fri, 8 Mar 2024 14:46:00 +0100
 Subject: [PATCH 02/10] disable "suffixed_cookie_name"
@@ -15,7 +15,7 @@ See: https://git.knut.univention.de/univention/components/univention-portal/-/bl
  1 file changed, 1 insertion(+)
 
 diff --git a/management/univention-management-console/src/univention/management/console/resource.py b/management/univention-management-console/src/univention/management/console/resource.py
-index adc99cec7a..387dc9d47d 100644
+index 283b00c0d04..d0f79257fcf 100644
 --- a/management/univention-management-console/src/univention/management/console/resource.py
 +++ b/management/univention-management-console/src/univention/management/console/resource.py
 @@ -162,6 +162,7 @@ class Resource(RequestHandler):

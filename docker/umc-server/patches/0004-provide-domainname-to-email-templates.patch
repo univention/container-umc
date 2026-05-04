@@ -1,4 +1,4 @@
-From a95304f9d904b1e1fa4047c1c9f1ad815c412b0e Mon Sep 17 00:00:00 2001
+From b200473c535608ad4b1b267441f545f844342928 Mon Sep 17 00:00:00 2001
 From: Thomas Kintscher <thomas.kintscher.extern@univention.de>
 Date: Tue, 9 Apr 2024 16:38:59 +0200
 Subject: [PATCH 04/10] provide domainname to email templates
@@ -16,7 +16,7 @@ which contain the domain from which the passwordreset originated.
  1 file changed, 2 insertions(+)
 
 diff --git a/management/univention-self-service/umc/python/passwordreset/sending/send_email.py b/management/univention-self-service/umc/python/passwordreset/sending/send_email.py
-index 870611ffbc..81efd7c6b1 100644
+index 870611ffbc9..81efd7c6b10 100644
 --- a/management/univention-self-service/umc/python/passwordreset/sending/send_email.py
 +++ b/management/univention-self-service/umc/python/passwordreset/sending/send_email.py
 @@ -80,6 +80,8 @@ class SendEmail(UniventionSelfServiceTokenEmitter):

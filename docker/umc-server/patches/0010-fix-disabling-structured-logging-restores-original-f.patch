@@ -1,4 +1,4 @@
-From 9c05009f316a0ce6bd4901ddc37fca37e43500eb Mon Sep 17 00:00:00 2001
+From c8d9973dc1319cdf1d26f64f347fe1fbbcd242fb Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Carlos=20Garc=C3=ADa-Mauri=C3=B1o?=
  <garcia-maurino@univention.de>
 Date: Tue, 20 Jan 2026 13:39:41 +0100
@@ -12,7 +12,7 @@ univention/dev/internal/team-nubus#1588
  1 file changed, 8 insertions(+)
 
 diff --git a/base/univention-debug-python/python/univention/logging.py b/base/univention-debug-python/python/univention/logging.py
-index 166fa5004a..a71029e18c 100644
+index 166fa5004a3..a71029e18c8 100644
 --- a/base/univention-debug-python/python/univention/logging.py
 +++ b/base/univention-debug-python/python/univention/logging.py
 @@ -236,6 +236,12 @@ def basicConfig(

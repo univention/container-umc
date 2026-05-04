@@ -1,4 +1,4 @@
-From 5710e41f4b249b5bee00a6c948326119b8b880fa Mon Sep 17 00:00:00 2001
+From 8ec2869156d79d86f37cfd91d19f568214cf0642 Mon Sep 17 00:00:00 2001
 From: Thomas Kintscher <thomas.kintscher.extern@univention.de>
 Date: Wed, 3 Apr 2024 18:23:55 +0200
 Subject: [PATCH 03/10] support un/authenticated memcached
@@ -49,7 +49,7 @@ The entire module just fails without providing any details.
  1 file changed, 9 insertions(+), 1 deletion(-)
 
 diff --git a/management/univention-self-service/umc/python/passwordreset/__init__.py b/management/univention-self-service/umc/python/passwordreset/__init__.py
-index 6f0b84f1bb..241de8b0c3 100644
+index 6f0b84f1bb8..241de8b0c3d 100644
 --- a/management/univention-self-service/umc/python/passwordreset/__init__.py
 +++ b/management/univention-self-service/umc/python/passwordreset/__init__.py
 @@ -254,6 +254,7 @@ class Instance(Base):

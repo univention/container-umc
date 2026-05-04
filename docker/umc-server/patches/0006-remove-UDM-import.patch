@@ -1,4 +1,4 @@
-From 9b3da61e371856fcf6686d18d4749ef7a929a054 Mon Sep 17 00:00:00 2001
+From 7601501a827c0a6f5eeebf2cf01f9a7dd1596c09 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Carlos=20Garc=C3=ADa-Mauri=C3=B1o?=
  <garcia-maurino@univention.de>
 Date: Wed, 11 Sep 2024 13:21:14 +0200
@@ -11,7 +11,7 @@ It's used for configuring the shared SQL connection feature. Look for
  1 file changed, 17 deletions(-)
 
 diff --git a/management/univention-management-console/src/univention/management/console/server.py b/management/univention-management-console/src/univention/management/console/server.py
-index 34722f938b..ea78501068 100755
+index 9a61153cec1..3cf888dd856 100755
 --- a/management/univention-management-console/src/univention/management/console/server.py
 +++ b/management/univention-management-console/src/univention/management/console/server.py
 @@ -38,7 +38,6 @@ from univention.management.console.resources import (
@@ -22,7 +22,7 @@ index 34722f938b..ea78501068 100755
  
  
  try:
-@@ -202,22 +201,6 @@ class Server:
+@@ -207,22 +206,6 @@ class Server:
          # bind sockets
          sockets = bind_sockets(self.options.port, ucr.get('umc/http/interface', '127.0.0.1'), backlog=ucr.get_int('umc/http/requestqueuesize', 100), reuse_port=True)
  
