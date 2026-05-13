@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.57.11](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.57.10...v0.57.11) (2026-05-13)
+
+
+### Bug Fixes
+
+* Bump traefik ([9f1a487](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/9f1a4870fe330cb3814309c9ea42d7aaf9d7c731)), closes [univention/dev/internal/team-nubus#1639](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1639)
+
 ## [0.57.10](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.57.9...v0.57.10) (2026-05-04)
 
 
