@@ -1759,7 +1759,7 @@ true
     "pullPolicy": null,
     "registry": null,
     "repository": "library/traefik",
-    "tag": "v3.7.0@sha256:d7cacdea7e95c400eea89ca31df6f366c0ce56f65e0b8a5397adef62518225d9"
+    "tag": "v3.7.1@sha256:8e61a286638b1d8edfc0f2448c99d65af463ab19b3a1a6fdc8006cdb17f0c139"
   },
   "logLevel": "INFO",
   "replicaCount": 1,
