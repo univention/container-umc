@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.57.14](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.57.13...v0.57.14) (2026-06-03)
+
+
+### Bug Fixes
+
+* **deps:** Bump traefik to v3.7.1 (CVE-2026-33814, CVE-2026-39820) ([a2de0a9](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/a2de0a9cf3663c1d8101e000d259ef1530304673)), closes [univention/dev/internal/team-nubus#1649](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1649)
+* **umc-server:** Make technical error thrown during forced password change on login user-friendly when a user enters a wrong old password ([b1eeccd](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/b1eeccd40a9cd464d11f497196b696d4dcc0086f)), closes [univention/dev/internal/team-nubus#1647](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1647)
+
 ## [0.57.13](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.57.12...v0.57.13) (2026-05-18)
 
 
