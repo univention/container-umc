@@ -22,7 +22,7 @@ RUN groupadd -g 999 -r sssd \
 # NOTE: Dependencies needed for getting the source code and building (not included in the build-dep below)
 RUN apt-get install --assume-yes --verbose-versions --allow-unauthenticated --no-install-recommends \
   wget=1.* \
-  winbind=2:4.21.* \
+  winbind=2:4.24.* \
   libcap-dev=1:2.66* \
   && cp /usr/lib/x86_64-linux-gnu/samba/libidmap-private-samba.so.0 /usr/lib/x86_64-linux-gnu/samba/libidmap-private-samba.so
 
