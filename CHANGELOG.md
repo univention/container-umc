@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.58.0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.57.14...v0.58.0) (2026-07-06)
+
+
+### Features
+
+* **umc-gateway:** use 2:4.24.* winbind ([1623bf6](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/1623bf6f1692b06d5a10c20832a586d8fa56aea6)), closes [#0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/issues/0)
+
+
+### Bug Fixes
+
+* **deps:** Update Base Image ([05891ed](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/05891ed1f4812809a709a0fb7fc50ab708c20555)), closes [#0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/issues/0)
+
 ## [0.57.14](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.57.13...v0.57.14) (2026-06-03)
 
 
