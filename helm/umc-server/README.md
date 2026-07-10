@@ -1643,6 +1643,18 @@ true
 			<td></td>
 		</tr>
 		<tr>
+			<td>probes.liveness.httpGet</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "path": "/univention/get/meta",
+  "port": "http"
+}
+</pre>
+</td>
+			<td>Check the Tornado process is answering HTTP requests.</td>
+		</tr>
+		<tr>
 			<td>probes.liveness.initialDelaySeconds</td>
 			<td>int</td>
 			<td><pre lang="json">
@@ -1665,15 +1677,6 @@ true
 			<td>int</td>
 			<td><pre lang="json">
 1
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>probes.liveness.tcpSocket.port</td>
-			<td>string</td>
-			<td><pre lang="json">
-"http"
 </pre>
 </td>
 			<td></td>
@@ -1706,6 +1709,24 @@ true
 			<td></td>
 		</tr>
 		<tr>
+			<td>probes.readiness.httpGet.path</td>
+			<td>string</td>
+			<td><pre lang="json">
+"/univention/get/meta"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>probes.readiness.httpGet.port</td>
+			<td>string</td>
+			<td><pre lang="json">
+"http"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
 			<td>probes.readiness.initialDelaySeconds</td>
 			<td>int</td>
 			<td><pre lang="json">
@@ -1728,15 +1749,6 @@ true
 			<td>int</td>
 			<td><pre lang="json">
 1
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>probes.readiness.tcpSocket.port</td>
-			<td>string</td>
-			<td><pre lang="json">
-"http"
 </pre>
 </td>
 			<td></td>
@@ -1984,31 +1996,19 @@ true
 			<td>SSSD log level, from 0 to 10.</td>
 		</tr>
 		<tr>
-			<td>sssdProbes.liveness.exec.command[0]</td>
-			<td>string</td>
+			<td>sssdProbes.liveness.exec</td>
+			<td>object</td>
 			<td><pre lang="json">
-"sh"
+{
+  "command": [
+    "sh",
+    "-c",
+    "getent -s sss passwd root\nrc=$?\n[ \"$rc\" -eq 0 ] || [ \"$rc\" -eq 2 ]\n"
+  ]
+}
 </pre>
 </td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>sssdProbes.liveness.exec.command[1]</td>
-			<td>string</td>
-			<td><pre lang="json">
-"-c"
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>sssdProbes.liveness.exec.command[2]</td>
-			<td>string</td>
-			<td><pre lang="json">
-"exit 0\n"
-</pre>
-</td>
-			<td></td>
+			<td>Query the sssd NSS responder for "root", which sssd's default filter_users answers without contacting LDAP: a hung responder fails the probe by timeout while an LDAP outage does not trigger restarts.</td>
 		</tr>
 		<tr>
 			<td>sssdProbes.liveness.failureThreshold</td>
@@ -2056,31 +2056,19 @@ true
 			<td>Timeout for command return.</td>
 		</tr>
 		<tr>
-			<td>sssdProbes.readiness.exec.command[0]</td>
-			<td>string</td>
+			<td>sssdProbes.readiness.exec</td>
+			<td>object</td>
 			<td><pre lang="json">
-"sh"
+{
+  "command": [
+    "getent",
+    "group",
+    "Domain Users"
+  ]
+}
 </pre>
 </td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>sssdProbes.readiness.exec.command[1]</td>
-			<td>string</td>
-			<td><pre lang="json">
-"-c"
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>sssdProbes.readiness.exec.command[2]</td>
-			<td>string</td>
-			<td><pre lang="json">
-"exit 0\n"
-</pre>
-</td>
-			<td></td>
+			<td>Look up "Domain Users" group, checking NSS, sssd_be, and LDAP end to end</td>
 		</tr>
 		<tr>
 			<td>sssdProbes.readiness.failureThreshold</td>
