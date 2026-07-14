@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.58.1](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.58.0...v0.58.1) (2026-07-14)
+
+
+### Bug Fixes
+
+* **deps:** Bump Traefik to 3.7.7 ([4e3b660](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/4e3b660801bda1ba750e9bea96d339e2bb22b660)), closes [univention/dev/internal/team-nubus#1666](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1666)
+
 ## [0.58.0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.57.14...v0.58.0) (2026-07-06)
 
 
