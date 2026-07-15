@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.58.2](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.58.1...v0.58.2) (2026-07-15)
+
+
+### Bug Fixes
+
+* **helm:** Improve liveness and readiness probes ([524c646](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/524c646e988b1cd2476f33e5b0c37045969b6ce7)), closes [univention/dev/nubus-for-k8s/udm-rest-api#21](https://git.knut.univention.de/univention/dev/nubus-for-k8s/udm-rest-api/issues/21)
+
 ## [0.58.1](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.58.0...v0.58.1) (2026-07-14)
 
 
