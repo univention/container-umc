@@ -149,6 +149,7 @@ RUN \
   # for /usr/sbin/univention-config-registry
   univention-config \
   univention-directory-reports \
+  univention-heimdal-common \
   univention-management-console-module-udm \
   univention-management-console-server \
   univention-pam \
@@ -506,6 +507,14 @@ COPY --from=build \
   /etc/univention/templates/files/etc/sssd/sssd.conf
 
 COPY --from=build \
+  /etc/univention/templates/info/univention-heimdal-common.info \
+  /etc/univention/templates/info/univention-heimdal-common.info
+
+COPY --from=build \
+  /etc/univention/templates/files/etc/krb5.conf \
+  /etc/univention/templates/files/etc/krb5.conf
+
+COPY --from=build \
   /etc/univention/templates/info/univention-management-console-*.info \
   /etc/univention/templates/info/
 COPY --from=build \
@@ -631,6 +640,7 @@ RUN echo -en 'en_US.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8\n' >> /etc/locale.gen && \
 RUN \
   mkdir -p \
     /etc/ldap \
+    /etc/krb5 \
     /etc/univention/ssl \
     /var/www/univention && \
   chown -R sssd:sssd \
@@ -640,6 +650,7 @@ RUN \
   /var/cache/univention-management-console \
   /var/log/univention \
   /etc/ldap \
+  /etc/krb5 \
   /etc/pam.d \
   /etc/univention \
   /etc/sssd \

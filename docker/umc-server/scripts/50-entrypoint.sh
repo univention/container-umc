@@ -216,6 +216,9 @@ ${SASL_SECPROPS:+SASL_SECPROPS ${SASL_SECPROPS}}
 EOF
 chmod 0644 /etc/ldap/ldap.conf
 
+[ -d /etc/krb5/ ] || mkdir /etc/krb5/
+univention-config-registry --debug filter < /etc/univention/templates/files/etc/krb5.conf > /etc/krb5/krb5.conf
+
 ############################################################
 # Configure PAM
 

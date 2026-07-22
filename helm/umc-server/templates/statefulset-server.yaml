@@ -94,6 +94,8 @@ spec:
               mountPath: "/usr/share/univention-management-console/oidc"
             - name: "usr-share-oidc"
               mountPath: "/usr/share/oidc"
+            - name: "etc-krb5"
+              mountPath: "/etc/krb5"
             - name: "etc-ldap"
               mountPath: "/etc/ldap"
             - name: "etc-pam"
@@ -220,6 +222,8 @@ spec:
               --no-daemonize-module-processes \
               --log-file stdout
           env:
+            - name: KRB5_CONFIG
+              value: /etc/krb5/krb5.conf
             - name: "UMC_SQL_CONNECTION_PASSWORD"
               valueFrom:
                 secretKeyRef:
@@ -252,6 +256,9 @@ spec:
           volumeMounts:
             - name: "etc-ldap"
               mountPath: "/etc/ldap"
+              readOnly: true
+            - name: "etc-krb5"
+              mountPath: "/etc/krb5"
               readOnly: true
             - name: "etc-pam"
               mountPath: "/etc/pam.d"
@@ -453,6 +460,9 @@ spec:
         {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumes "context" $) | nindent 8 }}
         {{- end }}
         - name: "nsswitch-conf"
+          emptyDir:
+            medium: "Memory"
+        - name: "etc-krb5"
           emptyDir:
             medium: "Memory"
         - name: "etc-ldap"
