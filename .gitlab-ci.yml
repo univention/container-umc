@@ -100,6 +100,8 @@ test-image-umc-server:
     - echo "Running tests inside of the image:"
     - docker compose exec umc-server univention-management-console-module --help
     - docker compose exec umc-server univention-management-console-server --help
+    # Smoke test for the univention.udm package used by the self-service
+    - docker compose exec umc-server python3 -c "from univention.udm import UDM, NoObject"
 
     - echo "Running tests from outside the image:"
     - >-

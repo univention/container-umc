@@ -397,12 +397,11 @@ COPY --from=build \
   ${DST_PY_LIBS}/univention/authorization/
 
 # from python3-univention-directory-manager
-# used files: __init__.py
-# unused files: base.py, binary_props.py, connections.py, encoders.py, exceptions.py, helpers.py, plugins.py, udm.py, utils.py
+# unused files: helpers.py, utils.py
 COPY --from=build \
   ${SRC_PY_LIBS}/univention/udm/*.py \
   ${DST_PY_LIBS}/univention/udm/
-RUN rm ${DST_PY_LIBS}/univention/udm/{base.py,binary_props.py,connections.py,encoders.py,exceptions.py,helpers.py,plugins.py,udm.py,utils.py}
+RUN rm ${DST_PY_LIBS}/univention/udm/{helpers.py,utils.py}
 
 # from python3-univention-admin-diary and univention-admin-diary-client
 # used files: __init__.py client.py events.py
