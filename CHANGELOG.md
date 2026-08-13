@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.58.3](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.58.2...v0.58.3) (2026-08-13)
+
+
+### Bug Fixes
+
+* **umc-server-dockerfile:** Add missing dependencies on UMC docker image build that was causing self-service registration to crash ([74abf50](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/74abf5071edf2250500f30e530238e1619bb2810)), closes [univention/dev/nubus-for-k8s/umc#15](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/issues/15)
+
 ## [0.58.2](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.58.1...v0.58.2) (2026-07-15)
 
 
