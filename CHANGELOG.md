@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.59.0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.58.3...v0.59.0) (2026-08-19)
+
+
+### Features
+
+* add /etc/krb5.conf ([915f7c5](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/915f7c5ddfc57070e8b65d1d2381ae6da5f2107d)), closes [univention/dev/nubus-for-k8s/umc#14](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/issues/14)
+
 ## [0.58.3](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.58.2...v0.58.3) (2026-08-13)
 
 
