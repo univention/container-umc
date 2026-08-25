@@ -82,7 +82,11 @@ RUN \
   rm -rf /apt/ && \
   awk \
   '/^Package: python3-univention-directory-manager-rest$/{ while(!/^Version: /){getline} print $2 }' \
-  /var/lib/dpkg/status > /version
+  /var/lib/dpkg/status > /version && \
+  # buildkit cannot remove the build container while daemons started by the postinst scripts are alive
+  { pkill --signal KILL --exact apache2 || true; } && \
+  # the bracket keeps the pattern from matching this RUN's own command line
+  { pkill --signal KILL --full 'univention-cli-serve[r]' || true; }
 
 ############################################################
 # Start second stage
