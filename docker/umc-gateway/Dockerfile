@@ -31,6 +31,16 @@ COPY scripts/fake-uv-lib.sh /usr/local/bin/fake-uv-lib.sh
 
 # hadolint ignore=SC2016
 RUN \
+  # download self-service files (installed later with dpkg to avoid pulling in postfix, postgres, ...)
+  # before univention-base-files gets installed: its UCR template rewrites /etc/resolv.conf and breaks DNS
+  chown _apt /apt && \
+  apt-get download \
+  univention-self-service=7.* \
+  univention-self-service-master=7.* \
+  # for /etc/univention/templates/files/etc/apache2/sites-available/univention-self-service.conf
+  # and /usr/share/univention-management-console-frontend/js/umc/modules/passwordreset.js
+  univention-self-service-passwordreset-umc=7.* \
+  && \
   # install Univention bash helper functions dependency
   apt-get --assume-yes --verbose-versions --no-install-recommends install \
   shell-univention-lib=11.* \
@@ -66,15 +76,6 @@ RUN \
   python3-univention-debhelper=4.* \
   # for UCR template files
   python3-univention-lib=11.* \
-  && \
-  # install self-service files (avoid pulling in postfix, postgres, ...)
-  chown _apt /apt && \
-  apt-get download \
-  univention-self-service=7.* \
-  univention-self-service-master=7.* \
-  # for /etc/univention/templates/files/etc/apache2/sites-available/univention-self-service.conf
-  # and /usr/share/univention-management-console-frontend/js/umc/modules/passwordreset.js
-  univention-self-service-passwordreset-umc=7.* \
   && \
   DEBIAN_FRONTEND=noninteractive \
   dpkg --install --force-depends /apt/* && \
