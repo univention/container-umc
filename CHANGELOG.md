@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.59.1](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.59.0...v0.59.1) (2026-08-26)
+
+
+### Bug Fixes
+
+* **deps:** Update Base Image ([c118430](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/c1184307f53330204a23a6907853fda872e22c51)), closes [#0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/issues/0)
+* **umc-gateway:** download self-service packages before installing univention-base-files ([3139c01](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/3139c01c7580a4a9522070cd7ff1f9e0f059f17f)), closes [univention/dev/nubus-for-k8s/nubus-helm#29](https://git.knut.univention.de/univention/dev/nubus-for-k8s/nubus-helm/issues/29)
+* **umc-gateway:** kill daemons left behind by the postinst scripts ([adf3ef6](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/adf3ef6fb14f8ce4b20d3441d0cc98994e80db58)), closes [univention/dev/nubus-for-k8s/nubus-helm#29](https://git.knut.univention.de/univention/dev/nubus-for-k8s/nubus-helm/issues/29)
+
 ## [0.59.0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.58.3...v0.59.0) (2026-08-19)
 
 
