@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.59.2](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.59.1...v0.59.2) (2026-08-27)
+
+
+### Bug Fixes
+
+* Update Traefik to v3.7.11 ([f1acb4e](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/f1acb4e8e2568566f6fd65f1247235b9bdc73825)), closes [univention/dev/internal/team-nubus#1673](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1673)
+
 ## [0.59.1](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.59.0...v0.59.1) (2026-08-26)
 
 
