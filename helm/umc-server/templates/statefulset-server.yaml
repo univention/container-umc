@@ -222,8 +222,6 @@ spec:
               --no-daemonize-module-processes \
               --log-file stdout
           env:
-            - name: KRB5_CONFIG
-              value: /etc/krb5/krb5.conf
             - name: "UMC_SQL_CONNECTION_PASSWORD"
               valueFrom:
                 secretKeyRef:
@@ -258,7 +256,8 @@ spec:
               mountPath: "/etc/ldap"
               readOnly: true
             - name: "etc-krb5"
-              mountPath: "/etc/krb5"
+              mountPath: "/etc/krb5.conf"
+              subPath: "krb5.conf"
               readOnly: true
             - name: "etc-pam"
               mountPath: "/etc/pam.d"
