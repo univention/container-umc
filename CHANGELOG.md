@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.59.4](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.59.3...v0.59.4) (2026-09-04)
+
+
+### Bug Fixes
+
+* **helm:** mount krb5.conf at the default Heimdal path ([a74a963](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/a74a96338aadb63a1f72181baa7bbd5c6fa5d135)), closes [univention/dev/nubus-for-k8s/umc#14](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/issues/14)
+
 ## [0.59.3](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.59.2...v0.59.3) (2026-09-03)
 
 
