@@ -173,6 +173,10 @@ container-release-attestation-traefik:
     - when: "on_success"
   needs:
     - extract-image-info
+  # Scope COSIGN_PRIVATE_KEY to this environment
+  environment:
+    name: "secured"
+    action: "prepare"
   script:
     - !reference [".bash-header-script", "script"]
     - !reference [".check-required-variables-bash-script", "script"]
