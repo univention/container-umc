@@ -404,6 +404,17 @@ COPY --from=build \
   ${DST_PY_LIBS}/univention/udm/
 RUN rm ${DST_PY_LIBS}/univention/udm/{helpers.py,utils.py}
 
+# used files: __init__.py, generic.py, users_user.py (only "users/user" is
+# looked up via UDM.machine()/.admin(), by the self-service passwordreset module)
+# unused files: appcenter_app.py, computers_all.py, container_cn.py, container_dc.py,
+# container_ou.py, groups_group.py, mail_all.py, nagios_service.py,
+# policies_registry.py, policies_share_userquota.py, policies_umc.py,
+# settings_data.py, settings_directory.py, users_ldap_v0.py, users_ldap_v1.py
+COPY --from=build \
+  ${SRC_PY_LIBS}/univention/udm/modules/*.py \
+  ${DST_PY_LIBS}/univention/udm/modules/
+RUN rm ${DST_PY_LIBS}/univention/udm/modules/{appcenter_app.py,computers_all.py,container_cn.py,container_dc.py,container_ou.py,groups_group.py,mail_all.py,nagios_service.py,policies_registry.py,policies_share_userquota.py,policies_umc.py,settings_data.py,settings_directory.py,users_ldap_v0.py,users_ldap_v1.py}
+
 # from python3-univention-admin-diary and univention-admin-diary-client
 # used files: __init__.py client.py events.py
 # unused files: -

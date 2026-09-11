@@ -102,6 +102,7 @@ test-image-umc-server:
     - docker compose exec umc-server univention-management-console-server --help
     # Smoke test for the univention.udm package used by the self-service
     - docker compose exec umc-server python3 -c "from univention.udm import UDM, NoObject"
+    - docker compose exec umc-server python3 -c "from univention.udm.plugins import Plugins; assert list(Plugins('univention.udm.modules'))"
 
     - echo "Running tests from outside the image:"
     - >-
