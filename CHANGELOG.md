@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.59.7](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.59.6...v0.59.7) (2026-09-14)
+
+
+### Bug Fixes
+
+* **umc-server-dockerfile:** Add missing dependencies to fix breaking self-service registration/verification/deregistration ([8323595](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/8323595afc6c4f59c69ca1920529294fcb3615b1)), closes [univention/dev/nubus-for-k8s/umc#18](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/issues/18)
+
 ## [0.59.6](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.59.5...v0.59.6) (2026-09-14)
 
 
