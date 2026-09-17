@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.60.0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.59.7...v0.60.0) (2026-09-17)
+
+
+### Features
+
+* **ci:** Run Traefik attestation in the "secured" environment ([b60bdbc](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/b60bdbcd4c9328c477bca6605bf181db7d6c7909)), closes [univention/dev/nubus-for-k8s/common-ci#4](https://git.knut.univention.de/univention/dev/nubus-for-k8s/common-ci/issues/4)
+
 ## [0.59.7](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.59.6...v0.59.7) (2026-09-14)
 
 
