@@ -374,6 +374,12 @@ spec:
             - name: passwordreset-email-body
               mountPath: /usr/share/univention-self-service/email_bodies
               readOnly: true
+            {{- if eq (include "umc-server.malwareScan.caCertEnabled" .) "true" }}
+            - name: secret-malware-scan-ca
+              mountPath: "/var/secrets/malware_scan_ca_cert"
+              subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.selfService.malwareScan.icap.tls.existingSecret "key" "ca.crt" "context" .) | quote }}
+              readOnly: true
+            {{- end }}
           ports:
             {{- range $key, $value := .Values.service.ports }}
             - name: {{ $key }}
@@ -544,5 +550,11 @@ spec:
           configMap:
             name: {{ include "common.names.fullname" . }}-pw-reset-email-body
             defaultMode: 0444
+        {{- if eq (include "umc-server.malwareScan.caCertEnabled" .) "true" }}
+        - name: secret-malware-scan-ca
+          secret:
+            defaultMode: 0444
+            secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.selfService.malwareScan.icap.tls.existingSecret "defaultNameSuffix" "malware-scan-ca" "context" .) | quote }}
+        {{- end }}
         - name: plugin-targets
           emptyDir: {}

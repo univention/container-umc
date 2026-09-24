@@ -28,6 +28,10 @@ data:
   UMC_SQL_MAX_OVERFLOW: {{ .Values.postgresql.authSession.config.maxOverflow | quote }}
   UMC_SQL_POOL_TIMEOUT: {{ .Values.postgresql.authSession.config.poolTimeout | quote }}
   UMC_SQL_POOL_RECYCLE: {{ .Values.postgresql.authSession.config.poolRecycle | quote }}
+  SELF_SERVICE_MALWARE_SCAN_ICAP_URL: {{ tpl .Values.selfService.malwareScan.icap.url . | quote }}
+  SELF_SERVICE_MALWARE_SCAN_ICAP_TIMEOUT: {{ .Values.selfService.malwareScan.icap.timeout | quote }}
+  SELF_SERVICE_MALWARE_SCAN_MAX_FILES: {{ .Values.selfService.malwareScan.maxFiles | quote }}
+  SELF_SERVICE_MALWARE_SCAN_ICAP_CA_FILE: {{ ternary "/var/secrets/malware_scan_ca_cert" "" (eq (include "umc-server.malwareScan.caCertEnabled" .) "true") | quote }}
 
 ---
 

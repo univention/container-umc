@@ -1849,6 +1849,98 @@ true
 			<td>Root path for UMC. This allows it to handle prefixes, (e.g., /univention) itself instead of relying on rewrites in the Ingress.</td>
 		</tr>
 		<tr>
+			<td>selfService.malwareScan</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "icap": {
+    "timeout": 30,
+    "tls": {
+      "caCert": "",
+      "existingSecret": {
+        "keyMapping": {
+          "ca.crt": null
+        },
+        "name": null
+      }
+    },
+    "url": ""
+  },
+  "maxFiles": 10
+}
+</pre>
+</td>
+			<td>Malware scan of files that users upload in the Self Service, for example profile pictures.</td>
+		</tr>
+		<tr>
+			<td>selfService.malwareScan.icap.timeout</td>
+			<td>int</td>
+			<td><pre lang="json">
+30
+</pre>
+</td>
+			<td>Time in seconds that the Self Service waits for the ICAP service to scan all uploaded files of one request. This sets the environment variable `SELF_SERVICE_MALWARE_SCAN_ICAP_TIMEOUT`.</td>
+		</tr>
+		<tr>
+			<td>selfService.malwareScan.icap.tls.caCert</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>CA certificate in PEM format that signed the certificate of the ICAP service, for `icaps://` URLs. If empty, the Self Service uses the CA certificates of the container. The certificate is always verified. The chart stores the certificate in a Secret and mounts it, this sets the environment variable `SELF_SERVICE_MALWARE_SCAN_ICAP_CA_FILE`.</td>
+		</tr>
+		<tr>
+			<td>selfService.malwareScan.icap.tls.existingSecret</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "keyMapping": {
+    "ca.crt": null
+  },
+  "name": null
+}
+</pre>
+</td>
+			<td>Use an existing Secret with the CA certificate instead of `caCert`.</td>
+		</tr>
+		<tr>
+			<td>selfService.malwareScan.icap.tls.existingSecret.keyMapping."ca.crt"</td>
+			<td>string</td>
+			<td><pre lang="json">
+null
+</pre>
+</td>
+			<td>Key in the Secret that contains the CA certificate, if it is not `ca.crt`.</td>
+		</tr>
+		<tr>
+			<td>selfService.malwareScan.icap.tls.existingSecret.name</td>
+			<td>string</td>
+			<td><pre lang="json">
+null
+</pre>
+</td>
+			<td>Name of the Secret.</td>
+		</tr>
+		<tr>
+			<td>selfService.malwareScan.icap.url</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>URL of the ICAP service that scans the files, for example `icap://clamav-icap:1344/avscan`. Use `icaps://` for a connection with TLS. If empty, the Self Service does not scan files. If the ICAP service is not available, the Self Service rejects the file. This sets the environment variable `SELF_SERVICE_MALWARE_SCAN_ICAP_URL`.</td>
+		</tr>
+		<tr>
+			<td>selfService.malwareScan.maxFiles</td>
+			<td>int</td>
+			<td><pre lang="json">
+10
+</pre>
+</td>
+			<td>Maximum number of files that a user can upload in one request when the malware scan is active. The Self Service rejects requests with more files before it scans them. This sets the environment variable `SELF_SERVICE_MALWARE_SCAN_MAX_FILES`.</td>
+		</tr>
+		<tr>
 			<td>selfService.passwordresetEmailBody</td>
 			<td>string</td>
 			<td><pre lang="json">

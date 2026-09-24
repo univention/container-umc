@@ -5,7 +5,7 @@
 # Global variables
 
 ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-base-python
-ARG UCS_BASE_IMAGE_TAG=5.2.7-build.20261022@sha256:621b7f61a1c1cb3bd84b3e6b9af4e7ee3f570a18a2c4d51108811ccb03b3511f
+ARG UCS_BASE_IMAGE_TAG=5.2.7-build.20261026@sha256:ec112f847399db7b4c64763188fd5fc054a6ec2d760b61b658fcd9536c1cb2ee
 ############################################################
 # Stage 0 - build sssd installer
 
@@ -140,6 +140,7 @@ RUN \
   python3-univention-directory-reports \
   python3-univention-heimdal \
   python3-univention-lib \
+  python3-univention-lib-icap \
   python3-univention-license \
   python3-univention-management-console \
   python3-univention-debhelper \
@@ -422,8 +423,8 @@ COPY --from=build \
   ${SRC_PY_LIBS}/univention/admindiary/*.py \
   ${DST_PY_LIBS}/univention/admindiary/
 
-# from python3-univention-lib
-# used files: i18n.py ucs.py umc_module.py s4.py misc.py
+# from python3-univention-lib and python3-univention-lib-icap
+# used files: i18n.py ucs.py umc_module.py s4.py misc.py icap.py
 # unused files: __init__.py account.py admember.py atjobs.py fstab.py
 #               ldap_extension.py license_tools.py listenerSharePath.py
 #               locking.py package_manager.py password.py

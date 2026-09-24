@@ -47,3 +47,14 @@ These template definitions are only used in this chart and do not relate to temp
 {{- required ".Values.ingress.tls.secretName must be defined" .Values.ingress.tls.secretName -}}
 {{- end -}}
 {{- end -}}
+
+{{- /*
+Tell if a CA certificate for the ICAP service of the malware scan is configured, inline or in an existing Secret.
+*/ -}}
+{{- define "umc-server.malwareScan.caCertEnabled" -}}
+{{- if or .Values.selfService.malwareScan.icap.tls.caCert (.Values.selfService.malwareScan.icap.tls.existingSecret).name -}}
+true
+{{- else -}}
+false
+{{- end -}}
+{{- end -}}

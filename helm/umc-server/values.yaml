@@ -254,6 +254,35 @@ selfService:
 
     Greetings from your password self service system.
 
+  # -- Malware scan of files that users upload in the Self Service, for example profile pictures.
+  malwareScan:
+    # -- Maximum number of files that a user can upload in one request when the malware scan is active.
+    # The Self Service rejects requests with more files before it scans them.
+    # This sets the environment variable `SELF_SERVICE_MALWARE_SCAN_MAX_FILES`.
+    maxFiles: 10
+    icap:
+      # -- URL of the ICAP service that scans the files, for example `icap://clamav-icap:1344/avscan`.
+      # Use `icaps://` for a connection with TLS. If empty, the Self Service does not scan files.
+      # If the ICAP service is not available, the Self Service rejects the file.
+      # This sets the environment variable `SELF_SERVICE_MALWARE_SCAN_ICAP_URL`.
+      url: ""
+      # -- Time in seconds that the Self Service waits for the ICAP service to scan all uploaded files of one request.
+      # This sets the environment variable `SELF_SERVICE_MALWARE_SCAN_ICAP_TIMEOUT`.
+      timeout: 30
+      tls:
+        # -- CA certificate in PEM format that signed the certificate of the ICAP service, for `icaps://` URLs.
+        # If empty, the Self Service uses the CA certificates of the container. The certificate is always verified.
+        # The chart stores the certificate in a Secret and mounts it, this sets the environment variable
+        # `SELF_SERVICE_MALWARE_SCAN_ICAP_CA_FILE`.
+        caCert: ""
+        # -- Use an existing Secret with the CA certificate instead of `caCert`.
+        existingSecret:
+          # -- Name of the Secret.
+          name: null
+          keyMapping:
+            # -- Key in the Secret that contains the CA certificate, if it is not `ca.crt`.
+            ca.crt: null
+
 # -- Configuration for SSSD.
 sssd:
   # -- SSSD log level, from 0 to 10.
