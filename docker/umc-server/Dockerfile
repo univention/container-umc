@@ -43,6 +43,7 @@ RUN wget --progress=dot:giga "${SSSD_URL}" \
   && apt-get build-dep --assume-yes --allow-unauthenticated sssd \
   && tar -xvf "sssd-${SSSD_VERSION}.tar.gz" \
   && cd "sssd-${SSSD_VERSION}" \
+  && for patch in /sssd/patches/*.patch; do patch -p1 < "${patch}"; done \
   && ./configure \
   --with-sssd-user=sssd \
   --disable-krb5-locator-plugin \

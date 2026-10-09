@@ -1,0 +1,46 @@
+Bug #56793: Replace nss_ldap/pam_ldap by sssd for users in UCS 5.2-0
+
+This patch fixes PAM authentication of accounts of type "users/ldap".
+
+The test case 61_test_udm_users.py -k test_simpleauthaccount_authentication showed
+that sssd_pam by default failed authenticating users without uidNumber.
+
+Following https://docs.pagure.org/sssd.sssd/design_pages/non_posix_support.html
+we additionally configured a "domain_type = application" to make this work as
+designed, but then sssd_pam logged a BACKTRACE with the caracteristic error
+message "A user with no UID?".
+
+It looks like the support for non-POSIX accounts via application domain configuration
+has been implemented in 2017 but then in 2019 d2424bfb7 modified the behavior of the
+pam responder without taking into consideration the functionality for non-POSIX accounts.
+
+sssd commit 4049b63f8 shows how it's done properly in nss_protocol_fill_initgr,
+by checking SYSDB_POSIX ("isPosix") for value "FALSE". Unfortunately that attribute
+is not present in the data store that is used in pamsrv_cmd.c, so we use the
+check for a missing gid that is used in other locations of the code too. It's ok
+here, because the presence uid would only allow an optimization to be used when
+doing initgroups. That optimization will now not be used for non-POSIX accounts.
+
+diff --git a/src/responder/pam/pamsrv_cmd.c b/src/responder/pam/pamsrv_cmd.c
+index 1695554..87f81c6 100644
+--- a/src/responder/pam/pamsrv_cmd.c
++++ b/src/responder/pam/pamsrv_cmd.c
+@@ -2030,9 +2031,15 @@ static void pam_check_user_search_next(struct tevent_req *req)
+             uid_t uid = ldb_msg_find_attr_as_uint64(result->msgs[0],
+                                                     SYSDB_UIDNUM, 0);
+             if (!uid) {
+-                DEBUG(SSSDBG_CRIT_FAILURE, "A user with no UID?\n");
+-                talloc_zfree(preq->cctx);
+-                return;
++                gid_t gid = ldb_msg_find_attr_as_uint64(result->msgs[0],
++                                                        SYSDB_GIDNUM, 1);
++                if (!gid) {
++                   // user also has no gid, so probably non-POSIX
++                } else {
++                    DEBUG(SSSDBG_CRIT_FAILURE, "A user with no UID?\n");
++                    talloc_zfree(preq->cctx);
++                    return;
++                }
+             }
+ 
+             /* If a user already has a session on the system, we take the
