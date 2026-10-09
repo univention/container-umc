@@ -56,8 +56,10 @@ RUN wget --progress=dot:giga "${SSSD_URL}" \
   --without-libnl \
   --disable-nls \
   --disable-rpath \
+  --without-oidc-child \
   && make -j"$(nproc)" \
   && make install DESTDIR=/sssd-root \
+  && rm -f /sssd-root/usr/local/lib/sssd/modules/sssd_krb5_idp_plugin.so \
   && cd / \
   && /sssd/build-deb.sh /sssd-root "${SSSD_VERSION}" /sssd.deb \
   && rm -rf "/sssd-${SSSD_VERSION}"* /sssd-root
