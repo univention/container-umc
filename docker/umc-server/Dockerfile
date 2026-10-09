@@ -6,10 +6,17 @@
 
 ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-base-python
 ARG UCS_BASE_IMAGE_TAG=5.2.7-build.20261026@sha256:f8874a5918f30c6f080f1bd6973e96a15de5316e8f2287a2e3146a3a07db09e3
+ARG SSSD_VERSION=2.10.2
+ARG SSSD_SHA256=e8aa5e6b48ae465bea7064048715ce7e9c53b50ec6a9c69304f59e0d35be40ff
+ARG SSSD_URL=https://github.com/SSSD/sssd/releases/download/${SSSD_VERSION}/sssd-${SSSD_VERSION}.tar.gz
+
 ############################################################
-# Stage 0 - build sssd installer
+# Stage 0 - build sssd Debian package
 
 FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} AS sssd
+ARG SSSD_VERSION
+ARG SSSD_SHA256
+ARG SSSD_URL
 
 SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 
@@ -26,14 +33,16 @@ RUN apt-get install --assume-yes --verbose-versions --allow-unauthenticated --no
   libcap-dev=1:2.66* \
   && cp /usr/lib/x86_64-linux-gnu/samba/libidmap-private-samba.so.0 /usr/lib/x86_64-linux-gnu/samba/libidmap-private-samba.so
 
+COPY sssd/ /sssd/
+
 # hadolint ignore=DL3003
-RUN wget --progress=dot:giga https://github.com/SSSD/sssd/releases/download/2.10.2/sssd-2.10.2.tar.gz \
+RUN wget --progress=dot:giga "${SSSD_URL}" \
   # NOTE: Check for known checksum
-  && echo "e8aa5e6b48ae465bea7064048715ce7e9c53b50ec6a9c69304f59e0d35be40ff  sssd-2.10.2.tar.gz" > sssd-2.10.2.tar.gz.sha256 \
-  && sha256sum -c sssd-2.10.2.tar.gz.sha256 \
+  && echo "${SSSD_SHA256}  sssd-${SSSD_VERSION}.tar.gz" > "sssd-${SSSD_VERSION}.tar.gz.sha256" \
+  && sha256sum -c "sssd-${SSSD_VERSION}.tar.gz.sha256" \
   && apt-get build-dep --assume-yes --allow-unauthenticated sssd \
-  && tar -xvf sssd-2.10.2.tar.gz \
-  && cd sssd-2.10.2 \
+  && tar -xvf "sssd-${SSSD_VERSION}.tar.gz" \
+  && cd "sssd-${SSSD_VERSION}" \
   && ./configure \
   --with-sssd-user=sssd \
   --disable-krb5-locator-plugin \
@@ -48,19 +57,10 @@ RUN wget --progress=dot:giga https://github.com/SSSD/sssd/releases/download/2.10
   --disable-nls \
   --disable-rpath \
   && make -j"$(nproc)" \
-  && mkdir -p /target/usr \
-  && make install DESTDIR="${PWD}"/target
-
-COPY sssd-setup.sh /sssd-setup.sh
-
-# hadolint ignore=DL3003
-RUN \
-  cd sssd-2.10.2 \
-  && tar --transform='s|^\./|/|' -cvzf sssd.tgz -C target . \
-  && cat /sssd-setup.sh sssd.tgz > sssd-installer.sh \
-  && chmod +x sssd-installer.sh \
-  && mv sssd-installer.sh / \
-  && rm -rf /sssd-2.10.2
+  && make install DESTDIR=/sssd-root \
+  && cd / \
+  && /sssd/build-deb.sh /sssd-root "${SSSD_VERSION}" /sssd.deb \
+  && rm -rf "/sssd-${SSSD_VERSION}"* /sssd-root
 
 ############################################################
 # Stage 1
@@ -205,92 +205,94 @@ SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 
 WORKDIR /
 
-RUN \
+RUN --mount=type=bind,from=sssd,source=/sssd.deb,target=/tmp/sssd.deb \
+  groupadd -g 999 -r sssd && \
+  useradd -r -g sssd -u 999 -d / -s /sbin/nologin -c "User for sssd" sssd && \
   apt-get --assume-yes --verbose-versions --no-install-recommends install \
+  /tmp/sssd.deb \
+  # for $PY_LIBS/univention/management/console/message.py
+  # calling $PY_LIBS/univention/uldap.py
+  cy2-saml \
   libc-bin \
-  locales \
   # for $PY_LIBS/univention/admin/password.py
   libhdb9-heimdal \
   # for $PY_LIBS/univention/admin/password.py
   libkrb5-26-heimdal \
-  libpam0g \
-  libpam-sss \
   libpam-oauthbearer \
-  libsasl2-modules-oauthbearer \
-  pam-saml \
   # for $PY_LIBS/univention/management/console/pam.py
   libpam-pwquality \
-  # for $PY_LIBS/univention/management/console/protocol/session.py
-  # the debian-buster version would cause a segfault.
-  python3-ldap \
-  # for $PY_LIBS/univention/management/console/message.py
-  # calling $PY_LIBS/univention/uldap.py
-  cy2-saml \
+  libpam0g \
   # for pylibmc (SASL authentication with memcached)
   libsasl2-modules \
+  libsasl2-modules-oauthbearer \
+  locales \
+  # for generating stub SAML certificates
+  openssl \
+  pam-saml \
+  # for $PY_LIBS/univention/admin/handlers/settings/
+  python3-apt \
   # for $PY_LIBS/univention/admin/password.py
   python3-bcrypt \
+  # for /usr/sbin/univention-management-console-web-server
+  python3-cherrypy3 \
+  # for $PY_LIBS/univention/password.py
+  python3-cracklib \
+  # for ...
+  python3-cryptography \
   # for /usr/sbin/univention-management-console-server
   python3-daemon \
   # for $PY_LIBS/univention/admin/syntax.py
   python3-dateutil \
   # for /usr/sbin/univention-management-console-web-server
   python3-defusedxml \
+  # for $PY_LIBS/univention/admin/syntax.py
+  python3-email-validator \
+  # for $PY_LIBS/univention/management/console/oidc.py
+  python3-jwt \
+  # for $PY_LIBS/univention/config_registry/
+  python3-lazy-object-proxy \
+  # for $PY_LIBS/univention/management/console/protocol/session.py
+  # the debian-buster version would cause a segfault.
+  python3-ldap \
   # for $PY_LIBS/univention/lib/umc_module.py
   python3-magic \
   # for $PY_LIBS/univention/management/console/protocol/server.py
   python3-openssl \
+  # for $PY_LIBS/univention/admin/password.py
+  python3-passlib \
   # for $PY_LIBS/univention/admin/syntax.py
   python3-pil \
   # for $PY_LIBS/univention/management/console/locales.py
   python3-polib \
-  # for $PY_LIBS/univention/management/console/protocol/server.py
-  python3-tornado \
-  # for $PY_LIBS/univention/config_registry/
-  python3-lazy-object-proxy \
-  python3-six \
-  # for $PY_LIBS/univention/password.py
-  python3-cracklib \
-  # for $PY_LIBS/univention/admin/syntax.py
-  python3-email-validator \
-  # for ...
-  python3-cryptography \
-  # for $PY_LIBS/univention/admin/handlers/settings/
-  python3-apt \
-  # for python3-trml2pdf
-  python3-reportlab \
-  # for $PY_LIBS/univention/admin/password.py
-  python3-passlib \
+  # for $PY_LIBS/univention/management/console/modules/passwordreset/tokendb.py
+  # NOTE: This is will attempt to write to /var/run/postgresql/.s.PGSQL.5432 and fail
+  python3-psycopg2 \
   # for ...
   python3-pycurl \
-  # for /usr/sbin/univention-management-console-server
-  python3-sqlalchemy \
+  # for $PY_LIBS/univention/management/console/modules/passwordreset/__init__.py
+  python3-pylibmc \
   # for /usr/sbin/univention-management-console-web-server
-  python3-cherrypy3 \
   python3-pysaml2 \
+  # for python3-trml2pdf
+  python3-reportlab \
   # for $PY_LIBS/univention/management/console/server.py
   python3-sdnotify \
   # for ...
   python3-setproctitle \
-  # for ...
+  # for $PY_LIBS/univention/config_registry/
+  python3-six \
+  # for /usr/sbin/univention-management-console-server
+  python3-sqlalchemy \
+  # for $PY_LIBS/univention/management/console/protocol/server.py
   python3-tornado \
   # for $PY_LIBS/univention/management/console/protocol/modserver.py
   python3-tzlocal \
   # for $PY_LIBS/univention/admin/__init__.py
   python3-unidecode \
-  # for $PY_LIBS/univention/management/console/modules/passwordreset/tokendb.py
-  # NOTE: This is will attempt to write to /var/run/postgresql/.s.PGSQL.5432 and fail
-  python3-psycopg2 \
-  # for $PY_LIBS/univention/management/console/modules/passwordreset/__init__.py
-  python3-pylibmc \
   # for $PY_LIBS/univention/admin/rest/client/__init__.py
   python3-uritemplate \
-  # for $PY_LIBS/univention/management/console/oidc.py
-  python3-jwt \
   # for the entrypoint.sh script
-  wget \
-  # for generating stub SAML certificates
-  openssl && \
+  wget && \
   #
   # Install regular dependencies
   #
@@ -302,8 +304,9 @@ RUN \
   # package dependencies.
   #
   apt-get --assume-yes --verbose-versions --no-install-recommends install \
+    python3-univention-debug \
     univention-config \
-    python3-univention-debug
+  && rm -rf /var/lib/apt/lists/*
 
 
 ############################################################
@@ -621,11 +624,6 @@ COPY scripts/50-entrypoint.sh \
   scripts/60-self-service.sh \
   /entrypoint.d/
 
-COPY --from=sssd /sssd-installer.sh /
-
-RUN /sssd-installer.sh \
-  && rm -f /sssd-installer.sh
-
 ############################################################
 # Define runtime
 
@@ -653,6 +651,7 @@ RUN \
   mkdir -p \
     /etc/ldap \
     /etc/krb5 \
+    /etc/sssd \
     /etc/univention/ssl \
     /var/www/univention && \
   chown -R sssd:sssd \
