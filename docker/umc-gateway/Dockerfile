@@ -97,8 +97,6 @@ ARG LABEL_CREATED=undefined
 ARG LABEL_REVISION=undefined
 ARG LABEL_SOURCE=undefined
 ARG LABEL_VERSION=undefined
-ARG SRC_PY_LIBS="/usr/lib/python3/dist-packages"
-ARG DST_PY_LIBS="/usr/lib/python3/dist-packages"
 
 SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 
@@ -106,12 +104,14 @@ WORKDIR /
 
 RUN \
   apt-get --assume-yes --verbose-versions --no-install-recommends install \
-  libpython3.11=3.11.* \
+  apache2-bin=2.* \
   libapache2-mod-wsgi-py3=4.* \
-  # for univention-config-registry
-  python3-lazy-object-proxy=1.* \
-  python3-six=1.* \
-  apache2-bin=2.*
+  libpython3.11=3.11.* \
+  python3-ldap=3.* \
+  python3-pyasn1-modules=0.* \
+  python3-pyasn1=0.* \
+  univention-config=17.* \
+  && rm -rf /var/lib/apt/lists/*
 
 
 ############################################################
@@ -154,45 +154,11 @@ COPY --from=build \
   /usr/share/doc/univention-web-js
 
 COPY --from=build \
-  ${SRC_PY_LIBS}/univention/ \
-  ${DST_PY_LIBS}/univention/
-
-COPY --from=build \
-  ${SRC_PY_LIBS}/ldap/ \
-  ${DST_PY_LIBS}/ldap/
-
-COPY --from=build \
-  ${SRC_PY_LIBS}/_ldap* \
-  ${SRC_PY_LIBS}/ldapurl.py \
-  ${SRC_PY_LIBS}/ldif.py \
-  ${DST_PY_LIBS}/
-
-COPY --from=build \
-  ${SRC_PY_LIBS}/pyasn1 \
-  ${DST_PY_LIBS}/pyasn1
-
-COPY --from=build \
-  ${SRC_PY_LIBS}/pyasn1_modules \
-  ${DST_PY_LIBS}/pyasn1_modules
-
-COPY --from=build \
-  /usr/lib/x86_64-linux-gnu/libuniventiondebug.* \
-  /usr/lib/x86_64-linux-gnu/
-
-COPY --from=build \
-  /usr/sbin/univention-config-registry \
-  /usr/sbin/univention-config-registry
-
-COPY --from=build \
   /version \
   /version
 
 RUN \
-  ln --symbolic --force /usr/sbin/univention-config-registry /usr/sbin/ucr && \
-  \
-  mkdir --parents /var/cache/univention-config/ && \
   touch /var/cache/univention-config/cache && \
-  \
   mkdir /var/log/univention/
 
 COPY --from=build \
