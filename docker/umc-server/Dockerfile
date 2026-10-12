@@ -181,28 +181,37 @@ RUN \
   for i in /apt/*.deb; do dpkg --extract "$i" /; done && \
   rm -rf /apt/
 
-COPY patches/*.patch /
-
 RUN \
-  patch -p 4 -d /usr/lib/python3/dist-packages/ -i /0001-set-password-without-kerberos.patch && \
-  patch -p 4 -d /usr/lib/python3/dist-packages/ -i /0002-disable-suffixed_cookie_name.patch && \
-  patch -p 5 -d /usr/lib/python3/dist-packages/univention/management/console/modules -i /0003-support-un-authenticated-memcached.patch && \
-  patch -p 5 -d /usr/lib/python3/dist-packages/univention/management/console/modules -i /0004-provide-domainname-to-email-templates.patch && \
-  patch -p 5 -d /usr/lib/python3/dist-packages/univention/management/console/modules -i /0005-smtp-authentication-for-self-service-emails.patch && \
-  patch -p 4 -d /usr/lib/python3/dist-packages/ -i /0006-remove-UDM-import.patch && \
-  patch -p 4 -d /usr/lib/python3/dist-packages/ -i /0007-replace-PAM-login-with-UDM-login-for-password-change.patch && \
-  patch -p 5 -d /usr/lib/python3/dist-packages/univention/management/console/modules -i /0008-allow-to-set-individual-attributes-to-readonly-in-pa.patch && \
-  patch -p 4 -d /usr/sbin -i /0009-remove-is-root-check.patch && \
-  patch -p 4 -d /usr/lib/python3/dist-packages/ -i /0010-fix-disabling-structured-logging-restores-original-f.patch && \
-  rm -v /*.patch
+  dpkg-query --show --showformat='${Package}=${Version}\n' \
+  libunivention-config0 \
+  libunivention-license0 \
+  libunivention-policy0 \
+  python3-m2crypto \
+  python3-notifier \
+  python3-pam \
+  python3-trml2pdf \
+  python3-univention \
+  python3-univention-admin-diary \
+  python3-univention-authorization \
+  python3-univention-directory-manager \
+  python3-univention-directory-manager-rest-client \
+  python3-univention-directory-reports \
+  python3-univention-heimdal \
+  python3-univention-lib \
+  python3-univention-lib-icap \
+  python3-univention-license \
+  python3-univention-management-console \
+  univention-management-console-module-udm \
+  univention-management-console-server \
+  univention-self-service-passwordreset-umc \
+  > /umc-packages.list
 
 ############################################################
 # Start final stage
 
 FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} AS final
 
-ARG SRC_PY_LIBS="/usr/lib/python3/dist-packages"
-ARG DST_PY_LIBS="/usr/lib/python3/dist-packages"
+ARG PY_LIBS="/usr/lib/python3/dist-packages"
 
 SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 
@@ -323,208 +332,44 @@ RUN --mount=type=bind,from=sssd,source=/sssd.deb,target=/tmp/sssd.deb \
 
 
 ############################################################
+# Install the Debian packages recorded in the build stage
+
+WORKDIR /apt
+
+RUN \
+  --mount=type=bind,from=build,source=/usr/local/bin,target=/usr/local/bin \
+  --mount=type=bind,from=build,source=/usr/share/univention-lib,target=/usr/share/univention-lib \
+  --mount=type=bind,from=build,source=/umc-packages.list,target=/umc-packages.list \
+  --mount=type=bind,from=build,source=/var/lib/apt/lists,target=/var/lib/apt/lists,rw \
+  --mount=type=bind,from=build,source=/usr/bin/patch,target=/usr/bin/patch \
+  --mount=type=bind,source=patches,target=/patches \
+  chown _apt /apt && \
+  mkdir /var/log/univention/ && \
+  xargs apt-get download < /umc-packages.list && \
+  DEBIAN_FRONTEND=noninteractive \
+  dpkg --install --force-depends \
+  --path-exclude=/usr/sbin/univention-management-console-acls \
+  --path-exclude='/usr/share/univention-management-console-frontend/*' \
+  ./*.deb && \
+  UMC_MODULES="${PY_LIBS}/univention/management/console/modules" && \
+  patch -p 4 -d "${PY_LIBS}" -i /patches/0001-set-password-without-kerberos.patch && \
+  patch -p 4 -d "${PY_LIBS}" -i /patches/0002-disable-suffixed_cookie_name.patch && \
+  patch -p 5 -d "${UMC_MODULES}" -i /patches/0003-support-un-authenticated-memcached.patch && \
+  patch -p 5 -d "${UMC_MODULES}" -i /patches/0004-provide-domainname-to-email-templates.patch && \
+  patch -p 5 -d "${UMC_MODULES}" -i /patches/0005-smtp-authentication-for-self-service-emails.patch && \
+  patch -p 4 -d "${PY_LIBS}" -i /patches/0006-remove-UDM-import.patch && \
+  patch -p 4 -d "${PY_LIBS}" -i /patches/0007-replace-PAM-login-with-UDM-login-for-password-change.patch && \
+  patch -p 5 -d "${UMC_MODULES}" -i /patches/0008-allow-to-set-individual-attributes-to-readonly-in-pa.patch && \
+  patch -p 4 -d /usr/sbin -i /patches/0009-remove-is-root-check.patch && \
+  patch -p 4 -d "${PY_LIBS}" -i /patches/0010-fix-disabling-structured-logging-restores-original-f.patch && \
+  rm -rf /apt/
+
+WORKDIR /
+
+############################################################
 # Copy files from other stages
 
-# from univention-management-console-server
-COPY --from=build \
-  /usr/sbin/univention-management-console-server \
-  /usr/sbin/
-COPY --from=build \
-  /usr/sbin/univention-management-console-module \
-  /usr/sbin/
-
-# from python3-univention-heimdal
-COPY --from=build \
-  ${SRC_PY_LIBS}/heimdal.cpython-311-x86_64-linux-gnu.so \
-  ${DST_PY_LIBS}/heimdal.cpython-311-x86_64-linux-gnu.so
-
-# from libunivention-license0
-COPY --from=build \
-  /usr/lib/x86_64-linux-gnu/libuniventionlicense.so.0.0.1 \
-  /usr/lib/x86_64-linux-gnu/libuniventionlicense.so.0
-
-# from libunivention-policy0
-COPY --from=build \
-  /usr/lib/x86_64-linux-gnu/libuniventionpolicy.so.0.0.1 \
-  /usr/lib/x86_64-linux-gnu/libuniventionpolicy.so.0
-
-# from libunivention-config0
-COPY --from=build \
-  /usr/lib/x86_64-linux-gnu/libuniventionconfig.so.0.0.1 \
-  /usr/lib/x86_64-linux-gnu/libuniventionconfig.so.0
-
-# from python3-notifier (univention package)
-# used files: __init__.py dispatch.py log.py nf_generic.py popen.py signals.py
-#             threads.py version.py
-# unused files: nf_gtk.py nf_qt.py nf_twisted.py
-COPY --from=build \
-  ${SRC_PY_LIBS}/notifier/*.py \
-  ${DST_PY_LIBS}/notifier/
-RUN rm ${DST_PY_LIBS}/notifier/{nf_gtk.py,nf_qt.py,nf_twisted.py}
-
-# from python3-pam
-COPY --from=build \
-  ${SRC_PY_LIBS}/PAM.cpython-311-x86_64-linux-gnu.so \
-  ${DST_PY_LIBS}/PAM.cpython-311-x86_64-linux-gnu.so
-
-# from python3-m2crypto
-COPY --from=build \
-  ${SRC_PY_LIBS}/M2Crypto/ \
-  ${DST_PY_LIBS}/M2Crypto/
-
-# from python3-trml2pdf
-COPY --from=build \
-  ${SRC_PY_LIBS}/trml2pdf/ \
-  ${DST_PY_LIBS}/trml2pdf/
-
-# from python3-univention-directory-manager
-# used files: __init__.py _ucr.py allocators.py config.py filter.py hook.py
-#             layout.py localization.py locking.py mapping.py modules.py
-#             nagios.py objects.py syntax.py types.py uexceptions.py uldap.py
-#             policy.py cron.py samba.py license_data.py
-# unused files: -
-COPY --from=build \
-  ${SRC_PY_LIBS}/univention/admin/*.py \
-  ${DST_PY_LIBS}/univention/admin/
-
-# from python3-univention-directory-manager-rest-client
-# used files: __init__.py
-# unused files: __main__.py
-COPY --from=build \
-  ${SRC_PY_LIBS}/univention/admin/rest/client/*.py \
-  ${DST_PY_LIBS}/univention/admin/rest/client/
-RUN rm ${DST_PY_LIBS}/univention/admin/rest/client/__main__.py
-
-COPY --from=build \
-  ${SRC_PY_LIBS}/univention/license.cpython-311-x86_64-linux-gnu.so \
-  ${DST_PY_LIBS}/univention/license.cpython-311-x86_64-linux-gnu.so
-
-# from python3-univention-directory-manager
-COPY --from=build \
-  ${SRC_PY_LIBS}/univention/admin/handlers/ \
-  ${DST_PY_LIBS}/univention/admin/handlers/
-
-# from python3-univention-directory-manager
-COPY --from=build \
-  ${SRC_PY_LIBS}/univention/admin/authorization/ \
-  ${DST_PY_LIBS}/univention/admin/authorization/
-
-# from python3-univention-authorization
-COPY --from=build \
-  ${SRC_PY_LIBS}/univention/authorization/ \
-  ${DST_PY_LIBS}/univention/authorization/
-
-# from python3-univention-directory-manager
-# unused files: helpers.py, utils.py
-COPY --from=build \
-  ${SRC_PY_LIBS}/univention/udm/*.py \
-  ${DST_PY_LIBS}/univention/udm/
-RUN rm ${DST_PY_LIBS}/univention/udm/{helpers.py,utils.py}
-
-# used files: __init__.py, generic.py, users_user.py (only "users/user" is
-# looked up via UDM.machine()/.admin(), by the self-service passwordreset module)
-# unused files: appcenter_app.py, computers_all.py, container_cn.py, container_dc.py,
-# container_ou.py, groups_group.py, mail_all.py, nagios_service.py,
-# policies_registry.py, policies_share_userquota.py, policies_umc.py,
-# settings_data.py, settings_directory.py, users_ldap_v0.py, users_ldap_v1.py
-COPY --from=build \
-  ${SRC_PY_LIBS}/univention/udm/modules/*.py \
-  ${DST_PY_LIBS}/univention/udm/modules/
-RUN rm ${DST_PY_LIBS}/univention/udm/modules/{appcenter_app.py,computers_all.py,container_cn.py,container_dc.py,container_ou.py,groups_group.py,mail_all.py,nagios_service.py,policies_registry.py,policies_share_userquota.py,policies_umc.py,settings_data.py,settings_directory.py,users_ldap_v0.py,users_ldap_v1.py}
-
-# from python3-univention-admin-diary and univention-admin-diary-client
-# used files: __init__.py client.py events.py
-# unused files: -
-COPY --from=build \
-  ${SRC_PY_LIBS}/univention/admindiary/*.py \
-  ${DST_PY_LIBS}/univention/admindiary/
-
-# from python3-univention-lib and python3-univention-lib-icap
-# used files: i18n.py ucs.py umc_module.py s4.py misc.py icap.py
-# unused files: __init__.py account.py admember.py atjobs.py fstab.py
-#               ldap_extension.py license_tools.py listenerSharePath.py
-#               locking.py package_manager.py password.py
-#               ucrLogrotate.py
-COPY --from=build \
-  ${SRC_PY_LIBS}/univention/lib/*.py \
-  ${DST_PY_LIBS}/univention/lib/
-RUN rm ${DST_PY_LIBS}/univention/lib/{__init__.py,account.py,admember.py,atjobs.py,fstab.py,ldap_extension.py,license_tools.py,listenerSharePath.py,locking.py,package_manager.py,password.py,ucrLogrotate.py}
-
-# from python3-univention-management-console
-# used files: acl.py auth.py base.py category.py config.py error.py ldap.py
-#             locales.py log.py module.py pam.py resources.py tools.py __init__.py
-# unused files: -
-COPY --from=build \
-  ${SRC_PY_LIBS}/univention/management/console/*.py \
-  ${DST_PY_LIBS}/univention/management/console/
-
-# from python3-univention-management-console
-# used files: __init__.py decorators.py sanitizers.py mixins.py
-# unused files: -
-COPY --from=build \
-  ${SRC_PY_LIBS}/univention/management/console/modules/*.py \
-  ${DST_PY_LIBS}/univention/management/console/modules/
-
-# from python3-univention-management-console
-# used files: __init__.py syntax.py tools.py udm_ldap.py
-# unused files: -
-COPY --from=build \
-  ${SRC_PY_LIBS}/univention/management/console/modules/udm/*.py \
-  ${DST_PY_LIBS}/univention/management/console/modules/udm/
-
-# from univention-self-service-passwordreset-umc
-COPY --from=build \
-  ${SRC_PY_LIBS}/univention/management/console/modules/passwordreset/ \
-  ${DST_PY_LIBS}/univention/management/console/modules/passwordreset
-
-# from python3-univention-management-console
-COPY --from=build \
-  ${SRC_PY_LIBS}/univention_management_console-*.egg-info \
-  ${DST_PY_LIBS}/univention_management_console-*.egg-info
-
-# from python3-univention
-# for $PY_LIBS/univention/admin/uldap.py
-COPY --from=build \
-  ${SRC_PY_LIBS}/univention/*.py \
-  ${DST_PY_LIBS}/univention/
-
-# from univention-management-console-server
-# for $PY_LIBS/univention/management/console/category.py
-COPY --from=build \
-  /usr/share/univention-management-console/categories/default.xml \
-  /usr/share/univention-management-console/categories/default.xml
-
-# from univention-management-console-module-udm
-# for $PY_LIBS/univention/management/console/module.py
-COPY --from=build \
-  /usr/share/univention-management-console/modules/udm.xml \
-  /usr/share/univention-management-console/modules/udm.xml
-
-# from univention-self-service-passwordreset-umc
-# for $PY_LIBS/univention/management/console/module.py
-COPY --from=build \
-  /usr/share/univention-management-console/modules/passwordreset.xml \
-  /usr/share/univention-management-console/modules/passwordreset.xml
-
-# from univention-management-console-server
-# for $PY_LIBS/univention/management/console/server.py
-COPY --from=build \
-  /usr/share/univention-management-console/oidc/oidc.json \
-  /usr/share/univention-management-console/oidc/oidc.json
-COPY --from=build \
-  /etc/univention/templates/files/usr/share/univention-management-console/oidc/oidc.json \
-  /etc/univention/templates/files/usr/share/univention-management-console/oidc/oidc.json
-
 RUN mkdir /usr/share/doc/univention-management-console-web-server/
-
-# Read by umc-get info
-COPY --from=build \
-  /usr/share/doc/univention-management-console-server/changelog.gz \
-  /usr/share/doc/univention-management-console-server/changelog.gz
-
-COPY --from=build \
-  /etc/univention/templates/info/univention-management-console-server.info \
-  /etc/univention/templates/info/
 
 COPY --from=build \
   /etc/univention/templates/info/univention-pam.info \
@@ -543,11 +388,8 @@ COPY --from=build \
   /etc/univention/templates/files/etc/krb5.conf
 
 COPY --from=build \
-  /etc/univention/templates/info/univention-management-console-*.info \
+  /etc/univention/templates/info/univention-management-console-web-server.info \
   /etc/univention/templates/info/
-COPY --from=build \
-  /etc/univention/templates/files/etc/pam.d/univention-management-console.d/ \
-  /etc/univention/templates/files/etc/pam.d/univention-management-console.d/
 # Read by pam_oauthbearer in the UMC PAM stack
 COPY --from=build \
   /etc/univention/templates/files/etc/ldap/sasl2/slapd.conf \
@@ -572,21 +414,7 @@ RUN \
   /etc/univention/templates/files/etc/pam.d/common-auth.d/50univention-pam_general \
   /etc/univention/templates/files/etc/pam.d/common-auth.d/70univention-pam_env
 
-COPY --from=build \
-  /etc/univention/templates/files/var/www/univention/meta.json \
-  /etc/univention/templates/files/var/www/univention/meta.json
-
-COPY --from=build \
-  /usr/lib/python3/dist-packages/univention/debhelper.py \
-  /usr/lib/python3/dist-packages/univention/debhelper.py
-
-RUN \
-  mkdir /var/log/univention/
-
 # available reports
-COPY --from=build \
-  ${SRC_PY_LIBS}/univention/directory/ \
-  ${DST_PY_LIBS}/univention/directory/
 COPY --from=build \
   /etc/univention/directory/reports/ \
   /etc/univention/directory/reports/
@@ -599,22 +427,9 @@ COPY --from=build \
 COPY --from=build \
   /usr/share/univention-directory-reports/ \
   /usr/share/univention-directory-reports/
-RUN mkdir /usr/share/univention-management-console-module-udm/
-
-# email bodies for self-service
 COPY --from=build \
-  /usr/share/univention-self-service/email_bodies/ \
-  /usr/share/univention-self-service/email_bodies
-
-# locales
-COPY --from=build \
-  /usr/share/locale/de/LC_MESSAGES/univention-*.mo \
+  /usr/share/locale/de/LC_MESSAGES/univention-directory-reports.mo \
   /usr/share/locale/de/LC_MESSAGES/
-COPY --from=build \
-  /usr/share/univention-management-console/i18n/de/umc-core.mo \
-  /usr/share/univention-management-console/i18n/de/udm.mo \
-  /usr/share/univention-management-console/i18n/de/passwordreset.mo \
-  /usr/share/univention-management-console/i18n/de/
 
 COPY --from=build \
   /usr/share/univention-management-console/saml/sp.py \
@@ -631,8 +446,6 @@ COPY --from=build \
 COPY --from=build \
   /version \
   /version
-
-RUN mkdir /var/cache/univention-management-console/
 
 ############################################################
 # Copy Docker-specific files
