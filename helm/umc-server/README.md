@@ -763,7 +763,7 @@ true
     "pullPolicy": null,
     "registry": null,
     "repository": "nubus/images/memcached",
-    "tag": "0.1.13@sha256:20866cca2e9b4bad287bdb44b43103796e354a35094e9c7d958cee52685ec74f"
+    "tag": "0.1.14@sha256:71c9eeffb64f0922eceb323223f5aaeb91146a2170b0c615afe8338ecebb2ba3"
   },
   "livenessProbe": {
     "enabled": true,
@@ -1048,7 +1048,7 @@ true
   "pullPolicy": null,
   "registry": null,
   "repository": "nubus/images/memcached",
-  "tag": "0.1.13@sha256:20866cca2e9b4bad287bdb44b43103796e354a35094e9c7d958cee52685ec74f"
+  "tag": "0.1.14@sha256:71c9eeffb64f0922eceb323223f5aaeb91146a2170b0c615afe8338ecebb2ba3"
 }
 </pre>
 </td>
@@ -1085,7 +1085,7 @@ null
 			<td>memcached.image.tag</td>
 			<td>string</td>
 			<td><pre lang="json">
-"0.1.13@sha256:20866cca2e9b4bad287bdb44b43103796e354a35094e9c7d958cee52685ec74f"
+"0.1.14@sha256:71c9eeffb64f0922eceb323223f5aaeb91146a2170b0c615afe8338ecebb2ba3"
 </pre>
 </td>
 			<td>Memcached image tag.</td>
