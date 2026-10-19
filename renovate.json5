@@ -1,0 +1,39 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "The upstream Traefik image the mirror-image CI component copies",
+      // The component takes the reference as three inputs, so one matchString
+      // spans all three lines. They have to stay adjacent and in this order.
+      "managerFilePatterns": [
+        "/^\\.gitlab-ci\\.yml$/"
+      ],
+      "matchStrings": [
+        "source: \"(?<depName>[^\"]+)\"\\s+tag: \"(?<currentValue>[^\"]+)\"\\s+digest: \"(?<currentDigest>sha256:[0-9a-f]{64})\""
+      ],
+      "datasourceTemplate": "docker"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "One merge request moves the chart pin and the mirror pin",
+      "matchPackageNames": [
+        "docker.io/library/traefik",
+        "library/traefik"
+      ],
+      "groupName": "Traefik",
+      "prBodyNotes": [
+        "cc @jlohmer @fbest @ccastens @fbotner @jconde @ekipsang"
+      ],
+      // Renovate only fires postUpgradeTasks that are part of the branch-level
+      // config, so the task belongs on the group rule.
+      "postUpgradeTasks": {
+        "commands": [
+          "helm-docs"
+        ],
+        "executionMode": "branch"
+      }
+    }
+  ]
+}
