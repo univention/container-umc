@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.60.2](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.60.1...v0.60.2) (2026-10-22)
+
+
+### Bug Fixes
+
+* **traefik:** Trigger a semantic-release version bump ([7e75d02](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/7e75d0287b6f693462bd766f7d60488bd7538e84)), closes [univention/dev/internal/team-nubus#1684](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1684)
+
 ## [0.60.1](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.60.0...v0.60.1) (2026-09-25)
 
 
