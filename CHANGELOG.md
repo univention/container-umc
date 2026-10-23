@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.60.4](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.60.3...v0.60.4) (2026-10-23)
+
+
+### Bug Fixes
+
+* **deps:** Update Base Image to v5.2.7-build.20261022 ([bdf9f51](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/bdf9f510b7851eabb0f8d5c68ed4bcfbe947384b)), closes [#0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/issues/0)
+
 ## [0.60.3](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.60.2...v0.60.3) (2026-10-23)
 
 
