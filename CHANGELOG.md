@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.61.0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.60.5...v0.61.0) (2026-10-26)
+
+
+### Features
+
+* **umc-server:** configure the Self Service malware scan ([7f89204](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/7f8920480b0cbecc9db237c2d74a5aaba6634653)), closes [univention/dev/ucs#3760](https://git.knut.univention.de/univention/dev/ucs/issues/3760)
+
 ## [0.60.5](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.60.4...v0.60.5) (2026-10-26)
 
 
