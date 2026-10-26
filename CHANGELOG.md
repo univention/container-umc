@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.60.5](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.60.4...v0.60.5) (2026-10-26)
+
+
+### Bug Fixes
+
+* **deps:** Update nubus/images/memcached Docker tag to v0.1.15 ([0095d55](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/0095d55f6ecfb1c1467e30e9bebf2e207cd82869)), closes [#0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/issues/0)
+
 ## [0.60.4](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.60.3...v0.60.4) (2026-10-23)
 
 
