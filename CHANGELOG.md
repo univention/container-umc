@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.61.3](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.61.2...v0.61.3) (2026-10-30)
+
+
+### Bug Fixes
+
+* **umc-server:** Apply UCS patch for PAM auth of users/ldap accounts ([98d8a22](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/98d8a22fd7d3a2945bb222ab3763bb4279c10cc9)), closes [univention/dev/nubus-for-k8s/umc#17](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/issues/17)
+* **umc-server:** Build sssd without oidc_child and IdP plugin ([1c8bc7d](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/1c8bc7d2567f1d430efbe847482f87cfc84c2d5d)), closes [univention/dev/nubus-for-k8s/umc#17](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/issues/17)
+* **umc-server:** Install sssd as a Debian package ([4143c25](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/4143c25e0d7cceee15b4d2e916261fb8cfbe48d9)), closes [univention/dev/nubus-for-k8s/umc#17](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/issues/17)
+
 ## [0.61.2](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.61.1...v0.61.2) (2026-10-26)
 
 
