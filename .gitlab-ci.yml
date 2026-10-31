@@ -4,7 +4,7 @@
 ---
 include:
   - project: "univention/dev/nubus-for-k8s/common-ci"
-    ref: "v1.69.3"
+    ref: "v1.70.0"
     file:
       - "defaults/stages.yaml"
       - "defaults/nubus-workflow.yaml"
@@ -28,7 +28,7 @@ include:
       tag: "v3.7.16"
       digest: "sha256:c8a121e4bb1347e8fd52657fab12f2cb70b68f8a018895e2068f92c9e519b9c2"
       destination: "artifacts.software-univention.de/library/traefik"
-  - component: "$CI_SERVER_FQDN/univention/dev/nubus-for-k8s/common-ci/vul-man@v1.69.2"
+  - component: "$CI_SERVER_FQDN/univention/dev/nubus-for-k8s/common-ci/vul-man@v1.70.0"
 
 variables:
   RENOVATE_USER_ID: "1393"
