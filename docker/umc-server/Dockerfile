@@ -378,10 +378,16 @@ RUN \
   # stay a literal string without any downloaded file
   if [ -s umc-packages.download ]; then \
     xargs apt-get download < umc-packages.download && \
+    # the --path-include options override the path-exclude rules of the base
+    # image in /etc/dpkg/dpkg.cfg.d/, as in the build stage:
+    # the changelog is read by "umc-get info", the .mo files are the German
+    # translations of UDM, UMC and the Univention libraries
     DEBIAN_FRONTEND=noninteractive \
     dpkg --install --force-depends \
     --path-exclude=/usr/sbin/univention-management-console-acls \
     --path-exclude='/usr/share/univention-management-console-frontend/*' \
+    --path-include=/usr/share/doc/univention-management-console-server/changelog.gz \
+    --path-include='/usr/share/locale/de/LC_MESSAGES/univention-*.mo' \
     ./*.deb; \
   fi && \
   rm /usr/sbin/univention-management-console-acls && \
