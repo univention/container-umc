@@ -108,9 +108,10 @@ RUN \
   DEBIAN_FRONTEND=noninteractive \
   apt-get --assume-yes --verbose-versions --no-install-recommends install \
   --option Dpkg::Options::="--force-confold" \
+  # used by the final stage to apply patches/
+  patch \
   python3 \
   python3-distutils \
-  patch \
   # for /usr/sbin/univention-config-registry
   python3-lazy-object-proxy \
   # the python3-univention-debug postinst uses py3compile
@@ -181,30 +182,38 @@ RUN \
   for i in /apt/*.deb; do dpkg --extract "$i" /; done && \
   rm -rf /apt/
 
+# Record all installed Debian packages owning at least one non-directory entry
+# below /usr/lib/python3/dist-packages as "<package>=<version>", one per line,
+# plus the packages listed explicitly below, which ship no Python modules but
+# are needed by them or by the UMC server.
+# The final stage installs exactly these versions via dpkg, so that SBOM
+# scanners attribute the files to their Debian packages.
+# hadolint ignore=SC2016
 RUN \
-  dpkg-query --show --showformat='${Package}=${Version}\n' \
-  libunivention-config0 \
-  libunivention-license0 \
-  libunivention-policy0 \
-  python3-m2crypto \
-  python3-notifier \
-  python3-pam \
-  python3-trml2pdf \
-  python3-univention \
-  python3-univention-admin-diary \
-  python3-univention-authorization \
-  python3-univention-directory-manager \
-  python3-univention-directory-manager-rest-client \
-  python3-univention-directory-reports \
-  python3-univention-heimdal \
-  python3-univention-lib \
-  python3-univention-lib-icap \
-  python3-univention-license \
-  python3-univention-management-console \
-  univention-management-console-module-udm \
-  univention-management-console-server \
-  univention-self-service-passwordreset-umc \
-  > /umc-packages.list
+  # the loop below would trace every single file
+  set +x && \
+  { \
+    for list in /var/lib/dpkg/info/*.list; do \
+      pkg="$(basename "${list}" .list)"; \
+      # "|| true": grep fails without matches or on SIGPIPE after "break"
+      { grep '^/usr/lib/python3/dist-packages/.' "${list}" || true; } | \
+      while IFS= read -r path; do \
+        if [ -L "${path}" ] || [ ! -d "${path}" ]; then echo "${pkg}"; break; fi; \
+      done; \
+    done; \
+    # shared libraries linked by the Python C extensions
+    echo libunivention-config0; \
+    echo libunivention-license0; \
+    echo libunivention-policy0; \
+    # /usr/sbin/univention-management-console-{server,module}
+    echo univention-management-console-server; \
+  } | \
+  xargs --no-run-if-empty \
+  dpkg-query --show --showformat='${db:Status-Abbrev} ${Package}=${Version}\n' | \
+  awk '$1 == "ii" { print $2 }' | \
+  LC_ALL=C sort --unique > /umc-packages.list && \
+  test -s /umc-packages.list && \
+  cat /umc-packages.list
 
 ############################################################
 # Start final stage
@@ -334,8 +343,17 @@ RUN --mount=type=bind,from=sssd,source=/sssd.deb,target=/tmp/sssd.deb \
 ############################################################
 # Install the Debian packages recorded in the build stage
 
+# Install the packages in the exact versions recorded in the build stage,
+# instead of copying their files.
+# The build stage's /usr/local/bin provides the fake commands called by the
+# maintainer scripts, its /usr/share/univention-lib the Univention shell
+# library (with all.sh, base.sh, join.sh and umc.sh replaced by fake-uv-lib.sh)
+# and its /var/lib/apt/lists the package indices matching the recorded versions.
+# Afterwards patches/ is applied on top of the pristine files from the Debian
+# packages, using the patch tool from the build stage.
 WORKDIR /apt
 
+# hadolint ignore=SC2016
 RUN \
   --mount=type=bind,from=build,source=/usr/local/bin,target=/usr/local/bin \
   --mount=type=bind,from=build,source=/usr/share/univention-lib,target=/usr/share/univention-lib \
@@ -345,23 +363,49 @@ RUN \
   --mount=type=bind,source=patches,target=/patches \
   chown _apt /apt && \
   mkdir /var/log/univention/ && \
-  xargs apt-get download < /umc-packages.list && \
-  DEBIAN_FRONTEND=noninteractive \
-  dpkg --install --force-depends \
-  --path-exclude=/usr/sbin/univention-management-console-acls \
-  --path-exclude='/usr/share/univention-management-console-frontend/*' \
-  ./*.deb && \
+  # skip packages which are already installed in exactly this version
+  while IFS='=' read -r pkg version; do \
+    # "|| true": dpkg-query fails for packages which are not installed
+    installed="$(dpkg-query --show --showformat='${db:Status-Abbrev}${Version}' "${pkg}" 2>/dev/null || true)"; \
+    if [ "${installed}" != "ii ${version}" ]; then \
+      echo "${pkg}=${version}"; \
+    fi; \
+  done < /umc-packages.list > umc-packages.download && \
+  # the maintainer scripts call it, the real one is excluded below;
+  # /usr/local/bin/systemctl is a copy of fake.sh
+  cp /usr/local/bin/systemctl /usr/sbin/univention-management-console-acls && \
+  # an empty list means everything is installed already, and "./*.deb" would
+  # stay a literal string without any downloaded file
+  if [ -s umc-packages.download ]; then \
+    xargs apt-get download < umc-packages.download && \
+    DEBIAN_FRONTEND=noninteractive \
+    dpkg --install --force-depends \
+    --path-exclude=/usr/sbin/univention-management-console-acls \
+    --path-exclude='/usr/share/univention-management-console-frontend/*' \
+    ./*.deb; \
+  fi && \
+  rm /usr/sbin/univention-management-console-acls && \
   UMC_MODULES="${PY_LIBS}/univention/management/console/modules" && \
-  patch -p 4 -d "${PY_LIBS}" -i /patches/0001-set-password-without-kerberos.patch && \
-  patch -p 4 -d "${PY_LIBS}" -i /patches/0002-disable-suffixed_cookie_name.patch && \
-  patch -p 5 -d "${UMC_MODULES}" -i /patches/0003-support-un-authenticated-memcached.patch && \
-  patch -p 5 -d "${UMC_MODULES}" -i /patches/0004-provide-domainname-to-email-templates.patch && \
-  patch -p 5 -d "${UMC_MODULES}" -i /patches/0005-smtp-authentication-for-self-service-emails.patch && \
-  patch -p 4 -d "${PY_LIBS}" -i /patches/0006-remove-UDM-import.patch && \
-  patch -p 4 -d "${PY_LIBS}" -i /patches/0007-replace-PAM-login-with-UDM-login-for-password-change.patch && \
-  patch -p 5 -d "${UMC_MODULES}" -i /patches/0008-allow-to-set-individual-attributes-to-readonly-in-pa.patch && \
-  patch -p 4 -d /usr/sbin -i /patches/0009-remove-is-root-check.patch && \
-  patch -p 4 -d "${PY_LIBS}" -i /patches/0010-fix-disabling-structured-logging-restores-original-f.patch && \
+  patch --no-backup-if-mismatch -p 4 -d "${PY_LIBS}" \
+    -i /patches/0001-set-password-without-kerberos.patch && \
+  patch --no-backup-if-mismatch -p 4 -d "${PY_LIBS}" \
+    -i /patches/0002-disable-suffixed_cookie_name.patch && \
+  patch --no-backup-if-mismatch -p 5 -d "${UMC_MODULES}" \
+    -i /patches/0003-support-un-authenticated-memcached.patch && \
+  patch --no-backup-if-mismatch -p 5 -d "${UMC_MODULES}" \
+    -i /patches/0004-provide-domainname-to-email-templates.patch && \
+  patch --no-backup-if-mismatch -p 5 -d "${UMC_MODULES}" \
+    -i /patches/0005-smtp-authentication-for-self-service-emails.patch && \
+  patch --no-backup-if-mismatch -p 4 -d "${PY_LIBS}" \
+    -i /patches/0006-remove-UDM-import.patch && \
+  patch --no-backup-if-mismatch -p 4 -d "${PY_LIBS}" \
+    -i /patches/0007-replace-PAM-login-with-UDM-login-for-password-change.patch && \
+  patch --no-backup-if-mismatch -p 5 -d "${UMC_MODULES}" \
+    -i /patches/0008-allow-to-set-individual-attributes-to-readonly-in-pa.patch && \
+  patch --no-backup-if-mismatch -p 4 -d /usr/sbin \
+    -i /patches/0009-remove-is-root-check.patch && \
+  patch --no-backup-if-mismatch -p 4 -d "${PY_LIBS}" \
+    -i /patches/0010-fix-disabling-structured-logging-restores-original-f.patch && \
   rm -rf /apt/
 
 WORKDIR /
