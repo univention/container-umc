@@ -42,3 +42,8 @@ umcServer:
   oidcClient:
     auth:
       password: "linter-oidc-client-password"
+
+# Needed by the tests that render the chart with global.secrets.generatePasswords: false, which ignores the masterPassword.
+memcached:
+  auth:
+    password: "linter-memcached-password"
