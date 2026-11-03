@@ -309,7 +309,17 @@ RUN --mount=type=bind,from=sssd,source=/sssd.deb,target=/tmp/sssd.deb \
   apt-get --assume-yes --verbose-versions --no-install-recommends install \
     python3-univention-debug \
     univention-config \
-  && rm -rf /var/lib/apt/lists/*
+  && rm -rf /var/lib/apt/lists/* && \
+  #
+  # Enable the sss NSS module, like the postinst scripts of Debian's sssd
+  # packages do. The self-built sssd package has no maintainer scripts, and
+  # without this entry getent and id do not see the LDAP users and groups.
+  #
+  sed -i -E '/^(passwd|group|shadow|services|netgroup|sudoers):/ { /\bsss\b/! s/$/ sss/ }' /etc/nsswitch.conf && \
+  { grep -qE '^sudoers:' /etc/nsswitch.conf || echo 'sudoers:        files sss' >> /etc/nsswitch.conf; } && \
+  { grep -qE '^automount:' /etc/nsswitch.conf || echo 'automount:      sss' >> /etc/nsswitch.conf; } && \
+  grep -qE '^passwd:.*\bsss\b' /etc/nsswitch.conf && \
+  grep -qE '^group:.*\bsss\b' /etc/nsswitch.conf
 
 
 ############################################################
