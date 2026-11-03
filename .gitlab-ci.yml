@@ -25,8 +25,8 @@ include:
   - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/mirror-image@2.25.3"
     inputs:
       source: "docker.io/library/traefik"
-      tag: "v3.7.16"
-      digest: "sha256:c8a121e4bb1347e8fd52657fab12f2cb70b68f8a018895e2068f92c9e519b9c2"
+      tag: "v3.7.17"
+      digest: "sha256:68ae5fe5b64ca166704b746a9e8afcd385e36b3f569a5691401bf652d57b3748"
       destination: "artifacts.software-univention.de/library/traefik"
   - component: "$CI_SERVER_FQDN/univention/dev/nubus-for-k8s/common-ci/vul-man@v1.70.0"
 

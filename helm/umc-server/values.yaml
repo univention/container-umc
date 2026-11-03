@@ -294,7 +294,7 @@ proxy:
   image:
     registry: null
     repository: "library/traefik"
-    tag: "v3.7.16@sha256:c8a121e4bb1347e8fd52657fab12f2cb70b68f8a018895e2068f92c9e519b9c2"
+    tag: "v3.7.17@sha256:68ae5fe5b64ca166704b746a9e8afcd385e36b3f569a5691401bf652d57b3748"
     pullPolicy: null
 
   logLevel: "INFO"
