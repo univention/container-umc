@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.61.4](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.61.3...v0.61.4) (2026-11-04)
+
+
+### Bug Fixes
+
+* **umc-server:** Enable the sss NSS module in nsswitch.conf ([ae3fdb0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/ae3fdb081d986da2545e5bf8afb859c440ef438f)), closes [univention/dev/nubus-for-k8s/umc#17](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/issues/17)
+
 ## [0.61.3](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.61.2...v0.61.3) (2026-10-30)
 
 
