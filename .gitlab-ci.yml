@@ -22,11 +22,12 @@ include:
 
   # Copy the pinned upstream Traefik image into the registry that helm/umc-server pulls from.
   # Renovate bumps this pin together with proxy.image.tag (Traefik group in renovate.json5).
-  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/mirror-image@2.25.3"
+  - component: "$CI_SERVER_FQDN/univention/dev/tooling/ci-components/mirror-image@2.26.1"
     inputs:
-      source: "docker.io/library/traefik"
+      # Traefik Labs' own build. Docker republishes library/traefik tags under new digests, which the mirror refuses.
+      source: "ghcr.io/traefik/traefik"
       tag: "v3.7.17"
-      digest: "sha256:68ae5fe5b64ca166704b746a9e8afcd385e36b3f569a5691401bf652d57b3748"
+      digest: "sha256:30ff62491aacdb862ceb8c9edcf2627da638d7deafdd4b6dab32fe34f8aa3e90"
       destination: "artifacts.software-univention.de/library/traefik"
   - component: "$CI_SERVER_FQDN/univention/dev/nubus-for-k8s/common-ci/vul-man@v1.70.0"
 

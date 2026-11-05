@@ -13,14 +13,37 @@
         "source: \"(?<depName>[^\"]+)\"\\s+tag: \"(?<currentValue>[^\"]+)\"\\s+digest: \"(?<currentDigest>sha256:[0-9a-f]{64})\""
       ],
       "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "description": "The chart's Traefik pin, looked up where the mirror copies it from",
+      // helm-values would look library/traefik up on Docker Hub,
+      // whose digest differs from the ghcr.io one Harbor holds.
+      "managerFilePatterns": [
+        "/^helm/umc-server/values\\.yaml$/"
+      ],
+      "matchStrings": [
+        "repository: \"library/traefik\"\\s+tag: \"(?<currentValue>[^\"@]+)@(?<currentDigest>sha256:[0-9a-f]{64})\""
+      ],
+      "depNameTemplate": "ghcr.io/traefik/traefik",
+      "datasourceTemplate": "docker"
     }
   ],
   "packageRules": [
     {
+      "description": "The custom manager owns the chart's Traefik pin",
+      "matchManagers": [
+        "helm-values"
+      ],
+      "matchPackageNames": [
+        "library/traefik"
+      ],
+      "enabled": false
+    },
+    {
       "description": "One merge request moves the chart pin and the mirror pin",
       "matchPackageNames": [
-        "docker.io/library/traefik",
-        "library/traefik"
+        "ghcr.io/traefik/traefik"
       ],
       "groupName": "Traefik",
       "prBodyNotes": [
