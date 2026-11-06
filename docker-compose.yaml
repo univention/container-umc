@@ -15,7 +15,6 @@ services:
       target: final
     ports:
       - 8091:80
-    env_file: .env.umc-gateway
 
   umc-server:
     image: gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/umc/umc-server:${IMAGE_TAG:-latest}
@@ -37,7 +36,12 @@ services:
         source: ./tests/stub_data/saml-certs
         target: /etc/univention/ssl/ucs-6045.univention-organization.intranet
         read_only: true
-    env_file: .env.umc-server
+    environment:
+      LDAP_SECRET_FILE: "/run/secrets/ldap_secret"
+      MACHINE_SECRET_FILE: "/run/secrets/machine_secret"
+      SELF_SERVICE_DB_SECRET: "univention"
+      SELF_SERVICE_MEMCACHED_SECRET: "univention"
+      KRB5_CONFIG: "/etc/krb5/krb5.conf"
     secrets:
       - ldap_secret
       - machine_secret
@@ -90,16 +94,10 @@ services:
         target: /cache
 
 secrets:
-  ca_cert:
-    file: ssl/certs/CAcert.pem
-  cert_pem:
-    file: ssl/certs/cert.pem
-  private_key:
-    file: ssl/certs/private.key
   ldap_secret:
-    file: secret/ldap.secret
+    file: tests/stub_data/ldap.secret
   machine_secret:
-    file: secret/machine.secret
+    file: tests/stub_data/machine.secret
 
 volumes:
   pre-commit-cache:

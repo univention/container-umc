@@ -6,22 +6,6 @@
 # See https://pre-commit.com/hooks.html for more hooks
 
 repos:
-  # "Copy .env.umc-*.examples so that docker-compose.yaml can be linted"
-  - repo: "local"
-    hooks:
-      - id: "copy-umc-gateway"
-        name: "copy-umc-gateway"
-        entry: "sh -c 'if [ ! -f .env.umc-gateway ]; then cp .env.umc-gateway.example .env.umc-gateway; fi'"
-        language: "system"
-        files: "docker-compose.yaml"
-        pass_filenames: false
-      - id: "copy-umc-server"
-        name: "copy-umc-server"
-        entry: "sh -c 'if [ ! -f .env.umc-server ]; then cp .env.umc-server.example .env.umc-server; fi'"
-        language: "system"
-        files: "docker-compose.yaml"
-        pass_filenames: false
-
   - repo: "https://github.com/pre-commit/pre-commit-hooks"
     rev: "v4.5.0"
     hooks:
