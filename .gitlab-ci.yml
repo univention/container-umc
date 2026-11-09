@@ -4,7 +4,7 @@
 ---
 include:
   - project: "univention/dev/nubus-for-k8s/common-ci"
-    ref: "v1.71.0"
+    ref: "v1.72.0"
     file:
       - "defaults/stages.yaml"
       - "defaults/nubus-workflow.yaml"
@@ -15,10 +15,7 @@ include:
       - "jobs/package-and-publish-helm-charts-external.yaml"
       - "jobs/check-debian-updates.yaml"
       - "templates/sonarqube.yaml"
-  - project: "univention/infrastructure/docker-services"
-    ref: "master"
-    file:
-      - "dind.yml"
+      - "templates/compose-test.yaml"
 
   # Copy the pinned upstream Traefik image into the registry that helm/umc-server pulls from.
   # Renovate bumps this pin together with proxy.image.tag (Traefik group in renovate.json5).
@@ -29,7 +26,7 @@ include:
       tag: "v3.7.17"
       digest: "sha256:30ff62491aacdb862ceb8c9edcf2627da638d7deafdd4b6dab32fe34f8aa3e90"
       destination: "artifacts.software-univention.de/library/traefik"
-  - component: "$CI_SERVER_FQDN/univention/dev/nubus-for-k8s/common-ci/vul-man@v1.71.0"
+  - component: "$CI_SERVER_FQDN/univention/dev/nubus-for-k8s/common-ci/vul-man@v1.72.0"
 
 variables:
   RENOVATE_USER_ID: "1393"
@@ -83,30 +80,13 @@ package-helm-charts:
     - helm repo add bitnami https://charts.bitnami.com/bitnami
 
 test-image-umc-server:
+  extends: ".compose-test"
   stage: "test"
-  extends: .dind
-  rules: &rules_dind
-    - if: '$CI_PIPELINE_SOURCE == "schedule"'
-      when: "never"
-    - if: '$GITLAB_USER_ID == $RENOVATE_USER_ID && $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS !~ /Renovate run dind/'
-      when: "manual"
-    - when: "on_success"
-  image: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:28.5.2@sha256:2a232a42256f70d78e3cc5d2b5d6b3276710a0de0596c145f627ecfae90282ac"
-  before_script:
-    # Allow that the Docker API version is negotiated between client and server
-    - unset DOCKER_API_VERSION
-    - export IMAGE_TAG=${RELEASE_VERSION}
-    - echo -e "\e[0Ksection_start:`date +%s`:docker_debug[collapsed=true]\r\e[0KDocker version details"
-    - echo $IMAGE_TAG
-    - docker version
-    - echo -e "\e[0Ksection_end:`date +%s`:docker_debug\r\e[0K"
-    - echo -e "\e[0Ksection_start:`date +%s`:docker_compose_config[collapsed=true]\r\e[0KDocker Compose configuration"
-    - docker compose config umc-server test
-    - echo -e "\e[0Ksection_end:`date +%s`:docker_compose_config\r\e[0K"
-    - docker compose --progress plain up --no-build --pull always  --wait --wait-timeout 60 umc-server
-    - sleep 10
-    - docker logs dev-local-umc-server-1
+  variables:
+    COMPOSE_TEST_SERVICES: "umc-server"
   script:
+    # umc-server has no healthcheck, so `up --wait` returns once the container runs.
+    - sleep 10
     - echo "Running tests inside of the image:"
     - docker compose exec umc-server univention-management-console-module --help
     - docker compose exec umc-server univention-management-console-server --help
@@ -116,10 +96,8 @@ test-image-umc-server:
 
     - echo "Running tests from outside the image:"
     - >-
-      docker compose --progress plain run --pull always --rm test
+      docker compose run --quiet-pull --rm test
       pytest tests/integration --umc-server-url=http://umc-server:8090
-  after_script:
-    - docker compose down --volumes
 
 sonarqube:
   extends: .sonarqube
