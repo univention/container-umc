@@ -548,6 +548,10 @@ COPY --from=build \
 COPY --from=build \
   /etc/univention/templates/files/etc/pam.d/univention-management-console.d/ \
   /etc/univention/templates/files/etc/pam.d/univention-management-console.d/
+# Read by pam_oauthbearer in the UMC PAM stack
+COPY --from=build \
+  /etc/univention/templates/files/etc/ldap/sasl2/slapd.conf \
+  /etc/univention/templates/files/etc/ldap/sasl2/slapd.conf
 
 # stub file for SAML IdP setup (handled by entrypoint.sh)
 # TODO: This calls UDM and creates saml/serviceprovider entries. Do we need them?

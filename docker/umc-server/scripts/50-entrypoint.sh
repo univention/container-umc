@@ -222,6 +222,8 @@ univention-config-registry --debug filter < /etc/univention/templates/files/etc/
 ############################################################
 # Configure PAM
 
+mkdir -p /etc/ldap/sasl2
+univention-config-registry commit /etc/ldap/sasl2/slapd.conf
 univention-config-registry commit /etc/pam.d/univention-management-console
 
 # Disable kerberos and unix pam modules
