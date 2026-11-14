@@ -23,8 +23,8 @@ include:
     inputs:
       # Traefik Labs' own build. Docker republishes library/traefik tags under new digests, which the mirror refuses.
       source: "ghcr.io/traefik/traefik"
-      tag: "v3.7.17"
-      digest: "sha256:30ff62491aacdb862ceb8c9edcf2627da638d7deafdd4b6dab32fe34f8aa3e90"
+      tag: "v3.7.19"
+      digest: "sha256:aa942a00bce033c909bf1f7e861d93761be4b31a035f10d2410d33e38a8f41cf"
       destination: "artifacts.software-univention.de/library/traefik"
   - component: "$CI_SERVER_FQDN/univention/dev/nubus-for-k8s/common-ci/vul-man@v1.72.1"
 
