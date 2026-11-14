@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.61.6](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.61.5...v0.61.6) (2026-11-14)
+
+
+### Bug Fixes
+
+* **umc-server:** render the SASL config that the PAM stack reads ([283ed3b](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/283ed3b007fe4e0fb4ae81acdc35847385f5017c)), closes [#59917](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/issues/59917)
+
 ## [0.61.5](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.61.4...v0.61.5) (2026-11-06)
 
 
