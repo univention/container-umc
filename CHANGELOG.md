@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.62.0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.61.7...v0.62.0) (2026-11-16)
+
+
+### Features
+
+* **helm:** Resolve the memcached password only when the chart renders it ([a136497](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/a136497aaaf01f44dd7d4cd4cb64655c15cca289)), closes [univention/dev/nubus-for-k8s/nubus-helm#38](https://git.knut.univention.de/univention/dev/nubus-for-k8s/nubus-helm/issues/38)
+
 ## [0.61.7](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.61.6...v0.61.7) (2026-11-14)
 
 
