@@ -147,7 +147,6 @@ RUN \
   python3-univention-lib-icap \
   python3-univention-license \
   python3-univention-management-console \
-  univention-admin-diary-client \
   # for /usr/sbin/univention-config-registry
   univention-config \
   univention-directory-reports \
