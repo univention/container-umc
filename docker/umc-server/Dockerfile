@@ -125,20 +125,20 @@ RUN \
   libunivention-debug1 \
   libunivention-license0 \
   libunivention-policy0 \
-  # for /usr/share/locale/de/LC_MESSAGES/univention-admin*.mo
-  python3-univention-directory-manager \
-  python3-notifier \
   # use UCS-repo because it is not yet in Debian/stable (just bullseye)
   python3-m2crypto \
+  python3-notifier \
   python3-pam \
   python3-trml2pdf \
   python3-univention \
-  # for $PY_LIBS/univention/admindiary/__init__.py
+  # for $PY_LIBS/univention/admindiary/{__init__,client,events}.py
   python3-univention-admin-diary \
   python3-univention-authorization \
   python3-univention-config-registry \
   # for univention.logging
   python3-univention-debug \
+  python3-univention-debhelper \
+  # for /usr/share/locale/de/LC_MESSAGES/univention-admin*.mo
   python3-univention-directory-manager \
   python3-univention-directory-manager-rest-client \
   python3-univention-directory-reports \
@@ -147,9 +147,6 @@ RUN \
   python3-univention-lib-icap \
   python3-univention-license \
   python3-univention-management-console \
-  python3-univention-debhelper \
-  # for $PY_LIBS/univention/admindiary/client.py and
-  # $PY_LIBS/univention/admindiary/events.py
   univention-admin-diary-client \
   # for /usr/sbin/univention-config-registry
   univention-config \
@@ -161,9 +158,12 @@ RUN \
   # for the self-service
   univention-self-service-passwordreset-umc \
   && \
-  echo 'path-exclude /usr/sbin/univention-management-console-acls' >> /etc/dpkg/dpkg.cfg.d/univention && \
-  echo 'path-include /usr/share/doc/univention-management-console-server/changelog.gz' >> /etc/dpkg/dpkg.cfg.d/univention && \
-  echo 'path-include /usr/share/locale/de/LC_MESSAGES/univention-*.mo' >> /etc/dpkg/dpkg.cfg.d/univention && \
+  echo 'path-exclude /usr/sbin/univention-management-console-acls' \
+    >> /etc/dpkg/dpkg.cfg.d/univention && \
+  echo 'path-include /usr/share/doc/univention-management-console-server/changelog.gz' \
+    >> /etc/dpkg/dpkg.cfg.d/univention && \
+  echo 'path-include /usr/share/locale/de/LC_MESSAGES/univention-*.mo' \
+    >> /etc/dpkg/dpkg.cfg.d/univention && \
   DEBIAN_FRONTEND=noninteractive \
   dpkg --install --force-depends /apt/* && \
   rm -rf /apt/ && \
