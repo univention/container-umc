@@ -335,9 +335,7 @@ RUN --mount=type=bind,from=sssd,source=/sssd.deb,target=/tmp/sssd.deb \
   #
   sed -i -E '/^(passwd|group|shadow|services|netgroup|sudoers):/ { /\bsss\b/! s/$/ sss/ }' /etc/nsswitch.conf && \
   { grep -qE '^sudoers:' /etc/nsswitch.conf || echo 'sudoers:        files sss' >> /etc/nsswitch.conf; } && \
-  { grep -qE '^automount:' /etc/nsswitch.conf || echo 'automount:      sss' >> /etc/nsswitch.conf; } && \
-  grep -qE '^passwd:.*\bsss\b' /etc/nsswitch.conf && \
-  grep -qE '^group:.*\bsss\b' /etc/nsswitch.conf
+  { grep -qE '^automount:' /etc/nsswitch.conf || echo 'automount:      sss' >> /etc/nsswitch.conf; }
 
 
 ############################################################
@@ -412,6 +410,10 @@ RUN \
     -i /patches/0009-remove-is-root-check.patch && \
   patch --no-backup-if-mismatch -p 4 -d "${PY_LIBS}" \
     -i /patches/0010-fix-disabling-structured-logging-restores-original-f.patch && \
+  # fail the build if a maintainer script above rewrote /etc/nsswitch.conf
+  # and dropped the sss entries added after the sssd installation
+  grep -qE '^passwd:.*\bsss\b' /etc/nsswitch.conf && \
+  grep -qE '^group:.*\bsss\b' /etc/nsswitch.conf && \
   rm -rf /apt/
 
 WORKDIR /
