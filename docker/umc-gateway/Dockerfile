@@ -107,9 +107,6 @@ RUN \
   apache2-bin=2.* \
   libapache2-mod-wsgi-py3=4.* \
   libpython3.11=3.11.* \
-  python3-ldap=3.* \
-  python3-pyasn1-modules=0.* \
-  python3-pyasn1=0.* \
   univention-config=17.* \
   && rm -rf /var/lib/apt/lists/*
 
