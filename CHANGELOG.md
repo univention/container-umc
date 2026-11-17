@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.62.2](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.62.1...v0.62.2) (2026-11-17)
+
+
+### Bug Fixes
+
+* **deps:** Update ghcr.io/traefik/traefik Docker tag to v3.7.19 ([3af429c](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/3af429ce5b16e808be92346611d7b6d35e081b30)), closes [#0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/issues/0)
+
 ## [0.62.1](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.62.0...v0.62.1) (2026-11-17)
 
 
