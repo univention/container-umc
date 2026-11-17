@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.62.1](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.62.0...v0.62.1) (2026-11-17)
+
+
+### Bug Fixes
+
+* **umc-gateway:** Do not install python-ldap and pyasn1 ([61cd8ae](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/61cd8aef7a2e25f808e0c199349c89be627e4bf2)), closes [univention/dev/nubus-for-k8s/umc#16](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/issues/16)
+* **umc-gateway:** Install Python dependencies as Debian packages ([67302ca](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/67302cac52cef0ad463ee47c4d862ba4fefdaa02)), closes [univention/dev/nubus-for-k8s/umc#16](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/issues/16)
+* **umc-server:** Check the sss entries after installing the UMC packages ([d472b9a](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/d472b9a8debf283cb07df9036d1f99925937e0c9)), closes [univention/dev/nubus-for-k8s/umc#16](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/issues/16)
+* **umc-server:** Generate the Debian package list in the build stage ([89052e2](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/89052e29bc607a9cfabfcb87b185fab4c344b1b3)), closes [univention/dev/nubus-for-k8s/umc#16](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/issues/16)
+* **umc-server:** Install UMC Python packages as Debian packages ([8d26f12](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/8d26f12e5a229b910a06905822de96945575dad4)), closes [univention/dev/nubus-for-k8s/umc#16](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/issues/16)
+* **umc-server:** Keep German translations and the UMC changelog ([d2fb404](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/commit/d2fb404febfe930f920887e100f63a09800e6237)), closes [univention/dev/nubus-for-k8s/umc#16](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/issues/16)
+
 ## [0.62.0](https://git.knut.univention.de/univention/dev/nubus-for-k8s/umc/compare/v0.61.7...v0.62.0) (2026-11-16)
 
 
