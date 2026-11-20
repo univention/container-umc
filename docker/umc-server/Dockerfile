@@ -5,7 +5,7 @@
 # Global variables
 
 ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-base-python
-ARG UCS_BASE_IMAGE_TAG=5.2.7-build.20261112@sha256:b7bb23e6e2bd578e13bb8b8ff7bde1d931f0589d25c12240d190bf916c1302dd
+ARG UCS_BASE_IMAGE_TAG=5.2.7-build.20261119@sha256:2f9992daeb801d74219df5af5ac3aa6157bcbefc25105f78510365de881be9da
 ARG SSSD_VERSION=2.10.2
 ARG SSSD_SHA256=e8aa5e6b48ae465bea7064048715ce7e9c53b50ec6a9c69304f59e0d35be40ff
 ARG SSSD_URL=https://github.com/SSSD/sssd/releases/download/${SSSD_VERSION}/sssd-${SSSD_VERSION}.tar.gz
